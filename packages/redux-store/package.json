@@ -1,0 +1,39 @@
+{
+  "name": "@aries-framework/redux-store",
+  "main": "build/index",
+  "types": "build/index",
+  "version": "0.0.0",
+  "files": [
+    "build"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/redux-store",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "directory": "packages/redux-store"
+  },
+  "scripts": {
+    "build": "yarn run clean && yarn run compile",
+    "clean": "rimraf -rf ./build",
+    "compile": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "yarn run build",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@reduxjs/toolkit": "^1.6.0",
+    "react-redux": "^7.2.4"
+  },
+  "devDependencies": {
+    "@aries-framework/core": "0.1.0-alpha.259",
+    "react": "^17.0.2",
+    "rimraf": "~3.0.2",
+    "typescript": "~4.4.2"
+  },
+  "peerDependencies": {
+    "@aries-framework/core": "0.1.0-alpha.259"
+  }
+}
