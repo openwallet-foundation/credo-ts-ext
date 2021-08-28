@@ -82,7 +82,7 @@ jobs:
 
   package-finder:
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' && github.repository == 'hyperledger/aries-framework-javascript' && github.event_name == 'push'
+    if: github.ref == 'refs/heads/main' && github.repository == 'hyperledger/aries-framework-javascript-ext' && github.event_name == 'push'
     needs: [integration-test, validate]
     outputs:
       packages: ${{ steps.get-packages.outputs.packages }}
