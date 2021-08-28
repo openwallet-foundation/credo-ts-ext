@@ -2,7 +2,7 @@ on:
   push:
     branches:
       - main
-name: release-please
+name: Release Please
 jobs:
   package-finder:
     runs-on: ubuntu-latest
