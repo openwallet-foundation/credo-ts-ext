@@ -51,9 +51,9 @@ If you're just getting started the [AFJ repo](https://github.com/hyperledger/ari
 
 All packages are placed in the [`packages/`](./packages) directory.
 
-| Package                                                                                      | Version                                                                                             | Description                                             |
-| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
-| [`@aries-framework/redux-store`](https://www.npmjs.com/package/@aries-framework/redux-store) | ![@aries-framework/redux-store version"](https://img.shields.io/npm/v/@aries-framework/redux-store) | Redux toolkit wrapper around Aries Framework JavaScript |
+| Package                                                                                      | Version                                                                                            | Description                                             |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [`@aries-framework/redux-store`](https://www.npmjs.com/package/@aries-framework/redux-store) | ![@aries-framework/redux-store version](https://img.shields.io/npm/v/@aries-framework/redux-store) | Redux toolkit wrapper around Aries Framework JavaScript |
 
 ## Contributing
 
