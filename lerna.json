@@ -1,11 +1,14 @@
 {
   "packages": ["packages/*"],
-  "version": "0.0.0",
+  "version": "independent",
   "useWorkspaces": true,
   "npmClient": "yarn",
+  "changelogPreset": "conventionalcommits",
+  "issueUrlFormat": "{{host}}/{{owner}}/{{repository}}/issues/{{id}}",
+  "conventionalCommits": true,
   "command": {
     "version": {
-      "allowBranch": "main"
+      "allowBranch": ["main", "initial-setup"]
     }
   }
 }
