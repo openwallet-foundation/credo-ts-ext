@@ -80,21 +80,15 @@ jobs:
       - uses: codecov/codecov-action@v1
         if: always()
 
-  release-canary:
-    runs-on: ubuntu-20.04
-    name: Release Canary
-    needs: [integration-test, validate]
+  package-finder:
+    runs-on: ubuntu-latest
     if: github.ref == 'refs/heads/main' && github.repository == 'hyperledger/aries-framework-javascript' && github.event_name == 'push'
+    needs: [integration-test, validate]
+    outputs:
+      packages: ${{ steps.get-packages.outputs.packages }}
     steps:
-      - name: Checkout aries-framework-javascript
+      - name: Checkout aries-framework-javascript-ext
         uses: actions/checkout@v2
-        with:
-          # pulls all commits (needed for lerna to correctly version)
-          fetch-depth: 0
-
-      # setup dependencies
-      - name: Setup Libindy
-        uses: ./.github/actions/setup-libindy
 
       - name: Setup NodeJS
         uses: ./.github/actions/setup-node
@@ -102,11 +96,46 @@ jobs:
           node-version: 16
 
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install
 
-      # On push to main, release unstable version
-      - name: Release Unstable
-        run: yarn lerna publish --loglevel=verbose --canary minor --exact --force-publish --yes --no-verify-access --dist-tag latest
+      - id: get-packages
+        name: Get all NPM packages
+        run: yarn ts-node ./scripts/getPackages.ts
+
+  release-please:
+    runs-on: ubuntu-latest
+    needs: [package-finder]
+    strategy:
+      fail-fast: false
+      matrix:
+        package: ${{fromJson(needs.package-finder.outputs.packages)}}
+    steps:
+      - uses: google-github-actions/release-please-action@v2
+        id: release-please
+        with:
+          path: packages/${{ matrix.package }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          release-type: node
+          package-name: ${{ matrix.package }}
+          bump-minor-pre-major: true
+          monorepo-tags: true
+
+      # Initiate release process if release was created
+      - name: Checkout aries-framework-javascript-ext
+        uses: actions/checkout@v2
+        if: ${{ steps.release-please.outputs.release_created }}
+      - name: Setup NodeJS
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: 16
+        if: ${{ steps.release-please.outputs.release_created }}
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+        if: ${{ steps.release-please.outputs.release_created }}
+      - name: Release to NPM
+        run: |
+          cd packages/${{ matrix.package }}
+          yarn publish
         env:
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+        if: ${{ steps.release-please.outputs.release_created }}
