@@ -133,9 +133,7 @@ jobs:
         run: yarn install --frozen-lockfile
         if: ${{ steps.release-please.outputs.release_created }}
       - name: Release to NPM
-        run: |
-          cd packages/${{ matrix.package }}
-          yarn publish
+        run: npm publish ./packages/${{ matrix.package }}
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
         if: ${{ steps.release-please.outputs.release_created }}
