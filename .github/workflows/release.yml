@@ -24,7 +24,7 @@ jobs:
         name: Get all NPM packages
         run: yarn ts-node ./scripts/getPackages.ts
 
-  release:
+  release-please:
     runs-on: ubuntu-latest
     needs:
       - package-finder
@@ -54,9 +54,11 @@ jobs:
         if: ${{ steps.release-please.outputs.release_created }}
       - name: Install dependencies
         run: yarn install --frozen-lockfile
-      - run: |
+        if: ${{ steps.release-please.outputs.release_created }}
+      - name: Release to NPM
+        run: |
           cd packages/${{ matrix.package }}
           yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-        if: ${{ steps.release.outputs.release_created }}
+        if: ${{ steps.release-please.outputs.release_created }}
