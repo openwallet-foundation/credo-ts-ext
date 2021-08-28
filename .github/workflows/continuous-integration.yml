@@ -1,0 +1,112 @@
+name: Continuous Integration
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+env:
+  TEST_AGENT_PUBLIC_DID_SEED: 000000000000000000000000Trustee9
+  GENESIS_TXN_PATH: network/genesis/local-genesis.txn
+
+# Make sure we're not running multiple release steps at the same time as this can give issues with determining the next npm version to release.
+# Ideally we only add this to the 'release' job so it doesn't limit PR runs, but github can't guarantee the job order in that case:
+# "When concurrency is specified at the job level, order is not guaranteed for jobs or runs that queue within 5 minutes of each other."
+concurrency:
+  group: aries-framework-${{ github.ref }}-${{ github.repository }}-${{ github.event_name }}
+  cancel-in-progress: true
+
+jobs:
+  validate:
+    runs-on: ubuntu-20.04
+    name: Validate
+    steps:
+      - name: Checkout aries-framework-javascript-ext
+        uses: actions/checkout@v2
+
+      # setup dependencies
+      - name: Setup Libindy
+        uses: ./.github/actions/setup-libindy
+
+      - name: Setup NodeJS
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Linting
+        run: yarn lint
+
+      - name: Prettier
+        run: yarn check-format
+
+      - name: Compile
+        run: yarn check-types
+
+  integration-test:
+    runs-on: ubuntu-20.04
+    name: Integration Tests
+
+    strategy:
+      matrix:
+        node-version: [12.x, 14.x, 16.2]
+
+    steps:
+      - name: Checkout aries-framework-javascript-ext
+        uses: actions/checkout@v2
+
+      # setup dependencies
+      - name: Setup Libindy
+        uses: ./.github/actions/setup-libindy
+      - name: Setup Indy Pool
+        uses: ./.github/actions/setup-indy-pool
+        with:
+          seed: ${TEST_AGENT_PUBLIC_DID_SEED}
+
+      - name: Setup NodeJS
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Run tests
+        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test --coverage
+
+      - uses: codecov/codecov-action@v1
+        if: always()
+
+  release-canary:
+    runs-on: ubuntu-20.04
+    name: Release Canary
+    needs: [integration-test, validate]
+    if: github.ref == 'refs/heads/main' && github.repository == 'hyperledger/aries-framework-javascript' && github.event_name == 'push'
+    steps:
+      - name: Checkout aries-framework-javascript
+        uses: actions/checkout@v2
+        with:
+          # pulls all commits (needed for lerna to correctly version)
+          fetch-depth: 0
+
+      # setup dependencies
+      - name: Setup Libindy
+        uses: ./.github/actions/setup-libindy
+
+      - name: Setup NodeJS
+        uses: ./.github/actions/setup-node
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      # On push to main, release unstable version
+      - name: Release Unstable
+        run: yarn lerna publish --loglevel=verbose --canary minor --exact --force-publish --yes --no-verify-access --dist-tag latest
+        env:
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

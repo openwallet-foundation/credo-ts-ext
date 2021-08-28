@@ -1,0 +1,49 @@
+{
+  "name": "aries-framework-ext",
+  "private": true,
+  "license": "Apache-2.0",
+  "workspaces": [
+    "packages/*"
+  ],
+  "repository": {
+    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "type": "git"
+  },
+  "scripts": {
+    "check-types": "lerna exec tsc -- --noEmit",
+    "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|md|yml|yaml)'",
+    "format": "yarn prettier --write",
+    "check-format": "yarn prettier --list-different",
+    "clean": "lerna run clean",
+    "build": "lerna run build",
+    "test": "jest",
+    "lint": "eslint --ignore-path .gitignore .",
+    "validate": "yarn lint && yarn check-types && yarn check-format",
+    "prepare": "husky install"
+  },
+  "devDependencies": {
+    "@types/eslint": "^7.2.13",
+    "@types/jest": "^27.0.1",
+    "@types/node": "^16.7.4",
+    "@types/node-fetch": "^2.5.12",
+    "@types/ws": "^7.4.7",
+    "@typescript-eslint/eslint-plugin": "^4.26.1",
+    "@typescript-eslint/parser": "^4.26.1",
+    "eslint": "^7.28.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-import-resolver-typescript": "^2.4.0",
+    "eslint-plugin-import": "^2.23.4",
+    "eslint-plugin-prettier": "^3.4.0",
+    "husky": "^7.0.1",
+    "jest": "^27.0.4",
+    "lerna": "^4.0.0",
+    "prettier": "^2.3.1",
+    "ts-jest": "^27.0.3",
+    "ts-node": "^10.2.1",
+    "tsconfig-paths": "^3.9.0",
+    "typescript": "~4.4.0"
+  },
+  "engines": {
+    "node": ">= 12"
+  }
+}
