@@ -47,30 +47,13 @@ Aries Framework JavaScript Extensions is an extension repo to [Aries Framework J
 
 If you're just getting started the [AFJ repo](https://github.com/hyperledger/aries-framework-javascript.git) is probably the place to start.
 
-### Packages
+## Packages
 
-<table>
-  <tr>
-    <th><b>Package</b></th>
-    <th><b>Version</b></th>
-  </tr>
-  <tr>
-    <td>@aries-framework/react-hooks</td>
-    <td>
-      <a href="https://npmjs.com/package/@aries-framework/react-hooks">
-        <img alt="@aries-framework/react-hooks version" src="https://img.shields.io/npm/v/@aries-framework/react-hooks"/>
-      </a>
-    </td>
-  </tr>
-  <tr>
-    <td>@aries-framework/redux-Store</td>
-    <td>
-      <a href="https://npmjs.com/package/@aries-framework/redux-store">
-        <img alt="@aries-framework/redux-store version" src="https://img.shields.io/npm/v/@aries-framework/redux-store"/>
-      </a>
-    </td>
-  </tr>
-</table>
+All packages are placed in the [`packages/`](./packages) directory.
+
+| Package                                                                                      | Version                                                                                             | Description                                             |
+| -------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
+| [`@aries-framework/redux-store`](https://www.npmjs.com/package/@aries-framework/redux-store) | ![@aries-framework/redux-store version"](https://img.shields.io/npm/v/@aries-framework/redux-store) | Redux toolkit wrapper around Aries Framework JavaScript |
 
 ## Contributing
 
