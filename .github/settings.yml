@@ -4,8 +4,8 @@
 
 repository:
   name: aries-framework-javascript-ext
-  description: aries-framework-javascript-ext
-  homepage: 
+  description: Extension libraries for Aries Framework JavaScript
+  homepage: https://github.com/hyperledger/aries-framework-javascript
   default_branch: main
   has_downloads: false
   has_issues: true
