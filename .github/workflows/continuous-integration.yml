@@ -119,6 +119,10 @@ jobs:
           package-name: ${{ matrix.package }}
           bump-minor-pre-major: true
           monorepo-tags: true
+          pull-request-title-pattern: |
+            chore${scope}: release${component} ${version}
+
+            Signed-off-by: github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>
 
       # Initiate release process if release was created
       - name: Checkout aries-framework-javascript-ext
