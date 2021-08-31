@@ -1,13 +1,15 @@
+import type { SerializedInstance } from '../../types'
 import type { MediationRecord } from '@aries-framework/core'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 
+import { JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { MediationThunks } from './mediationThunks'
 
 interface MediationState {
   mediation: {
-    records: MediationRecord[]
+    records: SerializedInstance<MediationRecord>[]
     isLoading: boolean
   }
   error: null | SerializedError
@@ -30,12 +32,12 @@ const mediationSlice = createSlice({
 
       if (index == -1) {
         // records doesn't exist, add it
-        state.mediation.records.push(action.payload)
+        state.mediation.records.push(JsonTransformer.toJSON(action.payload))
         return state
       }
 
       // record does exist, update it
-      state.mediation.records[index] = action.payload
+      state.mediation.records[index] = JsonTransformer.toJSON(action.payload)
       return state
     },
   },
@@ -51,7 +53,7 @@ const mediationSlice = createSlice({
       })
       .addCase(MediationThunks.getAllMediationRecords.fulfilled, (state, action) => {
         state.mediation.isLoading = false
-        state.mediation.records = action.payload
+        state.mediation.records = action.payload.map((m) => JsonTransformer.toJSON(m))
       })
   },
 })

@@ -1,13 +1,15 @@
+import type { SerializedInstance } from '../../types'
 import type { ProofRecord } from '@aries-framework/core'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 
+import { JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ProofsThunks } from './proofsThunks'
 
 interface ProofsState {
   proofs: {
-    records: ProofRecord[]
+    records: SerializedInstance<ProofRecord>[]
     isLoading: boolean
   }
   error: null | SerializedError
@@ -30,12 +32,12 @@ const proofsSlice = createSlice({
 
       if (index == -1) {
         // records doesn't exist, add it
-        state.proofs.records.push(action.payload)
+        state.proofs.records.push(JsonTransformer.toJSON(action.payload))
         return state
       }
 
       // record does exist, update it
-      state.proofs.records[index] = action.payload
+      state.proofs.records[index] = JsonTransformer.toJSON(action.payload)
       return state
     },
   },
@@ -51,7 +53,7 @@ const proofsSlice = createSlice({
       })
       .addCase(ProofsThunks.getAllProofs.fulfilled, (state, action) => {
         state.proofs.isLoading = false
-        state.proofs.records = action.payload
+        state.proofs.records = action.payload.map((p) => JsonTransformer.toJSON(p))
       })
       // proposeProof
       .addCase(ProofsThunks.proposeProof.rejected, (state, action) => {

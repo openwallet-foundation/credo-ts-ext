@@ -1,18 +1,20 @@
+import type { SerializedInstance } from '../../types'
 import type { ConnectionRecord, ConnectionInvitationMessage } from '@aries-framework/core'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 
+import { JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { ConnectionThunks } from './connectionsThunks'
 
 interface ConnectionsState {
   connections: {
-    records: ConnectionRecord[]
+    records: SerializedInstance<ConnectionRecord>[]
     isLoading: boolean
     error: null | SerializedError
   }
   invitation: {
-    message: null | ConnectionInvitationMessage
+    message: null | SerializedInstance<ConnectionInvitationMessage>
     connectionRecordId: null | string
     isLoading: boolean
     error: null | SerializedError
@@ -42,12 +44,12 @@ const connectionsSlice = createSlice({
 
       if (index == -1) {
         // records doesn't exist, add it
-        state.connections.records.push(action.payload)
+        state.connections.records.push(JsonTransformer.toJSON(action.payload))
         return state
       }
 
       // record does exist, update it
-      state.connections.records[index] = action.payload
+      state.connections.records[index] = JsonTransformer.toJSON(action.payload)
       return state
     },
   },
@@ -63,7 +65,7 @@ const connectionsSlice = createSlice({
       })
       .addCase(ConnectionThunks.getAllConnections.fulfilled, (state, action) => {
         state.connections.isLoading = false
-        state.connections.records = action.payload
+        state.connections.records = action.payload.map((c) => JsonTransformer.toJSON(c))
       })
       // createConnection
       .addCase(ConnectionThunks.createConnection.pending, (state) => {
@@ -75,7 +77,7 @@ const connectionsSlice = createSlice({
       })
       .addCase(ConnectionThunks.createConnection.fulfilled, (state, action) => {
         state.invitation.isLoading = false
-        state.invitation.message = action.payload.invitation
+        state.invitation.message = JsonTransformer.toJSON(action.payload.invitation)
         state.invitation.connectionRecordId = action.payload.connectionRecord.id
       })
       // receiveInvitation

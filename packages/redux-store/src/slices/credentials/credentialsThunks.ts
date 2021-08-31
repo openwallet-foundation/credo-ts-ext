@@ -127,7 +127,7 @@ const CredentialsThunks = {
   /**
    * Deletes a credentialRecord in the credential repository.
    */
-  deletCredential: createAsyncAgentThunk('credentials/deleteCredential', async (credentialId: string, thunkApi) => {
+  deleteCredential: createAsyncAgentThunk('credentials/deleteCredential', async (credentialId: string, thunkApi) => {
     const credentialRepository = thunkApi.extra.agent.injectionContainer.resolve(CredentialRepository)
     const credentialRecord = await credentialRepository.getById(credentialId)
     await credentialRepository.delete(credentialRecord)
