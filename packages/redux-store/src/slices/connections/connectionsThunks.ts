@@ -1,8 +1,6 @@
 import type { ClassMethodParameters } from '../../utils'
 import type { ConnectionInvitationMessage, ConnectionsModule } from '@aries-framework/core'
 
-import { ConnectionRepository } from '@aries-framework/core'
-
 import { createAsyncAgentThunk } from '../../utils'
 
 const ConnectionThunks = {
@@ -100,10 +98,7 @@ const ConnectionThunks = {
    * Deletes a connectionRecord in the connectionRepository.
    */
   deleteConnection: createAsyncAgentThunk('connections/deleteConnection', async (connectionId: string, thunksApi) => {
-    const connectionRepository = thunksApi.extra.agent.injectionContainer.resolve(ConnectionRepository)
-    const connectionRecord = await connectionRepository.getById(connectionId)
-    await connectionRepository.delete(connectionRecord)
-    return connectionRecord
+    return thunksApi.extra.agent.connections.deleteById(connectionId)
   }),
 }
 

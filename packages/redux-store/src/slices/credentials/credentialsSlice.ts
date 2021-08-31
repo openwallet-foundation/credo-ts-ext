@@ -81,7 +81,7 @@ const credentialsSlice = createSlice({
       })
       // deleteCredential
       .addCase(CredentialsThunks.deleteCredential.fulfilled, (state, action) => {
-        const credentialId = action.payload.id
+        const credentialId = action.meta.arg
         const index = state.credentials.records.findIndex((record) => record.id == credentialId)
         state.credentials.records.splice(index, 1)
       })
