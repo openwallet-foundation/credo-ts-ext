@@ -1,13 +1,15 @@
+import type { SerializedInstance } from '../../types'
 import type { CredentialRecord } from '@aries-framework/core'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 
+import { JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import { CredentialsThunks } from './credentialsThunks'
 
 interface CredentialsState {
   credentials: {
-    records: CredentialRecord[]
+    records: SerializedInstance<CredentialRecord>[]
     isLoading: boolean
   }
   error: null | SerializedError
@@ -30,12 +32,12 @@ const credentialsSlice = createSlice({
 
       if (index == -1) {
         // records doesn't exist, add it
-        state.credentials.records.push(action.payload)
+        state.credentials.records.push(JsonTransformer.toJSON(action.payload))
         return state
       }
 
       // record does exist, update it
-      state.credentials.records[index] = action.payload
+      state.credentials.records[index] = JsonTransformer.toJSON(action.payload)
       return state
     },
   },
@@ -51,7 +53,7 @@ const credentialsSlice = createSlice({
       })
       .addCase(CredentialsThunks.getAllCredentials.fulfilled, (state, action) => {
         state.credentials.isLoading = false
-        state.credentials.records = action.payload
+        state.credentials.records = action.payload.map((c) => JsonTransformer.toJSON(c))
       })
       // proposeCredential
       .addCase(CredentialsThunks.proposeCredential.rejected, (state, action) => {
@@ -78,7 +80,7 @@ const credentialsSlice = createSlice({
         state.error = action.error
       })
       // deleteCredential
-      .addCase(CredentialsThunks.deletCredential.fulfilled, (state, action) => {
+      .addCase(CredentialsThunks.deleteCredential.fulfilled, (state, action) => {
         const credentialId = action.payload.id
         const index = state.credentials.records.findIndex((record) => record.id == credentialId)
         state.credentials.records.splice(index, 1)
