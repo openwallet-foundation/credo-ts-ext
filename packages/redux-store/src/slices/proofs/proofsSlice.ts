@@ -85,7 +85,7 @@ const proofsSlice = createSlice({
       })
       // deleteProof
       .addCase(ProofsThunks.deleteProof.fulfilled, (state, action) => {
-        const proofId = action.payload.id
+        const proofId = action.meta.arg
         const index = state.proofs.records.findIndex((record) => record.id == proofId)
         state.proofs.records.splice(index, 1)
       })

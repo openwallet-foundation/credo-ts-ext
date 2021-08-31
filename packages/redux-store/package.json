@@ -28,12 +28,12 @@
     "react-redux": "^7.2.4"
   },
   "devDependencies": {
-    "@aries-framework/core": "0.1.0-alpha.259",
+    "@aries-framework/core": "0.1.0-alpha.264",
     "react": "^17.0.2",
     "rimraf": "~3.0.2",
     "typescript": "~4.4.2"
   },
   "peerDependencies": {
-    "@aries-framework/core": "0.1.0-alpha.259"
+    "@aries-framework/core": "0.1.0-alpha.264"
   }
 }

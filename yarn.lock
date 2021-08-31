@@ -2,12 +2,14 @@
 # yarn lockfile v1
 
 
-"@aries-framework/core@0.1.0-alpha.259":
-  version "0.1.0-alpha.259"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.259.tgz#4f9d2851eadcd2b3226c75b936c690970599974e"
-  integrity sha512-mvkaNdeaWkAi3IpAsc4yn4cTYvHwv530H2ZKa4Rasuqr1F1AgyeFAyvQ5jX/byohPS9s6gdqpVUdU33on213ZA==
+"@aries-framework/core@0.1.0-alpha.264":
+  version "0.1.0-alpha.264"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.264.tgz#cc762f0804e74199fab3becf46bbe7aba3a69156"
+  integrity sha512-red2MnmVA6D+vARLLtGZsqaRqNVX3tDffNTo6zuqJ6o27VrnRXabR2zMbjixJr25SBpo9hJwXloFB11vMFFwfQ==
   dependencies:
     "@types/indy-sdk" "^1.16.6"
+    "@types/node-fetch" "^2.5.10"
+    "@types/ws" "^7.4.4"
     abort-controller "^3.0.0"
     bn.js "^5.2.0"
     borc "^3.0.0"
@@ -750,7 +752,7 @@
   resolved "https://registry.yarnpkg.com/@types/json5/-/json5-0.0.29.tgz#ee28707ae94e11d2b827bcbe5270bcea7f3e71ee"
   integrity sha1-7ihweulOEdK4J7y+UnC86n8+ce4=
 
-"@types/node-fetch@^2.5.12":
+"@types/node-fetch@^2.5.10", "@types/node-fetch@^2.5.12":
   version "2.5.12"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.12.tgz#8a6f779b1d4e60b7a57fb6fd48d84fb545b9cc66"
   integrity sha512-MKgC4dlq4kKNa/mYrwpKfzQMB5X3ee5U6fSprkKpToBqBmX4nFZL9cW5jl6sWn+xpRJ7ypWh2yyqqr8UUCstSw==
@@ -807,7 +809,7 @@
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.6.3.tgz#31ca2e997bf13a0fffca30a25747d5b9f7dbb7de"
   integrity sha512-fWG42pMJOL4jKsDDZZREnXLjc3UE0R8LOJfARWYg6U966rxDT7TYejYzLnUF5cvSObGg34nd0+H2wHHU5Omdfw==
 
-"@types/ws@^7.4.7":
+"@types/ws@^7.4.4", "@types/ws@^7.4.7":
   version "7.4.7"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.4.7.tgz#f7c390a36f7a0679aa69de2d501319f4f8d9b702"
   integrity sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==
