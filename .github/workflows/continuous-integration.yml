@@ -3,9 +3,9 @@ name: Continuous Integration
 on:
   pull_request:
     branches: [main]
-    types: [opened, synchronize, reopened, auto_merge_enabled]
   push:
     branches: [main]
+  workflow_dispatch:
 
 env:
   TEST_AGENT_PUBLIC_DID_SEED: 000000000000000000000000Trustee9
