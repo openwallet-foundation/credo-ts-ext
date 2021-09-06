@@ -2,10 +2,10 @@
 # yarn lockfile v1
 
 
-"@aries-framework/core@0.1.0-alpha.264":
-  version "0.1.0-alpha.264"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.264.tgz#cc762f0804e74199fab3becf46bbe7aba3a69156"
-  integrity sha512-red2MnmVA6D+vARLLtGZsqaRqNVX3tDffNTo6zuqJ6o27VrnRXabR2zMbjixJr25SBpo9hJwXloFB11vMFFwfQ==
+"@aries-framework/core@0.1.0-alpha.268":
+  version "0.1.0-alpha.268"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.268.tgz#2847dbb273051095eabaf598f6451ce328babc6a"
+  integrity sha512-bg9j//3C51zlEoH2GCtgzae+sHG0HFBSzlN6kTnqOMsxFRs4DYzVvTHZg6y+Fi/6h8EMdX5vA9I/xZMV7Xx3TA==
   dependencies:
     "@types/indy-sdk" "^1.16.6"
     "@types/node-fetch" "^2.5.10"
