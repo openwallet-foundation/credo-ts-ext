@@ -11,7 +11,7 @@
   },
   "scripts": {
     "check-types": "yarn workspaces run tsc --noEmit",
-    "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|md|yml|yaml)'",
+    "prettier": "prettier '**/*.+(js|json|ts|md|yml|yaml)'",
     "format": "yarn prettier --write",
     "check-format": "yarn prettier --list-different",
     "test": "jest",
