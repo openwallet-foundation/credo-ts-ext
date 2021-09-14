@@ -1,0 +1,77 @@
+diff --git a/node_modules/@aries-framework/core/build/agent/EnvelopeService.js b/node_modules/@aries-framework/core/build/agent/EnvelopeService.js
+index 2cd9cd5..7177f4b 100644
+--- a/node_modules/@aries-framework/core/build/agent/EnvelopeService.js
++++ b/node_modules/@aries-framework/core/build/agent/EnvelopeService.js
+@@ -40,7 +40,9 @@ let EnvelopeService = class EnvelopeService {
+                     message: wireMessage,
+                 });
+                 this.logger.debug('Forward message created', forwardMessage);
+-                wireMessage = await this.wallet.pack(forwardMessage.toJSON(), [routingKey], senderKey !== null && senderKey !== void 0 ? senderKey : undefined);
++                const forward = forwardMessage.toJSON();
++                messageType_1.replaceNewDidCommPrefixWithLegacyDidSovOnMessage(forward);
++                wireMessage = await this.wallet.pack(forward, [routingKey], senderKey !== null && senderKey !== void 0 ? senderKey : undefined);
+             }
+         }
+         return wireMessage;
+diff --git a/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.d.ts b/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.d.ts
+index b5ba91f..54336ca 100644
+--- a/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.d.ts
++++ b/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.d.ts
+@@ -34,7 +34,10 @@ export declare class ConnectionInvitationMessage extends AgentMessage {
+      * @param domain domain name to use for invitation url
+      * @returns invitation url with base64 encoded invitation
+      */
+-    toUrl(domain?: string): string;
++    toUrl({ domain, useLegacyDidSovPrefix }: {
++        domain: string;
++        useLegacyDidSovPrefix?: boolean;
++    }): string;
+     /**
+      * Create a `ConnectionInvitationMessage` instance from the `c_i` parameter of an URL
+      *
+diff --git a/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js b/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js
+index 55d0e86..6388944 100644
+--- a/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js
++++ b/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js
+@@ -54,8 +54,11 @@ class ConnectionInvitationMessage extends AgentMessage_1.AgentMessage {
+      * @param domain domain name to use for invitation url
+      * @returns invitation url with base64 encoded invitation
+      */
+-    toUrl(domain = 'https://example.com/ssi') {
++    toUrl({ domain, useLegacyDidSovPrefix = false }) {
+         const invitationJson = this.toJSON();
++        if (useLegacyDidSovPrefix) {
++            messageType_1.replaceNewDidCommPrefixWithLegacyDidSovOnMessage(invitationJson);
++        }
+         const encodedInvitation = JsonEncoder_1.JsonEncoder.toBase64URL(invitationJson);
+         const invitationUrl = `${domain}?c_i=${encodedInvitation}`;
+         return invitationUrl;
+diff --git a/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js.map b/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js.map
+index c4e360b..ddfe338 100644
+--- a/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js.map
++++ b/node_modules/@aries-framework/core/build/modules/connections/messages/ConnectionInvitationMessage.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"ConnectionInvitationMessage.js","sourceRoot":"","sources":["../../../../src/modules/connections/messages/ConnectionInvitationMessage.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
++{"version":3,"file":"ConnectionInvitationMessage.js","sourceRoot":"","sources":["../../../../src/modules/connections/messages/ConnectionInvitationMessage.ts"],"names":[],"mappings":"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"}
+\ No newline at end of file
+diff --git a/node_modules/@aries-framework/core/build/utils/messageType.d.ts b/node_modules/@aries-framework/core/build/utils/messageType.d.ts
+index d365234..d2b470f 100644
+--- a/node_modules/@aries-framework/core/build/utils/messageType.d.ts
++++ b/node_modules/@aries-framework/core/build/utils/messageType.d.ts
+@@ -1,5 +1,5 @@
+ import type { UnpackedMessage } from '../types';
+-export declare function replaceLegacyDidSovPrefixOnMessage(message: UnpackedMessage): void;
++export declare function replaceLegacyDidSovPrefixOnMessage(message: UnpackedMessage | Record<string, unknown>): void;
+ export declare function replaceNewDidCommPrefixWithLegacyDidSovOnMessage(message: Record<string, unknown>): void;
+ export declare function replaceLegacyDidSovPrefix(messageType: string): string;
+ export declare function replaceNewDidCommPrefixWithLegacyDidSov(messageType: string): string;
+diff --git a/node_modules/@aries-framework/core/build/utils/messageType.js.map b/node_modules/@aries-framework/core/build/utils/messageType.js.map
+index 070ae9b..90dbee0 100644
+--- a/node_modules/@aries-framework/core/build/utils/messageType.js.map
++++ b/node_modules/@aries-framework/core/build/utils/messageType.js.map
+@@ -1 +1 @@
+-{"version":3,"file":"messageType.js","sourceRoot":"","sources":["../../src/utils/messageType.ts"],"names":[],"mappings":";;;AAEA,SAAgB,kCAAkC,CAAC,OAAwB;IACzE,OAAO,CAAC,OAAO,CAAC,GAAG,yBAAyB,CAAC,OAAO,CAAC,OAAO,CAAC,CAAC,CAAA;AAChE,CAAC;AAFD,gFAEC;AAED,SAAgB,gDAAgD,CAAC,OAAgC;IAC/F,OAAO,CAAC,OAAO,CAAC,GAAG,uCAAuC,CAAC,OAAO,CAAC,OAAO,CAAW,CAAC,CAAA;AACxF,CAAC;AAFD,4GAEC;AAED,SAAgB,yBAAyB,CAAC,WAAmB;IAC3D,MAAM,YAAY,GAAG,qCAAqC,CAAA;IAC1D,MAAM,aAAa,GAAG,qBAAqB,CAAA;IAE3C,IAAI,WAAW,CAAC,UAAU,CAAC,YAAY,CAAC,EAAE;QACxC,OAAO,WAAW,CAAC,OAAO,CAAC,YAAY,EAAE,aAAa,CAAC,CAAA;KACxD;IAED,OAAO,WAAW,CAAA;AACpB,CAAC;AATD,8DASC;AAED,SAAgB,uCAAuC,CAAC,WAAmB;IACzE,MAAM,YAAY,GAAG,qCAAqC,CAAA;IAC1D,MAAM,aAAa,GAAG,qBAAqB,CAAA;IAE3C,IAAI,WAAW,CAAC,UAAU,CAAC,aAAa,CAAC,EAAE;QACzC,OAAO,WAAW,CAAC,OAAO,CAAC,aAAa,EAAE,YAAY,CAAC,CAAA;KACxD;IAED,OAAO,WAAW,CAAA;AACpB,CAAC;AATD,0FASC"}
+\ No newline at end of file
++{"version":3,"file":"messageType.js","sourceRoot":"","sources":["../../src/utils/messageType.ts"],"names":[],"mappings":";;;AAEA,SAAgB,kCAAkC,CAAC,OAAkD;IACnG,OAAO,CAAC,OAAO,CAAC,GAAG,yBAAyB,CAAC,OAAO,CAAC,OAAO,CAAW,CAAC,CAAA;AAC1E,CAAC;AAFD,gFAEC;AAED,SAAgB,gDAAgD,CAAC,OAAgC;IAC/F,OAAO,CAAC,OAAO,CAAC,GAAG,uCAAuC,CAAC,OAAO,CAAC,OAAO,CAAW,CAAC,CAAA;AACxF,CAAC;AAFD,4GAEC;AAED,SAAgB,yBAAyB,CAAC,WAAmB;IAC3D,MAAM,YAAY,GAAG,qCAAqC,CAAA;IAC1D,MAAM,aAAa,GAAG,qBAAqB,CAAA;IAE3C,IAAI,WAAW,CAAC,UAAU,CAAC,YAAY,CAAC,EAAE;QACxC,OAAO,WAAW,CAAC,OAAO,CAAC,YAAY,EAAE,aAAa,CAAC,CAAA;KACxD;IAED,OAAO,WAAW,CAAA;AACpB,CAAC;AATD,8DASC;AAED,SAAgB,uCAAuC,CAAC,WAAmB;IACzE,MAAM,YAAY,GAAG,qCAAqC,CAAA;IAC1D,MAAM,aAAa,GAAG,qBAAqB,CAAA;IAE3C,IAAI,WAAW,CAAC,UAAU,CAAC,aAAa,CAAC,EAAE;QACzC,OAAO,WAAW,CAAC,OAAO,CAAC,aAAa,EAAE,YAAY,CAAC,CAAA;KACxD;IAED,OAAO,WAAW,CAAA;AACpB,CAAC;AATD,0FASC"}
+\ No newline at end of file
