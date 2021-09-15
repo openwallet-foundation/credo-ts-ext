@@ -43,7 +43,7 @@ const CredentialsSelectors = {
     createSelector(credentialsStateSelector, (credentialsState) => {
       const record = credentialsState.records.find((x) => x.id === credentialRecordId)
 
-      record ? JsonTransformer.fromJSON(record, CredentialRecord) : null
+      return record ? JsonTransformer.fromJSON(record, CredentialRecord) : null
     }),
 }
 
