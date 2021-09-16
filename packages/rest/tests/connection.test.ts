@@ -6,7 +6,7 @@ import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { getTestAgent, objectToJson } from './helpers'
+import { getTestAgent, objectToJson } from './utils/helpers'
 
 describe('ConnectionController', () => {
   let app: Express

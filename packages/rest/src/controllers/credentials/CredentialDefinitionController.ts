@@ -1,19 +1,16 @@
-import type { CredentialDefinitionModel } from '../../models/CredentialDefinitionModel'
-import type { CredDef } from 'indy-sdk'
-
 import { Agent, IndySdkError } from '@aries-framework/core'
 import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import {
-  NotFoundError,
+  BadRequestError,
+  Body,
+  Get,
   InternalServerError,
   JsonController,
-  Get,
-  Post,
+  NotFoundError,
   Param,
-  Body,
-  BadRequestError,
+  Post,
 } from 'routing-controllers'
-import { Service, Inject } from 'typedi'
+import { Inject, Service } from 'typedi'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
 
@@ -31,13 +28,9 @@ export class CredentialDefinitionController {
    * Retrieve credentialDefinition by credentialDefinitionId
    */
   @Get('/:credentialDefinitionId')
-  public async getCredentialDefinitionById(
-    @Param('credentialDefinitionId') credentialDefinitionId: string
-  ): Promise<CredentialDefinitionModel> {
+  public async getCredentialDefinitionById(@Param('credentialDefinitionId') credentialDefinitionId: string) {
     try {
-      const credentialDefinition = await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
-
-      return this.mapCredentialDefinition(credentialDefinition)
+      return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
     } catch (error) {
       if (error instanceof IndySdkError) {
         if (isIndyError(error.cause, 'LedgerNotFound')) {
@@ -58,19 +51,15 @@ export class CredentialDefinitionController {
    * Returns CredentialDefinitionId and CredentialDefinition
    */
   @Post('/')
-  public async createCredentialDefinition(
-    @Body() credentialDefinitionRequest: CredentialDefinitionRequest
-  ): Promise<CredentialDefinitionModel> {
+  public async createCredentialDefinition(@Body() credentialDefinitionRequest: CredentialDefinitionRequest) {
     try {
       const schema = await this.agent.ledger.getSchema(credentialDefinitionRequest.schemaId)
 
-      const credentialDefinition = await this.agent.ledger.registerCredentialDefinition({
+      return await this.agent.ledger.registerCredentialDefinition({
         schema,
         supportRevocation: credentialDefinitionRequest.supportRevocation,
         tag: credentialDefinitionRequest.tag,
       })
-
-      return this.mapCredentialDefinition(credentialDefinition)
     } catch (error) {
       if (error instanceof IndySdkError) {
         if (isIndyError(error.cause, 'LedgerNotFound')) {
@@ -78,16 +67,6 @@ export class CredentialDefinitionController {
         }
       }
       throw new InternalServerError(`something went wrong: ${error}`)
-    }
-  }
-
-  private mapCredentialDefinition(credentialDefinition: CredDef): CredentialDefinitionModel {
-    return {
-      id: credentialDefinition.id,
-      ver: credentialDefinition.ver,
-      type: credentialDefinition.type,
-      schemaId: credentialDefinition.schemaId,
-      tag: credentialDefinition.tag,
     }
   }
 }

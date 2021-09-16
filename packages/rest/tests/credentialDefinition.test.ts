@@ -6,7 +6,7 @@ import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { getTestAgent, getTestCredDef } from './helpers'
+import { getTestAgent, getTestCredDef } from './utils/helpers'
 
 describe('CredentialDefinitionController', () => {
   let app: Express

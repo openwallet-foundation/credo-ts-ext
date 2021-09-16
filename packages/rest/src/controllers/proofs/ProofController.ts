@@ -1,4 +1,4 @@
-import { Agent, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
+import { Agent, AgentConfig, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import {
   Body,
@@ -10,6 +10,7 @@ import {
   OnUndefined,
   Param,
   Post,
+  QueryParam,
 } from 'routing-controllers'
 import { Inject, Service } from 'typedi'
 
@@ -17,18 +18,15 @@ import { AcceptProofProposalRequest } from '../../schemas/AcceptProofProposalReq
 import { ProofRequestRequest } from '../../schemas/ProofPresentationRequest'
 import { ProofProposalRequest } from '../../schemas/ProofProposalRequest'
 import { PresentationProofRequestRequest } from '../../schemas/SendProofPresentationRequest'
-import { ProofUtils } from '../../utils/ProofUtils'
 
 @JsonController('/proofs')
 @Service()
 export class ProofController {
   @Inject()
   private agent: Agent
-  private proofUtils: ProofUtils
 
   public constructor(agent: Agent) {
     this.agent = agent
-    this.proofUtils = new ProofUtils(agent)
   }
 
   /**
@@ -49,29 +47,15 @@ export class ProofController {
   }
 
   /**
-   * Retrieve proof record by threadId
-   */
-  @Get('/thread/:threadId')
-  public async getProofByThreadId(@Param('threadId') threadId: string) {
-    try {
-      const proof = await this.proofUtils.getProofByThreadId(threadId)
-
-      return proof.toJSON()
-    } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`proof with threadId "${threadId}" not found.`)
-      }
-      throw new InternalServerError(`something went wrong: ${error}`)
-    }
-  }
-
-  /**
    * Retrieve all ProofRecords
    */
   @Get('/')
-  public async getAllProofs() {
+  public async getAllProofs(@QueryParam('threadId') threadId?: string) {
     const proofs = await this.agent.proofs.getAll()
 
+    if (threadId) {
+      return proofs.flatMap((proof) => (proof.threadId === threadId ? proof.toJSON() : []))
+    }
     return proofs.map((proof) => proof.toJSON())
   }
 
@@ -137,8 +121,10 @@ export class ProofController {
       comment,
     })
 
+    const config = this.agent.injectionContainer.resolve(AgentConfig)
+
     return {
-      message: `https://wwww.example.com/?c_i=${JsonEncoder.toBase64URL(proof.requestMessage.toJSON())}`,
+      message: `${config.endpoints[0]}/?c_i=${JsonEncoder.toBase64URL(proof.requestMessage.toJSON())}`,
       proofRecord: proof.proofRecord,
     }
   }

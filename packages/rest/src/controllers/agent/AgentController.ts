@@ -1,8 +1,6 @@
-import type { AgentInfoModel } from '../../models/AgentInfoModel'
-
 import { Agent, AgentConfig } from '@aries-framework/core'
-import { JsonController, Get } from 'routing-controllers'
-import { Service, Inject } from 'typedi'
+import { Get, JsonController } from 'routing-controllers'
+import { Inject, Service } from 'typedi'
 
 @JsonController('/agent')
 @Service()
@@ -18,7 +16,7 @@ export class AgentController {
    * Retrieve basic agent information
    */
   @Get('/')
-  public async getAgentInfo(): Promise<AgentInfoModel> {
+  public async getAgentInfo() {
     const config = this.agent.injectionContainer.resolve(AgentConfig)
     return {
       label: config.label,
