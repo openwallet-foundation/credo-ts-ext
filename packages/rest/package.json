@@ -1,8 +1,14 @@
 {
   "name": "@aries-framework/rest",
-  "version": "0.1.0",
   "main": "build/index",
   "types": "build/index",
+  "version": "0.1.0",
+  "files": [
+    "build"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
   "license": "Apache-2.0",
   "description": "Aries Framework JavaScript - Rest",
   "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest",
@@ -12,8 +18,7 @@
     "directory": "packages/rest"
   },
   "scripts": {
-    "start": "node dist/sample.js",
-    "dev": "tsnd --respawn src/samples/sample.ts",
+    "dev": "tsnd --respawn samples/sample.ts",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./build",
     "compile": "tsc -p tsconfig.build.json",
