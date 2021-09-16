@@ -5,3 +5,4 @@ yarn-error.log
 .idea
 coverage
 .DS_Store
+logs.txt
