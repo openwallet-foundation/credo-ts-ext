@@ -3,9 +3,9 @@ name: Continuous Integration
 on:
   pull_request:
     branches: [main]
+    types: [opened, synchronize, reopened, labeled]
   push:
     branches: [main]
-  workflow_dispatch:
 
 env:
   TEST_AGENT_PUBLIC_DID_SEED: 000000000000000000000000Trustee9
@@ -19,9 +19,30 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
+  ci-trigger:
+    runs-on: ubuntu-20.04
+    outputs:
+      triggered: ${{ steps.check.outputs.triggered }}
+    steps:
+      - name: Determine if CI should run
+        id: check
+        run: |
+          if [[ "${{ github.event.action }}" == "labeled" && "${{ github.event.label.name }}" == "ci-test" ]]; then
+              export SHOULD_RUN='true'
+          elif [[ "${{ github.event.action }}" == "labeled" && "${{ github.event.label.name }}" != "ci-test" ]]; then
+              export SHOULD_RUN='false'
+          else 
+              export SHOULD_RUN='true'
+          fi
+
+          echo "SHOULD_RUN: ${SHOULD_RUN}"
+          echo "::set-output name=triggered::${SHOULD_RUN}"
+
   validate:
     runs-on: ubuntu-20.04
     name: Validate
+    needs: [ci-trigger]
+    if: needs.ci-trigger.outputs.triggered == 'true'
     steps:
       - name: Checkout aries-framework-javascript-ext
         uses: actions/checkout@v2
@@ -50,6 +71,8 @@ jobs:
   integration-test:
     runs-on: ubuntu-20.04
     name: Integration Tests
+    needs: [ci-trigger]
+    if: needs.ci-trigger.outputs.triggered == 'true'
 
     strategy:
       matrix:
