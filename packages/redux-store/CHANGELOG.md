@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.1.0...redux-store-v0.1.1) (2021-09-16)
+
+
+### Bug Fixes
+
+* **redux-store:** return record by id ([#18](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/18)) ([2829129](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/28291297c04ef7be5b24a10fb7cd68dded5da849))
+
 ## 0.1.0 (2021-09-06)
 
 
