@@ -7,13 +7,6 @@ const config: Config.InitialOptions = {
   coverageDirectory: '<rootDir>/coverage/',
   verbose: true,
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
-  moduleNameMapper: {
-    '@aries-framework/(.+)': [
-      '<rootDir>/../../packages/$1/src',
-      '<rootDir>/../packages/$1/src',
-      '<rootDir>/packages/$1/src',
-    ],
-  },
   globals: {
     'ts-jest': {
       isolatedModules: true,
