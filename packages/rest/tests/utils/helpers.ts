@@ -8,8 +8,8 @@ import {
 } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 
-import { setupAgent } from '../src/utils/agent'
-import { TestLogger } from '../src/utils/logger'
+import { setupAgent } from './agent'
+import { TestLogger } from './logger'
 
 export async function getTestAgent(name: string, port: number) {
   const logger = new TestLogger(LogLevel.fatal)

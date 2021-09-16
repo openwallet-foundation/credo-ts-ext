@@ -1,12 +1,11 @@
 import type { Agent, ProofRecord, ProofRequest } from '@aries-framework/core'
 import type { Express } from 'express'
 
-import { ProofRepository } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { getTestProof, objectToJson, getTestProofRequest, getTestAgent } from './helpers'
+import { getTestAgent, getTestProof, getTestProofRequest, objectToJson } from './utils/helpers'
 
 describe('ProofController', () => {
   let app: Express
@@ -38,6 +37,24 @@ describe('ProofController', () => {
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(result.map(objectToJson))
     })
+    test('should optionally filter on threadId', async () => {
+      const spy = jest.spyOn(bobAgent.proofs, 'getAll').mockResolvedValueOnce([testProof])
+      const getResult = (): Promise<ProofRecord[]> => spy.mock.results[0].value
+
+      const response = await request(app).get('/proofs').query({ threadId: testProof.threadId })
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(result.map(objectToJson))
+    })
+    test('should return empty array if nothing found', async () => {
+      jest.spyOn(bobAgent.proofs, 'getAll').mockResolvedValueOnce([testProof])
+
+      const response = await request(app).get('/proofs').query({ threadId: 'string' })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([])
+    })
   })
 
   describe('Get by proof by id', () => {
@@ -53,25 +70,6 @@ describe('ProofController', () => {
     })
     test('should return 404 not found when proof record not found', async () => {
       const response = await request(app).get(`/proofs/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
-
-      expect(response.statusCode).toBe(404)
-    })
-  })
-
-  describe('Get by proof by threadId', () => {
-    test('should return proof record', async () => {
-      const proofrepository = bobAgent.injectionContainer.resolve(ProofRepository)
-      const spy = jest.spyOn(proofrepository, 'getSingleByQuery').mockResolvedValueOnce(testProof)
-      const getResult = (): Promise<ProofRecord> => spy.mock.results[0].value
-
-      const response = await request(app).get(`/proofs/thread/${testProof.threadId}`)
-
-      expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith({ threadId: testProof.threadId })
-      expect(response.body).toEqual(objectToJson(await getResult()))
-    })
-    test('should return 404 not found when proof record not found', async () => {
-      const response = await request(app).get(`/proofs/thread/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
 
       expect(response.statusCode).toBe(404)
     })

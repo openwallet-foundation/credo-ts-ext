@@ -5,7 +5,7 @@ import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { getTestAgent } from './helpers'
+import { getTestAgent } from './utils/helpers'
 
 describe('AgentController', () => {
   let app: Express

@@ -1,6 +1,6 @@
 {
   "name": "@aries-framework/rest",
-  "version": "0.1.0",
+  "version": "0.0.0",
   "main": "build/index",
   "types": "build/index",
   "license": "Apache-2.0",
@@ -13,7 +13,7 @@
   },
   "scripts": {
     "start": "node dist/sample.js",
-    "dev": "tsnd --respawn src/sample.ts",
+    "dev": "tsnd --respawn src/samples/sample.ts",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./build",
     "compile": "tsc -p tsconfig.build.json",
@@ -21,8 +21,8 @@
     "test": "jest"
   },
   "dependencies": {
-    "class-transformer": "^0.3.1",
-    "class-validator": "^0.12.2",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
     "class-validator-jsonschema": "^3.1.0",
     "express": "^4.17.1",
     "ngrok": "^4.2.2",
@@ -30,7 +30,6 @@
     "routing-controllers": "^0.9.0",
     "routing-controllers-openapi": "^3.1.0",
     "swagger-ui-express": "^4.1.6",
-    "tslog": "^3.2.1",
     "typedi": "^0.10.0"
   },
   "devDependencies": {
@@ -46,6 +45,7 @@
     "jest": "^27.1.0",
     "patch-package": "^6.4.7",
     "supertest": "^6.1.6",
+    "tslog": "^3.2.1",
     "ts-jest": "^27.0.5",
     "ts-node-dev": "^1.1.8",
     "typescript": "^4.4.2"

@@ -5,7 +5,7 @@ import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { objectToJson, getTestCredential, getTestAgent } from './helpers'
+import { objectToJson, getTestCredential, getTestAgent } from './utils/helpers'
 
 describe('CredentialController', () => {
   let app: Express
@@ -159,7 +159,6 @@ describe('CredentialController', () => {
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      // TODO: Fix -> expect(spy).toHaveBeenCalledWith(conId, proposalReq)
       expect(response.body).toEqual(objectToJson(result))
     })
     test('should give 404 not found when connection is not found', async () => {
