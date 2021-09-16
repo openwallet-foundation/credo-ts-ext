@@ -1,8 +1,8 @@
+import 'reflect-metadata'
 import type { Express } from 'express'
 
 import { Agent } from '@aries-framework/core'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
-import 'reflect-metadata'
 import { createExpressServer, getMetadataArgsStorage, useContainer } from 'routing-controllers'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import * as swaggerUiExpress from 'swagger-ui-express'

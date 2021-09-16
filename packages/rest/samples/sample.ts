@@ -1,9 +1,10 @@
-import { LogLevel, AutoAcceptCredential } from '@aries-framework/core'
+import { AutoAcceptCredential, LogLevel } from '@aries-framework/core'
 import { connect } from 'ngrok'
 
-import { setupAgent } from '../../tests/utils/agent'
-import { TestLogger } from '../../tests/utils/logger'
-import { startServer } from '../index'
+import { setupAgent } from '../tests/utils/agent'
+import { TestLogger } from '../tests/utils/logger'
+
+import { startServer } from './../src/index'
 
 const run = async () => {
   const logger = new TestLogger(LogLevel.debug)
