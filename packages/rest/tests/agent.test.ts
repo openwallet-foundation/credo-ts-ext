@@ -34,6 +34,6 @@ describe('AgentController', () => {
   })
 
   afterAll(async () => {
-    agent.shutdown({ deleteWallet: true })
+    await agent.shutdown({ deleteWallet: true })
   })
 })

@@ -189,7 +189,7 @@ describe('ConnectionController', () => {
   })
 
   afterAll(async () => {
-    bobAgent.shutdown({ deleteWallet: true })
-    aliceAgent.shutdown({ deleteWallet: true })
+    await bobAgent.shutdown({ deleteWallet: true })
+    await aliceAgent.shutdown({ deleteWallet: true })
   })
 })
