@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.1.0...rest-v0.1.1) (2021-09-16)
+
+
+### Bug Fixes
+
+* **rest:** require package.json to avoid error ([43e683a](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/43e683a11f4eed1d848f612c6e32e82d62141769))
+
 ## 0.1.0 (2021-09-16)
 
 
