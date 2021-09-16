@@ -8,7 +8,8 @@ import { routingControllersToSpec } from 'routing-controllers-openapi'
 import * as swaggerUiExpress from 'swagger-ui-express'
 import { Container } from 'typedi'
 
-import * as packageJson from '../package.json'
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const packageJson = require('../package.json')
 
 export const setupServer = async (agent: Agent) => {
   useContainer(Container)
