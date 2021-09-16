@@ -114,6 +114,10 @@ jobs:
       - name: Checkout aries-framework-javascript-ext
         uses: actions/checkout@v2
 
+      # Some packages need indy-sdk for node as part of yarn install
+      - name: Setup Libindy
+        uses: ./.github/actions/setup-libindy
+
       - name: Setup NodeJS
         uses: ./.github/actions/setup-node
         with:
@@ -151,6 +155,10 @@ jobs:
       # Initiate release process if release was created
       - name: Checkout aries-framework-javascript-ext
         uses: actions/checkout@v2
+        if: ${{ steps.release-please.outputs.release_created }}
+      # Some packages need indy-sdk for node as part of yarn install
+      - name: Setup Libindy
+        uses: ./.github/actions/setup-libindy
         if: ${{ steps.release-please.outputs.release_created }}
       - name: Setup NodeJS
         uses: ./.github/actions/setup-node
