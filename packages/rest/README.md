@@ -46,7 +46,7 @@ yarn add @aries-framework/rest
 
 ### Quick start
 
-> The API is generated using the OpenAPI Schema (Swagger). However this schema is not representing the real API. A lot of types are not correct. Keep this in mind when using this package.
+> The OpenAPI spec is generated using the OpenAPI Schema (Swagger). However this schema is not representing the real API. A lot of types are not correct. Keep this in mind when using this package.
 
 Aries Framework JavaScript REST API provides a Swagger (OpenAPI) definition of the exposed API. After you start the REST API the generated API Client will be available on `/docs`. 
 
