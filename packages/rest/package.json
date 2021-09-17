@@ -10,7 +10,7 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Aries Framework JavaScript - Rest",
+  "description": "Rest endpoint wrapper for using your agent over HTTP",
   "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest",
   "repository": {
     "type": "git",
