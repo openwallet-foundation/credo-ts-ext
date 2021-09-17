@@ -46,24 +46,21 @@ yarn add @aries-framework/rest
 
 ### Quick start
 
-> The API is generated using the OpenAPI Schema (Swagger). However this schema is not representing the real API. A lot of types are not correct. Keep this in mind when using this package.
+> The OpenAPI spec is generated using the OpenAPI Schema (Swagger). However this schema is not representing the real API. A lot of types are not correct. Keep this in mind when using this package.
 
-Aries Framework JavaScript REST API provides a Swagger (OpenAPI) definition of the exposed API. After you start the REST API the generated API Client will be available on `/docs`. 
-
+Aries Framework JavaScript REST API provides a Swagger (OpenAPI) definition of the exposed API. After you start the REST API the generated API Client will be available on `/docs`.
 
 ### Example of usage
 
 ```ts
+import { startServer } from '@aries-framework/rest'
 
-import { startServer } from "@aries-framework/rest";
-
-// The startServer function requires an initialized agent and a port. 
+// The startServer function requires an initialized agent and a port.
 // An example of how to setup an agent is located in the `samples` directory.
 const run = async (agent: Agent) => {
-  await startServer(agent, 3000);
+  await startServer(agent, 3000)
 }
 
 // A Swagger (OpenAPI) definition is exposed on http://localhost:3000/docs
-run() 
-
+run()
 ```
