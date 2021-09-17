@@ -16,7 +16,7 @@ export const setupServer = async (agent: Agent) => {
   Container.set(Agent, agent)
 
   const app: Express = createExpressServer({
-    controllers: [__dirname + '/controllers/**/*.ts'],
+    controllers: [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js'],
     cors: true,
   })
 
