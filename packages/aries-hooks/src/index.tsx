@@ -1,6 +1,6 @@
 import React, { createContext, useState, useEffect, useContext } from 'react'
 
-import { downloadGenesis, storeGenesis } from './genesis-utils'
+import { downloadGenesis, storeGenesis } from '../genesis-utils'
 
 import {
   Agent,
