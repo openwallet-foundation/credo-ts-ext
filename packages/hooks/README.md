@@ -1,10 +1,10 @@
-# Aries Hooks
+# Aries Framework Hooks
 
 This package exposes useful hooks that allow you to easily interact with AFJ.
 
-Everything exported from Aries Hooks:
+Everything exported from Hooks:
 
-```
+```ts
 import
 	AgentProvider, {
 	useAgent,
@@ -17,13 +17,13 @@ import
 	useProofs,
 	useProofById,
 	useProofByState
-} from 'aries-hooks'
+} from '@aries-framework/hooks'
 ```
 
 First step is to wrap your entire app in our `<AgentProvider/>`. The provider takes two props, the first is your `agentConfig` object and the second is your `genesisUrl`. The base of your app should look something like this:
 
-```
-import AgentProvider from "aries-hooks"
+```ts
+import AgentProvider from "@aries-framework/hooks"
 
 const App = () => {
 	return (
@@ -40,7 +40,7 @@ The `useAgent` hook returns `{ agent, loading }` so anytime you need access to a
 
 The following is an example of how you could use the `useConnections` hook to render a full list of all a user's connections.
 
-```
+```ts
 import { useConnections } from 'aries-hooks'
 
 const MyConnectionsComponent = () => {

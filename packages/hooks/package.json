@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/aries-hooks",
+  "name": "@aries-framework/hooks",
   "version": "1.0.1",
   "description": "",
   "main": "index.tsx",
