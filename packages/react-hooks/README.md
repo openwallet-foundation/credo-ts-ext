@@ -60,7 +60,7 @@ The three base hooks: `useConnections`, `useCredentials`, and `useProofs` work j
 
 Each base hook has a `ById` version that returns a singular record. For example if I wanted only a specific connectionRecord, I'd do this.
 ```ts
-const connection = useConnection(id)
+const connection = useConnectionById(id)
 ```
 
 More commonly, you'll want to get a filtered list of records based off of their state. Well, Hooray! We have a `ByState` version as well. For example, you can do this:
