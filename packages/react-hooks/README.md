@@ -1,6 +1,6 @@
-# Aries Framework Hooks
+# React Hooks for Aries Framework JavaScript
 
-This package exposes useful hooks that allow you to easily interact with AFJ.
+This package exposes useful React hooks that allow you to easily interact with AFJ.
 
 Everything exported from Hooks:
 
@@ -17,13 +17,13 @@ import
 	useProofs,
 	useProofById,
 	useProofByState
-} from '@aries-framework/hooks'
+} from '@aries-framework/react-hooks'
 ```
 
 First step is to wrap your entire app in our `<AgentProvider/>`. The provider takes two props, the first is your `agentConfig` object and the second is your `genesisUrl`. The base of your app should look something like this:
 
 ```ts
-import AgentProvider from "@aries-framework/hooks"
+import AgentProvider from "@aries-framework/react-hooks"
 
 const App = () => {
 	return (
@@ -41,7 +41,7 @@ The `useAgent` hook returns `{ agent, loading }` so anytime you need access to a
 The following is an example of how you could use the `useConnections` hook to render a full list of all a user's connections.
 
 ```ts
-import { useConnections } from 'aries-hooks'
+import { useConnections } from '@aries-framework/react-hooks'
 
 const MyConnectionsComponent = () => {
 	// all base hooks return an array of objects and a loading boolean
@@ -59,10 +59,14 @@ const MyConnectionsComponent = () => {
 The three base hooks: `useConnections`, `useCredentials`, and `useProofs` work just like the above! Just call the hook, destructure the data, and pass it through!
 
 Each base hook has a `ById` version that returns a singular record. For example if I wanted only a specific connectionRecord, I'd do this.
-`const { connection } = useConnection(id)`
+```ts
+const connection = useConnection(id)
+```
 
 More commonly, you'll want to get a filtered list of records based off of their state. Well, Hooray! We have a `ByState` version as well. For example, you can do this:
-`const credentials = useCredentialByState(CredentialState.OfferReceived)`
+```ts
+const credentials = useCredentialByState(CredentialState.OfferReceived)
+```
 
 Boom Bam Baby!
 That's all you need to know to get that data flowinggg.
