@@ -58,7 +58,7 @@ import { startServer } from '@aries-framework/rest'
 // The startServer function requires an initialized agent and a port.
 // An example of how to setup an agent is located in the `samples` directory.
 const run = async (agent: Agent) => {
-  await startServer(agent, 3000)
+  await startServer(agent, { port: 3000 })
 }
 
 // A Swagger (OpenAPI) definition is exposed on http://localhost:3000/docs

@@ -17,7 +17,7 @@ describe('CredentialController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Rest Credential Test Alice', 3005)
     bobAgent = await getTestAgent('Rest Credential Test Bob', 3006)
-    app = await setupServer(bobAgent)
+    app = await setupServer(bobAgent, { port: 3000 })
 
     testConnectionId = '000000aa-aa00-00a0-aa00-000a0aa00000'
     testCredential = getTestCredential()

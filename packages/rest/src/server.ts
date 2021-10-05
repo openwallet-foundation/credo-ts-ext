@@ -12,20 +12,20 @@ import { Container } from 'typedi'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
 
-export const setupServer = async (agent: Agent, config?: ServerConfig) => {
+export const setupServer = async (agent: Agent, config: ServerConfig) => {
   useContainer(Container)
   Container.set(Agent, agent)
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   let controllers: Array<Function | string> = [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js']
 
-  if (config?.controllers) {
-    controllers = [...controllers, ...config?.controllers]
+  if (config.extraControllers) {
+    controllers = [...controllers, ...config.extraControllers]
   }
 
   const app: Express = createExpressServer({
     controllers: controllers as unknown as string[],
-    cors: true,
+    cors: config.cors ?? true,
   })
 
   const schemas = validationMetadatasToSchemas({

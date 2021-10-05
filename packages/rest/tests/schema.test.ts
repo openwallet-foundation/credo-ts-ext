@@ -13,7 +13,7 @@ describe('AgentController', () => {
 
   beforeAll(async () => {
     agent = await getTestAgent('Rest Schema Test', 3010)
-    app = await setupServer(agent)
+    app = await setupServer(agent, { port: 3000 })
   })
 
   describe('get schema by id', () => {
