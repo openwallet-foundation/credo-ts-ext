@@ -1,7 +1,8 @@
 import 'reflect-metadata'
+import type { ServerConfig } from './utils/ServerConfig'
 import type { Express } from 'express'
 
-import { Agent } from '@aries-framework/core'
+import { Agent, AgentConfig } from '@aries-framework/core'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import { createExpressServer, getMetadataArgsStorage, useContainer } from 'routing-controllers'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
@@ -11,12 +12,19 @@ import { Container } from 'typedi'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
 
-export const setupServer = async (agent: Agent) => {
+export const setupServer = async (agent: Agent, config?: ServerConfig) => {
   useContainer(Container)
   Container.set(Agent, agent)
 
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  let controllers: Array<Function | string> = [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js']
+
+  if (config?.controllers) {
+    controllers = [...controllers, ...config?.controllers]
+  }
+
   const app: Express = createExpressServer({
-    controllers: [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js'],
+    controllers: controllers as unknown as string[],
     cors: true,
   })
 
@@ -24,6 +32,7 @@ export const setupServer = async (agent: Agent) => {
     refPointerPrefix: '#/components/schemas/',
   })
 
+  const agentConf = agent.injectionContainer.resolve(AgentConfig)
   const storage = getMetadataArgsStorage()
   const spec = routingControllersToSpec(storage, undefined, {
     components: {
@@ -31,7 +40,7 @@ export const setupServer = async (agent: Agent) => {
     },
     info: {
       description: packageJson.description,
-      title: packageJson.name,
+      title: agentConf.label,
       version: packageJson.version,
     },
   })
