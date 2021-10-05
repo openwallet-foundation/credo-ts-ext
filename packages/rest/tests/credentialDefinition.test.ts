@@ -15,7 +15,7 @@ describe('CredentialDefinitionController', () => {
 
   beforeAll(async () => {
     agent = await getTestAgent('Rest CredentialDefinition Test', 3007)
-    app = await setupServer(agent)
+    app = await setupServer(agent, { port: 3000 })
     testCredDef = getTestCredDef()
   })
 

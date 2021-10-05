@@ -1,11 +1,12 @@
 import 'reflect-metadata'
 
+import type { ServerConfig } from './utils/ServerConfig'
 import type { Agent } from '@aries-framework/core'
 
 import { setupServer } from './server'
 
-export const startServer = async (agent: Agent, port: number) => {
-  const app = await setupServer(agent)
+export const startServer = async (agent: Agent, config: ServerConfig) => {
+  const app = await setupServer(agent, config)
 
-  app.listen(port)
+  app.listen(config.port)
 }

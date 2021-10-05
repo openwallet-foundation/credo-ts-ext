@@ -16,7 +16,7 @@ describe('ConnectionController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Rest Connection Test Alice', 3002)
     bobAgent = await getTestAgent('Rest Connection Test Bob', 3003)
-    app = await setupServer(bobAgent)
+    app = await setupServer(bobAgent, { port: 3000 })
 
     await bobAgent.connections.createConnection()
   })

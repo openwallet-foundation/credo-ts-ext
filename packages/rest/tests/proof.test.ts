@@ -19,7 +19,7 @@ describe('ProofController', () => {
     aliceAgent = await getTestAgent('Rest Proof Test Alice', 3008)
     bobAgent = await getTestAgent('Rest Proof Test Bob', 3009)
 
-    app = await setupServer(bobAgent)
+    app = await setupServer(bobAgent, { port: 3000 })
 
     testConnectionId = '000000aa-aa00-00a0-aa00-000a0aa00000'
     testProof = getTestProof()

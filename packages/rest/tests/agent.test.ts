@@ -13,7 +13,7 @@ describe('AgentController', () => {
 
   beforeAll(async () => {
     agent = await getTestAgent('rest agent test', 3001)
-    app = await setupServer(agent)
+    app = await setupServer(agent, { port: 3000 })
   })
 
   describe('Get agent info', () => {
