@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.2.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.1.2...rest-v0.2.0) (2021-10-05)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rest:** The port property has been moved into a new configuration object.
+
+### Features
+
+* **rest:** added support for custom controllers ([#39](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/39)) ([8362e30](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/8362e30d8a4c9ef24779769f81b6e74f7f5978cc))
+
 ### [0.1.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.1.1...rest-v0.1.2) (2021-09-17)
 
 
