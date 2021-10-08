@@ -1,0 +1,1 @@
+export { PushNotificationsModule } from './PushNotificationsModule'
