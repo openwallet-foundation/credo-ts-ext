@@ -1,6 +1,6 @@
 import { AgentMessage } from '@aries-framework/core/build/agent/AgentMessage'
 import { Expose } from 'class-transformer'
-import { Equals, IsEnum, IsString } from 'class-validator'
+import { Equals, IsString } from 'class-validator'
 
 import { DeviceVendor } from '../services'
 
@@ -41,6 +41,6 @@ export class PushNotificationsDeviceInfoMessage extends AgentMessage {
   public deviceVendor!: DeviceVendor
 
   @Expose({ name: 'service' })
-  @IsEnum(String)
+  @IsString()
   public notificationsService!: NotificationsService
 }

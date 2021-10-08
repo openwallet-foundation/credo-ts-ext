@@ -1,4 +1,3 @@
-import { ConnectionService } from '@aries-framework/core'
 import { Lifecycle, scoped } from 'tsyringe'
 
 import {
@@ -17,29 +16,19 @@ export interface DeviceInfo {
 
 @scoped(Lifecycle.ContainerScoped)
 export class PushNotificationsService {
-  public constructor(private connectionService: ConnectionService) {}
-
-  public async createSetNativeDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
-    const message = new PushNotificationsSetNativeDeviceInfoMessage(deviceInfo)
-    const connection = await this.connectionService.getById(connectionId)
-    return { message, connection }
+  public createSetNativeDeviceInfo(deviceInfo: DeviceInfo) {
+    return new PushNotificationsSetNativeDeviceInfoMessage(deviceInfo)
   }
 
-  public async createSetFcmDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
-    const message = new PushNotificationsSetFcmDeviceInfoMessage(deviceInfo)
-    const connection = await this.connectionService.getById(connectionId)
-    return { message, connection }
+  public createSetFcmDeviceInfo(deviceInfo: DeviceInfo) {
+    return new PushNotificationsSetFcmDeviceInfoMessage(deviceInfo)
   }
 
-  public async createSetExpoDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
-    const message = new PushNotificationsSetExpoDeviceInfoMessage(deviceInfo)
-    const connection = await this.connectionService.getById(connectionId)
-    return { message, connection }
+  public createSetExpoDeviceInfo(deviceInfo: DeviceInfo) {
+    return new PushNotificationsSetExpoDeviceInfoMessage(deviceInfo)
   }
 
-  public async createGetDeviceInfo(connectionId: string) {
-    const message = new PushNotificationsGetDeviceInfoMessage()
-    const connection = await this.connectionService.getById(connectionId)
-    return { message, connection }
+  public createGetDeviceInfo() {
+    return new PushNotificationsGetDeviceInfoMessage()
   }
 }
