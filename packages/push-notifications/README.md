@@ -56,6 +56,8 @@ In order for this plugin to work we have to inject it into the agent to access a
 // Agent already has been setup BUT NOT YET INITIALIZED
 import { PushNotificationsModule } from '@aries-framework/push-notifications'
 
+const agent = new Agent(/** agent config... */)
+
 const pushNotificationsModule = agent.injectionContainer.resolve(PushNotificationsModule)
 
 await agent.initialize()

@@ -18,8 +18,6 @@
     "directory": "packages/push-notifications"
   },
   "scripts": {
-    "lint": "eslint --ignore-path ../../.gitignore .",
-    "check-types": "yarn tsc --noEmit",
     "sample": "tsnd --respawn samples/sample.ts",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./build",
@@ -27,22 +25,18 @@
     "prepublishOnly": "yarn run build",
     "test": "jest"
   },
-  "dependencies": {
-    "class-transformer": "^0.4.0",
-    "class-validator": "^0.13.1",
-    "tsyringe": "^4.6.0"
-  },
   "devDependencies": {
     "@aries-framework/core": "0.1.0-alpha.280",
     "@aries-framework/node": "0.1.0-alpha.280",
     "@types/jest": "^27.0.2",
-    "@types/node": "^16.10.3",
     "ts-node-dev": "^1.1.8",
     "tslog": "^3.2.2",
-    "typescript": "^4.4.2"
+    "typescript": "~4.4.2"
   },
   "peerDependencies": {
     "@aries-framework/core": "0.1.0-alpha.280",
-    "@aries-framework/node": "0.1.0-alpha.280"
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
+    "tsyringe": "^4.6.0"
   }
 }

@@ -1,7 +1,6 @@
 import { AutoAcceptCredential, LogLevel } from '@aries-framework/core'
 
 import { PushNotificationsModule } from '../src/PushNotificationsModule'
-import { DeviceVendor } from '../src/services'
 import { setupAgent } from '../tests/utils/agent'
 import { TestLogger } from '../tests/utils/logger'
 
@@ -26,16 +25,16 @@ const run = async () => {
   await agent.initialize()
 
   // Pushes a native device token and vendor to the specified connection record
-  pushNotificationsModule.sendNativeDeviceInfo(
-    { deviceToken: '123', deviceVendor: DeviceVendor.Android },
-    'a-valid-connection-id'
-  )
+  pushNotificationsModule.sendNativeDeviceInfo('a-valid-connection-id', {
+    deviceToken: '123',
+    deviceVendor: 'ios',
+  })
 
   // Pushes an expo device token and vendor to the specified connection record
-  pushNotificationsModule.sendExpoDeviceInfo(
-    { deviceToken: '123', deviceVendor: DeviceVendor.Ios },
-    'a-valid-connection-id'
-  )
+  pushNotificationsModule.sendExpoDeviceInfo('a-valid-connection-id', {
+    deviceToken: '123',
+    deviceVendor: 'android',
+  })
 
   // Gets the push notification device infomation located at the other agent behind the connection
   pushNotificationsModule.getDeviceInfo('a-valid-connection-id')
