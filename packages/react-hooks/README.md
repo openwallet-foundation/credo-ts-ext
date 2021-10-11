@@ -1,4 +1,25 @@
-# React Hooks for Aries Framework JavaScript
+<p align="center">
+  <br />
+  <img
+    alt="Hyperledger Aries logo"
+    src="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
+    height="250px"
+  />
+</p>
+<h1 align="center"><b>React Hooks for Aries Framework JavaScript</b></h1>
+<p align="center">
+  <a
+    href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"
+    ><img
+      alt="License"
+      src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
+  /></a>
+  <a href="https://www.typescriptlang.org/"
+    ><img
+      alt="typescript"
+      src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg"
+  /></a>
+</p>
 
 This package exposes useful React hooks that allow you to easily interact with AFJ.
 
@@ -20,14 +41,25 @@ import
 } from '@aries-framework/react-hooks'
 ```
 
-First step is to wrap your entire app in our `<AgentProvider/>`. The provider takes two props, the first is your `agentConfig` object and the second is your `genesisUrl`. The base of your app should look something like this:
+First step is to wrap your entire app in our `<AgentProvider/>`. The provider takes an initialized agent. The base of your app should look something like this:
 
 ```ts
 import AgentProvider from "@aries-framework/react-hooks"
 
 const App = () => {
+	const [agent, setAgent] = useState(undefined)
+
+	const initializeAgent = async () => {
+		await // initialize your agent
+		setAgent(yourAgent)
+	}
+
+	useEffect(() => {
+		initializeAgent()
+	}, [])
+
 	return (
-		<AgentProvider agentConfig={Your full agent config object} genesisUrl={Your genesis url} >
+		<AgentProvider agent={agent}>
 			// Your app here
 		</AgentProvider>
 	)

@@ -1,11 +1,7 @@
 import React, { createContext, useState, useEffect, useContext } from 'react'
 
-import { downloadGenesis, storeGenesis } from '../genesis-utils'
-
 import {
   Agent,
-  InitConfig,
-  HttpOutboundTransport,
   ConnectionState,
   CredentialState,
   ProofState,
@@ -18,13 +14,10 @@ import {
   ConnectionRecord,
   ProofRecord,
   CredentialRecord,
-  WsOutboundTransport,
   BasicMessageRecord,
   BasicMessageReceivedEvent,
   BasicMessageEventTypes,
 } from '@aries-framework/core'
-
-import { agentDependencies } from '@aries-framework/react-native'
 
 const TAG = 'Aries-Hooks:'
 
@@ -107,12 +100,11 @@ export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessa
 }
 
 interface Props {
-  agentConfig: InitConfig
-  genesisUrl: string
+  agent: Agent | undefined
   children: any
 }
 
-const AgentProvider: React.FC<Props> = ({ agentConfig, genesisUrl, children }) => {
+const AgentProvider: React.FC<Props> = ({ agent, children }) => {
   const [agentState, setAgentState] = useState<{
     agent: Agent | null
     loading: boolean
@@ -138,33 +130,23 @@ const AgentProvider: React.FC<Props> = ({ agentConfig, genesisUrl, children }) =
   }>({ basicMessages: [], loading: true })
 
   useEffect(() => {
-    setInitialState()
-  }, [])
+      setInitialState()
+  }, [agent])
 
   const setInitialState = async () => {
     try {
-      const genesis = await downloadGenesis(genesisUrl)
-      const genesisPath = await storeGenesis(genesis, 'genesis.txn')
+      if(agent) {
+        const connections = await agent.connections.getAll()
+        const credentials = await agent.credentials.getAll()
+        const proofs = await agent.proofs.getAll()
+        const basicMessages = await agent.basicMessages.findAllByQuery({})
 
-      const agent = new Agent({ ...agentConfig, genesisPath }, agentDependencies)
-
-      const wsTransport = new WsOutboundTransport()
-      const httpTransport = new HttpOutboundTransport()
-
-      agent.registerOutboundTransport(wsTransport)
-      agent.registerOutboundTransport(httpTransport)
-
-      await agent.initialize()
-      const connections = await agent.connections.getAll()
-      const credentials = await agent.credentials.getAll()
-      const proofs = await agent.proofs.getAll()
-      const basicMessages = await agent.basicMessages.findAllByQuery({})
-
-      setAgentState({ agent, loading: false })
-      setConnectionState({ connections, loading: false })
-      setCredentialState({ credentials, loading: false })
-      setProofState({ proofs, loading: false })
-      setBasicMessageState({ basicMessages, loading: false })
+        setAgentState({ agent, loading: false })
+        setConnectionState({ connections, loading: false })
+        setCredentialState({ credentials, loading: false })
+        setProofState({ proofs, loading: false })
+        setBasicMessageState({ basicMessages, loading: false })
+      }
     } catch (e) {
       console.error(TAG, 'ERROR IN SET_INITIAL_STATE:', e)
     }
