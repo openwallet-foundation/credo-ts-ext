@@ -19,123 +19,176 @@ import {
   ProofEventTypes,
   BasicMessageEventTypes,
 } from '@aries-framework/core'
-import React, { createContext, useState, useEffect, useContext } from 'react'
+import * as React from 'react'
+import { createContext, useState, useEffect, useContext } from 'react'
 
-const AgentContext = createContext<any>({})
-const ConnectionContext = createContext<any>({})
-const CredentialContext = createContext<any>({})
-const ProofContext = createContext<any>({})
-const BasicMessageContext = createContext<any>({})
+interface AgentContextInterface {
+  loading: boolean
+  agent?: Agent
+}
+
+interface ConnectionContextInterface {
+  loading: boolean
+  connections: ConnectionRecord[]
+}
+
+interface CredentialContextInterface {
+  loading: boolean
+  credentials: CredentialRecord[]
+}
+
+interface ProofContextInterface {
+  loading: boolean
+  proofs: ProofRecord[]
+}
+
+interface BasicMessageContextInterface {
+  loading: boolean
+  basicMessages: BasicMessageRecord[]
+}
+
+const AgentContext = createContext<AgentContextInterface | undefined>(undefined)
+const ConnectionContext = createContext<ConnectionContextInterface | undefined>(undefined)
+const CredentialContext = createContext<CredentialContextInterface | undefined>(undefined)
+const ProofContext = createContext<ProofContextInterface | undefined>(undefined)
+const BasicMessageContext = createContext<BasicMessageContextInterface | undefined>(undefined)
 
 // Agent
-export const useAgent = (): { agent: Agent; loading: boolean } => {
-  return useContext(AgentContext)
+export const useAgent = () => {
+  const agentContext = useContext(AgentContext)
+
+  if (!agentContext) {
+    throw new Error('useAgent must be used within a AgentContextProvider')
+  }
+
+  return agentContext
 }
 
 // Connection
-export const useConnections = (): { connections: ConnectionRecord[]; loading: boolean } => {
-  return useContext(ConnectionContext)
+export const useConnections = () => {
+  const connectionContext = useContext(ConnectionContext)
+
+  if (!connectionContext) {
+    throw new Error('useConnections must be used within a ConnectionContextProvider')
+  }
+
+  return connectionContext
 }
 
 export const useConnectionById = (id: string): ConnectionRecord | undefined => {
-  const { connections } = useContext(ConnectionContext)
-  const connection = connections.find((c: ConnectionRecord) => c.id === id)
-  return connection
+  const { connections } = useConnections()
+
+  return connections.find((c) => c.id === id)
 }
 
 export const useConnectionByState = (state: ConnectionState): ConnectionRecord[] => {
-  const connectionState = useContext(ConnectionContext)
-  const connections = connectionState.connections.filter((c: ConnectionRecord) => c.state === state)
-  return connections
+  const { connections } = useConnections()
+
+  return connections.filter((c) => c.state === state)
 }
 
 // Credential
-export const useCredentials = (): { credentials: CredentialRecord[]; loading: boolean } => {
-  return useContext(CredentialContext)
+export const useCredentials = () => {
+  const credentialContext = useContext(CredentialContext)
+
+  if (!credentialContext) {
+    throw new Error('useCredentials must be used within a CredentialContextProvider')
+  }
+
+  return credentialContext
 }
 
 export const useCredentialById = (id: string): CredentialRecord | undefined => {
-  const { credentials } = useContext(CredentialContext)
-  const credential = credentials.find((c: CredentialRecord) => c.id === id)
-  return credential
+  const { credentials } = useCredentials()
+
+  return credentials.find((c: CredentialRecord) => c.id === id)
 }
 
 export const useCredentialByState = (state: CredentialState): CredentialRecord[] => {
-  const credentialState = useContext(CredentialContext)
-  const credentials = credentialState.credentials.filter((c: CredentialRecord) => c.state === state)
-  return credentials
+  const { credentials } = useCredentials()
+
+  return credentials.filter((c: CredentialRecord) => c.state === state)
 }
 
 // Proofs
 export const useProofs = (): { proofs: ProofRecord[]; loading: boolean } => {
-  return useContext(ProofContext)
+  const proofContext = useContext(ProofContext)
+
+  if (!proofContext) {
+    throw new Error('useProofs must be used within a ProofContextProvider')
+  }
+
+  return proofContext
 }
 
 export const useProofById = (id: string): ProofRecord | undefined => {
-  const { proofs } = useContext(ProofContext)
-  const proof = proofs.find((p: ProofRecord) => p.id === id)
-  return proof
+  const { proofs } = useProofs()
+
+  return proofs.find((p: ProofRecord) => p.id === id)
 }
 
 export const useProofByState = (state: ProofState): ProofRecord[] => {
-  const proofState = useContext(ProofContext)
-  const proofs = proofState.proofs.filter((p: ProofRecord) => p.state === state)
-  return proofs
+  const { proofs } = useProofs()
+
+  return proofs.filter((p: ProofRecord) => p.state === state)
 }
 
-//BasicMessages
+const useBasicMessages = () => {
+  const basicMessageContext = useContext(BasicMessageContext)
+
+  if (!basicMessageContext) {
+    throw new Error('useBasicMessages must be used within a BasicMessageContextProvider')
+  }
+
+  return basicMessageContext
+}
+
+// BasicMessages
 export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessageRecord[] => {
-  const { basicMessages } = useContext(BasicMessageContext)
-  const connectionMessages = basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId)
-  return connectionMessages
+  const { basicMessages } = useBasicMessages()
+
+  return basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId)
 }
 
 interface Props {
   agent: Agent | undefined
-  children: any
 }
 
 const AgentProvider: React.FC<Props> = ({ agent, children }) => {
-  const [agentState, setAgentState] = useState<{
-    agent: Agent | null
-    loading: boolean
-  }>({
-    agent: null,
+  const [agentState, setAgentState] = useState<AgentContextInterface>({
     loading: true,
+    agent,
   })
-  const [connectionState, setConnectionState] = useState<{ connections: ConnectionRecord[] | []; loading: boolean }>({
+
+  const [connectionState, setConnectionState] = useState<ConnectionContextInterface>({
     connections: [],
     loading: true,
   })
-  const [credentialState, setCredentialState] = useState<{ credentials: CredentialRecord[] | []; loading: boolean }>({
+  const [credentialState, setCredentialState] = useState<CredentialContextInterface>({
     credentials: [],
     loading: true,
   })
-  const [proofState, setProofState] = useState<{ proofs: ProofRecord[] | []; loading: boolean }>({
+  const [proofState, setProofState] = useState<ProofContextInterface>({
     proofs: [],
     loading: true,
   })
-  const [basicMessageState, setBasicMessageState] = useState<{
-    basicMessages: BasicMessageRecord[] | []
-    loading: boolean
-  }>({ basicMessages: [], loading: true })
+  const [basicMessageState, setBasicMessageState] = useState<BasicMessageContextInterface>({
+    basicMessages: [],
+    loading: true,
+  })
 
   const setInitialState = async () => {
-    try {
-      if (agent) {
-        const connections = await agent.connections.getAll()
-        const credentials = await agent.credentials.getAll()
-        const proofs = await agent.proofs.getAll()
-        const basicMessages = await agent.basicMessages.findAllByQuery({})
+    if (agent) {
+      const connections = await agent.connections.getAll()
+      const credentials = await agent.credentials.getAll()
+      const proofs = await agent.proofs.getAll()
+      const basicMessages = await agent.basicMessages.findAllByQuery({})
 
-        setAgentState({ agent, loading: false })
-        setConnectionState({ connections, loading: false })
-        setCredentialState({ credentials, loading: false })
-        setProofState({ proofs, loading: false })
-        setBasicMessageState({ basicMessages, loading: false })
-      }
-    } catch (e) {
-      //error
+      setAgentState({ agent, loading: false })
+      setConnectionState({ connections, loading: false })
+      setCredentialState({ credentials, loading: false })
+      setProofState({ proofs, loading: false })
+      setBasicMessageState({ basicMessages, loading: false })
     }
   }
 
@@ -146,12 +199,14 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
   useEffect(() => {
     if (!connectionState.loading) {
       const listener = (event: ConnectionStateChangedEvent) => {
-        let newConnectionsState = connectionState.connections
+        // We shouldn't modify react state directly
+        const newConnectionsState = [...connectionState.connections]
+
         const index = newConnectionsState.findIndex((connection) => connection.id === event.payload.connectionRecord.id)
         if (index > -1) {
           newConnectionsState[index] = event.payload.connectionRecord
         } else {
-          newConnectionsState = [...newConnectionsState, event.payload.connectionRecord]
+          newConnectionsState.unshift(event.payload.connectionRecord)
         }
 
         setConnectionState({
@@ -159,23 +214,23 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
           connections: newConnectionsState,
         })
       }
-      agentState.agent?.events.on(ConnectionEventTypes.ConnectionStateChanged, listener)
+      agent?.events.on(ConnectionEventTypes.ConnectionStateChanged, listener)
 
       return () => {
-        agentState.agent?.events.off(ConnectionEventTypes.ConnectionStateChanged, listener)
+        agent?.events.off(ConnectionEventTypes.ConnectionStateChanged, listener)
       }
     }
-  }, [connectionState])
+  }, [connectionState, agent])
 
   useEffect(() => {
     if (!credentialState.loading) {
       const listener = async (event: CredentialStateChangedEvent) => {
-        let newCredentialsState = credentialState.credentials
+        const newCredentialsState = [...credentialState.credentials]
         const index = newCredentialsState.findIndex((credential) => credential.id === event.payload.credentialRecord.id)
         if (index > -1) {
           newCredentialsState[index] = event.payload.credentialRecord
         } else {
-          newCredentialsState = [...newCredentialsState, event.payload.credentialRecord]
+          newCredentialsState.unshift(event.payload.credentialRecord)
         }
 
         setCredentialState({
@@ -184,23 +239,23 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
         })
       }
 
-      agentState.agent?.events.on(CredentialEventTypes.CredentialStateChanged, listener)
+      agent?.events.on(CredentialEventTypes.CredentialStateChanged, listener)
 
       return () => {
-        agentState.agent?.events.off(CredentialEventTypes.CredentialStateChanged, listener)
+        agent?.events.off(CredentialEventTypes.CredentialStateChanged, listener)
       }
     }
-  }, [credentialState])
+  }, [credentialState, agent])
 
   useEffect(() => {
     if (!proofState.loading) {
       const listener = (event: ProofStateChangedEvent) => {
-        let newProofsState = proofState.proofs
+        const newProofsState = [...proofState.proofs]
         const index = newProofsState.findIndex((proof) => proof.id === event.payload.proofRecord.id)
         if (index > -1) {
           newProofsState[index] = event.payload.proofRecord
         } else {
-          newProofsState = [...newProofsState, event.payload.proofRecord]
+          newProofsState.unshift(event.payload.proofRecord)
         }
 
         setProofState({
@@ -209,25 +264,25 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
         })
       }
 
-      agentState.agent?.events.on(ProofEventTypes.ProofStateChanged, listener)
+      agent?.events.on(ProofEventTypes.ProofStateChanged, listener)
 
       return () => {
-        agentState.agent?.events.off(ProofEventTypes.ProofStateChanged, listener)
+        agent?.events.off(ProofEventTypes.ProofStateChanged, listener)
       }
     }
-  }, [proofState])
+  }, [proofState, agent])
 
   useEffect(() => {
     if (!basicMessageState.loading) {
       const listener = (event: BasicMessageReceivedEvent) => {
-        let newBasicMessageState = basicMessageState.basicMessages
+        const newBasicMessageState = [...basicMessageState.basicMessages]
         const index = newBasicMessageState.findIndex(
           (basicMessage) => basicMessage.id === event.payload.basicMessageRecord.id
         )
         if (index > -1) {
           newBasicMessageState[index] = event.payload.basicMessageRecord
         } else {
-          newBasicMessageState = [...newBasicMessageState, event.payload.basicMessageRecord]
+          newBasicMessageState.unshift(event.payload.basicMessageRecord)
         }
 
         setBasicMessageState({
@@ -236,10 +291,10 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
         })
       }
 
-      agentState.agent?.events.on(BasicMessageEventTypes.BasicMessageReceived, listener)
+      agent?.events.on(BasicMessageEventTypes.BasicMessageReceived, listener)
 
       return () => {
-        agentState.agent?.events.off(BasicMessageEventTypes.BasicMessageReceived, listener)
+        agent?.events.off(BasicMessageEventTypes.BasicMessageReceived, listener)
       }
     }
   }, [basicMessageState])
