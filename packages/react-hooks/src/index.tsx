@@ -19,7 +19,6 @@ import {
   ProofEventTypes,
   BasicMessageEventTypes,
 } from '@aries-framework/core'
-
 import React, { createContext, useState, useEffect, useContext } from 'react'
 
 const AgentContext = createContext<any>({})
