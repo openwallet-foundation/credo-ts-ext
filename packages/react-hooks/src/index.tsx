@@ -1,13 +1,8 @@
-import React, { createContext, useState, useEffect, useContext } from 'react'
-
-import {
+import type {
   Agent,
   ConnectionState,
   CredentialState,
   ProofState,
-  ConnectionEventTypes,
-  CredentialEventTypes,
-  ProofEventTypes,
   ConnectionStateChangedEvent,
   CredentialStateChangedEvent,
   ProofStateChangedEvent,
@@ -16,8 +11,16 @@ import {
   CredentialRecord,
   BasicMessageRecord,
   BasicMessageReceivedEvent,
+} from '@aries-framework/core'
+
+import {
+  ConnectionEventTypes,
+  CredentialEventTypes,
+  ProofEventTypes,
   BasicMessageEventTypes,
 } from '@aries-framework/core'
+
+import React, { createContext, useState, useEffect, useContext } from 'react'
 
 const AgentContext = createContext<any>({})
 const ConnectionContext = createContext<any>({})
@@ -118,13 +121,9 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
     loading: boolean
   }>({ basicMessages: [], loading: true })
 
-  useEffect(() => {
-      setInitialState()
-  }, [agent])
-
   const setInitialState = async () => {
     try {
-      if(agent) {
+      if (agent) {
         const connections = await agent.connections.getAll()
         const credentials = await agent.credentials.getAll()
         const proofs = await agent.proofs.getAll()
@@ -140,6 +139,10 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
       //error
     }
   }
+
+  useEffect(() => {
+    setInitialState()
+  }, [agent])
 
   useEffect(() => {
     if (!connectionState.loading) {
