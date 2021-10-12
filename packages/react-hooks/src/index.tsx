@@ -297,7 +297,7 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
         agent?.events.off(BasicMessageEventTypes.BasicMessageReceived, listener)
       }
     }
-  }, [basicMessageState])
+  }, [basicMessageState, agent])
 
   return (
     <AgentContext.Provider value={agentState}>
