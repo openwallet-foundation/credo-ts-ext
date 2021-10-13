@@ -4,7 +4,7 @@ import { Equals, IsString } from 'class-validator'
 
 import { DeviceVendor } from '../services'
 
-export type NotificationsService = 'fcm' | 'expo' | 'native' | string
+export type NotificationsService = 'native' | string
 
 export type DeviceInfoResponse = {
   deviceToken: string

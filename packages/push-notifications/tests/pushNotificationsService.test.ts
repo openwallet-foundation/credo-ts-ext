@@ -40,44 +40,4 @@ describe('PushNotifications', () => {
       })
     })
   })
-
-  describe('Create set Expo push notification Message', () => {
-    test('Should create a valid https://didcomm.org/push-notifications/1.0/set-expo-device-info message ', async () => {
-      const message = pushNotificationsService.createSetExpoDeviceInfo({ deviceToken: '123', deviceVendor: 'android' })
-
-      const jsonMessage = classToPlain(message)
-
-      expect(jsonMessage).toEqual({
-        '@type': 'https://didcomm.org/push-notifications/1.0/set-expo-device-info',
-        device_token: '123',
-        device_vendor: 'android',
-      })
-    })
-  })
-
-  describe('Create set fcm push notification Message', () => {
-    test('Should create a valid https://didcomm.org/push-notifications/1.0/set-fcm-device-info message ', async () => {
-      const message = pushNotificationsService.createSetFcmDeviceInfo({ deviceToken: '123', deviceVendor: 'ios' })
-
-      const jsonMessage = classToPlain(message)
-
-      expect(jsonMessage).toEqual({
-        '@type': 'https://didcomm.org/push-notifications/1.0/set-fcm-device-info',
-        device_token: '123',
-        device_vendor: 'ios',
-      })
-    })
-  })
-
-  describe('Create get push notification Message', () => {
-    test('Should create a valid https://didcomm.org/push-notifications/1.0/get-device-info message ', async () => {
-      const message = pushNotificationsService.createGetDeviceInfo()
-
-      const jsonMessage = classToPlain(message)
-
-      expect(jsonMessage).toEqual({
-        '@type': 'https://didcomm.org/push-notifications/1.0/get-device-info',
-      })
-    })
-  })
 })

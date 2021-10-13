@@ -28,10 +28,10 @@
     tsyringe "^4.5.0"
     uuid "^8.3.2"
 
-"@aries-framework/core@0.1.0-alpha.280", "@aries-framework/core@0.1.0-alpha.280+e316e04":
-  version "0.1.0-alpha.280"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.280.tgz#3f53625d4bdaa7e6bacb161e6d0266bdb930364e"
-  integrity sha512-YUKQydCyngFzK2HyTCG/40YdO0gsxFk+tecgq5VqpB0HXMG4jSVQxHKIx5o+8YLzojoJOP8PRicKcDOehjHkfg==
+"@aries-framework/core@0.1.0-alpha.282", "@aries-framework/core@0.1.0-alpha.282+a2b655a":
+  version "0.1.0-alpha.282"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.282.tgz#164049815b83a94015522c23539d1b0b5eeba93f"
+  integrity sha512-GZVrLGB4jbREEiPjTMIXUsc8hXcVP/tdt0wXUXJPofeRrEEch0sp1NmxnlalgsWeC1vLtuE79wIRlUCfrUxAbQ==
   dependencies:
     "@types/indy-sdk" "^1.16.6"
     "@types/node-fetch" "^2.5.10"
@@ -65,12 +65,12 @@
     node-fetch "^2.6.1"
     ws "^7.5.3"
 
-"@aries-framework/node@0.1.0-alpha.280":
-  version "0.1.0-alpha.280"
-  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.1.0-alpha.280.tgz#5ce624cbecde8266fce5edfee0d431ad3bae85f8"
-  integrity sha512-/Fh0opE8YnBa5DPcumlWIvl2Jcb4fEuWtBHpiEMafrv6oIMa6NTlcUN4I3FZFaFZmPwj0Hc/fvvQc4DyPCm3Fw==
+"@aries-framework/node@0.1.0-alpha.282":
+  version "0.1.0-alpha.282"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.1.0-alpha.282.tgz#215c2c68f8192e484c7df542b2fdf07ebcdc9aa8"
+  integrity sha512-hWZmgjR1c3dw6H5utZ9OscyCSPTjAKYia7rYShHcmDSugCiphOX5rJpZsgw13kAnGTdMVeoZmUylgb365aJkYA==
   dependencies:
-    "@aries-framework/core" "0.1.0-alpha.280+e316e04"
+    "@aries-framework/core" "0.1.0-alpha.282+a2b655a"
     express "^4.17.1"
     indy-sdk "^1.16.0-dev-1634"
     node-fetch "^2.6.1"

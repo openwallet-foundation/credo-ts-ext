@@ -37,32 +37,6 @@ export class PushNotificationsModule {
   }
 
   /**
-   * Sends the expo device info (token and vendor) to another agent via a `connectionId`
-   */
-  public async sendExpoDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
-    const connection = await this.connectionService.getById(connectionId)
-    const message = this.pushNotificationService.createSetExpoDeviceInfo(deviceInfo)
-
-    connection.assertReady()
-
-    const outbound = createOutboundMessage(connection, message)
-    await this.messageSender.sendMessage(outbound)
-  }
-
-  /**
-   * Sends the fcm device info (token and vendor) to another agent via a `connectionId`
-   */
-  public async sendFcmDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
-    const connection = await this.connectionService.getById(connectionId)
-    const message = this.pushNotificationService.createSetFcmDeviceInfo(deviceInfo)
-
-    connection.assertReady()
-
-    const outbound = createOutboundMessage(connection, message)
-    await this.messageSender.sendMessage(outbound)
-  }
-
-  /**
    * Gets the device info (token, vendor, service) from another agent via the `connectionId`
    */
   public async getDeviceInfo(connectionId: string) {

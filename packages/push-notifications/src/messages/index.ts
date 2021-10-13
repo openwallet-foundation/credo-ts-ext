@@ -1,5 +1,3 @@
 export { PushNotificationsGetDeviceInfoMessage } from './PushNotificationsGetDeviceInfoMessage'
-export { PushNotificationsSetFcmDeviceInfoMessage } from './PushNotificationsSetFcmDeviceInfoMessage'
 export { PushNotificationsSetNativeDeviceInfoMessage } from './PushNotificationsSetNativeDeviceInfoMessage'
-export { PushNotificationsSetExpoDeviceInfoMessage } from './PushNotificationsSetExpoDeviceInfoMessage'
 export { PushNotificationsDeviceInfoMessage } from './PushNotificationsDeviceInfoMessage'
