@@ -30,12 +30,6 @@ const run = async () => {
     deviceVendor: 'ios',
   })
 
-  // Pushes an expo device token and vendor to the specified connection record
-  pushNotificationsModule.sendExpoDeviceInfo('a-valid-connection-id', {
-    deviceToken: '123',
-    deviceVendor: 'android',
-  })
-
   // Gets the push notification device infomation located at the other agent behind the connection
   pushNotificationsModule.getDeviceInfo('a-valid-connection-id')
 }
