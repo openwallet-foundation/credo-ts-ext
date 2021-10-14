@@ -57,7 +57,7 @@ module.exports = {
       },
     },
     {
-      files: ['*.test.ts', '**/__tests__/**', '**/tests/**', 'jest.*.ts'],
+      files: ['*.test.ts', '**/__tests__/**', '**/tests/**', 'jest.*.ts', '**/samples/**'],
       env: {
         jest: true,
         node: false,
