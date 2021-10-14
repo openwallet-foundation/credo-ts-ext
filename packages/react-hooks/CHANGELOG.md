@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.1.1...react-hooks-v0.1.2) (2021-10-14)
+
+
+### Bug Fixes
+
+* **react-hooks:** add jsx react to tsconfig ([4701369](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/47013691f173016860abbef0a7fc7541c33302c3))
+
 ### [0.1.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.1.0...react-hooks-v0.1.1) (2021-10-14)
 
 
