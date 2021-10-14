@@ -11,7 +11,9 @@
     "type": "git"
   },
   "scripts": {
-    "check-types": "yarn workspaces run tsc --noEmit",
+    "check-types": "yarn check-types:build && yarn check-types:tests",
+    "check-types:tests": "tsc -p tsconfig.test.json --noEmit",
+    "check-types:build": "yarn workspaces run tsc --noEmit -p tsconfig.build.json",
     "prettier": "prettier '**/*.+(js|json|ts|md|yml|yaml)'",
     "format": "yarn prettier --write",
     "check-format": "yarn prettier --list-different",

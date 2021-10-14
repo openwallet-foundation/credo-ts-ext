@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.build.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@aries-framework/*": ["packages/*/src"]
+    },
+    "types": ["jest", "node"]
+  },
+  "include": ["tests", "samples", "**/tests", "**/samples"],
+  "exclude": ["node_modules", "build", "**/build/**"]
+}
