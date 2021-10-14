@@ -55,6 +55,7 @@ All packages are placed in the [`packages/`](./packages) directory.
 | -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------- |
 | [`@aries-framework/redux-store`](https://www.npmjs.com/package/@aries-framework/redux-store) | ![@aries-framework/redux-store version](https://img.shields.io/npm/v/@aries-framework/redux-store) | Redux toolkit wrapper around Aries Framework JavaScript |
 | [`@aries-framework/rest`](https://www.npmjs.com/package/@aries-framework/rest)               | ![@aries-framework/rest version](https://img.shields.io/npm/v/@aries-framework/rest)               | Rest endpoint wrapper for using your agent over HTTP    |
+| [`@aries-framework/react-hooks`](https://www.npmjs.com/package/@aries-framework/react-hooks) | ![@aries-framework/react-hooks version](https://img.shields.io/mpm/v/@aries-framework/react-hooks) | React Hooks for data handling and agent interaction     |
 
 ## Contributing
 
