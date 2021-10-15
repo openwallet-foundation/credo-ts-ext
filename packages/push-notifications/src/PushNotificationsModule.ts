@@ -39,6 +39,8 @@ export class PushNotificationsModule {
    */
   public async getDeviceInfo(connectionId: string) {
     const connection = await this.connectionService.getById(connectionId)
+    connection.assertReady()
+
     const message = this.pushNotificationService.createGetDeviceInfo()
 
     const outbound = createOutboundMessage(connection, message)

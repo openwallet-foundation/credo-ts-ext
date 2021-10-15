@@ -23,7 +23,7 @@ export class PushNotificationsSetNativeDeviceInfoMessage extends AgentMessage {
 
   @Equals(PushNotificationsSetNativeDeviceInfoMessage.type)
   public readonly type = PushNotificationsSetNativeDeviceInfoMessage.type
-  public static readonly type = 'https://didcomm.org/push-notifications/1.0/set-native-device-info'
+  public static readonly type = 'https://didcomm.org/push-notifications-native/1.0/set-device-info'
 
   @Expose({ name: 'device_token' })
   @IsString()
