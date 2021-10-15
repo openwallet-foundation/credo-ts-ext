@@ -1,13 +1,6 @@
-import type {
-  Agent,
-  CredentialState,
-  CredentialStateChangedEvent,
-  CredentialRecord,
-} from '@aries-framework/core'
+import type { Agent, CredentialState, CredentialStateChangedEvent, CredentialRecord } from '@aries-framework/core'
 
-import {
-  CredentialEventTypes,
-} from '@aries-framework/core'
+import { CredentialEventTypes } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
@@ -57,7 +50,6 @@ const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
     setInitialState()
   }, [agent])
 
-
   useEffect(() => {
     if (!credentialState.loading) {
       const listener = async (event: CredentialStateChangedEvent) => {
@@ -83,9 +75,7 @@ const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
     }
   }, [credentialState, agent])
 
-  return (
-    <CredentialContext.Provider value={credentialState}>{children}</CredentialContext.Provider>
-  )
+  return <CredentialContext.Provider value={credentialState}>{children}</CredentialContext.Provider>
 }
 
 export default CredentialProvider

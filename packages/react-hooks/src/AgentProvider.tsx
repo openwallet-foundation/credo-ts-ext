@@ -3,10 +3,10 @@ import type { Agent } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
+import BasicMessageProvider from './BasicMessageProvider'
 import ConnectionProvider from './ConnectionProvider'
 import CredentialProvider from './CredentialProvider'
 import ProofProvider from './ProofProvider'
-import BasicMessageProvider from './BasicMessageProvider'
 
 interface AgentContextInterface {
   loading: boolean

@@ -1,13 +1,6 @@
-import type {
-  Agent,
-  ConnectionState,
-  ConnectionStateChangedEvent,
-  ConnectionRecord,
-} from '@aries-framework/core'
+import type { Agent, ConnectionState, ConnectionStateChangedEvent, ConnectionRecord } from '@aries-framework/core'
 
-import {
-  ConnectionEventTypes,
-} from '@aries-framework/core'
+import { ConnectionEventTypes } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
@@ -82,9 +75,7 @@ const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
     }
   }, [connectionState, agent])
 
-  return (
-    <ConnectionContext.Provider value={connectionState}>{children}</ConnectionContext.Provider>
-  )
+  return <ConnectionContext.Provider value={connectionState}>{children}</ConnectionContext.Provider>
 }
 
 export default ConnectionProvider

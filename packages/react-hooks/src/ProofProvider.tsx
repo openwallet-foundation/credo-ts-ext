@@ -1,13 +1,6 @@
-import type {
-  Agent,
-  ProofState,
-  ProofStateChangedEvent,
-  ProofRecord,
-} from '@aries-framework/core'
+import type { Agent, ProofState, ProofStateChangedEvent, ProofRecord } from '@aries-framework/core'
 
-import {
-  ProofEventTypes,
-} from '@aries-framework/core'
+import { ProofEventTypes } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
@@ -40,7 +33,7 @@ interface Props {
   agent: Agent | undefined
 }
 
-const ProofProvider: React.FC<Props> = ({agent, children}) => {
+const ProofProvider: React.FC<Props> = ({ agent, children }) => {
   const [proofState, setProofState] = useState<ProofContextInterface>({
     proofs: [],
     loading: true,
@@ -82,9 +75,7 @@ const ProofProvider: React.FC<Props> = ({agent, children}) => {
     }
   }, [proofState, agent])
 
-  return (
-    <ProofContext.Provider value={proofState}>{children}</ProofContext.Provider>
-  )
+  return <ProofContext.Provider value={proofState}>{children}</ProofContext.Provider>
 }
 
 export default ProofProvider

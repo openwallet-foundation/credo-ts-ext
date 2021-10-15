@@ -1,12 +1,6 @@
-import type {
-  Agent,
-  BasicMessageRecord,
-  BasicMessageReceivedEvent,
-} from '@aries-framework/core'
+import type { Agent, BasicMessageRecord, BasicMessageReceivedEvent } from '@aries-framework/core'
 
-import {
-  BasicMessageEventTypes,
-} from '@aries-framework/core'
+import { BasicMessageEventTypes } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
@@ -34,7 +28,7 @@ interface Props {
   agent: Agent | undefined
 }
 
-const BasicMessageProvider: React.FC<Props> = ({agent, children}) => {
+const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
   const [basicMessageState, setBasicMessageState] = useState<BasicMessageContextInterface>({
     basicMessages: [],
     loading: true,
@@ -78,7 +72,7 @@ const BasicMessageProvider: React.FC<Props> = ({agent, children}) => {
     }
   }, [basicMessageState, agent])
 
-  return (<BasicMessageContext.Provider value={basicMessageState}>{children}</BasicMessageContext.Provider>)
+  return <BasicMessageContext.Provider value={basicMessageState}>{children}</BasicMessageContext.Provider>
 }
 
 export default BasicMessageProvider
