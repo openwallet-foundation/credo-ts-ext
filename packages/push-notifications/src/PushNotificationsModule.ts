@@ -1,8 +1,6 @@
 import type { DeviceInfo } from './services'
 
-import { ConnectionService } from '@aries-framework/core'
-import { Dispatcher } from '@aries-framework/core/build/agent/Dispatcher'
-import { MessageSender } from '@aries-framework/core/build/agent/MessageSender'
+import { ConnectionService, Dispatcher, MessageSender } from '@aries-framework/core'
 import { createOutboundMessage } from '@aries-framework/core/build/agent/helpers'
 import { Lifecycle, scoped } from 'tsyringe'
 
@@ -28,9 +26,9 @@ export class PushNotificationsModule {
    */
   public async sendNativeDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
     const connection = await this.connectionService.getById(connectionId)
-    const message = this.pushNotificationService.createSetNativeDeviceInfo(deviceInfo)
-
     connection.assertReady()
+
+    const message = this.pushNotificationService.createSetNativeDeviceInfo(deviceInfo)
 
     const outbound = createOutboundMessage(connection, message)
     await this.messageSender.sendMessage(outbound)

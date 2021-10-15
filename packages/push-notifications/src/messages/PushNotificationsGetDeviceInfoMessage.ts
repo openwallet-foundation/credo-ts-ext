@@ -1,4 +1,4 @@
-import { AgentMessage } from '@aries-framework/core/build/agent/AgentMessage'
+import { AgentMessage } from '@aries-framework/core'
 import { Equals } from 'class-validator'
 
 /**
