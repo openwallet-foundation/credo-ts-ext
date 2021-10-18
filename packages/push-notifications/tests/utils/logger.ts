@@ -25,7 +25,7 @@ export class TestLogger extends BaseLogger {
   public constructor(logLevel: LogLevel, name?: string) {
     super(logLevel)
 
-                    this.logLevel.toExponential()
+    this.logLevel.toExponential()
 
     this.logger = new Logger({
       name,

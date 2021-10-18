@@ -1,7 +1,6 @@
-import type { TestLogger } from './logger'
 import type { InitConfig, Logger } from '@aries-framework/core'
 
-import { Agent, HttpOutboundTransport, AutoAcceptCredential, AutoAcceptProof } from '@aries-framework/core'
+import { Agent, AutoAcceptCredential, AutoAcceptProof, HttpOutboundTransport } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
 
 export const setupAgent = ({
