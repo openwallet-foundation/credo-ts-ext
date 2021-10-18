@@ -1,8 +1,7 @@
-import { AutoAcceptCredential, LogLevel } from '@aries-framework/core'
+import { AutoAcceptCredential, ConsoleLogger, LogLevel } from '@aries-framework/core'
 
 import { PushNotificationsModule } from '../src/PushNotificationsModule'
 import { setupAgent } from '../tests/utils/agent'
-import { TestLogger } from '../tests/utils/logger'
 
 /**
  * replace `a-valid-connection-id` with the connection id you want to interact with
@@ -13,7 +12,7 @@ const run = async () => {
   const agent = setupAgent({
     publicDidSeed: '12312312312312312312312312312356',
     name: 'Aries Test Agent',
-    logger: new TestLogger(LogLevel.debug),
+    logger: new ConsoleLogger(LogLevel.debug),
     autoAcceptConnection: true,
     autoAcceptCredential: AutoAcceptCredential.ContentApproved,
   })
@@ -25,13 +24,13 @@ const run = async () => {
   await agent.initialize()
 
   // Pushes a native device token and vendor to the specified connection record
-  pushNotificationsModule.sendNativeDeviceInfo('a-valid-connection-id', {
+  pushNotificationsModule.setDeviceInfo('a-valid-connection', {
     deviceToken: '123',
-    deviceVendor: 'ios',
+    devicePlatform: 'ios',
   })
 
   // Gets the push notification device infomation located at the other agent behind the connection
-  pushNotificationsModule.getDeviceInfo('a-valid-connection-id')
+  pushNotificationsModule.getDeviceInfo('a-valid-connection')
 }
 
 void run()

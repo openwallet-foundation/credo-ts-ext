@@ -4,8 +4,6 @@ import { AgentMessage } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
 import { Equals, IsString } from 'class-validator'
 
-import { DeviceVendor } from '../services'
-
 /**
  * Message to set the native device information at another agent for push notifications
  *
@@ -16,8 +14,8 @@ export class PushNotificationsSetNativeDeviceInfoMessage extends AgentMessage {
     super()
 
     if (options) {
+      this.devicePlatform = options.devicePlatform
       this.deviceToken = options.deviceToken
-      this.deviceVendor = options.deviceVendor
     }
   }
 
@@ -25,11 +23,11 @@ export class PushNotificationsSetNativeDeviceInfoMessage extends AgentMessage {
   public readonly type = PushNotificationsSetNativeDeviceInfoMessage.type
   public static readonly type = 'https://didcomm.org/push-notifications-native/1.0/set-device-info'
 
+  @Expose({ name: 'device_platform' })
+  @IsString()
+  public devicePlatform!: string
+
   @Expose({ name: 'device_token' })
   @IsString()
   public deviceToken!: string
-
-  @Expose({ name: 'device_vendor' })
-  @IsString()
-  public deviceVendor!: DeviceVendor
 }

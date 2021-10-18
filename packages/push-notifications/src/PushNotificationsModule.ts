@@ -24,7 +24,7 @@ export class PushNotificationsModule {
   /**
    * Sends the native device info (token and vendor) to another agent via a `connectionId`
    */
-  public async sendNativeDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
+  public async setDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
     const connection = await this.connectionService.getById(connectionId)
     connection.assertReady()
 

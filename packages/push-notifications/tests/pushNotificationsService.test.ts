@@ -27,15 +27,15 @@ describe('PushNotifications', () => {
   describe('Create set Native push notification Message', () => {
     test('Should create a valid https://didcomm.org/push-notifications-native/1.0/set-device-info message ', async () => {
       const message = pushNotificationsService.createSetNativeDeviceInfo({
-        deviceToken: '123',
-        deviceVendor: 'android',
+        deviceToken: '1234-1234-1234-1234',
+        devicePlatform: 'android',
       })
 
       const jsonMessage = classToPlain(message)
 
       expect(jsonMessage).toEqual({
         '@type': 'https://didcomm.org/push-notifications-native/1.0/set-device-info',
-        device_token: '123',
+        device_token: '1234-1234-1234-1234',
         device_vendor: 'android',
       })
     })

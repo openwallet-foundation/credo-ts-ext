@@ -1,5 +1,5 @@
 import type { TestLogger } from './logger'
-import type { InitConfig } from '@aries-framework/core'
+import type { InitConfig, Logger } from '@aries-framework/core'
 
 import { Agent, HttpOutboundTransport, AutoAcceptCredential, AutoAcceptProof } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
@@ -11,7 +11,7 @@ export const setupAgent = ({
 }: {
   publicDidSeed: string
   name: string
-  logger: TestLogger
+  logger: Logger
   autoAcceptConnection: boolean
   autoAcceptCredential: AutoAcceptCredential
 }): Agent => {

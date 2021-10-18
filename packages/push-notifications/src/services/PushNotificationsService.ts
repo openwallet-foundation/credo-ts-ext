@@ -2,11 +2,11 @@ import { Lifecycle, scoped } from 'tsyringe'
 
 import { PushNotificationsGetDeviceInfoMessage, PushNotificationsSetNativeDeviceInfoMessage } from '../messages'
 
-export type DeviceVendor = 'android' | 'ios' | string
+export type DevicePlatform = 'android' | 'ios' | string
 
 export interface DeviceInfo {
   deviceToken: string
-  deviceVendor: DeviceVendor
+  devicePlatform: DevicePlatform
 }
 
 @scoped(Lifecycle.ContainerScoped)

@@ -1,16 +1,8 @@
+import type { DeviceInfo } from '../services'
+
 import { AgentMessage } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
 import { Equals, IsString } from 'class-validator'
-
-import { DeviceVendor } from '../services'
-
-export type NotificationsService = 'native' | string
-
-export type DeviceInfoResponse = {
-  deviceToken: string
-  deviceVendor: DeviceVendor
-  service: NotificationsService
-}
 
 /**
  * Message to get the device information from another agent for push notifications
@@ -18,13 +10,12 @@ export type DeviceInfoResponse = {
  * @todo ADD RFC
  */
 export class PushNotificationsDeviceInfoMessage extends AgentMessage {
-  public constructor(options: DeviceInfoResponse) {
+  public constructor(options: DeviceInfo & { notificationsService: string }) {
     super()
 
     if (options) {
       this.deviceToken = options.deviceToken
-      this.deviceVendor = options.deviceVendor
-      this.notificationsService = options.service
+      this.devicePlatform = options.devicePlatform
     }
   }
 
@@ -36,11 +27,7 @@ export class PushNotificationsDeviceInfoMessage extends AgentMessage {
   @IsString()
   public deviceToken!: string
 
-  @Expose({ name: 'device_vendor' })
+  @Expose({ name: 'device_platform' })
   @IsString()
-  public deviceVendor!: DeviceVendor
-
-  @Expose({ name: 'service' })
-  @IsString()
-  public notificationsService!: NotificationsService
+  public devicePlatform!: string
 }
