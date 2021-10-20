@@ -1,19 +1,22 @@
-import 'reflect-metadata'
-
 import type { Agent } from '@aries-framework/core'
 
 import { classToPlain } from 'class-transformer'
 
+import 'reflect-metadata'
 import { PushNotificationsService } from '../src/services'
 
-import { getTestAgent } from './utils/helpers'
+import { setupAgent } from './utils/agent'
 
 describe('PushNotifications', () => {
   let notificationReceiver: Agent
   let pushNotificationsService: PushNotificationsService
 
   beforeAll(async () => {
-    notificationReceiver = getTestAgent('push notifications notification receiver test')
+    notificationReceiver = setupAgent(
+      'push notifications notification receiver test',
+      '65748374657483920193747564738290'
+    )
+
     pushNotificationsService = notificationReceiver.injectionContainer.resolve(PushNotificationsService)
     await notificationReceiver.initialize()
   })

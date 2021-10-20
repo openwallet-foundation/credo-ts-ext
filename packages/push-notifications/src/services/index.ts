@@ -1,1 +1,1 @@
-export { DeviceInfo, DevicePlatform as DeviceVendor, PushNotificationsService } from './PushNotificationsService'
+export { DeviceInfo, DevicePlatform, PushNotificationsService } from './PushNotificationsService'

@@ -1,5 +1,3 @@
-import { AutoAcceptCredential, ConsoleLogger, LogLevel } from '@aries-framework/core'
-
 import { PushNotificationsModule } from '../src/PushNotificationsModule'
 import { setupAgent } from '../tests/utils/agent'
 
@@ -8,16 +6,11 @@ import { setupAgent } from '../tests/utils/agent'
  * See the tests for a more accurate implementation
  */
 const run = async () => {
-  // Setup an agent
-  const agent = setupAgent({
-    publicDidSeed: '12312312312312312312312312312356',
-    name: 'Aries Test Agent',
-    logger: new ConsoleLogger(LogLevel.debug),
-    autoAcceptConnection: true,
-    autoAcceptCredential: AutoAcceptCredential.ContentApproved,
-  })
+  // Setup the agent
+  const agent = setupAgent('aries push notifications agent', '65748374657483920193747564738290')
 
   // Inject the PushNotificationModule
+  // NOTE: This has to be done before initializing the agent
   const pushNotificationsModule = agent.injectionContainer.resolve(PushNotificationsModule)
 
   // Initialize the agent

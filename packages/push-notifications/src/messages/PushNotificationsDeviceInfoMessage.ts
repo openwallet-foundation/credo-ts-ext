@@ -10,7 +10,7 @@ import { Equals, IsString } from 'class-validator'
  * @todo ADD RFC
  */
 export class PushNotificationsDeviceInfoMessage extends AgentMessage {
-  public constructor(options: DeviceInfo & { notificationsService: string }) {
+  public constructor(options: DeviceInfo) {
     super()
 
     if (options) {

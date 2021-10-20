@@ -35,7 +35,8 @@ export class PushNotificationsModule {
   }
 
   /**
-   * Gets the device info (token, vendor, service) from another agent via the `connectionId`
+   * Gets the device info (token, vendor) from another agent via the `connectionId`
+   * And emits it on the agent event bus
    */
   public async getDeviceInfo(connectionId: string) {
     const connection = await this.connectionService.getById(connectionId)
