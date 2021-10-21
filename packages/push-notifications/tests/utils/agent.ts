@@ -5,7 +5,6 @@ import {
   ConsoleLogger,
   HttpOutboundTransport,
   LogLevel,
-  MediatorPickupStrategy,
   WsOutboundTransport,
 } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
