@@ -4,6 +4,8 @@ import { AgentMessage } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
 import { Equals, IsString } from 'class-validator'
 
+import { DevicePlatform } from '../services'
+
 /**
  * Message to set the native device information at another agent for push notifications
  *
@@ -25,7 +27,7 @@ export class PushNotificationsSetNativeDeviceInfoMessage extends AgentMessage {
 
   @Expose({ name: 'device_platform' })
   @IsString()
-  public devicePlatform!: string
+  public devicePlatform!: DevicePlatform
 
   @Expose({ name: 'device_token' })
   @IsString()

@@ -9,7 +9,7 @@ import {
 } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
 
-export const setupAgent = (name = 'test-agent-blobbieb', publicDidSeed = '12312312312312312312312312312356') => {
+export const setupAgent = ({ name, publicDidSeed }: { name: string; publicDidSeed: string }) => {
   const agent = new Agent(
     {
       logger: new ConsoleLogger(LogLevel.off),

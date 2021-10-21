@@ -2,7 +2,10 @@ import { Lifecycle, scoped } from 'tsyringe'
 
 import { PushNotificationsGetDeviceInfoMessage, PushNotificationsSetNativeDeviceInfoMessage } from '../messages'
 
-export type DevicePlatform = 'android' | 'ios' | string
+export enum DevicePlatform {
+  Android = 'android',
+  Ios = 'ios',
+}
 
 export interface DeviceInfo {
   deviceToken: string
