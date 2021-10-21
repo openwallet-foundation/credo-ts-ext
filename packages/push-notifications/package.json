@@ -1,0 +1,45 @@
+{
+  "name": "@aries-framework/push-notifications",
+  "main": "build/index",
+  "types": "build/index",
+  "version": "0.0.0",
+  "files": [
+    "build"
+  ],
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "Apache-2.0",
+  "description": "Push notification plugin for Aries Framework JavaScript",
+  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/push-notifications",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "directory": "packages/push-notifications"
+  },
+  "scripts": {
+    "sample": "tsnd --respawn samples/sample.ts",
+    "build": "yarn run clean && yarn run compile",
+    "clean": "rimraf -rf ./build",
+    "compile": "tsc -p tsconfig.build.json",
+    "prepublishOnly": "yarn run build",
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@aries-framework/core": "0.1.0-alpha.285",
+    "@aries-framework/node": "0.1.0-alpha.285",
+    "@types/jest": "^27.0.2",
+    "ts-node-dev": "^1.1.8",
+    "tslog": "^3.2.2",
+    "typescript": "~4.4.2"
+  },
+  "peerDependencies": {
+    "@aries-framework/core": "0.1.0-alpha.285",
+    "class-transformer": "^0.4.0",
+    "class-validator": "^0.13.1",
+    "tsyringe": "^4.6.0"
+  },
+  "dependencies": {
+    "reflect-metadata": "^0.1.13"
+  }
+}
