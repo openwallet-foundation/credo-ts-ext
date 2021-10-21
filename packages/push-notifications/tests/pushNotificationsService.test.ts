@@ -39,7 +39,7 @@ describe('PushNotifications', () => {
       expect(jsonMessage).toEqual({
         '@type': 'https://didcomm.org/push-notifications-native/1.0/set-device-info',
         device_token: '1234-1234-1234-1234',
-        device_vendor: 'android',
+        device_platform: 'android',
       })
     })
   })

@@ -20,9 +20,6 @@ export const setupAgent = (name = 'test-agent-blobbieb', publicDidSeed = '123123
       autoAcceptProofs: AutoAcceptProof.ContentApproved,
       autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
       walletConfig: { id: name, key: name },
-      mediatorPickupStrategy: MediatorPickupStrategy.Implicit,
-      mediatorConnectionsInvite:
-        'http://localhost:9001?c_i=eyJAdHlwZSI6ICJkaWQ6c292OkJ6Q2JzTlloTXJqSGlxWkRUVUFTSGc7c3BlYy9jb25uZWN0aW9ucy8xLjAvaW52aXRhdGlvbiIsICJAaWQiOiAiZjg0OWM5YjktMDFiYi00NGQ4LThlZTMtMDk3ZDcwYTY4YTUzIiwgImxhYmVsIjogIm1lZGlhdG9yICsgcHVzaCBub3RpZmljYXRpb25zICsgZXhhbXBsZSIsICJzZXJ2aWNlRW5kcG9pbnQiOiAiaHR0cDovL2xvY2FsaG9zdDo5MDAxIiwgInJlY2lwaWVudEtleXMiOiBbIjVwMUtWbjNxcEhDTXdlbVFldlhpZXlreXdTOWpUTUprZUg2NlQ2YVpxdUZuIl19',
     },
     agentDependencies
   )
