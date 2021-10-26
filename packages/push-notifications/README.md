@@ -28,7 +28,7 @@
 </p>
 <br />
 
-Push Notifications plugin for [Aries framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git).
+Push Notifications plugin for [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git).
 
 ### Installation
 
@@ -53,7 +53,6 @@ In order for this plugin to work we have to inject it into the agent to access a
 > This is the current way however this will be changed someday to improve plugin management
 
 ```ts
-// Agent already has been setup BUT NOT YET INITIALIZED
 import { PushNotificationsModule } from '@aries-framework/push-notifications'
 
 const agent = new Agent(/** agent config... */)
@@ -69,5 +68,5 @@ pushNotificationsModule.sendNativeDeviceInfo(
 )
 
 // To get the device info and the used service back from the other agent
-pushNotificationsModule.getDeviceInfo('a-valid-connection')
+pushNotificationsModule.getNativeDeviceInfo('a-valid-connection')
 ```
