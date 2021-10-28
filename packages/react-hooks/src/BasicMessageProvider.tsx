@@ -21,7 +21,11 @@ export const useBasicMessages = (): { basicMessages: BasicMessageRecord[]; loadi
 
 export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessageRecord[] => {
   const { basicMessages } = useBasicMessages()
-  return basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId)
+  const [messages, setMessages] = useState()
+  useEffect(() => {
+    setMessages(basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId))
+  }, [basicMessages])
+  return messages
 }
 
 interface Props {
@@ -65,9 +69,11 @@ const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
       }
 
       agent?.events.on(BasicMessageEventTypes.BasicMessageReceived, listener)
+      agent?.events.on(BasicMessageEventTypes.BasicMessageSent, listener)
 
       return () => {
         agent?.events.off(BasicMessageEventTypes.BasicMessageReceived, listener)
+        agent?.events.off(BasicMessageEventTypes.BasicMessageSent, listener)
       }
     }
   }, [basicMessageState, agent])
