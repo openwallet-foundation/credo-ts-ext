@@ -1,0 +1,1 @@
+export { PushNotificationsDeviceInfoHandler } from './PushNotificationsDeviceInfoHandler'
