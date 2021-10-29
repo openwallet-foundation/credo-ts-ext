@@ -132,15 +132,13 @@ export class ProofController {
   /**
    * Creates a presentation request bound to existing connection
    */
-  @Post('/:connectionId/request-proof')
+  @Post('/request-proof')
   public async requestProof(
-    @Param('connectionId') connectionId: string,
     @Body()
     request: ProofRequestRequest
   ) {
+    const { connectionId, proofRequest, comment } = request
     try {
-      const { proofRequest, comment } = request
-
       const proof = await this.agent.proofs.requestProof(connectionId, proofRequest, {
         comment,
       })

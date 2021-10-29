@@ -8,6 +8,9 @@ import { IsString, IsOptional, ValidateNested, IsEnum, Matches } from 'class-val
 
 export class CredentialOfferRequest implements CredentialOfferTemplate {
   @IsString()
+  public connectionId!: string
+
+  @IsString()
   @Matches(/^([a-zA-Z0-9]{21,22}):3:CL:(([1-9][0-9]*)|([a-zA-Z0-9]{21,22}:2:.+:[0-9.]+)):(.+)?$/)
   public credentialDefinitionId!: string
 

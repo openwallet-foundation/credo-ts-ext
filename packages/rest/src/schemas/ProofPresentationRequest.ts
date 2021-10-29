@@ -3,6 +3,9 @@ import { RecordTransformer } from '@aries-framework/core/build/utils/transformer
 import { IsOptional, IsString, ValidateNested } from 'class-validator'
 
 export class ProofRequestRequest {
+  @IsString()
+  public connectionId!: string
+
   @ValidateNested()
   @RecordTransformer(ProofRequest)
   public proofRequest!: ProofRequest
