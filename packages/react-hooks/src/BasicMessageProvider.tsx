@@ -1,4 +1,4 @@
-import type { Agent, BasicMessageRecord, BasicMessageReceivedEvent, ConnectionRecord } from '@aries-framework/core'
+import type { Agent, BasicMessageRecord, BasicMessageReceivedEvent } from '@aries-framework/core'
 
 import { BasicMessageEventTypes } from '@aries-framework/core'
 import * as React from 'react'
@@ -22,7 +22,7 @@ export const useBasicMessages = (): { basicMessages: BasicMessageRecord[]; loadi
 export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessageRecord[] => {
   const { basicMessages } = useBasicMessages()
   const messages = useMemo(
-    () => basicMessages.filter((m: ConnectionRecord) => m.connectionId === connectionId),
+    () => basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId),
     [basicMessages, connectionId]
   )
   return messages
