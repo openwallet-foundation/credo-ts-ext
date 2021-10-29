@@ -2,7 +2,7 @@ import type { Agent, CredentialState, CredentialStateChangedEvent, CredentialRec
 
 import { CredentialEventTypes } from '@aries-framework/core'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext } from 'react'
+import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
 interface CredentialContextInterface {
   loading: boolean
@@ -26,7 +26,11 @@ export const useCredentialById = (id: string): CredentialRecord | undefined => {
 
 export const useCredentialByState = (state: CredentialState): CredentialRecord[] => {
   const { credentials } = useCredentials()
-  return credentials.filter((c: CredentialRecord) => c.state === state)
+  const filteredCredentials = useMemo(
+    () => credentials.filter((c: CredentialRecord) => c.state === state),
+    [credentials, state]
+  )
+  return filteredCredentials
 }
 
 interface Props {

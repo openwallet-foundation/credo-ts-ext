@@ -2,7 +2,7 @@ import type { Agent, ConnectionState, ConnectionStateChangedEvent, ConnectionRec
 
 import { ConnectionEventTypes } from '@aries-framework/core'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext } from 'react'
+import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
 interface ConnectionContextInterface {
   loading: boolean
@@ -26,7 +26,11 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
 
 export const useConnectionByState = (state: ConnectionState): ConnectionRecord[] => {
   const { connections } = useConnections()
-  return connections.filter((c: ConnectionRecord) => c.state === state)
+  const filteredConnections = useMemo(
+    () => connections.filter((c: ConnectionRecord) => c.state === state),
+    [connections, state]
+  )
+  return filteredConnections
 }
 
 interface Props {
