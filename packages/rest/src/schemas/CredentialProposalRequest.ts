@@ -7,6 +7,9 @@ import { Type } from 'class-transformer'
 import { IsDefined, IsString, ValidateNested, IsOptional, Matches, IsEnum } from 'class-validator'
 
 export class CredentialProposalRequest implements CredentialProposeOptions {
+  @IsString()
+  public connectionId!: string
+
   @IsOptional()
   @IsString()
   public comment?: string

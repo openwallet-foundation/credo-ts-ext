@@ -11,7 +11,6 @@ describe('CredentialController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
-  let testConnectionId: string
   let testCredential: CredentialRecord
 
   beforeAll(async () => {
@@ -19,7 +18,6 @@ describe('CredentialController', () => {
     bobAgent = await getTestAgent('Rest Credential Test Bob', 3006)
     app = await setupServer(bobAgent, { port: 3000 })
 
-    testConnectionId = '000000aa-aa00-00a0-aa00-000a0aa00000'
     testCredential = getTestCredential()
   })
 
@@ -71,6 +69,7 @@ describe('CredentialController', () => {
       const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
 
       const proposalReq = {
+        connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
         credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
         issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
         schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
@@ -89,7 +88,7 @@ describe('CredentialController', () => {
         },
       }
 
-      const response = await request(app).post(`/credentials/${testConnectionId}/propose-credential`).send(proposalReq)
+      const response = await request(app).post(`/credentials/propose-credential`).send(proposalReq)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
@@ -139,6 +138,7 @@ describe('CredentialController', () => {
 
   describe('Offer a credential', () => {
     const proposalReq = {
+      connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
       credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
       credentialProposal: {
         '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
@@ -155,7 +155,7 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'offerCredential').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
 
-      const response = await request(app).post(`/credentials/${testConnectionId}/offer-credential`).send(proposalReq)
+      const response = await request(app).post(`/credentials/offer-credential`).send(proposalReq)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)

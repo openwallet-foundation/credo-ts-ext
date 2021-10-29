@@ -11,7 +11,6 @@ describe('ProofController', () => {
   let app: Express
   let bobAgent: Agent
   let aliceAgent: Agent
-  let testConnectionId: string
   let testProof: ProofRecord
   let testRequest: ProofRequest
 
@@ -21,7 +20,6 @@ describe('ProofController', () => {
 
     app = await setupServer(bobAgent, { port: 3000 })
 
-    testConnectionId = '000000aa-aa00-00a0-aa00-000a0aa00000'
     testProof = getTestProof()
     testRequest = getTestProofRequest()
   })
@@ -152,7 +150,9 @@ describe('ProofController', () => {
 
   describe('Request out of band proof', () => {
     test('should return proof record', async () => {
-      const response = await request(app).post(`/proofs/request-outofband-proof`).send({ proofRequest: testRequest })
+      const response = await request(app)
+        .post(`/proofs/request-outofband-proof`)
+        .send({ connectionId: 'string', proofRequest: testRequest })
 
       expect(response.statusCode).toBe(200)
       expect(response.body.message).toBeDefined()
@@ -166,16 +166,16 @@ describe('ProofController', () => {
       const getResult = (): Promise<ProofRecord> => spy.mock.results[0].value
 
       const response = await request(app)
-        .post(`/proofs/${testConnectionId}/request-proof`)
-        .send({ proofRequest: testRequest })
+        .post(`/proofs/request-proof`)
+        .send({ connectionId: 'string', proofRequest: testRequest })
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(objectToJson(await getResult()))
     })
     test('should give 404 not found when connection is not found', async () => {
       const response = await request(app)
-        .post(`/proofs/${testConnectionId}/request-proof`)
-        .send({ proofRequest: testRequest })
+        .post(`/proofs/request-proof`)
+        .send({ connectionId: 'string', proofRequest: testRequest })
 
       expect(response.statusCode).toBe(404)
     })
