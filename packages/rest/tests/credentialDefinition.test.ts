@@ -24,7 +24,7 @@ describe('CredentialDefinitionController', () => {
       const spy = jest.spyOn(agent.ledger, 'getCredentialDefinition').mockResolvedValueOnce(testCredDef)
       const getResult = (): Promise<CredDef> => spy.mock.results[0].value
 
-      const response = await request(app).get(`/credential-defintions/WgWxqztrNooG92RXvxSTWv:3:CL:20:tag`)
+      const response = await request(app).get(`/credential-definitions/WgWxqztrNooG92RXvxSTWv:3:CL:20:tag`)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
@@ -36,12 +36,12 @@ describe('CredentialDefinitionController', () => {
     })
 
     test('should return 400 BadRequest when id has invalid structure', async () => {
-      const response = await request(app).get(`/credential-defintions/x`)
+      const response = await request(app).get(`/credential-definitions/x`)
       expect(response.statusCode).toBe(400)
     })
 
     test('should return 404 NotFound when schema not found', async () => {
-      const response = await request(app).get(`/credential-defintions/WgWxqztrNooG92RXvxSTWv:3:CL:20:tag`)
+      const response = await request(app).get(`/credential-definitions/WgWxqztrNooG92RXvxSTWv:3:CL:20:tag`)
       expect(response.statusCode).toBe(404)
     })
   })
@@ -61,7 +61,7 @@ describe('CredentialDefinitionController', () => {
 
       const getResult = (): Promise<CredDef> => spy.mock.results[0].value
 
-      const response = await request(app).post(`/credential-defintions`).send({
+      const response = await request(app).post(`/credential-definitions`).send({
         tag: 'latest',
         supportRevocation: false,
         schemaId: 'WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0',
@@ -78,7 +78,7 @@ describe('CredentialDefinitionController', () => {
     })
 
     test('should throw error when props missing ', async () => {
-      const response = await request(app).post(`/credential-defintions`).send({
+      const response = await request(app).post(`/credential-definitions`).send({
         tag: 'latest',
         supportRevocation: false,
       })
