@@ -1,4 +1,6 @@
 import { Agent, AriesFrameworkError, IndySdkError } from '@aries-framework/core'
+import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
+import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
 import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import {
   InternalServerError,
@@ -33,17 +35,17 @@ export class SchemaController {
     try {
       return await this.agent.ledger.getSchema(schemaId)
     } catch (error) {
-      if (error instanceof IndySdkError) {
-        if (isIndyError(error.cause, 'LedgerNotFound')) {
-          throw new NotFoundError(`schema definition with schemaId "${schemaId}" not found.`)
-        }
-        if (isIndyError(error.cause, 'LedgerInvalidTransaction')) {
+      if (error instanceof LedgerNotFoundError) {
+        throw new NotFoundError(`schema definition with schemaId "${schemaId}" not found.`)
+      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
+        if (isIndyError(error.cause.cause, 'LedgerInvalidTransaction')) {
           throw new ForbiddenError(`schema definition with schemaId "${schemaId}" can not be returned.`)
         }
-        if (isIndyError(error.cause, 'CommonInvalidStructure')) {
+        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
           throw new BadRequestError(`schemaId "${schemaId}" has invalid structure.`)
         }
       }
+
       throw new InternalServerError(`something went wrong: ${error}`)
     }
   }

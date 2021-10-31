@@ -31,8 +31,13 @@ export async function setupAgent({
       id: name,
       key: name,
     },
-    poolName: 'pool-holder',
-    genesisTransactions: BCOVRIN_TEST_GENESIS,
+    indyLedgers: [
+      {
+        id: 'BCovrin Test Genesis',
+        genesisTransactions: BCOVRIN_TEST_GENESIS,
+        isProduction: false,
+      },
+    ],
     publicDidSeed: publicDidSeed,
     endpoints: endpoints,
     autoAcceptConnections: autoAcceptConnection,
