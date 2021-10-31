@@ -16,7 +16,7 @@ import { Inject, Service } from 'typedi'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
 
-@JsonController('/credential-defintions')
+@JsonController('/credential-definitions')
 @Service()
 export class CredentialDefinitionController {
   @Inject()
