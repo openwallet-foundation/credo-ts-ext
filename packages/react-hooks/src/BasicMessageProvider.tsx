@@ -68,12 +68,10 @@ const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
         })
       }
 
-      agent?.events.on(BasicMessageEventTypes.BasicMessageReceived, listener)
-      agent?.events.on(BasicMessageEventTypes.BasicMessageSent, listener)
+      agent?.events.on(BasicMessageEventTypes.BasicMessageStateChanged, listener)
 
       return () => {
-        agent?.events.off(BasicMessageEventTypes.BasicMessageReceived, listener)
-        agent?.events.off(BasicMessageEventTypes.BasicMessageSent, listener)
+        agent?.events.off(BasicMessageEventTypes.BasicMessageStateChanged, listener)
       }
     }
   }, [basicMessageState, agent])
