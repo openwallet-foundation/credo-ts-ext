@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.2.0...rest-v0.3.0) (2021-11-01)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rest:** The credentential-definitions endpoint topic contained a typo (credential-defintions instead of credential-definitions)
+* **rest:** The connection id is moved from the path to the request body for credential and proof endpoints
+
+### Bug Fixes
+
+* **rest:** typo in credential definition endpoint ([b4d345e](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/b4d345ed2af112679389ad4d8ed76760e442cc26))
+
+
+### Code Refactoring
+
+* **rest:** moved connectionId from path to requestbody ([#59](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/59)) ([1d37f0b](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/1d37f0bdde96742fc947213f8b934353872c570c))
+
 ## [0.2.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.1.2...rest-v0.2.0) (2021-10-05)
 
 

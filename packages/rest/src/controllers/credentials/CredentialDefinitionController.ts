@@ -1,4 +1,6 @@
 import { Agent, IndySdkError } from '@aries-framework/core'
+import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
+import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
 import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import {
   BadRequestError,
@@ -14,7 +16,7 @@ import { Inject, Service } from 'typedi'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
 
-@JsonController('/credential-defintions')
+@JsonController('/credential-definitions')
 @Service()
 export class CredentialDefinitionController {
   @Inject()
@@ -32,13 +34,12 @@ export class CredentialDefinitionController {
     try {
       return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
     } catch (error) {
-      if (error instanceof IndySdkError) {
-        if (isIndyError(error.cause, 'LedgerNotFound')) {
-          throw new NotFoundError(
-            `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`
-          )
-        }
-        if (isIndyError(error.cause, 'CommonInvalidStructure')) {
+      if (error instanceof LedgerNotFoundError) {
+        throw new NotFoundError(
+          `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`
+        )
+      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
+        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
           throw new BadRequestError(`credentialDefinitionId "${credentialDefinitionId}" has invalid structure.`)
         }
       }
@@ -61,11 +62,10 @@ export class CredentialDefinitionController {
         tag: credentialDefinitionRequest.tag,
       })
     } catch (error) {
-      if (error instanceof IndySdkError) {
-        if (isIndyError(error.cause, 'LedgerNotFound')) {
-          throw new NotFoundError(`schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`)
-        }
+      if (error instanceof LedgerNotFoundError) {
+        throw new NotFoundError(`schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`)
       }
+
       throw new InternalServerError(`something went wrong: ${error}`)
     }
   }

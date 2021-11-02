@@ -57,14 +57,14 @@ export class CredentialController {
    * Initiate a new credential exchange as holder by sending a credential proposal message
    * to the connection with the specified connection id.
    */
-  @Post('/:connectionId/propose-credential')
+  @Post('/propose-credential')
   public async proposeCredential(
-    @Param('connectionId') connectionId: string,
     @Body()
     proposal: CredentialProposalRequest
   ) {
+    const { connectionId, ...proposalRequest } = proposal
     try {
-      const credential = await this.agent.credentials.proposeCredential(connectionId, proposal)
+      const credential = await this.agent.credentials.proposeCredential(connectionId, proposalRequest)
 
       return credential.toJSON()
     } catch (error) {
@@ -101,14 +101,14 @@ export class CredentialController {
    * Initiate a new credential exchange as issuer by sending a credential offer message
    * to the connection with the specified connection id.
    */
-  @Post('/:connectionId/offer-credential')
+  @Post('/offer-credential')
   public async offerCredential(
-    @Param('connectionId') connectionId: string,
     @Body()
     offer: CredentialOfferRequest
   ) {
+    const { connectionId, ...offerRequest } = offer
     try {
-      const credential = await this.agent.credentials.offerCredential(connectionId, offer)
+      const credential = await this.agent.credentials.offerCredential(connectionId, offerRequest)
 
       return credential.toJSON()
     } catch (error) {
