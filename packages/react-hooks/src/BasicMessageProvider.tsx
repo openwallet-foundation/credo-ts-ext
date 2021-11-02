@@ -1,4 +1,4 @@
-import type { Agent, BasicMessageRecord, BasicMessageReceivedEvent } from '@aries-framework/core'
+import type { Agent, BasicMessageRecord, BasicMessageStateChangedEvent } from '@aries-framework/core'
 
 import { BasicMessageEventTypes } from '@aries-framework/core'
 import * as React from 'react'
@@ -51,7 +51,7 @@ const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
 
   useEffect(() => {
     if (!basicMessageState.loading) {
-      const listener = (event: BasicMessageReceivedEvent) => {
+      const listener = (event: BasicMessageStateChangedEvent) => {
         const newBasicMessageState = [...basicMessageState.basicMessages]
         const index = newBasicMessageState.findIndex(
           (basicMessage) => basicMessage.id === event.payload.basicMessageRecord.id
