@@ -2,7 +2,7 @@ import type { Agent, ProofState, ProofStateChangedEvent, ProofRecord } from '@ar
 
 import { ProofEventTypes } from '@aries-framework/core'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext } from 'react'
+import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
 interface ProofContextInterface {
   loading: boolean
@@ -26,7 +26,8 @@ export const useProofById = (id: string): ProofRecord | undefined => {
 
 export const useProofByState = (state: ProofState): ProofRecord[] => {
   const { proofs } = useProofs()
-  return proofs.filter((p: ProofRecord) => p.state === state)
+  const filteredProofs = useMemo(() => proofs.filter((p: ProofRecord) => p.state === state), [proofs, state])
+  return filteredProofs
 }
 
 interface Props {

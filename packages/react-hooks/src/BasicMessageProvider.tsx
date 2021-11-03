@@ -1,8 +1,8 @@
-import type { Agent, BasicMessageRecord, BasicMessageReceivedEvent } from '@aries-framework/core'
+import type { Agent, BasicMessageRecord, BasicMessageStateChangedEvent } from '@aries-framework/core'
 
 import { BasicMessageEventTypes } from '@aries-framework/core'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext } from 'react'
+import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
 interface BasicMessageContextInterface {
   loading: boolean
@@ -21,7 +21,11 @@ export const useBasicMessages = (): { basicMessages: BasicMessageRecord[]; loadi
 
 export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessageRecord[] => {
   const { basicMessages } = useBasicMessages()
-  return basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId)
+  const messages = useMemo(
+    () => basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId),
+    [basicMessages, connectionId]
+  )
+  return messages
 }
 
 interface Props {
@@ -47,7 +51,7 @@ const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
 
   useEffect(() => {
     if (!basicMessageState.loading) {
-      const listener = (event: BasicMessageReceivedEvent) => {
+      const listener = (event: BasicMessageStateChangedEvent) => {
         const newBasicMessageState = [...basicMessageState.basicMessages]
         const index = newBasicMessageState.findIndex(
           (basicMessage) => basicMessage.id === event.payload.basicMessageRecord.id
@@ -64,10 +68,10 @@ const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
         })
       }
 
-      agent?.events.on(BasicMessageEventTypes.BasicMessageReceived, listener)
+      agent?.events.on(BasicMessageEventTypes.BasicMessageStateChanged, listener)
 
       return () => {
-        agent?.events.off(BasicMessageEventTypes.BasicMessageReceived, listener)
+        agent?.events.off(BasicMessageEventTypes.BasicMessageStateChanged, listener)
       }
     }
   }, [basicMessageState, agent])
