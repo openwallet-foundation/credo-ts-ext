@@ -1,17 +1,19 @@
-import type { Agent, CredentialRecord } from '@aries-framework/core'
+import type { Agent, CredentialRecord, OfferCredentialMessage } from '@aries-framework/core'
 import type { Express } from 'express'
 
+import { JsonTransformer } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { objectToJson, getTestCredential, getTestAgent } from './utils/helpers'
+import { objectToJson, getTestCredential, getTestAgent, getTestCredentialOfferMsg } from './utils/helpers'
 
 describe('CredentialController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
   let testCredential: CredentialRecord
+  let testCredentialOfferMsg: OfferCredentialMessage
 
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Rest Credential Test Alice', 3005)
@@ -19,6 +21,7 @@ describe('CredentialController', () => {
     app = await setupServer(bobAgent, { port: 3000 })
 
     testCredential = getTestCredential()
+    testCredentialOfferMsg = getTestCredentialOfferMsg()
   })
 
   describe('Get all credentials', () => {
@@ -167,6 +170,36 @@ describe('CredentialController', () => {
         .send(proposalReq)
 
       expect(response.statusCode).toBe(404)
+    })
+  })
+
+  describe('Offer out of band credential', () => {
+    const offerReq = {
+      credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+      credentialProposal: {
+        '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
+        attributes: [
+          {
+            'mime-type': 'text/plain',
+            name: 'name',
+            value: 'test',
+          },
+        ],
+      },
+    }
+
+    test('should return credential record', async () => {
+      const spy = jest
+        .spyOn(bobAgent.credentials, 'createOutOfBandOffer')
+        .mockResolvedValueOnce({ offerMessage: testCredentialOfferMsg, credentialRecord: testCredential })
+      const getResult = () => spy.mock.results[0].value
+
+      const response = await request(app).post(`/credentials/offer-outofband-credential`).send(offerReq)
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body.message).toBeDefined()
+      expect(response.body.credentialRecord).toEqual(objectToJson(result.credentialRecord))
     })
   })
 

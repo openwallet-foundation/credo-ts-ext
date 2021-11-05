@@ -1,4 +1,5 @@
-import { IndySdkError, Agent, RecordNotFoundError } from '@aries-framework/core'
+import { IndySdkError, Agent, RecordNotFoundError, AgentConfig } from '@aries-framework/core'
+import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import {
   Get,
@@ -15,6 +16,7 @@ import { Service, Inject } from 'typedi'
 
 import { AcceptCredentialProposalRequest } from '../../schemas/AcceptCredentialProposalRequest'
 import { CredentialOfferRequest } from '../../schemas/CredentialOfferRequest'
+import { CredentialOfferTemp } from '../../schemas/CredentialOfferTemplate'
 import { CredentialProposalRequest } from '../../schemas/CredentialProposalRequest'
 
 @JsonController('/credentials')
@@ -94,6 +96,26 @@ export class CredentialController {
         throw new NotFoundError(`Credential with credential id "${credentialId}" not found.`)
       }
       throw new InternalServerError(`Something went wrong: ${error}`)
+    }
+  }
+
+  /**
+   * Creates a credential offer not bound to any existing connection
+   */
+  @Post('/offer-outofband-credential')
+  public async offerCredentialOutOfBand(
+    @Body()
+    offer: CredentialOfferTemp
+  ) {
+    const credential = await this.agent.credentials.createOutOfBandOffer(offer)
+    // eslint-disable-next-line no-console
+    console.log(credential)
+
+    const config = this.agent.injectionContainer.resolve(AgentConfig)
+
+    return {
+      message: `${config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(credential.offerMessage.toJSON())}`,
+      credentialRecord: credential.credentialRecord,
     }
   }
 
