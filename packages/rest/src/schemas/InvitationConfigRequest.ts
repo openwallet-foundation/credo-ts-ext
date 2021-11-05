@@ -12,4 +12,12 @@ export class InvitationConfigRequest {
   @IsOptional()
   @IsString()
   public mediatorId?: string
+
+  @IsOptional()
+  @IsString()
+  public myLabel?: string
+
+  @IsOptional()
+  @IsString()
+  public myImageUrl?: string
 }
