@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.3](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.1.2...react-hooks-v0.1.3) (2021-11-04)
+
+
+### Bug Fixes
+
+* **react-hooks:** message filtering overflows ([#58](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/58)) ([1eb2a92](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/1eb2a92dcf28e7693ed75c7a00f234eea4782b1f))
+
 ### [0.1.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.1.1...react-hooks-v0.1.2) (2021-10-14)
 
 
