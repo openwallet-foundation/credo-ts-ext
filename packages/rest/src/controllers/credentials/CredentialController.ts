@@ -108,13 +108,11 @@ export class CredentialController {
     offer: CredentialOfferTemp
   ) {
     const credential = await this.agent.credentials.createOutOfBandOffer(offer)
-    // eslint-disable-next-line no-console
-    console.log(credential)
-
-    const config = this.agent.injectionContainer.resolve(AgentConfig)
 
     return {
-      message: `${config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(credential.offerMessage.toJSON())}`,
+      message: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
+        credential.offerMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
+      )}`,
       credentialRecord: credential.credentialRecord,
     }
   }

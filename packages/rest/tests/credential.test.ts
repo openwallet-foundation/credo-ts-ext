@@ -1,7 +1,6 @@
 import type { Agent, CredentialRecord, OfferCredentialMessage } from '@aries-framework/core'
 import type { Express } from 'express'
 
-import { JsonTransformer } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
