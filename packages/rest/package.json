@@ -38,8 +38,8 @@
     "typedi": "^0.10.0"
   },
   "devDependencies": {
-    "@aries-framework/core": "0.1.0-alpha.291",
-    "@aries-framework/node": "0.1.0-alpha.291",
+    "@aries-framework/core": "0.1.0-alpha.301",
+    "@aries-framework/node": "0.1.0-alpha.301",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.1",
     "@types/node": "^16.6.2",
@@ -55,6 +55,6 @@
     "typescript": "^4.4.2"
   },
   "peerDependencies": {
-    "@aries-framework/core": "0.1.0-alpha.291"
+    "@aries-framework/core": "0.1.0-alpha.301"
   }
 }
