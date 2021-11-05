@@ -1,4 +1,4 @@
-import { IndySdkError, Agent, RecordNotFoundError, AgentConfig } from '@aries-framework/core'
+import { IndySdkError, Agent, RecordNotFoundError } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import {
