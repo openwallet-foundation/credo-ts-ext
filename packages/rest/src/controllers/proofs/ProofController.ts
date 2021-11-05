@@ -15,9 +15,10 @@ import {
 import { Inject, Service } from 'typedi'
 
 import { AcceptProofProposalRequest } from '../../schemas/AcceptProofProposalRequest'
-import { ProofRequestRequest } from '../../schemas/ProofPresentationRequest'
+import { PresentationProofRequest } from '../../schemas/PresentationProofRequest'
+import { ProofPresentationRequest } from '../../schemas/ProofPresentationRequest'
 import { ProofProposalRequest } from '../../schemas/ProofProposalRequest'
-import { PresentationProofRequestRequest } from '../../schemas/SendProofPresentationRequest'
+import { ProofRequestTemplate } from '../../schemas/ProofRequestTemplate'
 
 @JsonController('/proofs')
 @Service()
@@ -65,7 +66,7 @@ export class ProofController {
    */
   @Post('/propose-proof')
   public async proposeProof(@Body() proposal: ProofProposalRequest) {
-    const { attributes, predicates, comment, connectionId } = proposal
+    const { attributes, predicates, connectionId, ...proposalOptions } = proposal
 
     try {
       const presentationPreview = new PresentationPreview({
@@ -73,9 +74,7 @@ export class ProofController {
         predicates,
       })
 
-      const proof = await this.agent.proofs.proposeProof(connectionId, presentationPreview, {
-        comment,
-      })
+      const proof = await this.agent.proofs.proposeProof(connectionId, presentationPreview, proposalOptions)
 
       return proof.toJSON()
     } catch (error) {
@@ -113,13 +112,11 @@ export class ProofController {
   @Post('/request-outofband-proof')
   public async requestProofOutOfBand(
     @Body()
-    request: ProofRequestRequest
+    request: ProofRequestTemplate
   ) {
-    const { proofRequest, comment } = request
+    const { proofRequest, ...requestOptions } = request
 
-    const proof = await this.agent.proofs.createOutOfBandRequest(proofRequest, {
-      comment,
-    })
+    const proof = await this.agent.proofs.createOutOfBandRequest(proofRequest, requestOptions)
 
     const config = this.agent.injectionContainer.resolve(AgentConfig)
 
@@ -135,13 +132,11 @@ export class ProofController {
   @Post('/request-proof')
   public async requestProof(
     @Body()
-    request: ProofRequestRequest
+    request: ProofPresentationRequest
   ) {
-    const { connectionId, proofRequest, comment } = request
+    const { connectionId, proofRequest, ...requestOptions } = request
     try {
-      const proof = await this.agent.proofs.requestProof(connectionId, proofRequest, {
-        comment,
-      })
+      const proof = await this.agent.proofs.requestProof(connectionId, proofRequest, requestOptions)
 
       return proof.toJSON()
     } catch (error) {
@@ -157,10 +152,7 @@ export class ProofController {
    * associated with the proof record.
    */
   @Post('/:proofRecordId/accept-request')
-  public async acceptRequest(
-    @Param('proofRecordId') proofRecordId: string,
-    @Body() request: PresentationProofRequestRequest
-  ) {
+  public async acceptRequest(@Param('proofRecordId') proofRecordId: string, @Body() request: PresentationProofRequest) {
     try {
       const { proofRequest, presentationProposal, comment } = request
 
