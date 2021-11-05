@@ -121,7 +121,9 @@ export class ProofController {
     const config = this.agent.injectionContainer.resolve(AgentConfig)
 
     return {
-      message: `${config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(proof.requestMessage.toJSON())}`,
+      message: `${config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
+        proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
+      )}`,
       proofRecord: proof.proofRecord,
     }
   }
