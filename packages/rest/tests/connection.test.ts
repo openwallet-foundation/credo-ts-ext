@@ -85,11 +85,12 @@ describe('ConnectionController', () => {
       expect(response.body.connection.autoAcceptConnection).toEqual(false)
     })
 
-    test('should accept custom label parameter', async () => {
+    test('should accept custom label and imageUrl', async () => {
       const spy = jest.spyOn(bobAgent.connections, 'createConnection')
 
       const params = {
         myLabel: 'custom-label',
+        myImageUrl: 'https://example.com/image.png',
       }
 
       const response = await request(app).post('/connections/create-invitation').send(params)
@@ -97,6 +98,7 @@ describe('ConnectionController', () => {
       expect(response.statusCode).toBe(200)
       expect(spy).toBeCalledWith(params)
       expect(response.body.invitation.label).toEqual('custom-label')
+      expect(response.body.invitation.imageUrl).toEqual('https://example.com/image.png')
     })
   })
 
