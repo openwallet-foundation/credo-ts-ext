@@ -1,4 +1,4 @@
-import { Agent, AgentConfig, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
+import { Agent, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import {
   Body,
@@ -118,10 +118,8 @@ export class ProofController {
 
     const proof = await this.agent.proofs.createOutOfBandRequest(proofRequest, requestOptions)
 
-    const config = this.agent.injectionContainer.resolve(AgentConfig)
-
     return {
-      message: `${config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
+      message: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
         proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
       )}`,
       proofRecord: proof.proofRecord,

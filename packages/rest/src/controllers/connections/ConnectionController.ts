@@ -1,10 +1,4 @@
-import {
-  Agent,
-  AgentConfig,
-  ConnectionInvitationMessage,
-  JsonTransformer,
-  RecordNotFoundError,
-} from '@aries-framework/core'
+import { Agent, ConnectionInvitationMessage, JsonTransformer, RecordNotFoundError } from '@aries-framework/core'
 import {
   Body,
   Delete,
@@ -66,14 +60,12 @@ export class ConnectionController {
     try {
       const { invitation, connectionRecord } = await this.agent.connections.createConnection(invitationConfig)
 
-      const agentConfig = this.agent.injectionContainer.resolve(AgentConfig)
-
       return {
         invitationUrl: invitation.toUrl({
-          domain: agentConfig.endpoints[0] + '/invitation',
-          useLegacyDidSovPrefix: agentConfig.useLegacyDidSovPrefix,
+          domain: this.agent.config.endpoints[0] + '/invitation',
+          useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
         }),
-        invitation: invitation.toJSON({ useLegacyDidSovPrefix: agentConfig.useLegacyDidSovPrefix }),
+        invitation: invitation.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix }),
         connection: connectionRecord.toJSON(),
       }
     } catch (error) {
