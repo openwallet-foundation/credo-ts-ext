@@ -1,4 +1,4 @@
-import { Agent, AgentConfig } from '@aries-framework/core'
+import { Agent } from '@aries-framework/core'
 import { Get, JsonController } from 'routing-controllers'
 import { Inject, Service } from 'typedi'
 
@@ -17,10 +17,9 @@ export class AgentController {
    */
   @Get('/')
   public async getAgentInfo() {
-    const config = this.agent.injectionContainer.resolve(AgentConfig)
     return {
-      label: config.label,
-      endpoints: config.endpoints,
+      label: this.agent.config.label,
+      endpoints: this.agent.config.endpoints,
       isInitialized: this.agent.isInitialized,
       publicDid: this.agent.publicDid,
     }
