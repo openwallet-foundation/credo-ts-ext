@@ -28,6 +28,12 @@ const run = async () => {
     port: 3000,
     cors: true,
     extraControllers: [GreetingController],
+    staticResources: [
+      {
+        pathName: '/public',
+        directory: `${__dirname}/public`,
+      },
+    ],
   }
 
   await startServer(agent, conf)

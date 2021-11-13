@@ -4,6 +4,7 @@ import type { Express } from 'express'
 
 import { Agent, AgentConfig } from '@aries-framework/core'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
+import { static as stc } from 'express'
 import { createExpressServer, getMetadataArgsStorage, useContainer } from 'routing-controllers'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import * as swaggerUiExpress from 'swagger-ui-express'
@@ -46,6 +47,10 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
   })
 
   app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
+
+  config.staticResources?.map((item) => {
+    app.use(item.pathName, stc(item.directory))
+  })
 
   app.get('/', (_req, res) => {
     res.header('Access-Control-Allow-Origin', '*')
