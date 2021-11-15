@@ -1,16 +1,8 @@
-import { ProofRequest } from '@aries-framework/core'
-import { RecordTransformer } from '@aries-framework/core/build/utils/transformers'
-import { IsOptional, IsString, ValidateNested } from 'class-validator'
+import { IsString } from 'class-validator'
 
-export class ProofRequestRequest {
+import { ProofRequestTemplate } from './ProofRequestTemplate'
+
+export class ProofPresentationRequest extends ProofRequestTemplate {
   @IsString()
   public connectionId!: string
-
-  @ValidateNested()
-  @RecordTransformer(ProofRequest)
-  public proofRequest!: ProofRequest
-
-  @IsOptional()
-  @IsString()
-  public comment?: string
 }

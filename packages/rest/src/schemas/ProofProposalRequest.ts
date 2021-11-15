@@ -1,6 +1,6 @@
-import { PresentationPreviewAttribute, PresentationPreviewPredicate } from '@aries-framework/core'
+import { AutoAcceptProof, PresentationPreviewAttribute, PresentationPreviewPredicate } from '@aries-framework/core'
 import { Type } from 'class-transformer'
-import { IsString, IsOptional, ValidateNested } from 'class-validator'
+import { IsString, IsOptional, ValidateNested, IsEnum } from 'class-validator'
 
 export class ProofProposalRequest {
   @IsString()
@@ -13,6 +13,10 @@ export class ProofProposalRequest {
   @ValidateNested({ each: true })
   @Type(() => PresentationPreviewPredicate)
   public predicates!: PresentationPreviewPredicate[]
+
+  @IsOptional()
+  @IsEnum(AutoAcceptProof)
+  public autoAcceptProof?: AutoAcceptProof
 
   @IsOptional()
   @IsString()
