@@ -32,7 +32,6 @@ const run = async () => {
 
   const conf: ServerConfig = {
     port: 3000,
-    cors: true,
     app: app,
   }
 
