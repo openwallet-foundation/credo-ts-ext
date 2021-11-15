@@ -18,7 +18,7 @@
     "directory": "packages/rest"
   },
   "scripts": {
-    "dev": "tsnd --respawn samples/sample.ts",
+    "dev": "tsnd --respawn samples/sampleWithApp.ts",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./build",
     "compile": "tsc -p tsconfig.build.json",

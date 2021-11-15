@@ -26,16 +26,17 @@ const run = async () => {
     useLegacyDidSovPrefix: true,
   })
 
-  const conf: ServerConfig = {
-    port: 3000,
-    cors: true,
-  }
-
   const app: Express = createExpressServer({
     controllers: [GreetingController],
   })
 
-  await startServer(agent, conf, app)
+  const conf: ServerConfig = {
+    port: 3000,
+    cors: true,
+    app: app,
+  }
+
+  await startServer(agent, conf)
 }
 
 run()
