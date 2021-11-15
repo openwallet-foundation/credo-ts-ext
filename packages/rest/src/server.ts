@@ -2,7 +2,7 @@ import 'reflect-metadata'
 import type { ServerConfig } from './utils/ServerConfig'
 import type { Express } from 'express'
 
-import { Agent, AgentConfig } from '@aries-framework/core'
+import { Agent } from '@aries-framework/core'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import { static as stc } from 'express'
 import { createExpressServer, getMetadataArgsStorage, useContainer } from 'routing-controllers'
@@ -33,7 +33,6 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
     refPointerPrefix: '#/components/schemas/',
   })
 
-  const agentConf = agent.injectionContainer.resolve(AgentConfig)
   const storage = getMetadataArgsStorage()
   const spec = routingControllersToSpec(storage, undefined, {
     components: {
@@ -41,7 +40,7 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
     },
     info: {
       description: packageJson.description,
-      title: agentConf.label,
+      title: agent.config.label,
       version: packageJson.version,
     },
   })
