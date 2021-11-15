@@ -16,7 +16,22 @@ export const setupServer = async (agent: Agent, config: ServerConfig, app?: Expr
   useContainer(Container)
   Container.set(Agent, agent)
 
-  const controllers = [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js']
+  // eslint-disable-next-line @typescript-eslint/ban-types
+  const controllers: Array<Function | string> = [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js']
+
+  let server: Express
+
+  if (app) {
+    server = useExpressServer(app, {
+      controllers: controllers as unknown as string[],
+      cors: config.cors ?? true,
+    })
+  } else {
+    server = createExpressServer({
+      controllers: controllers as unknown as string[],
+      cors: config.cors ?? true,
+    })
+  }
 
   const schemas = validationMetadatasToSchemas({
     refPointerPrefix: '#/components/schemas/',
@@ -32,26 +47,6 @@ export const setupServer = async (agent: Agent, config: ServerConfig, app?: Expr
       title: agent.config.label,
       version: packageJson.version,
     },
-  })
-
-  if (app) {
-    useExpressServer(app, {
-      controllers: controllers,
-      cors: config.cors ?? true,
-    })
-
-    app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
-
-    app.get('/', (_req, res) => {
-      res.header('Access-Control-Allow-Origin', '*')
-      res.json(spec)
-    })
-    return app
-  }
-
-  const server: Express = createExpressServer({
-    controllers: controllers as unknown as string[],
-    cors: config.cors ?? true,
   })
 
   server.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
