@@ -6,7 +6,7 @@ import type { Agent } from '@aries-framework/core'
 import { setupServer } from './server'
 
 export const startServer = async (agent: Agent, config: ServerConfig) => {
-  const app = await setupServer(agent, config)
+  const server = await setupServer(agent, config)
 
-  app.listen(config.port)
+  server.listen(config.port)
 }

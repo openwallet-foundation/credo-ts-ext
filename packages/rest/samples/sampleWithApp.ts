@@ -1,11 +1,15 @@
 import type { ServerConfig } from '../src/utils/ServerConfig'
+import type { Express } from 'express'
 
 import { AutoAcceptCredential, LogLevel } from '@aries-framework/core'
 import { connect } from 'ngrok'
+import { createExpressServer } from 'routing-controllers'
 
 import { startServer } from '../src/index'
 import { setupAgent } from '../tests/utils/agent'
 import { TestLogger } from '../tests/utils/logger'
+
+import { GreetingController } from './utils/GreetingController'
 
 const run = async () => {
   const logger = new TestLogger(LogLevel.debug)
@@ -22,9 +26,13 @@ const run = async () => {
     useLegacyDidSovPrefix: true,
   })
 
+  const app: Express = createExpressServer({
+    controllers: [GreetingController],
+  })
+
   const conf: ServerConfig = {
     port: 3000,
-    cors: true,
+    app: app,
   }
 
   await startServer(agent, conf)

@@ -4,7 +4,7 @@ import type { Express } from 'express'
 
 import { Agent } from '@aries-framework/core'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
-import { createExpressServer, getMetadataArgsStorage, useContainer } from 'routing-controllers'
+import { createExpressServer, getMetadataArgsStorage, useContainer, useExpressServer } from 'routing-controllers'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import * as swaggerUiExpress from 'swagger-ui-express'
 import { Container } from 'typedi'
@@ -17,16 +17,20 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
   Container.set(Agent, agent)
 
   // eslint-disable-next-line @typescript-eslint/ban-types
-  let controllers: Array<Function | string> = [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js']
+  const controllers = [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js']
 
-  if (config.extraControllers) {
-    controllers = [...controllers, ...config.extraControllers]
+  let server: Express
+
+  if (config.app) {
+    server = useExpressServer(config.app, {
+      controllers: controllers,
+    })
+  } else {
+    server = createExpressServer({
+      controllers: controllers,
+      cors: config.cors ?? true,
+    })
   }
-
-  const app: Express = createExpressServer({
-    controllers: controllers as unknown as string[],
-    cors: config.cors ?? true,
-  })
 
   const schemas = validationMetadatasToSchemas({
     refPointerPrefix: '#/components/schemas/',
@@ -44,12 +48,12 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
     },
   })
 
-  app.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
+  server.use('/docs', swaggerUiExpress.serve, swaggerUiExpress.setup(spec))
 
-  app.get('/', (_req, res) => {
+  server.get('/', (_req, res) => {
     res.header('Access-Control-Allow-Origin', '*')
     res.json(spec)
   })
 
-  return app
+  return server
 }

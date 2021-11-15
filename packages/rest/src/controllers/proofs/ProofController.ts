@@ -154,12 +154,11 @@ export class ProofController {
   @Post('/:proofRecordId/accept-request')
   public async acceptRequest(@Param('proofRecordId') proofRecordId: string, @Body() request: PresentationProofRequest) {
     try {
-      const { proofRequest, presentationProposal, comment } = request
+      const { filterByPresentationPreview, comment } = request
 
-      const retrievedCredentials = await this.agent.proofs.getRequestedCredentialsForProofRequest(
-        proofRequest,
-        presentationProposal
-      )
+      const retrievedCredentials = await this.agent.proofs.getRequestedCredentialsForProofRequest(proofRecordId, {
+        filterByPresentationPreview: filterByPresentationPreview,
+      })
 
       const requestedCredentials = this.agent.proofs.autoSelectCredentialsForProofRequest(retrievedCredentials)
 
