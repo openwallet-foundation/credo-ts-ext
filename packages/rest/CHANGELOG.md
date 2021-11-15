@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.4.0...rest-v0.5.0) (2021-11-15)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rest:** the 'extraControllers' config property has been removed in favor of a custom 'app' property. This allows for a more flexible wat to customize the express app. See the sample for an example.
+
+### Features
+
+* **rest:** allow app instance for custom configuration ([#73](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/73)) ([35400df](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/35400df5bdf1f621109e38aca4fa6644664612c8))
+
 ## [0.4.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.3.0...rest-v0.4.0) (2021-11-07)
 
 
