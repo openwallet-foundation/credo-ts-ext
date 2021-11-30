@@ -1,0 +1,87 @@
+import type { Agent, QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/core'
+
+import { QuestionAnswerEventTypes } from '@aries-framework/core'
+import * as React from 'react'
+import { createContext, useState, useEffect, useContext, useMemo } from 'react'
+
+interface QuestionAnswerContextInterface {
+  loading: boolean
+  questionAnswerMessages: QuestionAnswerRecord[]
+}
+
+const QuestionAnswerContext = createContext<QuestionAnswerContextInterface | undefined>(undefined)
+
+export const useQuestionAnswer = (): { questionAnswerMessages: QuestionAnswerRecord[]; loading: boolean } => {
+  const questionAnswerContext = useContext(QuestionAnswerContext)
+  if (!questionAnswerContext) {
+    throw new Error('useQuestionAnswer must be used within a QuestionAnswerContextProvider')
+  }
+  return questionAnswerContext
+}
+
+export const useQuestionAnswerByConnectionId = (connectionId: string): QuestionAnswerRecord[] => {
+  const { questionAnswerMessages } = useQuestionAnswer()
+  const messages = useMemo(
+    () => questionAnswerMessages.filter((m: QuestionAnswerRecord) => m.connectionId === connectionId),
+    [questionAnswerMessages, connectionId]
+  )
+  return messages
+}
+
+export const useQuestionAnswerById = (id: string): QuestionAnswerRecord | undefined => {
+    const { questionAnswerMessages } = useQuestionAnswer()
+    return questionAnswerMessages.find((c: QuestionAnswerRecord) => c.id === id)
+  }
+
+interface Props {
+  agent: Agent | undefined
+}
+
+const QuestionAnswerProvider: React.FC<Props> = ({ agent, children }) => {
+  const [questionAnswerState, setQuestionAnswerState] = useState<QuestionAnswerContextInterface>({
+    questionAnswerMessages: [],
+    loading: true,
+  })
+
+  const setInitialState = async () => {
+    if (agent) {
+      const questionAnswerMessages = await agent.questionAnswer.getAll()
+      setQuestionAnswerState({ questionAnswerMessages, loading: false })
+    }
+  }
+
+  useEffect(() => {
+    setInitialState()
+  }, [agent])
+
+  useEffect(() => {
+    if (!questionAnswerState.loading) {
+      const listener = (event: QuestionAnswerStateChangedEvent) => {
+        const newQuestionAnswerState = [...questionAnswerState.questionAnswerMessages]
+        const index = newQuestionAnswerState.findIndex(
+          (questionAnswerMessage) => questionAnswerMessage.id === event.payload.questionAnswerRecord.id
+        )
+        if (index > -1) {
+            newQuestionAnswerState[index] = event.payload.questionAnswerRecord
+        } else {
+            newQuestionAnswerState.unshift(event.payload.questionAnswerRecord)
+        }
+
+        setQuestionAnswerState({
+          loading: questionAnswerState.loading,
+          questionAnswerMessages: newQuestionAnswerState,
+        })
+      }
+
+      agent?.events.on(QuestionAnswerEventTypes.QuestionAnswerStateChanged, listener)
+
+      return () => {
+        agent?.events.off(QuestionAnswerEventTypes.QuestionAnswerStateChanged, listener)
+      }
+    }
+  }, [questionAnswerState, agent])
+
+  return <QuestionAnswerContext.Provider value={questionAnswerState}>{children}</QuestionAnswerContext.Provider>
+}
+
+export default QuestionAnswerProvider
