@@ -58,10 +58,10 @@
     tsyringe "^4.5.0"
     uuid "^8.3.2"
 
-"@aries-framework/core@0.1.0-alpha.317", "@aries-framework/core@0.1.0-alpha.317+dee03e3":
-  version "0.1.0-alpha.317"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.317.tgz#673c271c4974c8454e90472f6870ee270142a15a"
-  integrity sha512-680EYdcfnQQRkLNhpjMgeKwU3Oyh1Yq9w6Ijb+3POCdKFabgzBMFq2MtR4KJMMv3nQBToRCWbfU2Qo1yhVwqCA==
+"@aries-framework/core@0.1.0-alpha.318", "@aries-framework/core@0.1.0-alpha.318+ba3f17e":
+  version "0.1.0-alpha.318"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.1.0-alpha.318.tgz#7643301fe92d3c642720b80ce7f33865092a7617"
+  integrity sha512-1oASW/jtUFVHzTV+6DRRqOdVvofiaeTmJeqvMDuhJlkUDsppLb6lIz39QRPnilY2/IbBdz8V7aBi1lA494K53Q==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@types/indy-sdk" "^1.16.6"
@@ -97,12 +97,12 @@
     node-fetch "^2.6.1"
     ws "^7.5.3"
 
-"@aries-framework/node@0.1.0-alpha.317":
-  version "0.1.0-alpha.317"
-  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.1.0-alpha.317.tgz#8501c2f7a98f4ecf824aba733eac59e6a59843b2"
-  integrity sha512-NW1rZjYufg3939IZ5rp+JBMqRpnESgU1X1IBL9CZVDqIEUCtZqk8jEZI8ih88DN8fPYMdfgUT0iihyenkgtyYQ==
+"@aries-framework/node@0.1.0-alpha.318":
+  version "0.1.0-alpha.318"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.1.0-alpha.318.tgz#cb6609a36bb81a41df70a9b26a12571054f74c45"
+  integrity sha512-BLFw6S0XzAgJusJQvnxweO1SxKlA11PagT6Zc5z2llV79bAFMu1HTtSkBvN69jmvZRrCoRXMUxnKrAwGvc2HAg==
   dependencies:
-    "@aries-framework/core" "0.1.0-alpha.317+dee03e3"
+    "@aries-framework/core" "0.1.0-alpha.318+ba3f17e"
     express "^4.17.1"
     indy-sdk "^1.16.0-dev-1636"
     node-fetch "^2.6.1"
