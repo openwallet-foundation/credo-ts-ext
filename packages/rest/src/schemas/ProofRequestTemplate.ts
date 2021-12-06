@@ -1,10 +1,10 @@
 import { AutoAcceptProof, ProofRequest } from '@aries-framework/core'
-import { RecordTransformer } from '@aries-framework/core/build/utils/transformers'
+import { Type } from 'class-transformer'
 import { IsString, IsOptional, ValidateNested, IsEnum } from 'class-validator'
 
 export class ProofRequestTemplate {
   @ValidateNested()
-  @RecordTransformer(ProofRequest)
+  @Type(() => ProofRequest)
   public proofRequest!: ProofRequest
 
   @IsOptional()
