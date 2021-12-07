@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.1.4](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.1.3...react-hooks-v0.1.4) (2021-12-04)
+
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#78](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/78)) ([ca38eba](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/ca38eba50dbb524269865d4fbfcb2d33720d0b48))
+
 ### [0.1.3](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.1.2...react-hooks-v0.1.3) (2021-11-04)
 
 

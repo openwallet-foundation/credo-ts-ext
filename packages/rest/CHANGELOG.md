@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.6.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.5.0...rest-v0.6.0) (2021-12-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rest:** proof request indy fields are now snake_case as used by indy instead of camelCase as used by AFJ.
+
+### Bug Fixes
+
+* **deps:** update dependencies ([#78](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/78)) ([ca38eba](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/ca38eba50dbb524269865d4fbfcb2d33720d0b48))
+* **rest:** remove record transformer ([#77](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/77)) ([cda30f5](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/cda30f56b557a11645e9201ecf3e615ce8c890f5))
+
 ## [0.5.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.4.0...rest-v0.5.0) (2021-11-15)
 
 
