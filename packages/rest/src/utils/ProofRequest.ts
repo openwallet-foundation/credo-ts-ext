@@ -1,8 +1,7 @@
 import { ProofAttributeInfo, ProofPredicateInfo, RevocationInterval } from '@aries-framework/core'
+import { IsMap } from '@aries-framework/core/build/utils/transformers'
 import { Expose, Type } from 'class-transformer'
 import { IsString, ValidateNested, IsInstance, IsOptional, IsIn } from 'class-validator'
-
-import { IsMap } from './IsMap'
 
 export class ProofRequest {
   @IsString()
@@ -13,7 +12,7 @@ export class ProofRequest {
 
   @IsString()
   @IsOptional()
-  public nonce!: string
+  public nonce?: string
 
   @Expose({ name: 'requested_attributes' })
   @IsMap()

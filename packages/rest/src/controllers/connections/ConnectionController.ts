@@ -62,7 +62,7 @@ export class ConnectionController {
 
       return {
         invitationUrl: invitation.toUrl({
-          domain: this.agent.config.endpoints[0] + '/invitation',
+          domain: this.agent.config.endpoints[0],
           useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
         }),
         invitation: invitation.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix }),
