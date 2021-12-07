@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.6.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.6.0...rest-v0.6.1) (2021-12-07)
+
+
+### Bug Fixes
+
+* **rest:** made nonce optional on proofrequest ([#84](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/84)) ([c1efe58](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/c1efe58055639e1c3df0429df6a0efe8fcdeb850))
+
 ## [0.6.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.5.0...rest-v0.6.0) (2021-12-06)
 
 
