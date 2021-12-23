@@ -22,9 +22,8 @@ describe('PushNotifications', () => {
   })
 
   afterAll(async () => {
-    await notificationReceiver.shutdown({
-      deleteWallet: true,
-    })
+    await notificationReceiver.shutdown()
+    await notificationReceiver.wallet.delete()
   })
 
   describe('Create set Native push notification Message', () => {
