@@ -87,6 +87,7 @@ describe('CredentialDefinitionController', () => {
   })
 
   afterAll(async () => {
-    await agent.shutdown({ deleteWallet: true })
+    await agent.shutdown()
+    await agent.wallet.delete()
   })
 })
