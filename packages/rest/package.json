@@ -2,7 +2,7 @@
   "name": "@aries-framework/rest",
   "main": "build/index",
   "types": "build/index",
-  "version": "0.6.1",
+  "version": "0.7.0",
   "files": [
     "build"
   ],

@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.7.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.6.1...rest-v0.7.0) (2022-01-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* update aries framework javascript version to 0.1.0 (#86)
+
+### Miscellaneous Chores
+
+* update aries framework javascript version to 0.1.0 ([#86](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/86)) ([ebaa11a](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/ebaa11a8f1c4588b020e870abd092a5813ec28ef))
+
 ### [0.6.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.6.0...rest-v0.6.1) (2021-12-07)
 
 
