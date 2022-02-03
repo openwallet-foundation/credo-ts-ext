@@ -36,7 +36,7 @@
     "routing-controllers-openapi": "^3.1.0",
     "swagger-ui-express": "^4.1.6",
     "typedi": "^0.10.0",
-    "node-fetch": "^3.2.0"
+    "node-fetch": "2.2.0"
   },
   "devDependencies": {
     "@aries-framework/core": "^0.1.0",
