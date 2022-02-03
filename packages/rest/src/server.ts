@@ -36,10 +36,10 @@ export const setupServer = async (agent: Agent, config: ServerConfig, webhookUrl
     })
   }
 
-  if (webhookUrl) {
-    connectionEvents(agent, webhookUrl)
-    credentialEvents(agent, webhookUrl)
-    proofEvents(agent, webhookUrl)
+  if (config.webhookUrl) {
+    connectionEvents(agent, config)
+    credentialEvents(agent, config)
+    proofEvents(agent, config)
   }
 
   const schemas = validationMetadatasToSchemas({

@@ -1,17 +1,14 @@
+import type { ServerConfig } from '../utils/ServerConfig'
 import type { Agent, CredentialStateChangedEvent } from '@aries-framework/core'
 
 import { CredentialEventTypes } from '@aries-framework/core'
-import fetch from 'node-fetch'
 
-export const credentialEvents = async (agent: Agent, webhookUrl: string) => {
+import { webhookEvent } from './WebhookEvent'
+
+export const credentialEvents = async (agent: Agent, config: ServerConfig) => {
   agent.events.on(CredentialEventTypes.CredentialStateChanged, async ({ payload }: CredentialStateChangedEvent) => {
     const record = payload.credentialRecord
     const body = record.toJSON()
-
-    await fetch(webhookUrl + '/credentials', {
-      method: 'POST',
-      body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' },
-    })
+    webhookEvent(config.webhookUrl + '/credentials', body)
   })
 }

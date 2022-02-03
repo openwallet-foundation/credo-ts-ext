@@ -5,8 +5,8 @@ import type { Agent } from '@aries-framework/core'
 
 import { setupServer } from './server'
 
-export const startServer = async (agent: Agent, config: ServerConfig, webhookUrl?: string) => {
-  const server = await setupServer(agent, config, webhookUrl)
+export const startServer = async (agent: Agent, config: ServerConfig) => {
+  const server = await setupServer(agent, config)
 
   server.listen(config.port)
 }
