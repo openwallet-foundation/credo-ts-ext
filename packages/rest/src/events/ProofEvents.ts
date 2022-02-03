@@ -1,6 +1,7 @@
 import type { Agent, ProofStateChangedEvent } from '@aries-framework/core'
 
 import { ProofEventTypes } from '@aries-framework/core'
+import fetch from 'node-fetch'
 
 export const proofEvents = async (agent: Agent, webhookUrl: string) => {
   agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
@@ -10,6 +11,7 @@ export const proofEvents = async (agent: Agent, webhookUrl: string) => {
     await fetch(webhookUrl + '/proofs', {
       method: 'POST',
       body: JSON.stringify(body),
+      headers: { 'Content-Type': 'application/json' },
     })
   })
 }
