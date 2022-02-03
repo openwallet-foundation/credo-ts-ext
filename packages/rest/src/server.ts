@@ -16,7 +16,7 @@ import { proofEvents } from './events/ProofEvents'
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
 
-export const setupServer = async (agent: Agent, config: ServerConfig, webhookUrl?: string) => {
+export const setupServer = async (agent: Agent, config: ServerConfig) => {
   useContainer(Container)
   Container.set(Agent, agent)
 
