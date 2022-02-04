@@ -2,6 +2,8 @@ import type { IncomingHttpHeaders } from 'http'
 
 import express from 'express'
 
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
 export interface WebhookData {
   receivedAt: string
   headers: IncomingHttpHeaders

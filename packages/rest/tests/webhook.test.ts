@@ -15,7 +15,7 @@ import { EventEmitter } from '@aries-framework/core/build/agent/EventEmitter'
 import { setupServer } from '../src/server'
 
 import { getTestAgent } from './utils/helpers'
-import { webhookListener } from './utils/webhook'
+import { sleep, webhookListener } from './utils/webhook'
 
 describe('WebhookTest', () => {
   let agent: Agent
@@ -37,7 +37,6 @@ describe('WebhookTest', () => {
   test('should return a webhook event when connection state changed', async () => {
     const { connectionRecord } = await agent.connections.createConnection()
 
-    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
     await sleep(100)
 
     const webhook = webhooks.find(
@@ -66,7 +65,6 @@ describe('WebhookTest', () => {
       },
     })
 
-    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
     await sleep(100)
 
     const webhook = webhooks.find(
@@ -95,7 +93,6 @@ describe('WebhookTest', () => {
       },
     })
 
-    const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
     await sleep(100)
 
     const webhook = webhooks.find(
