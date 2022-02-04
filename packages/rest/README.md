@@ -90,7 +90,7 @@ const run = async (agent: Agent) => {
 run()
 ```
 
-In case of an event, we will sent the event to the webhookUrl with the topic of the event added to the url.
+In case of an event, we will sent the event to the webhookUrl with the topic of the event added to the url (http://test.com/{topic}).
 
 So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
 
