@@ -9,6 +9,6 @@ export const credentialEvents = async (agent: Agent, config: ServerConfig) => {
   agent.events.on(CredentialEventTypes.CredentialStateChanged, async ({ payload }: CredentialStateChangedEvent) => {
     const record = payload.credentialRecord
     const body = record.toJSON()
-    sendWebhookEvent(config.webhookUrl + '/credentials', body)
+    await sendWebhookEvent(config.webhookUrl + '/credentials', body)
   })
 }

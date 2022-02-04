@@ -37,6 +37,10 @@ describe('WebhookTest', () => {
   test('should return a webhook event when connection state changed', async () => {
     const { connectionRecord } = await agent.connections.createConnection()
 
+    /*
+     * we sleep here to wait for the event to have processed and sent out
+     * an webhook first before searching for the webhook
+     */
     await sleep(100)
 
     const webhook = webhooks.find(
@@ -65,6 +69,10 @@ describe('WebhookTest', () => {
       },
     })
 
+    /*
+     * we sleep here to wait for the event to have processed and sent out
+     * an webhook first before searching for the webhook
+     */
     await sleep(100)
 
     const webhook = webhooks.find(
@@ -93,6 +101,10 @@ describe('WebhookTest', () => {
       },
     })
 
+    /*
+     * we sleep here to wait for the event to have processed and sent out
+     * an webhook first before searching for the webhook
+     */
     await sleep(100)
 
     const webhook = webhooks.find(

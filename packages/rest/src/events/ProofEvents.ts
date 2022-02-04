@@ -9,6 +9,6 @@ export const proofEvents = async (agent: Agent, config: ServerConfig) => {
   agent.events.on(ProofEventTypes.ProofStateChanged, async ({ payload }: ProofStateChangedEvent) => {
     const record = payload.proofRecord
     const body = record.toJSON()
-    sendWebhookEvent(config.webhookUrl + '/proofs', body)
+    await sendWebhookEvent(config.webhookUrl + '/proofs', body)
   })
 }

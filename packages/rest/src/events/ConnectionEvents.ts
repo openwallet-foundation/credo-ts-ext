@@ -9,6 +9,6 @@ export const connectionEvents = async (agent: Agent, config: ServerConfig) => {
   agent.events.on(ConnectionEventTypes.ConnectionStateChanged, async ({ payload }: ConnectionStateChangedEvent) => {
     const record = payload.connectionRecord
     const body = record.toJSON()
-    sendWebhookEvent(config.webhookUrl + '/connections', body)
+    await sendWebhookEvent(config.webhookUrl + '/connections', body)
   })
 }
