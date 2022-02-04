@@ -69,10 +69,29 @@ run()
 
 We use webhooks as a method for the rest api to have the option to call the controller in case of an event.
 
-Usage: add a webhook url to the ServerConfig you pass to startServer()
-
 Current supported events are:
 
 - connections
 - credentials
 - proofs
+
+Example of usage:
+
+```ts
+// You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl
+
+const run = async (agent: Agent) => {
+  const config = {
+    port: 3000,
+    webhookUrl: 'http://test.com',
+  }
+  await startServer(agent, config)
+}
+run()
+```
+
+In case of an event, we will sent the event to the webhookUrl with the topic of the event added to the url.
+
+So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
+
+The payload of the webhook contains the date, the header, topic and a body containing an id, the state and possibly a key, meaning the record of the state of the changed event.
