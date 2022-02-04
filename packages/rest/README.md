@@ -94,4 +94,4 @@ In case of an event, we will sent the event to the webhookUrl with the topic of 
 
 So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
 
-The payload of the webhook contains the date, the header, topic and a body containing an id, the state and possibly a key, meaning the record of the state of the changed event.
+The payload of the webhook contains the date, the header, topic and a body containing the connection_id, the state of the event and possibly a key, meaning the record of the state of the changed event.
