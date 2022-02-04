@@ -67,7 +67,9 @@ run()
 
 ### Webhooks
 
-We use webhooks as a method for the rest api to call the controller in case of an event. Add a webhook url to the ServerConfig you provide to startServer()
+We use webhooks as a method for the rest api to have the option to call the controller in case of an event.
+
+Usage: add a webhook url to the ServerConfig you pass to startServer()
 
 Current supported events are:
 
