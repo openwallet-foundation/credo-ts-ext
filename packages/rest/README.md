@@ -64,3 +64,13 @@ const run = async (agent: Agent) => {
 // A Swagger (OpenAPI) definition is exposed on http://localhost:3000/docs
 run()
 ```
+
+### Webhooks
+
+We use webhooks as a method for the rest api to call the controller in case of an event. Add a webhook url to the ServerConfig you provide to startServer()
+
+Current supported events are:
+
+- connections
+- credentials
+- proofs
