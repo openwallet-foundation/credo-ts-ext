@@ -4,4 +4,5 @@ export interface ServerConfig {
   port: number
   cors?: boolean
   app?: Express
+  webhookUrl?: string
 }

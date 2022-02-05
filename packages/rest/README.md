@@ -64,3 +64,34 @@ const run = async (agent: Agent) => {
 // A Swagger (OpenAPI) definition is exposed on http://localhost:3000/docs
 run()
 ```
+
+### Webhooks
+
+We use webhooks as a method for the rest api to have the option to call the controller in case of an event.
+
+Current supported events are:
+
+- `Connections`
+- `Credentials`
+- `Proofs`
+
+Example of usage:
+
+```ts
+// You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl
+
+const run = async (agent: Agent) => {
+  const config = {
+    port: 3000,
+    webhookUrl: 'http://test.com',
+  }
+  await startServer(agent, config)
+}
+run()
+```
+
+In case of an event, we will send the event to the webhookUrl with the topic of the event added to the url (http://test.com/{topic}).
+
+So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
+
+The payload of the webhook contains the serialized record related to the topic of the event. For the `connections` topic this will be a `ConnectionRecord`, for the `credentials` topic it will be a `CredentialRecord`, and so on.
