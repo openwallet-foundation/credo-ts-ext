@@ -71,9 +71,9 @@ We use webhooks as a method for the rest api to have the option to call the cont
 
 Current supported events are:
 
-- connections
-- credentials
-- proofs
+- `Connections`
+- `Credentials`
+- `Proofs`
 
 Example of usage:
 
@@ -94,4 +94,4 @@ In case of an event, we will sent the event to the webhookUrl with the topic of 
 
 So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
 
-The payload of the webhook contains the date, the header, topic and a body containing the connection_id, the state of the event and possibly a key, meaning the record of the state of the changed event.
+The payload of the webhook contains the serialized record related to the topic of the event. For the `connections` topic this will be a `ConnectionRecord`, for the `credentials` topic it will be a `CredentialRecord`, and so on.
