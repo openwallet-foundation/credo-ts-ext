@@ -9,6 +9,10 @@ import { routingControllersToSpec } from 'routing-controllers-openapi'
 import * as swaggerUiExpress from 'swagger-ui-express'
 import { Container } from 'typedi'
 
+import { connectionEvents } from './events/ConnectionEvents'
+import { credentialEvents } from './events/CredentialEvents'
+import { proofEvents } from './events/ProofEvents'
+
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
 
@@ -30,6 +34,12 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
       controllers: controllers,
       cors: config.cors ?? true,
     })
+  }
+
+  if (config.webhookUrl) {
+    connectionEvents(agent, config)
+    credentialEvents(agent, config)
+    proofEvents(agent, config)
   }
 
   const schemas = validationMetadatasToSchemas({
