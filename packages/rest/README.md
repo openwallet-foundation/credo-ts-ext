@@ -95,3 +95,34 @@ In case of an event, we will send the event to the webhookUrl with the topic of 
 So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
 
 The payload of the webhook contains the serialized record related to the topic of the event. For the `connections` topic this will be a `ConnectionRecord`, for the `credentials` topic it will be a `CredentialRecord`, and so on.
+
+### Usage with Docker
+
+The easiest way to start working with the AFJ rest interface is using the pre-build docker image. The following is an example compose setup.
+
+```yaml
+version: '3.5'
+
+services:
+  rest-sample:
+    image: ghcr.io/hyperledger/afj-rest:latest
+    environment:
+      # possible to set values using env variables
+      AFJ_REST_LOG_LEVEL: 1
+    volumes:
+      # also possible to set values using json
+      - ./myConfig.json:/config.json
+    ports:
+      - '5000:5000'
+      - '5001:5001'
+      - '3000:3000'
+    platform: linux/amd64
+    # or via command line arguments
+    command: --auto-accept-connections --config /config.json
+```
+
+See the example [CLI Config](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest/samples/cliConfig.json) on how to configure the API using JSON. You can also find the possible options by running afj-rest with `--help`:
+
+```
+docker run ghcr.io/hyperledger/afj-rest --help
+```
