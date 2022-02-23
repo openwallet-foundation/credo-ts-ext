@@ -1,4 +1,4 @@
-version: "3.5"
+version: '3.5'
 
 services:
   rest-sample:
@@ -11,9 +11,9 @@ services:
       # also possible to set values using json
       - ./samples/cliConfig.json:/config.json
     ports:
-      - "5000:5000"
-      - "5001:5001"
-      - "3000:3000"
+      - '5000:5000'
+      - '5001:5001'
+      - '3000:3000'
     platform: linux/amd64
     # or via command line arguments
     command: --auto-accept-connections --config /config.json
