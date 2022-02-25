@@ -118,7 +118,7 @@ describe('ConnectionController', () => {
 
   describe('receive invitation', () => {
     test('should return connection record from received invitation', async () => {
-      const { invitation } = await aliceAgent.connections.createConnection()
+      const { invitation } = await bobAgent.connections.createConnection()
 
       const spy = jest.spyOn(bobAgent.connections, 'receiveInvitation')
       const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
@@ -133,7 +133,7 @@ describe('ConnectionController', () => {
     })
 
     test('should overwrite agent options with request options', async () => {
-      const { invitation } = await aliceAgent.connections.createConnection()
+      const { invitation } = await bobAgent.connections.createConnection()
 
       const req = {
         invitation: invitation.toJSON({ useLegacyDidSovPrefix: true }),
@@ -173,6 +173,7 @@ describe('ConnectionController', () => {
           domain: aliceAgent.config.endpoints[0],
           useLegacyDidSovPrefix: aliceAgent.config.useLegacyDidSovPrefix,
         }),
+        autoAcceptConnection: false,
       }
       const response = await request(app).post('/connections/receive-invitation-url').send(req)
 
