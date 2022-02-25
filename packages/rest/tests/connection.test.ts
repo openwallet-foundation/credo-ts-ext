@@ -54,6 +54,16 @@ describe('ConnectionController', () => {
     })
   })
 
+  describe('Send basic message to connection', () => {
+    test('should give 404 not found when connection is not found', async () => {
+      const response = await request(app)
+        .post(`/connections/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/send-message`)
+        .send({ content: 'Hello!' })
+
+      expect(response.statusCode).toBe(404)
+    })
+  })
+
   describe('create invitation', () => {
     test('should return invitation', async () => {
       const spy = jest.spyOn(bobAgent.connections, 'createConnection')
@@ -126,6 +136,41 @@ describe('ConnectionController', () => {
         autoAcceptConnection: false,
       }
       const response = await request(app).post('/connections/receive-invitation').send(req)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body.autoAcceptConnection).toBeFalsy()
+    })
+  })
+
+  describe('receive invitation by url', () => {
+    test('should return connection record from received invitation', async () => {
+      const { invitation } = await bobAgent.connections.createConnection()
+
+      const spy = jest.spyOn(bobAgent.connections, 'receiveInvitation')
+      const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
+
+      const req = {
+        invitationUrl: invitation.toUrl({
+          domain: bobAgent.config.endpoints[0],
+          useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
+        }),
+      }
+      const response = await request(app).post('/connections/receive-invitation-url').send(req)
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(objectToJson(await getResult()))
+    })
+
+    test('should overwrite agent options with request options', async () => {
+      const { invitation } = await bobAgent.connections.createConnection()
+
+      const req = {
+        invitationUrl: invitation.toUrl({
+          domain: bobAgent.config.endpoints[0],
+          useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
+        }),
+      }
+      const response = await request(app).post('/connections/receive-invitation-url').send(req)
 
       expect(response.statusCode).toBe(200)
       expect(response.body.autoAcceptConnection).toBeFalsy()

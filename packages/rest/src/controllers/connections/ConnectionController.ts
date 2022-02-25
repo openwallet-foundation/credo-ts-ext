@@ -1,4 +1,5 @@
 import { Agent, ConnectionInvitationMessage, JsonTransformer, RecordNotFoundError } from '@aries-framework/core'
+import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import {
   Body,
   Delete,
@@ -12,7 +13,9 @@ import {
 } from 'routing-controllers'
 import { Inject, Service } from 'typedi'
 
+import { BasicMessageRequest } from '../../schemas/BasicMessageRequest'
 import { InvitationConfigRequest } from '../../schemas/InvitationConfigRequest'
+import { ReceiveInvitationByUrlRequest } from '../../schemas/ReceiveInvitationByUrlRequest'
 import { ReceiveInvitationRequest } from '../../schemas/ReceiveInvitationRequest'
 
 @JsonController('/connections')
@@ -46,6 +49,29 @@ export class ConnectionController {
   public async getAllConnections() {
     const connections = await this.agent.connections.getAll()
     return connections.map((c) => c.toJSON())
+  }
+
+  /**
+   * Send a basic message to a connection
+   */
+  @Post('/:connectionId/send-message')
+  @OnUndefined(204)
+  public async sendMessage(
+    @Param('connectionId') connectionId: string,
+    @Body()
+    basicMessage: BasicMessageRequest
+  ) {
+    try {
+      const connection = await this.agent.connections.findById(connectionId)
+
+      if (!connection) {
+        throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
+      }
+
+      this.agent.basicMessages.sendMessage(connectionId, basicMessage.content)
+    } catch (error) {
+      throw new InternalServerError(`something went wrong: ${error}`)
+    }
   }
 
   /**
@@ -85,6 +111,27 @@ export class ConnectionController {
   public async receiveInvitation(@Body() invitationRequest: ReceiveInvitationRequest) {
     const { invitation, ...config } = invitationRequest
     try {
+      const inv = JsonTransformer.fromJSON(invitation, ConnectionInvitationMessage)
+      const connection = await this.agent.connections.receiveInvitation(inv, config)
+
+      return connection.toJSON()
+    } catch (error) {
+      throw new InternalServerError(`something went wrong: ${error}`)
+    }
+  }
+
+  /**
+   * Receive connection invitation as invitee by invitationUrl and create connection. If auto accepting is enabled
+   * via either the config passed in the function or the global agent config, a connection
+   * request message will be send.
+   */
+  @Post('/receive-invitation-url')
+  public async receiveInvitationByUrl(@Body() invitationByUrlRequest: ReceiveInvitationByUrlRequest) {
+    const { invitationUrl, ...config } = invitationByUrlRequest
+
+    try {
+      const base64 = invitationUrl.split('=')[1]
+      const invitation = JsonEncoder.fromBase64(base64)
       const inv = JsonTransformer.fromJSON(invitation, ConnectionInvitationMessage)
       const connection = await this.agent.connections.receiveInvitation(inv, config)
 
