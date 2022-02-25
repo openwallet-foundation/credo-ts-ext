@@ -17,6 +17,9 @@
     "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
     "directory": "packages/rest"
   },
+  "bin": {
+    "afj-rest": "bin/afj-rest.js"
+  },
   "scripts": {
     "dev": "tsnd --respawn samples/sampleWithApp.ts",
     "build": "yarn run clean && yarn run compile",
@@ -36,11 +39,13 @@
     "routing-controllers": "^0.9.0",
     "routing-controllers-openapi": "^3.1.0",
     "swagger-ui-express": "^4.1.6",
-    "typedi": "^0.10.0"
+    "tslog": "^3.2.2",
+    "typedi": "^0.10.0",
+    "yargs": "^17.3.1",
+    "@aries-framework/core": "^0.1.0",
+    "@aries-framework/node": "^0.1.0"
   },
   "devDependencies": {
-    "@aries-framework/core": "^0.1.0",
-    "@aries-framework/node": "^0.1.0",
     "@types/express": "^4.17.13",
     "@types/jest": "^27.0.3",
     "@types/node": "^16.11.10",
@@ -52,10 +57,6 @@
     "supertest": "^6.1.6",
     "ts-jest": "^27.0.7",
     "ts-node-dev": "^1.1.8",
-    "tslog": "^3.2.2",
     "typescript": "^4.5.2"
-  },
-  "peerDependencies": {
-    "@aries-framework/core": "^0.1.0"
   }
 }

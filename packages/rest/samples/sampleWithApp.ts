@@ -6,13 +6,13 @@ import { connect } from 'ngrok'
 import { createExpressServer } from 'routing-controllers'
 
 import { startServer } from '../src/index'
+import { TsLogger } from '../src/utils/logger'
 import { setupAgent } from '../tests/utils/agent'
-import { TestLogger } from '../tests/utils/logger'
 
 import { GreetingController } from './utils/GreetingController'
 
 const run = async () => {
-  const logger = new TestLogger(LogLevel.debug)
+  const logger = new TsLogger(LogLevel.debug)
   const endpoint = await connect(3001)
 
   const agent = await setupAgent({

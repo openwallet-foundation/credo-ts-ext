@@ -1,4 +1,4 @@
-import type { TestLogger } from './logger'
+import type { TsLogger } from '../../src/utils/logger'
 import type { AutoAcceptCredential, InitConfig } from '@aries-framework/core'
 
 import { Agent, ConnectionInvitationMessage, HttpOutboundTransport } from '@aries-framework/core'
@@ -20,7 +20,7 @@ export async function setupAgent({
   publicDidSeed: string
   endpoints: string[]
   name: string
-  logger: TestLogger
+  logger: TsLogger
   autoAcceptConnection: boolean
   autoAcceptCredential: AutoAcceptCredential
   useLegacyDidSovPrefix: boolean
