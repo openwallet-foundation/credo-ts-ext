@@ -62,14 +62,11 @@ export class ConnectionController {
     basicMessage: BasicMessageRequest
   ) {
     try {
-      const connection = await this.agent.connections.findById(connectionId)
-
-      if (!connection) {
+      await this.agent.basicMessages.sendMessage(connectionId, basicMessage.content)
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
         throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
       }
-
-      this.agent.basicMessages.sendMessage(connectionId, basicMessage.content)
-    } catch (error) {
       throw new InternalServerError(`something went wrong: ${error}`)
     }
   }

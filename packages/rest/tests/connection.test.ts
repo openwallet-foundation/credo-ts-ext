@@ -21,6 +21,10 @@ describe('ConnectionController', () => {
     await bobAgent.connections.createConnection()
   })
 
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('Get all connections', () => {
     test('should return all connections', async () => {
       const spy = jest.spyOn(bobAgent.connections, 'getAll')
@@ -114,7 +118,7 @@ describe('ConnectionController', () => {
 
   describe('receive invitation', () => {
     test('should return connection record from received invitation', async () => {
-      const { invitation } = await bobAgent.connections.createConnection()
+      const { invitation } = await aliceAgent.connections.createConnection()
 
       const spy = jest.spyOn(bobAgent.connections, 'receiveInvitation')
       const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
@@ -129,7 +133,7 @@ describe('ConnectionController', () => {
     })
 
     test('should overwrite agent options with request options', async () => {
-      const { invitation } = await bobAgent.connections.createConnection()
+      const { invitation } = await aliceAgent.connections.createConnection()
 
       const req = {
         invitation: invitation.toJSON({ useLegacyDidSovPrefix: true }),
@@ -144,17 +148,17 @@ describe('ConnectionController', () => {
 
   describe('receive invitation by url', () => {
     test('should return connection record from received invitation', async () => {
-      const { invitation } = await bobAgent.connections.createConnection()
+      const { invitation } = await aliceAgent.connections.createConnection()
+      const req = {
+        invitationUrl: invitation.toUrl({
+          domain: aliceAgent.config.endpoints[0],
+          useLegacyDidSovPrefix: aliceAgent.config.useLegacyDidSovPrefix,
+        }),
+      }
 
       const spy = jest.spyOn(bobAgent.connections, 'receiveInvitation')
       const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
 
-      const req = {
-        invitationUrl: invitation.toUrl({
-          domain: bobAgent.config.endpoints[0],
-          useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
-        }),
-      }
       const response = await request(app).post('/connections/receive-invitation-url').send(req)
 
       expect(response.statusCode).toBe(200)
@@ -162,12 +166,12 @@ describe('ConnectionController', () => {
     })
 
     test('should overwrite agent options with request options', async () => {
-      const { invitation } = await bobAgent.connections.createConnection()
+      const { invitation } = await aliceAgent.connections.createConnection()
 
       const req = {
         invitationUrl: invitation.toUrl({
-          domain: bobAgent.config.endpoints[0],
-          useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
+          domain: aliceAgent.config.endpoints[0],
+          useLegacyDidSovPrefix: aliceAgent.config.useLegacyDidSovPrefix,
         }),
       }
       const response = await request(app).post('/connections/receive-invitation-url').send(req)
