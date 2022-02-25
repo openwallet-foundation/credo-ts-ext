@@ -36,7 +36,7 @@ The Aries Framework JavaScript REST API is the most convenient way for self-sove
 
 ### Quick start
 
-The Rest API provides an OpenAPI schema that easily be viewed using the SwaggerUI that is provided with the server. The docs can be viewed on the `/docs` endpoint (e.g. http://localhost:3000/docs).
+The Rest API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The docs can be viewed on the `/docs` endpoint (e.g. http://localhost:3000/docs).
 
 > The OpenAPI spec is generated from the model classes used by Aries Framework JavaScript. Due to limitations in the inspection of these classes, the generated schema does not always exactly match the expected format. Keep this in mind when using this package. If you encounter any issues, feel free to open an issue.
 
