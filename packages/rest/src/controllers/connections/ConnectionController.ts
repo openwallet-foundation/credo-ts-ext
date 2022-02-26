@@ -13,6 +13,7 @@ import {
 import { Inject, Service } from 'typedi'
 
 import { InvitationConfigRequest } from '../../schemas/InvitationConfigRequest'
+import { ReceiveInvitationByUrlRequest } from '../../schemas/ReceiveInvitationByUrlRequest'
 import { ReceiveInvitationRequest } from '../../schemas/ReceiveInvitationRequest'
 
 @JsonController('/connections')
@@ -87,6 +88,24 @@ export class ConnectionController {
     try {
       const inv = JsonTransformer.fromJSON(invitation, ConnectionInvitationMessage)
       const connection = await this.agent.connections.receiveInvitation(inv, config)
+
+      return connection.toJSON()
+    } catch (error) {
+      throw new InternalServerError(`something went wrong: ${error}`)
+    }
+  }
+
+  /**
+   * Receive connection invitation as invitee by invitationUrl and create connection. If auto accepting is enabled
+   * via either the config passed in the function or the global agent config, a connection
+   * request message will be send.
+   */
+  @Post('/receive-invitation-url')
+  public async receiveInvitationByUrl(@Body() invitationByUrlRequest: ReceiveInvitationByUrlRequest) {
+    const { invitationUrl, ...config } = invitationByUrlRequest
+
+    try {
+      const connection = await this.agent.connections.receiveInvitationFromUrl(invitationUrl, config)
 
       return connection.toJSON()
     } catch (error) {
