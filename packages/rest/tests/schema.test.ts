@@ -16,6 +16,10 @@ describe('AgentController', () => {
     app = await setupServer(agent, { port: 3000 })
   })
 
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('get schema by id', () => {
     test('should return schema ', async () => {
       const spy = jest.spyOn(agent.ledger, 'getSchema').mockResolvedValueOnce({

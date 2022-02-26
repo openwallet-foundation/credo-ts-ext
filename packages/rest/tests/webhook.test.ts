@@ -23,15 +23,32 @@ describe('WebhookTest', () => {
   const webhooks: WebhookData[] = []
 
   beforeEach(async () => {
-    agent = await getTestAgent('Rest Webhook Test Bob', 3003)
+    agent = await getTestAgent('Rest Webhook Test Bob', 3012)
     server = await webhookListener(3000, webhooks)
-    await setupServer(agent, { webhookUrl: 'http://localhost:3000', port: 3004 })
+    await setupServer(agent, { webhookUrl: 'http://localhost:3000', port: 3013 })
   })
 
   afterEach(async () => {
     await agent.shutdown()
     await agent.wallet.delete()
     server.close()
+  })
+
+  test('should return a webhook event when basic message state changed', async () => {
+    const { invitation } = await agent.connections.createConnection()
+    const { id } = await agent.connections.receiveInvitation(invitation)
+
+    await agent.basicMessages.sendMessage(id, 'Hello')
+
+    /*
+     * we sleep here to wait for the event to have processed and sent out
+     * an webhook first before searching for the webhook
+     */
+    await sleep(100)
+
+    const webhook = webhooks.find((webhook) => webhook.topic !== 'connections')
+
+    expect(webhook).toBeDefined()
   })
 
   test('should return a webhook event when connection state changed', async () => {

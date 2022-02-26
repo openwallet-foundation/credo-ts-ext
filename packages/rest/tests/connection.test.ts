@@ -58,16 +58,6 @@ describe('ConnectionController', () => {
     })
   })
 
-  describe('Send basic message to connection', () => {
-    test('should give 404 not found when connection is not found', async () => {
-      const response = await request(app)
-        .post(`/connections/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/send-message`)
-        .send({ content: 'Hello!' })
-
-      expect(response.statusCode).toBe(404)
-    })
-  })
-
   describe('create invitation', () => {
     test('should return invitation', async () => {
       const spy = jest.spyOn(bobAgent.connections, 'createConnection')

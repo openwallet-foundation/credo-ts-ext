@@ -24,6 +24,10 @@ describe('ProofController', () => {
     testRequest = getTestProofRequest()
   })
 
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('Get all proofs', () => {
     test('should return all proofs', async () => {
       const spy = jest.spyOn(bobAgent.proofs, 'getAll').mockResolvedValueOnce([testProof])

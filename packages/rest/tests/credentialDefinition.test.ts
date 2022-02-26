@@ -19,6 +19,10 @@ describe('CredentialDefinitionController', () => {
     testCredDef = getTestCredDef()
   })
 
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('get credential definition by id', () => {
     test('should return credential definition ', async () => {
       const spy = jest.spyOn(agent.ledger, 'getCredentialDefinition').mockResolvedValueOnce(testCredDef)

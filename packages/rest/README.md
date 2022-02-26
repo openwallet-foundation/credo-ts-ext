@@ -71,6 +71,7 @@ We use webhooks as a method for the rest api to have the option to call the cont
 
 Current supported events are:
 
+- `Basic messages`
 - `Connections`
 - `Credentials`
 - `Proofs`

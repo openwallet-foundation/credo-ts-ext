@@ -9,6 +9,7 @@ import { routingControllersToSpec } from 'routing-controllers-openapi'
 import * as swaggerUiExpress from 'swagger-ui-express'
 import { Container } from 'typedi'
 
+import { basicMessageEvents } from './events/BasicMessageEvents'
 import { connectionEvents } from './events/ConnectionEvents'
 import { credentialEvents } from './events/CredentialEvents'
 import { proofEvents } from './events/ProofEvents'
@@ -37,6 +38,7 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
   }
 
   if (config.webhookUrl) {
+    basicMessageEvents(agent, config)
     connectionEvents(agent, config)
     credentialEvents(agent, config)
     proofEvents(agent, config)

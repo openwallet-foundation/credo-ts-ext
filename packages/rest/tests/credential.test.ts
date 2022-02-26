@@ -23,6 +23,10 @@ describe('CredentialController', () => {
     testCredentialOfferMsg = getTestCredentialOfferMsg()
   })
 
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
   describe('Get all credentials', () => {
     test('should return all credentials', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])

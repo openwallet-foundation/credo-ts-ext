@@ -12,7 +12,6 @@ import {
 } from 'routing-controllers'
 import { Inject, Service } from 'typedi'
 
-import { BasicMessageRequest } from '../../schemas/BasicMessageRequest'
 import { InvitationConfigRequest } from '../../schemas/InvitationConfigRequest'
 import { ReceiveInvitationByUrlRequest } from '../../schemas/ReceiveInvitationByUrlRequest'
 import { ReceiveInvitationRequest } from '../../schemas/ReceiveInvitationRequest'
@@ -48,26 +47,6 @@ export class ConnectionController {
   public async getAllConnections() {
     const connections = await this.agent.connections.getAll()
     return connections.map((c) => c.toJSON())
-  }
-
-  /**
-   * Send a basic message to a connection
-   */
-  @Post('/:connectionId/send-message')
-  @OnUndefined(204)
-  public async sendMessage(
-    @Param('connectionId') connectionId: string,
-    @Body()
-    basicMessage: BasicMessageRequest
-  ) {
-    try {
-      await this.agent.basicMessages.sendMessage(connectionId, basicMessage.content)
-    } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
-      }
-      throw new InternalServerError(`something went wrong: ${error}`)
-    }
   }
 
   /**
