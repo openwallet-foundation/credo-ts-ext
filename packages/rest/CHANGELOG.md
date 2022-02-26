@@ -1,5 +1,14 @@
 # Changelog
 
+## [0.8.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.7.0...rest-v0.8.0) (2022-02-26)
+
+
+### Features
+
+* **rest:** add cli and docker image publishing ([#96](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/96)) ([87d0205](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/87d02058e4b7d1fba1039265f5d595880f862097))
+* **rest:** add webhooks ([#93](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/93)) ([9fc020d](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/9fc020d7db0f002894e520766987eec327a2ed69))
+* **rest:** added basic messages and receive invitation by url ([#97](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/97)) ([956c928](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/956c928e3599925c65d8f99852bf06cebc06dba7))
+
 ## [0.7.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.6.1...rest-v0.7.0) (2022-01-04)
 
 
