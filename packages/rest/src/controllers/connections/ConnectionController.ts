@@ -1,5 +1,4 @@
 import { Agent, ConnectionInvitationMessage, JsonTransformer, RecordNotFoundError } from '@aries-framework/core'
-import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import {
   Body,
   Delete,
@@ -127,10 +126,7 @@ export class ConnectionController {
     const { invitationUrl, ...config } = invitationByUrlRequest
 
     try {
-      const base64 = invitationUrl.split('=')[1]
-      const invitation = JsonEncoder.fromBase64(base64)
-      const inv = JsonTransformer.fromJSON(invitation, ConnectionInvitationMessage)
-      const connection = await this.agent.connections.receiveInvitation(inv, config)
+      const connection = await this.agent.connections.receiveInvitationFromUrl(invitationUrl, config)
 
       return connection.toJSON()
     } catch (error) {
