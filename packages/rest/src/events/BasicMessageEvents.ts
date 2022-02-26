@@ -11,7 +11,7 @@ export const basicMessageEvents = async (agent: Agent, config: ServerConfig) => 
     async ({ payload }: BasicMessageStateChangedEvent) => {
       const record = payload.basicMessageRecord
       const body = record.toJSON()
-      await sendWebhookEvent(config.webhookUrl + '/basic-messages', body)
+      await sendWebhookEvent(config.webhookUrl + '/basic-messages', body, agent.config.logger)
     }
   )
 }
