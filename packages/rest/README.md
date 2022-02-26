@@ -28,11 +28,96 @@
 </p>
 <br />
 
-Aries Framework JavaScript REST API is a wrapper around [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git).
+The Aries Framework JavaScript REST API is the most convenient way for self-sovereign identity (SSI) developers to interact with SSI agents.
 
-### Installation
+- ⭐ **Endpoints** to create connections, issue credentials, and request proofs.
+- 💻 **CLI** that makes it super easy to start an instance of the REST API.
+- 🌐 **Interoperable** with all major Aries implementations.
 
-Make sure you have set up the correct version of Aries Framework JavaScript according to the AFJ repository. To find out which version of AFJ you need to have installed you can run the following command. This will list the required peer dependency for `@aries-framework/core`.
+### Quick start
+
+The Rest API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The docs can be viewed on the `/docs` endpoint (e.g. http://localhost:3000/docs).
+
+> The OpenAPI spec is generated from the model classes used by Aries Framework JavaScript. Due to limitations in the inspection of these classes, the generated schema does not always exactly match the expected format. Keep this in mind when using this package. If you encounter any issues, feel free to open an issue.
+
+#### Using the CLI
+
+Using the CLI is the easiest way to get started with REST API.
+
+**With Docker (easiest)**
+
+Make sure you have [Docker](https://docs.docker.com/get-docker/) installed. To get a minimal version of the agent running the following command is sufficient:
+
+```sh
+docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/afj-rest \
+  --label "AFJ Rest" \
+  --wallet-id "walletId" \
+  --wallet-key "walletKey" \
+  --endpoint http://localhost:5000 \
+  --admin-port 3000 \
+  --outbound-transport http \
+  --inbound-transport http 5000
+```
+
+See the [docker-compose.yml](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/docker-compose.yml) file for an example of using the afj-rest image with docker compose.
+
+> ⚠️ The docker image is not optimized for ARM architectures and won't work on Apple Silicon macs. See the **Directly on Computer** below on how to run it directly on your computer without docker.
+
+**Directly on Computer**
+
+To run AFJ rest directly on your computer you need to have the indy-sdk installed. Follow the indy [installation steps](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/libindy) for your platform and verify indy is installed.
+
+Once you have installed indy you can start the rest server using the following command:
+
+```sh
+npx -p @aries-framework/rest afj-rest start \
+  --label "AFJ Rest" \
+  --wallet-id "walletId" \
+  --wallet-key "walletKey" \
+  --endpoint http://localhost:5000 \
+  --admin-port 3000 \
+  --outbound-transport http \
+  --inbound-transport http 5000
+```
+
+**Configuration**
+
+To find out all available configuration options from the cli, you can run the cli command with `--help`. This will print a full list of all available options.
+
+```sh
+# With docker
+docker run ghcr.io/hyperledger/afj-rest --help
+
+# Directly on computer
+npx -p @aries-framework/rest afj-rest start --help
+```
+
+It is also possible to configure the rest API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
+
+```json
+{
+  "label": "AFJ Rest Agent",
+  "walletId": "walletId",
+  "walletKey": "walletKey"
+  // ... other config options ... //
+}
+```
+
+As a final option it is possible to configure the agent using environment variables. All properties are prefixed by `AFJ_REST` transformed to UPPER_SNAKE_CASE.
+
+```sh
+# With docker
+docker run -e AFJ_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/afj-rest ...
+
+# Directly on computer
+AFJ_REST_WALLET_KEY="my-secret-key" npx -p @aries-framework/rest afj-rest start ...
+```
+
+#### Starting Own Server
+
+Starting your own server is more involved than using the CLI, but allows more fine-grained control over the settings and allows you to extend the rest api with custom endpoints.
+
+To get started, make sure you have set up the correct version of Aries Framework JavaScript according to the AFJ repository. To find out which version of AFJ you need to have installed you can run the following command. This will list the required peer dependency for `@aries-framework/core`.
 
 ```sh
 npm info "@aries-framework/rest" peerDependencies
@@ -44,20 +129,22 @@ Then add the rest package to your project.
 yarn add @aries-framework/rest
 ```
 
-### Quick start
-
-> The OpenAPI spec is generated using the OpenAPI Schema (Swagger). However this schema is not representing the real API. A lot of types are not correct. Keep this in mind when using this package.
-
-Aries Framework JavaScript REST API provides a Swagger (OpenAPI) definition of the exposed API. After you start the REST API the generated API Client will be available on `/docs`.
-
-### Example of usage
+Finally you can create an agent instance and import the `startServer` method from the rest package. That's all you have to do.
 
 ```ts
 import { startServer } from '@aries-framework/rest'
+import { Agent } from '@aries-framework/core'
+import { agentDependencies } from '@aries-framework/node'
 
 // The startServer function requires an initialized agent and a port.
 // An example of how to setup an agent is located in the `samples` directory.
-const run = async (agent: Agent) => {
+const run = async () => {
+  const agent = new Agent(
+    {
+      // ... AFJ Config ... //
+    },
+    agentDependencies
+  )
   await startServer(agent, { port: 3000 })
 }
 
@@ -76,7 +163,7 @@ Current supported events are:
 - `Credentials`
 - `Proofs`
 
-Example of usage:
+When using the CLI a webhook url can be specified using the `--webhook-url` config option. When using the rest server as an library the webhook url can be configured in the `startServer` method.
 
 ```ts
 // You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl

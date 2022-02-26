@@ -10,7 +10,7 @@ function logToTransport(logObject: ILogObject) {
   appendFileSync('logs.txt', JSON.stringify(logObject) + '\n')
 }
 
-export class TestLogger extends BaseLogger {
+export class TsLogger extends BaseLogger {
   private logger: Logger
 
   // Map our log levels to tslog levels

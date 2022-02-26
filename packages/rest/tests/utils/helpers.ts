@@ -9,11 +9,12 @@ import {
 } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 
+import { TsLogger } from '../../src/utils/logger'
+
 import { setupAgent } from './agent'
-import { TestLogger } from './logger'
 
 export async function getTestAgent(name: string, port: number) {
-  const logger = new TestLogger(LogLevel.fatal)
+  const logger = new TsLogger(LogLevel.fatal)
 
   return await setupAgent({
     port: port,
