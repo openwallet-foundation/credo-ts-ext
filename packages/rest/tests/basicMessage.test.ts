@@ -19,7 +19,7 @@ describe('BasicMessageController', () => {
     connection = await agent.connections.receiveInvitation(invitation)
   })
 
-  describe('Get basic messages', () => {
+  describe('get basic messages', () => {
     test('should return all basic messages by connectionId', async () => {
       const spy = jest.spyOn(agent.basicMessages, 'findAllByQuery')
       const getResult = (): Promise<BasicMessageRecord[]> => spy.mock.results[0].value
