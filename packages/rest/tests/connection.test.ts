@@ -117,7 +117,7 @@ describe('ConnectionController', () => {
 
       expect(response.statusCode).toBe(200)
       expect(spy).toBeCalledWith(params)
-      expect(response.body.invitation.multiUseInvitation).toBeTruthy()
+      expect(response.body.connection.multiUseInvitation).toBeTruthy()
     })
   })
 
