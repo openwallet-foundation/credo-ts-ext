@@ -146,6 +146,7 @@ jobs:
           release-type: node
           package-name: ${{ matrix.package }}
           bump-minor-pre-major: true
+          bump-patch-for-minor-pre-major: true
           monorepo-tags: true
           signoff: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
 
