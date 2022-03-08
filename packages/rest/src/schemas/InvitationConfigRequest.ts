@@ -14,6 +14,10 @@ export class InvitationConfigRequest {
   public mediatorId?: string
 
   @IsOptional()
+  @IsBoolean()
+  public multiUseInvitation?: boolean
+
+  @IsOptional()
   @IsString()
   public myLabel?: string
 
