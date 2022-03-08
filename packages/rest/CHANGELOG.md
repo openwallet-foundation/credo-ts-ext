@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.9.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.8.0...rest-v0.9.0) (2022-03-08)
+
+
+### Features
+
+* **rest:** added multi use param to create invitation ([#100](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/100)) ([d00f11d](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/d00f11d78e9f65de3907bd6bf94dd6c38e2ddc3b))
+
 ## [0.8.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.7.0...rest-v0.8.0) (2022-02-26)
 
 
