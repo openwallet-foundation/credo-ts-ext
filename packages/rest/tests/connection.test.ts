@@ -87,6 +87,7 @@ describe('ConnectionController', () => {
       expect(spy).toBeCalledWith(params)
       expect(response.body.connection.alias).toEqual('test')
       expect(response.body.connection.autoAcceptConnection).toEqual(false)
+      expect(response.body.connection.multiUseInvitation).toEqual(false)
     })
 
     test('should accept custom label and imageUrl', async () => {
@@ -103,6 +104,20 @@ describe('ConnectionController', () => {
       expect(spy).toBeCalledWith(params)
       expect(response.body.invitation.label).toEqual('custom-label')
       expect(response.body.invitation.imageUrl).toEqual('https://example.com/image.png')
+    })
+
+    test('should accept multiUseInvitation parameter', async () => {
+      const spy = jest.spyOn(bobAgent.connections, 'createConnection')
+
+      const params = {
+        multiUseInvitation: true,
+      }
+
+      const response = await request(app).post('/connections/create-invitation').send(params)
+
+      expect(response.statusCode).toBe(200)
+      expect(spy).toBeCalledWith(params)
+      expect(response.body.invitation.multiUseInvitation).toBeTruthy()
     })
   })
 
