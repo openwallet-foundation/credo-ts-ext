@@ -1,17 +1,6 @@
-import { Agent, IndySdkError } from '@aries-framework/core'
-import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
+import { Agent } from '@aries-framework/core'
 import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
-import { isIndyError } from '@aries-framework/core/build/utils/indyError'
-import {
-  BadRequestError,
-  Body,
-  Get,
-  InternalServerError,
-  JsonController,
-  NotFoundError,
-  Param,
-  Post,
-} from 'routing-controllers'
+import { Body, Get, InternalServerError, JsonController, NotFoundError, Param, Post } from 'routing-controllers'
 import { Inject, Service } from 'typedi'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
@@ -38,10 +27,6 @@ export class CredentialDefinitionController {
         throw new NotFoundError(
           `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`
         )
-      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
-        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw new BadRequestError(`credentialDefinitionId "${credentialDefinitionId}" has invalid structure.`)
-        }
       }
       throw new InternalServerError(`something went wrong: ${error}`)
     }
@@ -64,10 +49,6 @@ export class CredentialDefinitionController {
     } catch (error) {
       if (error instanceof LedgerNotFoundError) {
         throw new NotFoundError(`schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`)
-      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
-        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw new BadRequestError(`schemaId "${credentialDefinitionRequest.schemaId}" has invalid structure.`)
-        }
       }
       throw new InternalServerError(`something went wrong: ${error}`)
     }

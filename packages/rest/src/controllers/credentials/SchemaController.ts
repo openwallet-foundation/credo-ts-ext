@@ -1,13 +1,10 @@
-import { Agent, AriesFrameworkError, IndySdkError } from '@aries-framework/core'
-import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
+import { Agent, AriesFrameworkError } from '@aries-framework/core'
 import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
-import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import {
   InternalServerError,
   ForbiddenError,
   NotFoundError,
   JsonController,
-  BadRequestError,
   Get,
   Post,
   Param,
@@ -37,13 +34,6 @@ export class SchemaController {
     } catch (error) {
       if (error instanceof LedgerNotFoundError) {
         throw new NotFoundError(`schema definition with schemaId "${schemaId}" not found.`)
-      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
-        if (isIndyError(error.cause.cause, 'LedgerInvalidTransaction')) {
-          throw new ForbiddenError(`schema definition with schemaId "${schemaId}" can not be returned.`)
-        }
-        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw new BadRequestError(`schemaId "${schemaId}" has invalid structure.`)
-        }
       }
 
       throw new InternalServerError(`something went wrong: ${error}`)
@@ -66,10 +56,6 @@ export class SchemaController {
       if (error instanceof AriesFrameworkError) {
         if (error.message.includes('UnauthorizedClientRequest')) {
           throw new ForbiddenError(`this action is not allowed.`)
-        }
-      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
-        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw new BadRequestError(`schema "${schema}" has invalid structure.`)
         }
       }
       throw new InternalServerError(`something went wrong: ${error}`)
