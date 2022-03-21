@@ -64,8 +64,11 @@ export class CredentialDefinitionController {
     } catch (error) {
       if (error instanceof LedgerNotFoundError) {
         throw new NotFoundError(`schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`)
+      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
+        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
+          throw new BadRequestError(`schemaId "${credentialDefinitionRequest.schemaId}" has invalid structure.`)
+        }
       }
-
       throw new InternalServerError(`something went wrong: ${error}`)
     }
   }

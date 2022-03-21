@@ -91,6 +91,9 @@ export class ConnectionController {
 
       return connection.toJSON()
     } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        throw new NotFoundError(`mediator with mediatorId ${invitationRequest?.mediatorId} not found`)
+      }
       throw new InternalServerError(`something went wrong: ${error}`)
     }
   }
@@ -109,6 +112,9 @@ export class ConnectionController {
 
       return connection.toJSON()
     } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        throw new NotFoundError(`mediator with mediatorId ${invitationByUrlRequest?.mediatorId} not found`)
+      }
       throw new InternalServerError(`something went wrong: ${error}`)
     }
   }

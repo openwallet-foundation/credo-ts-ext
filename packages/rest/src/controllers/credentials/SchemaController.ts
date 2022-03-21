@@ -67,6 +67,10 @@ export class SchemaController {
         if (error.message.includes('UnauthorizedClientRequest')) {
           throw new ForbiddenError(`this action is not allowed.`)
         }
+      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
+        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
+          throw new BadRequestError(`schema "${schema}" has invalid structure.`)
+        }
       }
       throw new InternalServerError(`something went wrong: ${error}`)
     }
