@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer'
-import { ValidateNested } from 'class-validator'
+import { IsInstance, ValidateNested } from 'class-validator'
 
 import { InvitationConfigRequest } from './InvitationConfigRequest'
 import { InvitationRequest } from './InvitationRequest'
@@ -7,5 +7,6 @@ import { InvitationRequest } from './InvitationRequest'
 export class ReceiveInvitationRequest extends InvitationConfigRequest {
   @ValidateNested()
   @Type(() => InvitationRequest)
+  @IsInstance(InvitationRequest)
   public invitation!: InvitationRequest
 }
