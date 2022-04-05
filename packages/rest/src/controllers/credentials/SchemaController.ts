@@ -13,7 +13,7 @@ import {
   Param,
   Body,
 } from 'routing-controllers'
-import { inject, injectable } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 import { SchemaTemplate } from '../../schemas/SchemaRequest'
 
@@ -22,7 +22,7 @@ import { SchemaTemplate } from '../../schemas/SchemaRequest'
 export class SchemaController {
   private agent: Agent
 
-  public constructor(@inject('agent') agent: Agent) {
+  public constructor(agent: Agent) {
     this.agent = agent
   }
 

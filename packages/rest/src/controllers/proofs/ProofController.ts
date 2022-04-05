@@ -12,7 +12,7 @@ import {
   Post,
   QueryParam,
 } from 'routing-controllers'
-import { inject, injectable } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 import { AcceptProofProposalRequest } from '../../schemas/AcceptProofProposalRequest'
 import { PresentationProofRequest } from '../../schemas/PresentationProofRequest'
@@ -25,7 +25,7 @@ import { ProofRequestTemplate } from '../../schemas/ProofRequestTemplate'
 export class ProofController {
   private agent: Agent
 
-  public constructor(@inject('agent') agent: Agent) {
+  public constructor(agent: Agent) {
     this.agent = agent
   }
 

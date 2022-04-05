@@ -1,8 +1,8 @@
 import 'reflect-metadata'
 import type { ServerConfig } from './utils/ServerConfig'
-import type { Agent } from '@aries-framework/core'
 import type { Express } from 'express'
 
+import { Agent } from '@aries-framework/core'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import { createExpressServer, getMetadataArgsStorage, useContainer, useExpressServer } from 'routing-controllers'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
@@ -19,7 +19,7 @@ import TsyringeAdapter from './utils/TsyringeAdapter'
 const packageJson = require('../package.json')
 
 export const setupServer = async (agent: Agent, config: ServerConfig) => {
-  container.register('agent', { useValue: agent })
+  container.registerInstance(Agent, agent)
   useContainer(new TsyringeAdapter(container))
 
   // eslint-disable-next-line @typescript-eslint/ban-types

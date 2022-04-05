@@ -10,7 +10,7 @@ import {
   Param,
   Post,
 } from 'routing-controllers'
-import { inject, injectable } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 import { InvitationConfigRequest } from '../../schemas/InvitationConfigRequest'
 import { ReceiveInvitationByUrlRequest } from '../../schemas/ReceiveInvitationByUrlRequest'
@@ -21,7 +21,7 @@ import { ReceiveInvitationRequest } from '../../schemas/ReceiveInvitationRequest
 export class ConnectionController {
   private agent: Agent
 
-  public constructor(@inject('agent') agent: Agent) {
+  public constructor(agent: Agent) {
     this.agent = agent
   }
 

@@ -12,7 +12,7 @@ import {
   Param,
   Post,
 } from 'routing-controllers'
-import { injectable, inject } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
 
@@ -21,7 +21,7 @@ import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionR
 export class CredentialDefinitionController {
   private agent: Agent
 
-  public constructor(@inject('agent') agent: Agent) {
+  public constructor(agent: Agent) {
     this.agent = agent
   }
 

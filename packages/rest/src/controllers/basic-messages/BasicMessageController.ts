@@ -9,7 +9,7 @@ import {
   Param,
   Post,
 } from 'routing-controllers'
-import { inject, injectable } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 import { BasicMessageRequest } from '../../schemas/BasicMessageRequest'
 
@@ -18,7 +18,7 @@ import { BasicMessageRequest } from '../../schemas/BasicMessageRequest'
 export class BasicMessageController {
   private agent: Agent
 
-  public constructor(@inject('agent') agent: Agent) {
+  public constructor(agent: Agent) {
     this.agent = agent
   }
 

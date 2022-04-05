@@ -12,7 +12,7 @@ import {
   Delete,
   OnUndefined,
 } from 'routing-controllers'
-import { injectable, inject } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 import { AcceptCredentialProposalRequest } from '../../schemas/AcceptCredentialProposalRequest'
 import { CredentialOfferRequest } from '../../schemas/CredentialOfferRequest'
@@ -24,7 +24,7 @@ import { CredentialProposalRequest } from '../../schemas/CredentialProposalReque
 export class CredentialController {
   private agent: Agent
 
-  public constructor(@inject('agent') agent: Agent) {
+  public constructor(agent: Agent) {
     this.agent = agent
   }
 

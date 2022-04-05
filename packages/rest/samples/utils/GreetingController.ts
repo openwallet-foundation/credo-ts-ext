@@ -1,13 +1,13 @@
 import { Agent, AgentConfig } from '@aries-framework/core'
 import { Get, JsonController } from 'routing-controllers'
-import { injectable, inject } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 @JsonController('/greeting')
 @injectable()
 export class GreetingController {
   private agent: Agent
 
-  public constructor(@inject('agent') agent: Agent) {
+  public constructor(agent: Agent) {
     this.agent = agent
   }
 
