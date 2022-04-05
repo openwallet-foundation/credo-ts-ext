@@ -12,7 +12,7 @@ import {
   Post,
   QueryParam,
 } from 'routing-controllers'
-import { Inject, Service } from 'typedi'
+import { inject, injectable } from 'tsyringe'
 
 import { AcceptProofProposalRequest } from '../../schemas/AcceptProofProposalRequest'
 import { PresentationProofRequest } from '../../schemas/PresentationProofRequest'
@@ -21,12 +21,11 @@ import { ProofProposalRequest } from '../../schemas/ProofProposalRequest'
 import { ProofRequestTemplate } from '../../schemas/ProofRequestTemplate'
 
 @JsonController('/proofs')
-@Service()
+@injectable()
 export class ProofController {
-  @Inject()
   private agent: Agent
 
-  public constructor(agent: Agent) {
+  public constructor(@inject('agent') agent: Agent) {
     this.agent = agent
   }
 

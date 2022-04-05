@@ -9,17 +9,16 @@ import {
   Param,
   Post,
 } from 'routing-controllers'
-import { Inject, Service } from 'typedi'
+import { inject, injectable } from 'tsyringe'
 
 import { BasicMessageRequest } from '../../schemas/BasicMessageRequest'
 
 @JsonController('/basic-messages')
-@Service()
+@injectable()
 export class BasicMessageController {
-  @Inject()
   private agent: Agent
 
-  public constructor(agent: Agent) {
+  public constructor(@inject('agent') agent: Agent) {
     this.agent = agent
   }
 

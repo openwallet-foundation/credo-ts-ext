@@ -1,14 +1,13 @@
 import { Agent } from '@aries-framework/core'
 import { Get, JsonController } from 'routing-controllers'
-import { Inject, Service } from 'typedi'
+import { inject, injectable } from 'tsyringe'
 
 @JsonController('/agent')
-@Service()
+@injectable()
 export class AgentController {
-  @Inject()
   private agent: Agent
 
-  public constructor(agent: Agent) {
+  public constructor(@inject('agent') agent: Agent) {
     this.agent = agent
   }
 

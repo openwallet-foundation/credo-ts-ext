@@ -1,25 +1,26 @@
 import 'reflect-metadata'
 import type { ServerConfig } from './utils/ServerConfig'
+import type { Agent } from '@aries-framework/core'
 import type { Express } from 'express'
 
-import { Agent } from '@aries-framework/core'
 import { validationMetadatasToSchemas } from 'class-validator-jsonschema'
 import { createExpressServer, getMetadataArgsStorage, useContainer, useExpressServer } from 'routing-controllers'
 import { routingControllersToSpec } from 'routing-controllers-openapi'
 import * as swaggerUiExpress from 'swagger-ui-express'
-import { Container } from 'typedi'
+import { container } from 'tsyringe'
 
 import { basicMessageEvents } from './events/BasicMessageEvents'
 import { connectionEvents } from './events/ConnectionEvents'
 import { credentialEvents } from './events/CredentialEvents'
 import { proofEvents } from './events/ProofEvents'
+import TsyringeAdapter from './utils/TsyringeAdapter'
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const packageJson = require('../package.json')
 
 export const setupServer = async (agent: Agent, config: ServerConfig) => {
-  useContainer(Container)
-  Container.set(Agent, agent)
+  container.register('agent', { useValue: agent })
+  useContainer(new TsyringeAdapter(container))
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   const controllers = [__dirname + '/controllers/**/*.ts', __dirname + '/controllers/**/*.js']

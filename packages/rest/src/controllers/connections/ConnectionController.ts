@@ -10,19 +10,18 @@ import {
   Param,
   Post,
 } from 'routing-controllers'
-import { Inject, Service } from 'typedi'
+import { inject, injectable } from 'tsyringe'
 
 import { InvitationConfigRequest } from '../../schemas/InvitationConfigRequest'
 import { ReceiveInvitationByUrlRequest } from '../../schemas/ReceiveInvitationByUrlRequest'
 import { ReceiveInvitationRequest } from '../../schemas/ReceiveInvitationRequest'
 
 @JsonController('/connections')
-@Service()
+@injectable()
 export class ConnectionController {
-  @Inject()
   private agent: Agent
 
-  public constructor(agent: Agent) {
+  public constructor(@inject('agent') agent: Agent) {
     this.agent = agent
   }
 
