@@ -67,7 +67,9 @@ describe('WebhookTest', () => {
         webhook.body.state === connectionRecord.state
     )
 
-    expect(JSON.parse(JSON.stringify(connectionRecord.toJSON()))).toMatchObject(webhook?.body as any)
+    expect(JSON.parse(JSON.stringify(connectionRecord.toJSON()))).toMatchObject(
+      webhook?.body as Record<string, unknown>
+    )
   })
 
   test('should return a webhook event when credential state changed', async () => {
@@ -99,7 +101,9 @@ describe('WebhookTest', () => {
         webhook.body.state === credentialRecord.state
     )
 
-    expect(JSON.parse(JSON.stringify(credentialRecord.toJSON()))).toMatchObject(webhook?.body as any)
+    expect(JSON.parse(JSON.stringify(credentialRecord.toJSON()))).toMatchObject(
+      webhook?.body as Record<string, unknown>
+    )
   })
 
   test('should return a webhook event when proof state changed', async () => {
@@ -129,6 +133,6 @@ describe('WebhookTest', () => {
         webhook.topic === 'proofs' && webhook.body.id === proofRecord.id && webhook.body.state === proofRecord.state
     )
 
-    expect(JSON.parse(JSON.stringify(proofRecord.toJSON()))).toMatchObject(webhook?.body as any)
+    expect(JSON.parse(JSON.stringify(proofRecord.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)
   })
 })
