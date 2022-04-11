@@ -34,7 +34,7 @@ export class CredentialDefinitionController {
     try {
       return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
     } catch (error) {
-      if (error instanceof LedgerNotFoundError) {
+      if (error instanceof IndySdkError && isIndyError(error.cause, 'LedgerNotFound')) {
         throw new NotFoundError(
           `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`
         )

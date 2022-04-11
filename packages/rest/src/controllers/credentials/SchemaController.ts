@@ -35,7 +35,7 @@ export class SchemaController {
     try {
       return await this.agent.ledger.getSchema(schemaId)
     } catch (error) {
-      if (error instanceof LedgerNotFoundError) {
+      if (error instanceof IndySdkError && isIndyError(error.cause, 'LedgerNotFound')) {
         throw new NotFoundError(`schema definition with schemaId "${schemaId}" not found.`)
       } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
         if (isIndyError(error.cause.cause, 'LedgerInvalidTransaction')) {
