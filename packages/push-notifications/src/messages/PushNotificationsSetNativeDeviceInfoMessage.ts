@@ -6,16 +6,21 @@ import { Equals, IsString } from 'class-validator'
 
 import { DevicePlatform } from '../services'
 
+export interface PushNotificationsSetNativeDeviceInfoOptions extends DeviceInfo {
+  id?: string
+}
+
 /**
  * Message to set the native device information at another agent for push notifications
  *
  * @todo ADD RFC
  */
 export class PushNotificationsSetNativeDeviceInfoMessage extends AgentMessage {
-  public constructor(options: DeviceInfo) {
+  public constructor(options: PushNotificationsSetNativeDeviceInfoOptions) {
     super()
 
     if (options) {
+      this.id = options.id ?? this.generateId()
       this.devicePlatform = options.devicePlatform
       this.deviceToken = options.deviceToken
     }

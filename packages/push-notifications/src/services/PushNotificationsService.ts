@@ -19,6 +19,6 @@ export class PushNotificationsService {
   }
 
   public createGetDeviceInfo() {
-    return new PushNotificationsGetDeviceInfoMessage()
+    return new PushNotificationsGetDeviceInfoMessage({})
   }
 }
