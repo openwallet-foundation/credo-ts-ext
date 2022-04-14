@@ -146,7 +146,7 @@ describe('CredentialController', () => {
     const proposalReq = {
       connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
       credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-      credentialProposal: {
+      preview: {
         '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
         attributes: [
           {
@@ -179,7 +179,7 @@ describe('CredentialController', () => {
   describe('Offer out of band credential', () => {
     const offerReq = {
       credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-      credentialProposal: {
+      preview: {
         '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
         attributes: [
           {
