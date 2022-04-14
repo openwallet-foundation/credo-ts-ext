@@ -1,10 +1,10 @@
 import type { CredentialProposeOptions } from '@aries-framework/core'
-import type { Attachment } from '@aries-framework/core/build/decorators/attachment/Attachment'
-import type { LinkedAttachment } from '@aries-framework/core/build/utils/LinkedAttachment'
 
 import { AutoAcceptCredential, CredentialPreview } from '@aries-framework/core'
+import { Attachment } from '@aries-framework/core/build/decorators/attachment/Attachment'
+import { LinkedAttachment } from '@aries-framework/core/build/utils/LinkedAttachment'
 import { Type } from 'class-transformer'
-import { IsDefined, IsString, ValidateNested, IsOptional, Matches, IsEnum } from 'class-validator'
+import { IsString, ValidateNested, IsOptional, Matches, IsEnum, IsInstance } from 'class-validator'
 
 export class CredentialProposalRequest implements CredentialProposeOptions {
   @IsString()
@@ -16,7 +16,7 @@ export class CredentialProposalRequest implements CredentialProposeOptions {
 
   @ValidateNested()
   @Type(() => CredentialPreview)
-  @IsDefined()
+  @IsInstance(CredentialPreview)
   public credentialProposal?: CredentialPreview
 
   @IsOptional()
@@ -50,9 +50,15 @@ export class CredentialProposalRequest implements CredentialProposeOptions {
   @Matches(/^(did:sov:)?[a-zA-Z0-9]{21,22}$/)
   public issuerDid?: string
 
+  @ValidateNested({ each: true })
+  @Type(() => Attachment)
+  @IsInstance(Attachment, { each: true })
   @IsOptional()
   public attachments?: Attachment[]
 
+  @ValidateNested({ each: true })
+  @Type(() => LinkedAttachment)
+  @IsInstance(LinkedAttachment, { each: true })
   @IsOptional()
   public linkedAttachments?: LinkedAttachment[]
 

@@ -4,7 +4,7 @@ import { CredentialPreview, AutoAcceptCredential } from '@aries-framework/core'
 import { Attachment } from '@aries-framework/core/build/decorators/attachment/Attachment'
 import { LinkedAttachment } from '@aries-framework/core/build/utils/LinkedAttachment'
 import { Type } from 'class-transformer'
-import { IsString, IsOptional, ValidateNested, IsEnum, Matches } from 'class-validator'
+import { IsString, IsOptional, ValidateNested, IsEnum, Matches, IsInstance } from 'class-validator'
 
 export class CredentialOfferTemp implements CredentialOfferTemplate {
   @IsString()
@@ -17,19 +17,22 @@ export class CredentialOfferTemp implements CredentialOfferTemplate {
 
   @ValidateNested()
   @Type(() => CredentialPreview)
+  @IsInstance(CredentialPreview)
   public preview!: CredentialPreview
 
   @IsEnum(AutoAcceptCredential)
   @IsOptional()
   public autoAcceptCredential?: AutoAcceptCredential
 
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => Attachment)
+  @IsInstance(Attachment, { each: true })
   @IsOptional()
   public attachments?: Attachment[]
 
-  @ValidateNested()
+  @ValidateNested({ each: true })
   @Type(() => LinkedAttachment)
+  @IsInstance(LinkedAttachment, { each: true })
   @IsOptional()
   public linkedAttachments?: LinkedAttachment[]
 }
