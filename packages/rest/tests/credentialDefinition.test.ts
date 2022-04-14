@@ -44,7 +44,7 @@ describe('CredentialDefinitionController', () => {
       expect(response.statusCode).toBe(400)
     })
 
-    test('should return 404 NotFound when schema not found', async () => {
+    test('should return 404 NotFound when credential definition not found', async () => {
       const response = await request(app).get(`/credential-definitions/WgWxqztrNooG92RXvxSTWv:3:CL:20:tag`)
       expect(response.statusCode).toBe(404)
     })
