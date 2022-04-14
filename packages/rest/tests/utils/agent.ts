@@ -3,8 +3,11 @@ import type { AutoAcceptCredential, InitConfig } from '@aries-framework/core'
 
 import { Agent, ConnectionInvitationMessage, HttpOutboundTransport } from '@aries-framework/core'
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
+import path from 'path'
 
-import { BCOVRIN_TEST_GENESIS } from './util'
+export const genesisPath = process.env.GENESIS_TXN_PATH
+  ? path.resolve(process.env.GENESIS_TXN_PATH)
+  : path.join(__dirname, '../../../../network/genesis/local-genesis.txn')
 
 export async function setupAgent({
   port,
@@ -33,8 +36,8 @@ export async function setupAgent({
     },
     indyLedgers: [
       {
-        id: 'BCovrin Test Genesis',
-        genesisTransactions: BCOVRIN_TEST_GENESIS,
+        id: 'LocalLedger',
+        genesisPath,
         isProduction: false,
       },
     ],
