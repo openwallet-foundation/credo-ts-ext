@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.2.0...push-notifications-v0.2.1) (2022-04-14)
+
+
+### Bug Fixes
+
+* **push-notifications:** add [@id](https://www.github.com/id) to messages ([4378ca6](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/4378ca6bbcab5369f9b49917707417b32d1cf443))
+
 ## [0.2.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.1.1...push-notifications-v0.2.0) (2022-01-04)
 
 
