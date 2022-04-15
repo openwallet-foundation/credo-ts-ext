@@ -33,6 +33,7 @@ const run = async () => {
   const conf: ServerConfig = {
     port: 3000,
     app: app,
+    webhookUrl: 'http://localhost:5000/agent-events',
   }
 
   await startServer(agent, conf)

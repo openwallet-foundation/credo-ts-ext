@@ -62,6 +62,8 @@ All packages are placed in the [`packages/`](./packages) directory.
 
 If you would like to contribute to this repository, please read the [CONTRIBUTING](/CONTRIBUTING.md) guidelines. These documents will provide more information to get you started!
 
+For running tests, make sure to follow the network setup guides from the Aries Framework JavaScript [DEVREADME.md](https://github.com/hyperledger/aries-framework-javascript/blob/main/DEVREADME.md)
+
 The Aries Framework JavaScript call takes place every week at Thursday, 14:00 UTC via [Zoom](https://zoom.us/j/92215586249?pwd=Vm5ZTGV4T0cwVEl4blh3MjBzYjVYZz09). This meeting is for contributors to groom and plan the backlog, and discuss issues. Feel free to join!
 
 ## License
