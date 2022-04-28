@@ -1,6 +1,6 @@
-import type { Agent, ConnectionStateChangedEvent, ConnectionRecord, DidExchangeState } from '@aries-framework/core'
+import type { Agent, ConnectionStateChangedEvent, DidExchangeState, RecordDeletedEvent } from '@aries-framework/core'
 
-import { ConnectionEventTypes } from '@aries-framework/core'
+import { ConnectionEventTypes, ConnectionRecord, RepositoryEventTypes } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
@@ -56,7 +56,7 @@ const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
 
   useEffect(() => {
     if (!connectionState.loading) {
-      const listener = (event: ConnectionStateChangedEvent) => {
+      const stateChangedListener = (event: ConnectionStateChangedEvent) => {
         const newConnectionsState = [...connectionState.connections]
 
         const index = newConnectionsState.findIndex((connection) => connection.id === event.payload.connectionRecord.id)
@@ -71,10 +71,26 @@ const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
           connections: newConnectionsState,
         })
       }
-      agent?.events.on(ConnectionEventTypes.ConnectionStateChanged, listener)
+
+      const deletedListener = async (event: RecordDeletedEvent<ConnectionRecord>) => {
+        if (event.payload.record.type !== ConnectionRecord.type) {
+          return
+        }
+        const newConnectionsState = connectionState.connections.filter(
+          (connection) => connection.id != event.payload.record.id
+        )
+        setConnectionState({
+          loading: connectionState.loading,
+          connections: newConnectionsState,
+        })
+      }
+
+      agent?.events.on(ConnectionEventTypes.ConnectionStateChanged, stateChangedListener)
+      agent?.events.on(RepositoryEventTypes.RecordDeleted, deletedListener)
 
       return () => {
-        agent?.events.off(ConnectionEventTypes.ConnectionStateChanged, listener)
+        agent?.events.off(ConnectionEventTypes.ConnectionStateChanged, stateChangedListener)
+        agent?.events.off(RepositoryEventTypes.RecordDeleted, deletedListener)
       }
     }
   }, [connectionState, agent])
