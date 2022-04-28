@@ -13,14 +13,13 @@ import {
   Param,
   Body,
 } from 'routing-controllers'
-import { Service, Inject } from 'typedi'
+import { injectable } from 'tsyringe'
 
 import { SchemaTemplate } from '../../schemas/SchemaRequest'
 
 @JsonController('/schemas')
-@Service()
+@injectable()
 export class SchemaController {
-  @Inject()
   private agent: Agent
 
   public constructor(agent: Agent) {

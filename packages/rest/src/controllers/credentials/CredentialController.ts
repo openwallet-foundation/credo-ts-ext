@@ -12,7 +12,7 @@ import {
   Delete,
   OnUndefined,
 } from 'routing-controllers'
-import { Service, Inject } from 'typedi'
+import { injectable } from 'tsyringe'
 
 import { AcceptCredentialProposalRequest } from '../../schemas/AcceptCredentialProposalRequest'
 import { CredentialOfferRequest } from '../../schemas/CredentialOfferRequest'
@@ -20,9 +20,8 @@ import { CredentialOfferTemp } from '../../schemas/CredentialOfferTemplate'
 import { CredentialProposalRequest } from '../../schemas/CredentialProposalRequest'
 
 @JsonController('/credentials')
-@Service()
+@injectable()
 export class CredentialController {
-  @Inject()
   private agent: Agent
 
   public constructor(agent: Agent) {
