@@ -12,14 +12,13 @@ import {
   Param,
   Post,
 } from 'routing-controllers'
-import { Inject, Service } from 'typedi'
+import { injectable } from 'tsyringe'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
 
 @JsonController('/credential-definitions')
-@Service()
+@injectable()
 export class CredentialDefinitionController {
-  @Inject()
   private agent: Agent
 
   public constructor(agent: Agent) {
