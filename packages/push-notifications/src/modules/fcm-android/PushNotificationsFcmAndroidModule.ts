@@ -1,11 +1,11 @@
-import type { FcmAndroidDeviceInfo } from '../services'
+import type { FcmAndroidDeviceInfo } from '../../services'
 
 import { ConnectionService, Dispatcher, MessageSender } from '@aries-framework/core'
 import { createOutboundMessage } from '@aries-framework/core/build/agent/helpers'
 import { Lifecycle, scoped } from 'tsyringe'
 
-import { PushNotificationsFcmAndroidDeviceInfoHandler } from '../handlers'
-import { PushNotificationsFcmAndroidService } from '../services'
+import { PushNotificationsFcmAndroidDeviceInfoHandler } from '../../handlers'
+import { PushNotificationsFcmAndroidService } from '../../services'
 
 /**
  * Module that exposes push notification fcm Android get and set functionality

@@ -1,11 +1,11 @@
-import type { ApnsDeviceInfo } from '../services'
+import type { ApnsDeviceInfo } from '../../services'
 
 import { ConnectionService, Dispatcher, MessageSender } from '@aries-framework/core'
 import { createOutboundMessage } from '@aries-framework/core/build/agent/helpers'
 import { Lifecycle, scoped } from 'tsyringe'
 
-import { PushNotificationsApnsDeviceInfoHandler } from '../handlers'
-import { PushNotificationsApnsService } from '../services'
+import { PushNotificationsApnsDeviceInfoHandler } from '../../handlers'
+import { PushNotificationsApnsService } from '../../services'
 
 /**
  * Module that exposes push notification apns get and set functionality

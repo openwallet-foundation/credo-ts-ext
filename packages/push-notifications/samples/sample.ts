@@ -1,5 +1,5 @@
-import { PushNotificationsApnsModule } from '@aries-framework/push-notifications'
-
+// import from '@aries-framework/push-notifications'
+import { PushNotificationsApnsModule } from '../src'
 import { setupAgent } from '../tests/utils/agent'
 
 /**
