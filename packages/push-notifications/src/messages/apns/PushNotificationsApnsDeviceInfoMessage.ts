@@ -1,4 +1,4 @@
-import type { ApnsDeviceInfo } from '@aries-framework/push-notifications'
+import type { ApnsDeviceInfo } from '../../services'
 
 import { AgentMessage } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
