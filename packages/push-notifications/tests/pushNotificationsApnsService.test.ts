@@ -3,22 +3,21 @@ import type { Agent } from '@aries-framework/core'
 import { JsonTransformer } from '@aries-framework/core'
 import { MessageValidator } from '@aries-framework/core/build/utils/MessageValidator'
 
-import { PushNotificationsDeviceInfoMessage } from '../src'
-import { DevicePlatform, PushNotificationsService } from '../src/services'
+import { PushNotificationsApnsService } from '../src/services/apns/PushNotificationsApnsService'
 
 import { setupAgent } from './utils/agent'
 
 describe('PushNotifications', () => {
   let notificationReceiver: Agent
-  let pushNotificationsService: PushNotificationsService
+  let pushNotificationsService: PushNotificationsApnsService
 
   beforeAll(async () => {
     notificationReceiver = setupAgent({
-      name: 'push notifications notification receiver test',
+      name: 'push notifications apns serivce notification receiver test',
       publicDidSeed: '65748374657483920193747564738290',
     })
 
-    pushNotificationsService = notificationReceiver.injectionContainer.resolve(PushNotificationsService)
+    pushNotificationsService = notificationReceiver.injectionContainer.resolve(PushNotificationsApnsService)
     await notificationReceiver.initialize()
   })
 
@@ -27,11 +26,10 @@ describe('PushNotifications', () => {
     await notificationReceiver.wallet.delete()
   })
 
-  describe('Create set Native push notification Message', () => {
-    test('Should create a valid https://didcomm.org/push-notifications-native/1.0/set-device-info message ', async () => {
-      const message = pushNotificationsService.createSetNativeDeviceInfo({
+  describe('Create apns set push notification message', () => {
+    test('Should create a valid https://didcomm.org/push-notifications-apns/1.0/set-device-info message ', async () => {
+      const message = pushNotificationsService.createSetDeviceInfo({
         deviceToken: '1234-1234-1234-1234',
-        devicePlatform: DevicePlatform.Android,
       })
 
       const jsonMessage = JsonTransformer.toJSON(message)
@@ -40,15 +38,14 @@ describe('PushNotifications', () => {
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),
-        '@type': 'https://didcomm.org/push-notifications-native/1.0/set-device-info',
+        '@type': 'https://didcomm.org/push-notifications-apns/1.0/set-device-info',
         device_token: '1234-1234-1234-1234',
-        device_platform: 'android',
       })
     })
   })
 
-  describe('Create get device info Message', () => {
-    test('Should create a valid https://didcomm.org/push-notifications-native/1.0/get-device-info message ', async () => {
+  describe('Create apns get device info message', () => {
+    test('Should create a valid https://didcomm.org/push-notifications-apns/1.0/get-device-info message ', async () => {
       const message = pushNotificationsService.createGetDeviceInfo()
 
       const jsonMessage = JsonTransformer.toJSON(message)
@@ -57,15 +54,14 @@ describe('PushNotifications', () => {
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),
-        '@type': 'https://didcomm.org/push-notifications-native/1.0/get-device-info',
+        '@type': 'https://didcomm.org/push-notifications-apns/1.0/get-device-info',
       })
     })
   })
 
-  describe('PushNotificationsDeviceInfoMessage', () => {
-    test('Should create a valid https://didcomm.org/push-notifications-native/1.0/device-info message ', async () => {
-      const message = new PushNotificationsDeviceInfoMessage({
-        devicePlatform: DevicePlatform.Android,
+  describe('Create apns device info message', () => {
+    test('Should create a valid https://didcomm.org/push-notifications-apns/1.0/device-info message ', async () => {
+      const message = pushNotificationsService.createDeviceInfo({
         deviceToken: '1234-1234-1234-1234',
       })
 
@@ -75,9 +71,8 @@ describe('PushNotifications', () => {
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),
-        '@type': 'https://didcomm.org/push-notifications-native/1.0/device-info',
+        '@type': 'https://didcomm.org/push-notifications-apns/1.0/device-info',
         device_token: '1234-1234-1234-1234',
-        device_platform: 'android',
       })
     })
   })
