@@ -1,5 +1,7 @@
 import type { Handler, HandlerInboundMessage } from '@aries-framework/core/build/agent/Handler'
 
+import { PushNotificationsFcmAndroidSetDeviceInfoMessage } from '../../messages'
+
 /**
  * Handler for incoming push notification device info messages
  */
