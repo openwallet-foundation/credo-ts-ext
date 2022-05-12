@@ -1,10 +1,10 @@
-import type { ApnsDeviceInfo } from '@aries-framework/push-notifications'
+import type { FcmAndroidDeviceInfo } from '../../services/fcm-android'
 
 import { AgentMessage } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
 import { Equals, IsString } from 'class-validator'
 
-interface PushNotificationsFcmAndroidDeviceInfoOptions extends ApnsDeviceInfo {
+interface PushNotificationsFcmAndroidDeviceInfoOptions extends FcmAndroidDeviceInfo {
   id?: string
 }
 
