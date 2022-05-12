@@ -7,7 +7,7 @@ import { PushNotificationsFcmAndroidService } from '../src/services/fcm-android/
 
 import { setupAgent } from './utils/agent'
 
-describe('PushNotifications', () => {
+describe('Push Notifications Fcm Android', () => {
   let notificationReceiver: Agent
   let pushNotificationsService: PushNotificationsFcmAndroidService
 

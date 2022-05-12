@@ -7,7 +7,7 @@ import { PushNotificationsApnsService } from '../src/services/apns/PushNotificat
 
 import { setupAgent } from './utils/agent'
 
-describe('PushNotifications', () => {
+describe('Push Notifications apns', () => {
   let notificationReceiver: Agent
   let pushNotificationsService: PushNotificationsApnsService
 
