@@ -1,2 +1,2 @@
 export * from './apns'
-export * from './fcm-android'
+export * from './fcm'

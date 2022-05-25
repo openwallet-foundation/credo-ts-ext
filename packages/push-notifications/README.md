@@ -53,12 +53,12 @@ In order for this plugin to work we have to inject it into the agent to access a
 > This is the current way however this will be changed someday to improve plugin management
 
 ```ts
-import { PushNotificationsApnsModule, PushNotificationsFcmAndroidModule } from '@aries-framework/push-notifications'
+import { PushNotificationsApnsModule, PushNotificationsFcmModule } from '@aries-framework/push-notifications'
 
 const agent = new Agent(/** agent config... */)
 
 const pushNotificationsApnsModule = agent.injectionContainer.resolve(PushNotificationsApnsModule)
-const pushNotificationsFcmAndroidModule = agent.injectionContainer.resolve(PushNotificationsFcmAndroidModule)
+const pushNotificationsFcmModule = agent.injectionContainer.resolve(PushNotificationsFcmModule)
 
 await agent.initialize()
 
@@ -73,15 +73,15 @@ pushNotificationsApnsModule.sendDeviceInfo(
 // To get the device info and the used service back from the other agent
 pushNotificationsApnsModule.getDeviceInfo('a-valid-connection')
 
-/* -- Android -- */
+/* -- fcm -- */
 
-// To send fcm android device info to another agent you have to accquire the device token and send it.
-pushNotificationsFcmAndroidModule.sendDeviceInfo(
+// To send fcm, primarily Android, device info to another agent you have to accquire the device token and send it.
+pushNotificationsFcmModule.sendDeviceInfo(
   'a-valid-connection-id'
   { deviceToken: '123' },
 )
 
 // To get the device info and the used service back from the other agent
-pushNotificationsFcmAndroidModule.getDeviceInfo('a-valid-connection')
+pushNotificationsFcmModule.getDeviceInfo('a-valid-connection')
 
 ```
