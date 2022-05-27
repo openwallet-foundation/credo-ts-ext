@@ -1,6 +1,6 @@
-// import from '@aries-framework/push-notifications'
-import { PushNotificationsApnsModule } from '../src'
 import { setupAgent } from '../tests/utils/agent'
+
+import { PushNotificationsApnsModule } from '@aries-framework/push-notifications'
 
 /**
  * replace `a-valid-connection-id` with the connection id you want to interact with
