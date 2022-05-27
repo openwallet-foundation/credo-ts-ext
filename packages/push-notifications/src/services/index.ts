@@ -1,1 +1,2 @@
-export { DeviceInfo, DevicePlatform, PushNotificationsService } from './PushNotificationsService'
+export * from './apns'
+export * from './fcm'
