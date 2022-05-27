@@ -1,7 +1,6 @@
-import { PushNotificationsModule } from '../src/PushNotificationsModule'
 import { setupAgent } from '../tests/utils/agent'
 
-import { DevicePlatform } from '@aries-framework/push-notifications'
+import { PushNotificationsApnsModule } from '@aries-framework/push-notifications'
 
 /**
  * replace `a-valid-connection-id` with the connection id you want to interact with
@@ -16,19 +15,18 @@ const run = async () => {
 
   // Inject the PushNotificationModule
   // NOTE: This has to be done before initializing the agent
-  const pushNotificationsModule = agent.injectionContainer.resolve(PushNotificationsModule)
+  const pushNotificationsApnsModule = agent.injectionContainer.resolve(PushNotificationsApnsModule)
 
   // Initialize the agent
   await agent.initialize()
 
-  // Pushes a native device token and vendor to the specified connection record
-  await pushNotificationsModule.setDeviceInfo('a-valid-connection', {
+  // Pushes a  device token and vendor to the specified connection record
+  await pushNotificationsApnsModule.setDeviceInfo('a-valid-connection', {
     deviceToken: '123',
-    devicePlatform: DevicePlatform.Ios,
   })
 
   // Gets the push notification device infomation located at the other agent behind the connection
-  await pushNotificationsModule.getDeviceInfo('a-valid-connection')
+  await pushNotificationsApnsModule.getDeviceInfo('a-valid-connection')
 }
 
 void run()
