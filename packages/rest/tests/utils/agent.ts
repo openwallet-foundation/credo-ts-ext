@@ -1,55 +1,54 @@
-import type { TsLogger } from '../../src/utils/logger'
-import type { AutoAcceptCredential, InitConfig } from '@aries-framework/core'
-
-import { Agent, ConnectionInvitationMessage, HttpOutboundTransport } from '@aries-framework/core'
+import {
+  AutoAcceptCredential,
+  AutoAcceptProof,
+  Agent,
+  ConnectionInvitationMessage,
+  HttpOutboundTransport,
+  LogLevel,
+} from '@aries-framework/core'
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 import path from 'path'
+
+import { TsLogger } from 'packages/rest/src/utils/logger'
 
 export const genesisPath = process.env.GENESIS_TXN_PATH
   ? path.resolve(process.env.GENESIS_TXN_PATH)
   : path.join(__dirname, '../../../../network/genesis/local-genesis.txn')
 
-export async function setupAgent({
-  port,
+export const setupAgent = async ({
+  name,
   publicDidSeed,
   endpoints,
-  name,
-  logger,
-  autoAcceptConnections,
-  autoAcceptCredentials,
-  useLegacyDidSovPrefix,
+  port,
 }: {
-  port: number
+  name: string
   publicDidSeed: string
   endpoints: string[]
-  name: string
-  logger: TsLogger
-  autoAcceptConnections: boolean
-  autoAcceptCredentials: AutoAcceptCredential
-  useLegacyDidSovPrefix: boolean
-}) {
-  const agentConfig: InitConfig = {
-    label: name,
-    walletConfig: {
-      id: name,
-      key: name,
-    },
-    indyLedgers: [
-      {
-        id: 'LocalLedger',
-        genesisPath,
-        isProduction: false,
-      },
-    ],
-    publicDidSeed: publicDidSeed,
-    endpoints: endpoints,
-    autoAcceptConnections: autoAcceptConnections,
-    autoAcceptCredentials: autoAcceptCredentials,
-    useLegacyDidSovPrefix: useLegacyDidSovPrefix,
-    logger: logger,
-  }
+  port: number
+}) => {
+  const logger = new TsLogger(LogLevel.debug)
 
-  const agent = new Agent(agentConfig, agentDependencies)
+  const agent = new Agent(
+    {
+      publicDidSeed,
+      label: name,
+      endpoints: endpoints,
+      autoAcceptConnections: true,
+      autoAcceptProofs: AutoAcceptProof.ContentApproved,
+      autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
+      walletConfig: { id: name, key: name },
+      useLegacyDidSovPrefix: true,
+      logger: logger,
+      indyLedgers: [
+        {
+          id: 'LocalLedger',
+          genesisPath,
+          isProduction: false,
+        },
+      ],
+    },
+    agentDependencies
+  )
 
   const httpInbound = new HttpInboundTransport({
     port: port,
@@ -70,7 +69,12 @@ export async function setupAgent({
     } else {
       const { invitation } = await agent.connections.createConnection()
 
-      res.send(invitation.toUrl({ domain: endpoints + '/invitation', useLegacyDidSovPrefix: useLegacyDidSovPrefix }))
+      res.send(
+        invitation.toUrl({
+          domain: endpoints + '/invitation',
+          useLegacyDidSovPrefix: agent.config.useLegacyDidSovPrefix,
+        })
+      )
     }
   })
 
