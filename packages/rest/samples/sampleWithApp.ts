@@ -21,8 +21,8 @@ const run = async () => {
     endpoints: [endpoint],
     name: 'Aries Test Agent',
     logger: logger,
-    autoAcceptConnection: true,
-    autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+    autoAcceptConnections: true,
+    autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     useLegacyDidSovPrefix: true,
   })
 

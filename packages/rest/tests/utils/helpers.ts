@@ -22,8 +22,8 @@ export async function getTestAgent(name: string, port: number) {
     endpoints: [`http://localhost:${port}`],
     name: name,
     logger: logger,
-    autoAcceptConnection: true,
-    autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+    autoAcceptConnections: true,
+    autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
     useLegacyDidSovPrefix: true,
   })
 }
