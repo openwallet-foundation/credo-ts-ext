@@ -5,8 +5,6 @@ import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 import { JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ProofsThunks } from './proofsThunks'
-
 interface ProofsState {
   proofs: {
     records: SerializedInstance<ProofRecord>[]
@@ -27,6 +25,9 @@ const proofsSlice = createSlice({
   name: 'proofs',
   initialState,
   reducers: {
+    setProofs: (state, action: PayloadAction<ProofRecord[]>) => {
+      state.proofs.records = action.payload.map((record) => JsonTransformer.toJSON(record))
+    },
     updateOrAdd: (state, action: PayloadAction<ProofRecord>) => {
       const index = state.proofs.records.findIndex((record) => record.id == action.payload.id)
 
@@ -40,55 +41,6 @@ const proofsSlice = createSlice({
       state.proofs.records[index] = JsonTransformer.toJSON(action.payload)
       return state
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      // getAllProofs
-      .addCase(ProofsThunks.getAllProofs.pending, (state) => {
-        state.proofs.isLoading = true
-      })
-      .addCase(ProofsThunks.getAllProofs.rejected, (state, action) => {
-        state.proofs.isLoading = false
-        state.error = action.error
-      })
-      .addCase(ProofsThunks.getAllProofs.fulfilled, (state, action) => {
-        state.proofs.isLoading = false
-        state.proofs.records = action.payload.map((p) => JsonTransformer.toJSON(p))
-      })
-      // proposeProof
-      .addCase(ProofsThunks.proposeProof.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // acceptProposal
-      .addCase(ProofsThunks.acceptProposal.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // requestProof
-      .addCase(ProofsThunks.requestProof.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // acceptRequest
-      .addCase(ProofsThunks.acceptRequest.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // acceptPresentation
-      .addCase(ProofsThunks.acceptPresentation.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // getRequestedCredentialsForProofRequest
-      .addCase(ProofsThunks.getRequestedCredentialsForProofRequest.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // autoSelectCredentialsForProofRequest
-      .addCase(ProofsThunks.autoSelectCredentialsForProofRequest.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // deleteProof
-      .addCase(ProofsThunks.deleteProof.fulfilled, (state, action) => {
-        const proofId = action.meta.arg
-        const index = state.proofs.records.findIndex((record) => record.id == proofId)
-        state.proofs.records.splice(index, 1)
-      })
   },
 })
 

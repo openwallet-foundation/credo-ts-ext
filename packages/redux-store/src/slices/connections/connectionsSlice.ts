@@ -5,8 +5,6 @@ import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 import { JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
 
-import { ConnectionThunks } from './connectionsThunks'
-
 interface ConnectionsState {
   connections: {
     records: SerializedInstance<ConnectionRecord>[]
@@ -39,6 +37,9 @@ const connectionsSlice = createSlice({
   name: 'connections',
   initialState,
   reducers: {
+    setConnections: (state, action: PayloadAction<ConnectionRecord[]>) => {
+      state.connections.records = action.payload.map((record) => JsonTransformer.toJSON(record))
+    },
     updateOrAdd: (state, action: PayloadAction<ConnectionRecord>) => {
       const index = state.connections.records.findIndex((record) => record.id == action.payload.id)
 
@@ -52,73 +53,6 @@ const connectionsSlice = createSlice({
       state.connections.records[index] = JsonTransformer.toJSON(action.payload)
       return state
     },
-  },
-  extraReducers: (builder) => {
-    builder
-      // fetchAllConnections
-      .addCase(ConnectionThunks.getAllConnections.pending, (state) => {
-        state.connections.isLoading = true
-      })
-      .addCase(ConnectionThunks.getAllConnections.rejected, (state, action) => {
-        state.connections.isLoading = false
-        state.connections.error = action.error
-      })
-      .addCase(ConnectionThunks.getAllConnections.fulfilled, (state, action) => {
-        state.connections.isLoading = false
-        state.connections.records = action.payload.map((c) => JsonTransformer.toJSON(c))
-      })
-      // createConnection
-      .addCase(ConnectionThunks.createConnection.pending, (state) => {
-        state.invitation.isLoading = true
-      })
-      .addCase(ConnectionThunks.createConnection.rejected, (state, action) => {
-        state.invitation.isLoading = false
-        state.connections.error = action.error
-      })
-      .addCase(ConnectionThunks.createConnection.fulfilled, (state, action) => {
-        state.invitation.isLoading = false
-        state.invitation.message = JsonTransformer.toJSON(action.payload.invitation)
-        state.invitation.connectionRecordId = action.payload.connectionRecord.id
-      })
-      // receiveInvitation
-      .addCase(ConnectionThunks.receiveInvitation.pending, (state) => {
-        state.invitation.isLoading = true
-      })
-      .addCase(ConnectionThunks.receiveInvitation.rejected, (state, action) => {
-        state.invitation.isLoading = false
-        state.invitation.error = action.error
-      })
-      .addCase(ConnectionThunks.receiveInvitation.fulfilled, (state) => {
-        state.invitation.isLoading = false
-      })
-      // receiveInvitationFromUrl
-      .addCase(ConnectionThunks.receiveInvitationFromUrl.pending, (state) => {
-        state.invitation.isLoading = true
-      })
-      .addCase(ConnectionThunks.receiveInvitationFromUrl.rejected, (state, action) => {
-        state.invitation.isLoading = false
-        state.invitation.error = action.error
-      })
-      .addCase(ConnectionThunks.receiveInvitationFromUrl.fulfilled, (state) => {
-        state.invitation.isLoading = false
-      })
-      // acceptInvitation
-      .addCase(ConnectionThunks.acceptInvitation.pending, (state) => {
-        state.invitation.isLoading = true
-      })
-      .addCase(ConnectionThunks.acceptInvitation.rejected, (state, action) => {
-        state.invitation.isLoading = false
-        state.invitation.error = action.error
-      })
-      .addCase(ConnectionThunks.acceptInvitation.fulfilled, (state) => {
-        state.invitation.isLoading = false
-      })
-      // deleteConnection
-      .addCase(ConnectionThunks.deleteConnection.fulfilled, (state, action) => {
-        const connectionId = action.meta.arg
-        const index = state.connections.records.findIndex((connectionRecord) => connectionRecord.id === connectionId)
-        state.connections.records.splice(index, 1)
-      })
   },
 })
 
