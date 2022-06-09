@@ -1,4 +1,4 @@
-import type { Agent, ConnectionState, ConnectionStateChangedEvent, ConnectionRecord } from '@aries-framework/core'
+import type { Agent, ConnectionStateChangedEvent, ConnectionRecord, DidExchangeState } from '@aries-framework/core'
 
 import { ConnectionEventTypes } from '@aries-framework/core'
 import * as React from 'react'
@@ -24,7 +24,7 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-export const useConnectionByState = (state: ConnectionState): ConnectionRecord[] => {
+export const useConnectionByState = (state: DidExchangeState): ConnectionRecord[] => {
   const { connections } = useConnections()
   const filteredConnections = useMemo(
     () => connections.filter((c: ConnectionRecord) => c.state === state),

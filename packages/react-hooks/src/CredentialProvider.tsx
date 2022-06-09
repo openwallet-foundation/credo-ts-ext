@@ -1,4 +1,9 @@
-import type { Agent, CredentialState, CredentialStateChangedEvent, CredentialRecord } from '@aries-framework/core'
+import type {
+  Agent,
+  CredentialState,
+  CredentialStateChangedEvent,
+  CredentialExchangeRecord,
+} from '@aries-framework/core'
 
 import { CredentialEventTypes } from '@aries-framework/core'
 import * as React from 'react'
@@ -6,7 +11,7 @@ import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
 interface CredentialContextInterface {
   loading: boolean
-  credentials: CredentialRecord[]
+  credentials: CredentialExchangeRecord[]
 }
 
 const CredentialContext = createContext<CredentialContextInterface | undefined>(undefined)
@@ -19,15 +24,15 @@ export const useCredentials = () => {
   return credentialContext
 }
 
-export const useCredentialById = (id: string): CredentialRecord | undefined => {
+export const useCredentialById = (id: string): CredentialExchangeRecord | undefined => {
   const { credentials } = useCredentials()
-  return credentials.find((c: CredentialRecord) => c.id === id)
+  return credentials.find((c: CredentialExchangeRecord) => c.id === id)
 }
 
-export const useCredentialByState = (state: CredentialState): CredentialRecord[] => {
+export const useCredentialByState = (state: CredentialState): CredentialExchangeRecord[] => {
   const { credentials } = useCredentials()
   const filteredCredentials = useMemo(
-    () => credentials.filter((c: CredentialRecord) => c.state === state),
+    () => credentials.filter((c: CredentialExchangeRecord) => c.state === state),
     [credentials, state]
   )
   return filteredCredentials
