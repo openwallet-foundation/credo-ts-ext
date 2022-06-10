@@ -2,10 +2,10 @@ name: Continuous Integration
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, 'afj-**']
     types: [opened, synchronize, reopened, labeled]
   push:
-    branches: [main]
+    branches: [main, 'afj-**']
 
 env:
   TEST_AGENT_PUBLIC_DID_SEED: 000000000000000000000000Trustee9
