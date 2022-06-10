@@ -1,30 +1,20 @@
 import {
-  AutoAcceptCredential,
   CredentialRecord,
   JsonTransformer,
-  LogLevel,
   OfferCredentialMessage,
   ProofRecord,
   ProofRequest,
 } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 
-import { TsLogger } from '../../src/utils/logger'
-
 import { setupAgent } from './agent'
 
 export async function getTestAgent(name: string, port: number) {
-  const logger = new TsLogger(LogLevel.fatal)
-
   return await setupAgent({
     port: port,
     publicDidSeed: 'testtesttesttesttesttesttesttest',
     endpoints: [`http://localhost:${port}`],
     name: name,
-    logger: logger,
-    autoAcceptConnection: true,
-    autoAcceptCredential: AutoAcceptCredential.ContentApproved,
-    useLegacyDidSovPrefix: true,
   })
 }
 
