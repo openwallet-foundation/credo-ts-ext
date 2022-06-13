@@ -176,35 +176,35 @@ describe('CredentialController', () => {
     })
   })
 
-  describe('Offer out of band credential', () => {
-    const offerReq = {
-      credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-      preview: {
-        '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-        attributes: [
-          {
-            'mime-type': 'text/plain',
-            name: 'name',
-            value: 'test',
-          },
-        ],
-      },
-    }
+  // describe('Offer out of band credential', () => {
+  //   const offerReq = {
+  //     credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+  //     preview: {
+  //       '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
+  //       attributes: [
+  //         {
+  //           'mime-type': 'text/plain',
+  //           name: 'name',
+  //           value: 'test',
+  //         },
+  //       ],
+  //     },
+  //   }
 
-    test('should return credential record', async () => {
-      const spy = jest
-        .spyOn(bobAgent.credentials, 'createOutOfBandOffer')
-        .mockResolvedValueOnce({ offerMessage: testCredentialOfferMsg, credentialRecord: testCredential })
-      const getResult = () => spy.mock.results[0].value
+  //   test('should return credential record', async () => {
+  //     const spy = jest
+  //       .spyOn(bobAgent.credentials, 'createOutOfBandOffer')
+  //       .mockResolvedValueOnce({ offerMessage: testCredentialOfferMsg, credentialRecord: testCredential })
+  //     const getResult = () => spy.mock.results[0].value
 
-      const response = await request(app).post(`/credentials/offer-outofband-credential`).send(offerReq)
-      const result = await getResult()
+  //     const response = await request(app).post(`/credentials/offer-outofband-credential`).send(offerReq)
+  //     const result = await getResult()
 
-      expect(response.statusCode).toBe(200)
-      expect(response.body.message).toBeDefined()
-      expect(response.body.credentialRecord).toEqual(objectToJson(result.credentialRecord))
-    })
-  })
+  //     expect(response.statusCode).toBe(200)
+  //     expect(response.body.message).toBeDefined()
+  //     expect(response.body.credentialRecord).toEqual(objectToJson(result.credentialRecord))
+  //   })
+  // })
 
   describe('Accept a credential offer', () => {
     test('should return credential record', async () => {

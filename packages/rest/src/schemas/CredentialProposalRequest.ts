@@ -1,12 +1,10 @@
-import type { CredentialProposeOptions } from '@aries-framework/core'
-
-import { AutoAcceptCredential, CredentialPreview } from '@aries-framework/core'
+import { AutoAcceptCredential, V1CredentialPreview } from '@aries-framework/core'
 import { Attachment } from '@aries-framework/core/build/decorators/attachment/Attachment'
 import { LinkedAttachment } from '@aries-framework/core/build/utils/LinkedAttachment'
 import { Type } from 'class-transformer'
 import { IsString, ValidateNested, IsOptional, Matches, IsEnum, IsInstance } from 'class-validator'
 
-export class CredentialProposalRequest implements CredentialProposeOptions {
+export class CredentialProposalRequest {
   @IsString()
   public connectionId!: string
 
@@ -15,9 +13,9 @@ export class CredentialProposalRequest implements CredentialProposeOptions {
   public comment?: string
 
   @ValidateNested()
-  @Type(() => CredentialPreview)
-  @IsInstance(CredentialPreview)
-  public credentialProposal?: CredentialPreview
+  @Type(() => V1CredentialPreview)
+  @IsInstance(V1CredentialPreview)
+  public credentialProposal?: V1CredentialPreview
 
   @IsOptional()
   @IsString()
