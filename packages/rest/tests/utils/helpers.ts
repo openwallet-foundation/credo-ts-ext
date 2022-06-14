@@ -1,7 +1,7 @@
 import {
-  CredentialRecord,
+  CredentialExchangeRecord,
   JsonTransformer,
-  OfferCredentialMessage,
+  // OfferCredentialMessage,
   ProofRecord,
   ProofRequest,
 } from '@aries-framework/core'
@@ -73,27 +73,27 @@ export function getTestCredential() {
     ],
   }
 
-  return JsonTransformer.fromJSON(json, CredentialRecord)
+  return JsonTransformer.fromJSON(json, CredentialExchangeRecord)
 }
 
-export function getTestCredentialOfferMsg() {
-  const offerMsg = {
-    '@type': 'https://didcomm.org/issue-credential/1.0/offer-credential',
-    id: 'string',
-    credentialPreview: {
-      '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-      attributes: [
-        {
-          'mime-type': 'text/plain',
-          name: 'name',
-          value: 'test',
-        },
-      ],
-    },
-  }
+// export function getTestCredentialOfferMsg() {
+//   const offerMsg = {
+//     '@type': 'https://didcomm.org/issue-credential/1.0/offer-credential',
+//     id: 'string',
+//     credentialPreview: {
+//       '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
+//       attributes: [
+//         {
+//           'mime-type': 'text/plain',
+//           name: 'name',
+//           value: 'test',
+//         },
+//       ],
+//     },
+//   }
 
-  return JsonTransformer.fromJSON(offerMsg, OfferCredentialMessage)
-}
+//   return JsonTransformer.fromJSON(offerMsg, OfferCredentialMessage)
+// }
 
 export function getTestCredDef() {
   return {

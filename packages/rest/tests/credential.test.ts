@@ -1,26 +1,26 @@
-import type { Agent, CredentialRecord, OfferCredentialMessage } from '@aries-framework/core'
+import type { Agent, CredentialExchangeRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { objectToJson, getTestCredential, getTestAgent, getTestCredentialOfferMsg } from './utils/helpers'
+import { objectToJson, getTestCredential, getTestAgent } from './utils/helpers'
 
 describe('CredentialController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
-  let testCredential: CredentialRecord
-  let testCredentialOfferMsg: OfferCredentialMessage
+  let testCredential: CredentialExchangeRecord
+  // let testCredentialOfferMsg: OfferCredentialMessage
 
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Rest Credential Test Alice', 3005)
     bobAgent = await getTestAgent('Rest Credential Test Bob', 3006)
     app = await setupServer(bobAgent, { port: 3000 })
 
-    testCredential = getTestCredential()
-    testCredentialOfferMsg = getTestCredentialOfferMsg()
+    testCredential = getTestCredential() as CredentialExchangeRecord
+    // testCredentialOfferMsg = getTestCredentialOfferMsg()
   })
 
   afterEach(() => {
@@ -31,7 +31,7 @@ describe('CredentialController', () => {
     test('should return all credentials', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])
 
-      const getResult = (): Promise<CredentialRecord[]> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord[]> => spy.mock.results[0].value
 
       const response = await request(app).get('/credentials')
       const result = await getResult()
@@ -45,7 +45,7 @@ describe('CredentialController', () => {
     test('should return credential', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'getById').mockResolvedValueOnce(testCredential)
 
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).get(`/credentials/${testCredential.id}`)
       const result = await getResult()
@@ -72,7 +72,7 @@ describe('CredentialController', () => {
   describe('Propose a credential', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'proposeCredential').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const proposalReq = {
         connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
@@ -111,7 +111,7 @@ describe('CredentialController', () => {
   describe('Accept a credential proposal', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptProposal').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const proposalReq = {
         credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
@@ -127,7 +127,7 @@ describe('CredentialController', () => {
     })
     test('should work without optional parameters', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptProposal').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-proposal`)
       const result = await getResult()
@@ -159,7 +159,7 @@ describe('CredentialController', () => {
     }
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'offerCredential').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/offer-credential`).send(proposalReq)
       const result = await getResult()
@@ -209,7 +209,7 @@ describe('CredentialController', () => {
   describe('Accept a credential offer', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptOffer').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-offer`)
       const result = await getResult()
@@ -228,7 +228,7 @@ describe('CredentialController', () => {
   describe('Accept a credential request', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptRequest').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-request`)
       const result = await getResult()
@@ -247,7 +247,7 @@ describe('CredentialController', () => {
   describe('Accept a credential', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptCredential').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-credential`)
       const result = await getResult()
