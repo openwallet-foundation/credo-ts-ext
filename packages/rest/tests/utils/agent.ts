@@ -11,6 +11,8 @@ import path from 'path'
 
 import { TsLogger } from '../../src/utils/logger'
 
+import { BCOVRIN_TEST_GENESIS } from './util'
+
 export const genesisPath = process.env.GENESIS_TXN_PATH
   ? path.resolve(process.env.GENESIS_TXN_PATH)
   : path.join(__dirname, '../../../../network/genesis/local-genesis.txn')
@@ -41,8 +43,8 @@ export const setupAgent = async ({
       logger: logger,
       indyLedgers: [
         {
-          id: 'LocalLedger',
-          genesisPath,
+          id: 'TestLedger',
+          genesisTransactions: BCOVRIN_TEST_GENESIS,
           isProduction: false,
         },
       ],
