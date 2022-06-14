@@ -69,14 +69,9 @@ export const setupAgent = async ({
       const invitation = await ConnectionInvitationMessage.fromUrl(req.url)
       res.send(invitation.toJSON())
     } else {
-      const { invitation } = await agent.connections.createConnection()
+      const { outOfBandInvitation } = await agent.oob.createInvitation()
 
-      res.send(
-        invitation.toUrl({
-          domain: endpoints + '/invitation',
-          useLegacyDidSovPrefix: agent.config.useLegacyDidSovPrefix,
-        })
-      )
+      res.send(outOfBandInvitation.toUrl({ domain: endpoints + '/invitation' }))
     }
   })
 
