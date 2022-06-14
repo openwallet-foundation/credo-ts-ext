@@ -25,7 +25,7 @@ const proofsSlice = createSlice({
   name: 'proofs',
   initialState,
   reducers: {
-    setProofs: (state, action: PayloadAction<ProofRecord[]>) => {
+    setProofRecords: (state, action: PayloadAction<ProofRecord[]>) => {
       state.proofs.records = action.payload.map((record) => JsonTransformer.toJSON(record))
     },
     updateOrAdd: (state, action: PayloadAction<ProofRecord>) => {

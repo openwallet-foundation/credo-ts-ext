@@ -25,7 +25,7 @@ const credentialsSlice = createSlice({
   name: 'credentials',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<CredentialExchangeRecord[]>) => {
+    setCredentialExchangeRecords: (state, action: PayloadAction<CredentialExchangeRecord[]>) => {
       state.credentials.records = action.payload.map((record) => JsonTransformer.toJSON(record))
     },
     updateOrAdd: (state, action: PayloadAction<CredentialExchangeRecord>) => {

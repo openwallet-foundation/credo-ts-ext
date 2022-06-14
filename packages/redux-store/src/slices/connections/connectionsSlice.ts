@@ -37,7 +37,7 @@ const connectionsSlice = createSlice({
   name: 'connections',
   initialState,
   reducers: {
-    setConnections: (state, action: PayloadAction<ConnectionRecord[]>) => {
+    setConnectionRecords: (state, action: PayloadAction<ConnectionRecord[]>) => {
       state.connections.records = action.payload.map((record) => JsonTransformer.toJSON(record))
     },
     updateOrAdd: (state, action: PayloadAction<ConnectionRecord>) => {

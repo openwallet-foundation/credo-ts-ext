@@ -25,7 +25,7 @@ const mediationSlice = createSlice({
   name: 'mediation',
   initialState,
   reducers: {
-    setMediation: (state, action: PayloadAction<MediationRecord[]>) => {
+    setMediationRecords: (state, action: PayloadAction<MediationRecord[]>) => {
       state.mediation.records = action.payload.map((record) => JsonTransformer.toJSON(record))
     },
     updateOrAdd: (state, action: PayloadAction<MediationRecord>) => {
