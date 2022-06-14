@@ -11,8 +11,6 @@ import {
 } from 'routing-controllers'
 import { injectable } from 'tsyringe'
 
-import { BasicMessageRequest } from '../../schemas/BasicMessageRequest'
-
 @JsonController('/basic-messages')
 @injectable()
 export class BasicMessageController {
@@ -23,29 +21,36 @@ export class BasicMessageController {
   }
 
   /**
-   * Retrieve basic messages by connectionId
+   * Retrieve basic messages by connection id
+   *
+   * @param connectionId
+   * @returns BasicMessageRecord[]
    */
   @Get('/:connectionId')
   public async getBasicMessages(@Param('connectionId') connectionId: string) {
-    const basicMessages = await this.agent.basicMessages.findAllByQuery({ connectionId: connectionId })
+    const basicMessages = await this.agent.basicMessages.findAllByQuery({ connectionId })
     return basicMessages.map((m) => m.toJSON())
   }
 
   /**
    * Send a basic message to a connection
+   *
+   * @param connectionId
+   * @param message
    */
   @Post('/:connectionId')
   @OnUndefined(204)
   public async sendMessage(
     @Param('connectionId') connectionId: string,
     @Body()
-    basicMessage: BasicMessageRequest
+    request: Record<'message', string>
   ) {
     try {
-      await this.agent.basicMessages.sendMessage(connectionId, basicMessage.content)
+      const { message } = request
+      await this.agent.basicMessages.sendMessage(connectionId, message)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
+        throw new NotFoundError(`connection with connection id "${connectionId}" not found.`)
       }
       throw new InternalServerError(`something went wrong: ${error}`)
     }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { Agent, BasicMessageRecord, ConnectionRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
@@ -9,22 +10,61 @@ import { getTestAgent, objectToJson } from './utils/helpers'
 
 describe('BasicMessageController', () => {
   let app: Express
-  let agent: Agent
-  let connection: ConnectionRecord
+  let aliceAgent: Agent
+  let bobAgent: Agent
+  let bobConnectionToAlice: ConnectionRecord
+  let aliceConnectionToBob: ConnectionRecord
 
   beforeAll(async () => {
-    agent = await getTestAgent('rest agent basic message test', 3011)
-    app = await setupServer(agent, { port: 3000 })
-    const { invitation } = await agent.connections.createConnection()
-    connection = await agent.connections.receiveInvitation(invitation)
+    aliceAgent = await getTestAgent('REST Agent Test Alice', 3002)
+    bobAgent = await getTestAgent('REST Agent Test Bob', 3003)
+    app = await setupServer(bobAgent, { port: 3000 })
   })
 
-  describe('get basic messages', () => {
-    test('should return list of basic messages filtered by connectionId', async () => {
-      const spy = jest.spyOn(agent.basicMessages, 'findAllByQuery')
+  afterEach(() => {
+    jest.clearAllMocks()
+  })
+
+  describe('Alice and Bob connect', () => {
+    test('make a connection between agents', async () => {
+      const { outOfBandInvitation, ...aliceOOBRecord } = await aliceAgent.oob.createInvitation()
+
+      const { outOfBandRecord: bobOOBRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
+      const [bobConnectionAtBobAlice] = await bobAgent.connections.findAllByOutOfBandId(bobOOBRecord.id)
+      bobConnectionToAlice = await bobAgent.connections.returnWhenIsConnected(bobConnectionAtBobAlice!.id)
+
+      const [aliceConnectionAtAliceBob] = await aliceAgent.connections.findAllByOutOfBandId(aliceOOBRecord.id)
+      aliceConnectionToBob = await aliceAgent.connections.returnWhenIsConnected(aliceConnectionAtAliceBob!.id)
+
+      expect(aliceConnectionToBob?.theirDid).toEqual(bobConnectionToAlice?.did)
+      expect(bobConnectionToAlice?.theirDid).toEqual(aliceConnectionToBob?.did)
+    })
+  })
+
+  describe('Send basic message to connection', () => {
+    test('should give 204 no content when message is sent', async () => {
+      const response = await request(app)
+        .post(`/basic-messages/${bobConnectionToAlice?.id}`)
+        .send({ message: 'Hello!' })
+
+      expect(response.statusCode).toBe(204)
+    })
+
+    test('should give 404 not found when connection is not found', async () => {
+      const response = await request(app)
+        .post(`/basic-messages/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
+        .send({ message: 'Hello!' })
+
+      expect(response.statusCode).toBe(404)
+    })
+  })
+
+  describe('Get basic messages', () => {
+    test('should return list of basic messages filtered by connection id', async () => {
+      const spy = jest.spyOn(bobAgent.basicMessages, 'findAllByQuery')
       const getResult = (): Promise<BasicMessageRecord[]> => spy.mock.results[0].value
 
-      const response = await request(app).get(`/basic-messages/${connection.id}`)
+      const response = await request(app).get(`/basic-messages/${bobConnectionToAlice.id}`)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
@@ -32,23 +72,10 @@ describe('BasicMessageController', () => {
     })
   })
 
-  describe('send basic message to connection', () => {
-    test('should give 204 no content when message is send', async () => {
-      const response = await request(app).post(`/basic-messages/${connection.id}`).send({ content: 'Hello!' })
-
-      expect(response.statusCode).toBe(204)
-    })
-    test('should give 404 not found when connection is not found', async () => {
-      const response = await request(app)
-        .post(`/basic-messages/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
-        .send({ content: 'Hello!' })
-
-      expect(response.statusCode).toBe(404)
-    })
-  })
-
   afterAll(async () => {
-    await agent.shutdown()
-    await agent.wallet.delete()
+    await aliceAgent.shutdown()
+    await aliceAgent.wallet.delete()
+    await bobAgent.shutdown()
+    await bobAgent.wallet.delete()
   })
 })
