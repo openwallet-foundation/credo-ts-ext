@@ -26,10 +26,10 @@ describe('WebhookTest', () => {
   const webhooks: WebhookData[] = []
 
   beforeEach(async () => {
-    aliceAgent = await getTestAgent('Rest Webhook Test Alice', 3012)
-    bobAgent = await getTestAgent('Rest Webhook Test Bob', 3013)
+    aliceAgent = await getTestAgent('Rest Webhook Test Alice', 3022)
+    bobAgent = await getTestAgent('Rest Webhook Test Bob', 3023)
     server = await webhookListener(3000, webhooks)
-    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3000', port: 3014 })
+    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3000', port: 3024 })
   })
 
   test('should return a webhook event when basic message state changed', async () => {
