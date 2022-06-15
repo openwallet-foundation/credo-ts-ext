@@ -16,8 +16,8 @@ describe('BasicMessageController', () => {
   let aliceConnectionToBob: ConnectionRecord
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('REST Agent Test Alice', 3002)
-    bobAgent = await getTestAgent('REST Agent Test Bob', 3003)
+    aliceAgent = await getTestAgent('REST Agent Test Alice', 3012)
+    bobAgent = await getTestAgent('REST Agent Test Bob', 3013)
     app = await setupServer(bobAgent, { port: 3000 })
   })
 

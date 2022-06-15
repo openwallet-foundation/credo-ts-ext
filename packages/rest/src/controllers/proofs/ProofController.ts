@@ -30,13 +30,30 @@ export class ProofController {
   }
 
   /**
-   * Retrieve proof record by proofRecordId
+   * Retrieve all proof records
+   *
+   * @param threadId
+   * @returns ProofRecord[]
+   */
+  @Get('/')
+  public async getAllProofs(@QueryParam('threadId') threadId?: string) {
+    const proofs = await this.agent.proofs.getAll()
+    if (threadId) {
+      return proofs.flatMap((proof) => (proof.threadId === threadId ? proof.toJSON() : []))
+    }
+    return proofs.map((proof) => proof.toJSON())
+  }
+
+  /**
+   * Retrieve proof record by proof record id
+   *
+   * @param proofRecordId
+   * @returns ProofRecord
    */
   @Get('/:proofRecordId')
   public async getProofById(@Param('proofRecordId') proofRecordId: string) {
     try {
       const proof = await this.agent.proofs.getById(proofRecordId)
-
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -47,21 +64,29 @@ export class ProofController {
   }
 
   /**
-   * Retrieve all ProofRecords
+   * Deletes a proof record in the proof repository.
+   *
+   * @param proofRecordId
    */
-  @Get('/')
-  public async getAllProofs(@QueryParam('threadId') threadId?: string) {
-    const proofs = await this.agent.proofs.getAll()
-
-    if (threadId) {
-      return proofs.flatMap((proof) => (proof.threadId === threadId ? proof.toJSON() : []))
+  @Delete('/:proofRecordId')
+  @OnUndefined(204)
+  public async deleteProof(@Param('proofRecordId') proofRecordId: string) {
+    try {
+      await this.agent.proofs.deleteById(proofRecordId)
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        throw new NotFoundError(`Proof with proofRecordId "${proofRecordId}" not found.`)
+      }
+      throw new InternalServerError(`Something went wrong: ${error}`)
     }
-    return proofs.map((proof) => proof.toJSON())
   }
 
   /**
-   * Initiate a new presentation exchange as prover by sending a presentation proposal message
+   * Initiate a new presentation exchange as prover by sending a presentation proposal request
    * to the connection with the specified connection id.
+   *
+   * @param proposal
+   * @returns ProofRecord
    */
   @Post('/propose-proof')
   public async proposeProof(@Body() proposal: ProofProposalRequest) {
@@ -74,7 +99,6 @@ export class ProofController {
       })
 
       const proof = await this.agent.proofs.proposeProof(connectionId, presentationPreview, proposalOptions)
-
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -85,8 +109,12 @@ export class ProofController {
   }
 
   /**
-   * Accept a presentation proposal as verifier (by sending a presentation request message) to the connection
-   * associated with the proof record.
+   * Accept a presentation proposal as verifier by sending an accept proposal message
+   * to the connection associated with the proof record.
+   *
+   * @param proofRecordId
+   * @param proposal
+   * @returns ProofRecord
    */
   @Post('/:proofRecordId/accept-proposal')
   public async acceptProposal(
@@ -95,7 +123,6 @@ export class ProofController {
   ) {
     try {
       const proof = await this.agent.proofs.acceptProposal(proofRecordId, proposal)
-
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -107,6 +134,9 @@ export class ProofController {
 
   /**
    * Creates a presentation request not bound to any proposal or existing connection
+   *
+   * @param request
+   * @returns { requestMessage: RequestPresentationMessage; proofRecord: ProofRecord; }
    */
   @Post('/request-outofband-proof')
   public async requestProofOutOfBand(
@@ -114,9 +144,7 @@ export class ProofController {
     request: ProofRequestTemplate
   ) {
     const { proofRequest, ...requestOptions } = request
-
     const proof = await this.agent.proofs.createOutOfBandRequest(proofRequest, requestOptions)
-
     return {
       message: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
         proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
@@ -127,6 +155,9 @@ export class ProofController {
 
   /**
    * Creates a presentation request bound to existing connection
+   *
+   * @param request
+   * @returns ProofRecord
    */
   @Post('/request-proof')
   public async requestProof(
@@ -136,7 +167,6 @@ export class ProofController {
     const { connectionId, proofRequest, ...requestOptions } = request
     try {
       const proof = await this.agent.proofs.requestProof(connectionId, proofRequest, requestOptions)
-
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -147,8 +177,12 @@ export class ProofController {
   }
 
   /**
-   * Accept a presentation request as prover (by sending a presentation message) to the connection
-   * associated with the proof record.
+   * Accept a presentation request as prover by sending an accept request message
+   * to the connection associated with the proof record.
+   *
+   * @param proofRecordId
+   * @param request
+   * @returns ProofRecord
    */
   @Post('/:proofRecordId/accept-request')
   public async acceptRequest(@Param('proofRecordId') proofRecordId: string, @Body() request: PresentationProofRequest) {
@@ -175,8 +209,11 @@ export class ProofController {
   }
 
   /**
-   * Accept a presentation as prover (by sending a presentation acknowledgement message) to the connection
-   * associated with the proof record.
+   * Accept a presentation as prover by sending an accept presentation message
+   * to the connection associated with the proof record.
+   *
+   * @param proofRecordId
+   * @returns ProofRecord
    */
   @Post('/:proofRecordId/accept-presentation')
   public async acceptPresentation(@Param('proofRecordId') proofRecordId: string) {
@@ -184,22 +221,6 @@ export class ProofController {
       const proof = await this.agent.proofs.acceptPresentation(proofRecordId)
 
       return proof.toJSON()
-    } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Proof with proofRecordId "${proofRecordId}" not found.`)
-      }
-      throw new InternalServerError(`Something went wrong: ${error}`)
-    }
-  }
-
-  /**
-   * Deletes a proofRecord in the proof repository.
-   */
-  @Delete('/:proofRecordId')
-  @OnUndefined(204)
-  public async deleteProof(@Param('proofRecordId') proofRecordId: string) {
-    try {
-      await this.agent.proofs.deleteById(proofRecordId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         throw new NotFoundError(`Proof with proofRecordId "${proofRecordId}" not found.`)

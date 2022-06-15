@@ -12,7 +12,7 @@ import { setupAgent } from './agent'
 export async function getTestAgent(name: string, port: number) {
   return await setupAgent({
     port: port,
-    publicDidSeed: 'testtesttesttesttesttesttesttest',
+    publicDidSeed: 'testagenttestagenttestagent',
     endpoints: [`http://localhost:${port}`],
     name: name,
   })
@@ -127,7 +127,7 @@ export function getTestProof() {
     },
     type: 'ProofRecord',
     id: '222222aa-aa22-22a2-aa22-222a2aa22222',
-    createdAt: '2021-01-01T00:0:00.000Z',
+    createdAt: '2021-01-01T00:00:00.000Z',
     requestMessage: {
       type: 'https://didcomm.org/present-proof/1.0/request-presentation',
       id: '333333aa-aa33-33a3-aa33-333a3aa33333',
