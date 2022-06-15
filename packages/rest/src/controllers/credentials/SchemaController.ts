@@ -15,7 +15,7 @@ import {
 } from 'routing-controllers'
 import { injectable } from 'tsyringe'
 
-import { SchemaTemplate } from '../../schemas/SchemaRequest'
+import { SchemaRequest } from '../../schemas/SchemaRequest'
 
 @JsonController('/schemas')
 @injectable()
@@ -59,7 +59,7 @@ export class SchemaController {
    * @returns schema
    */
   @Post('/')
-  public async createSchema(@Body() schema: SchemaTemplate) {
+  public async createSchema(@Body() schema: SchemaRequest) {
     try {
       return await this.agent.ledger.registerSchema({
         name: schema.name,
