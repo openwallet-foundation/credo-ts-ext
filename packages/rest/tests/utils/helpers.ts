@@ -32,7 +32,7 @@ export function getTestCredential() {
     },
     type: 'CredentialRecord',
     id: '222222aa-aa22-22a2-aa22-222a2aa22222',
-    createdAt: '2021-01-01T00:0:00.000Z',
+    createdAt: '2021-01-01T00:00:00.000Z',
     state: 'string',
     connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
     metadata: {
