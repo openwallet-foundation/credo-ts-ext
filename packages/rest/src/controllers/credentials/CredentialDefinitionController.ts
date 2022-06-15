@@ -26,14 +26,17 @@ export class CredentialDefinitionController {
   }
 
   /**
-   * Retrieve credentialDefinition by credentialDefinitionId
+   * Retrieve credential definition by credential definition id
+   *
+   * @param credentialDefinitionId
+   * @returns CredDef
    */
   @Get('/:credentialDefinitionId')
   public async getCredentialDefinitionById(@Param('credentialDefinitionId') credentialDefinitionId: string) {
     try {
       return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
     } catch (error) {
-      if (error instanceof LedgerNotFoundError) {
+      if (error instanceof IndySdkError && error.message === 'IndyError(LedgerNotFound): LedgerNotFound') {
         throw new NotFoundError(
           `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`
         )
@@ -47,8 +50,10 @@ export class CredentialDefinitionController {
   }
 
   /**
-   * Creates a new CredentialDefinition.
-   * Returns CredentialDefinitionId and CredentialDefinition
+   * Creates a new credential definition.
+   *
+   * @param credentialDefinitionRequest
+   * @returns CredDef
    */
   @Post('/')
   public async createCredentialDefinition(@Body() credentialDefinitionRequest: CredentialDefinitionRequest) {

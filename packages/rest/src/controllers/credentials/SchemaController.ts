@@ -27,14 +27,17 @@ export class SchemaController {
   }
 
   /**
-   * Retrieve schema by schemaId
+   * Retrieve schema by schema id
+   *
+   * @param schemaId
+   * @returns Schema
    */
   @Get('/:schemaId')
   public async getSchemaById(@Param('schemaId') schemaId: string) {
     try {
       return await this.agent.ledger.getSchema(schemaId)
     } catch (error) {
-      if (error instanceof LedgerNotFoundError) {
+      if (error instanceof IndySdkError && error.message === 'IndyError(LedgerNotFound): LedgerNotFound') {
         throw new NotFoundError(`schema definition with schemaId "${schemaId}" not found.`)
       } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
         if (isIndyError(error.cause.cause, 'LedgerInvalidTransaction')) {
@@ -51,7 +54,9 @@ export class SchemaController {
 
   /**
    * Creates a new schema and registers schema on ledger
-   * Returns created schema
+   *
+   * @param schema
+   * @returns schema
    */
   @Post('/')
   public async createSchema(@Body() schema: SchemaTemplate) {
