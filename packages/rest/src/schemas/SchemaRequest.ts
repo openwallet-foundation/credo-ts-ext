@@ -1,6 +1,6 @@
 import { IsString, IsArray, Matches } from 'class-validator'
 
-export class SchemaTemplate {
+export class SchemaRequest {
   @IsString()
   public name!: string
 
