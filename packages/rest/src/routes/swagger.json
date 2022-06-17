@@ -1,91 +1,84 @@
 {
-	"components": {
-		"examples": {},
-		"headers": {},
-		"parameters": {},
-		"requestBodies": {},
-		"responses": {},
-		"schemas": {
-			"DidInfo": {
-				"properties": {
-					"did": {
-						"type": "string"
-					},
-					"verkey": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"did",
-					"verkey"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AgentInfo": {
-				"properties": {
-					"label": {
-						"type": "string"
-					},
-					"endpoints": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"isInitialized": {
-						"type": "boolean"
-					},
-					"publicDid": {
-						"$ref": "#/components/schemas/DidInfo"
-					}
-				},
-				"required": [
-					"label",
-					"endpoints",
-					"isInitialized"
-				],
-				"type": "object",
-				"additionalProperties": false
-			}
-		},
-		"securitySchemes": {}
-	},
-	"info": {
-		"title": "@aries-framework/rest",
-		"version": "0.8.0",
-		"description": "Rest endpoint wrapper for using your agent over HTTP",
-		"license": {
-			"name": "Apache-2.0"
-		},
-		"contact": {}
-	},
-	"openapi": "3.0.0",
-	"paths": {
-		"/agent": {
-			"get": {
-				"operationId": "GetAgentInfo",
-				"responses": {
-					"200": {
-						"description": "Ok",
-						"content": {
-							"application/json": {
-								"schema": {
-									"$ref": "#/components/schemas/AgentInfo"
-								}
-							}
-						}
-					}
-				},
-				"description": "Retrieve basic agent information",
-				"security": [],
-				"parameters": []
-			}
-		}
-	},
-	"servers": [
-		{
-			"url": "/"
-		}
-	]
+  "components": {
+    "examples": {},
+    "headers": {},
+    "parameters": {},
+    "requestBodies": {},
+    "responses": {},
+    "schemas": {
+      "DidInfo": {
+        "properties": {
+          "did": {
+            "type": "string"
+          },
+          "verkey": {
+            "type": "string"
+          }
+        },
+        "required": ["did", "verkey"],
+        "type": "object",
+        "additionalProperties": false
+      },
+      "AgentInfo": {
+        "properties": {
+          "label": {
+            "type": "string"
+          },
+          "endpoints": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "isInitialized": {
+            "type": "boolean"
+          },
+          "publicDid": {
+            "$ref": "#/components/schemas/DidInfo"
+          }
+        },
+        "required": ["label", "endpoints", "isInitialized"],
+        "type": "object",
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {}
+  },
+  "info": {
+    "title": "@aries-framework/rest",
+    "version": "0.8.0",
+    "description": "Rest endpoint wrapper for using your agent over HTTP",
+    "license": {
+      "name": "Apache-2.0"
+    },
+    "contact": {}
+  },
+  "openapi": "3.0.0",
+  "paths": {
+    "/agent": {
+      "get": {
+        "operationId": "GetAgentInfo",
+        "responses": {
+          "200": {
+            "description": "Ok",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AgentInfo"
+                }
+              }
+            }
+          }
+        },
+        "description": "Retrieve basic agent information",
+        "security": [],
+        "parameters": []
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ]
 }
