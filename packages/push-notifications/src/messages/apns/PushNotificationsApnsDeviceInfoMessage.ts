@@ -1,8 +1,8 @@
 import type { ApnsDeviceInfo } from '../../services'
 
-import { AgentMessage } from '@aries-framework/core'
+import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
-import { Equals, IsString } from 'class-validator'
+import { IsString } from 'class-validator'
 
 interface PushNotificationsApnsDeviceInfoOptions extends ApnsDeviceInfo {
   id?: string
@@ -15,10 +15,6 @@ interface PushNotificationsApnsDeviceInfoOptions extends ApnsDeviceInfo {
  * @todo ADD RFC
  */
 export class PushNotificationsApnsDeviceInfoMessage extends AgentMessage {
-  @Equals(PushNotificationsApnsDeviceInfoMessage.type)
-  public readonly type = PushNotificationsApnsDeviceInfoMessage.type
-  public static readonly type = 'https://didcomm.org/push-notifications-apns/1.0/device-info'
-
   public constructor(options: PushNotificationsApnsDeviceInfoOptions) {
     super()
 
@@ -27,6 +23,10 @@ export class PushNotificationsApnsDeviceInfoMessage extends AgentMessage {
       this.deviceToken = options.deviceToken
     }
   }
+
+  @IsValidMessageType(PushNotificationsApnsDeviceInfoMessage.type)
+  public readonly type = PushNotificationsApnsDeviceInfoMessage.type.messageTypeUri
+  public static readonly type = parseMessageType('https://didcomm.org/push-notifications-apns/1.0/device-info')
 
   @Expose({ name: 'device_token' })
   @IsString()
