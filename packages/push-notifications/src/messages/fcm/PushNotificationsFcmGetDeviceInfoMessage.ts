@@ -1,5 +1,4 @@
-import { AgentMessage } from '@aries-framework/core'
-import { Equals } from 'class-validator'
+import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 
 interface PushNotificationsFcmGetDeviceInfoOptions {
   id?: string
@@ -11,10 +10,6 @@ interface PushNotificationsFcmGetDeviceInfoOptions {
  * @todo ADD RFC
  */
 export class PushNotificationsFcmGetDeviceInfoMessage extends AgentMessage {
-  @Equals(PushNotificationsFcmGetDeviceInfoMessage.type)
-  public readonly type = PushNotificationsFcmGetDeviceInfoMessage.type
-  public static readonly type = 'https://didcomm.org/push-notifications-fcm/1.0/get-device-info'
-
   public constructor(options: PushNotificationsFcmGetDeviceInfoOptions) {
     super()
 
@@ -22,4 +17,8 @@ export class PushNotificationsFcmGetDeviceInfoMessage extends AgentMessage {
       this.id = options.id ?? this.generateId()
     }
   }
+
+  @IsValidMessageType(PushNotificationsFcmGetDeviceInfoMessage.type)
+  public readonly type = PushNotificationsFcmGetDeviceInfoMessage.type.messageTypeUri
+  public static readonly type = parseMessageType('https://didcomm.org/push-notifications-fcm/1.0/get-device-info')
 }
