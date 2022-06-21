@@ -25,11 +25,11 @@ describe('WebhookTest', () => {
   let server: Server
   const webhooks: WebhookData[] = []
 
-  beforeEach(async () => {
-    aliceAgent = await getTestAgent('Rest Webhook Test Alice', 3022)
-    bobAgent = await getTestAgent('Rest Webhook Test Bob', 3023)
-    server = await webhookListener(3000, webhooks)
-    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3000', port: 3024 })
+  beforeAll(async () => {
+    aliceAgent = await getTestAgent('Rest Webhook Test Alice', 3042)
+    bobAgent = await getTestAgent('Rest Webhook Test Bob', 3043)
+    server = await webhookListener(3044, webhooks)
+    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3044', port: 3000 })
   })
 
   test('should return a webhook event when basic message state changed', async () => {
@@ -134,7 +134,7 @@ describe('WebhookTest', () => {
     expect(JSON.parse(JSON.stringify(proofRecord.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)
   })
 
-  afterEach(async () => {
+  afterAll(async () => {
     await aliceAgent.shutdown()
     await aliceAgent.wallet.delete()
     await bobAgent.shutdown()

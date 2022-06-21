@@ -12,7 +12,7 @@ describe('AgentController', () => {
   let agent: Agent
 
   beforeAll(async () => {
-    agent = await getTestAgent('Rest Schema Test', 3010)
+    agent = await getTestAgent('Rest Schema Test', 3021)
     app = await setupServer(agent, { port: 3000 })
   })
 
