@@ -15,8 +15,8 @@ describe('ProofController', () => {
   let testRequest: ProofRequest
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Rest Proof Test Alice', 3042)
-    bobAgent = await getTestAgent('Rest Proof Test Bob', 3043)
+    aliceAgent = await getTestAgent('Rest Proof Test Alice', 3032)
+    bobAgent = await getTestAgent('Rest Proof Test Bob', 3033)
     app = await setupServer(bobAgent, { port: 3000 })
 
     testProof = getTestProof()

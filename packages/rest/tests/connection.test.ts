@@ -6,6 +6,7 @@ import request from 'supertest'
 import { setupServer } from '../src/server'
 
 import { getTestAgent, objectToJson } from './utils/helpers'
+import { sleep } from './utils/webhook'
 
 describe('ConnectionController', () => {
   let app: Express
@@ -13,8 +14,8 @@ describe('ConnectionController', () => {
   let bobAgent: Agent
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('REST Agent Test Alice', 3002)
-    bobAgent = await getTestAgent('REST Agent Test Bob', 3003)
+    aliceAgent = await getTestAgent('REST Agent Test Alice', 3012)
+    bobAgent = await getTestAgent('REST Agent Test Bob', 3013)
     app = await setupServer(bobAgent, { port: 3000 })
   })
 
@@ -97,8 +98,8 @@ describe('ConnectionController', () => {
     })
   })
 
-  describe('Accept response', () => {
-    test.skip('should return accepted connection record', async () => {
+  describe.skip('Accept response', () => {
+    test('should return accepted connection record', async () => {
       // Alice creates an oob invitation for Bob
       const { outOfBandInvitation, ...aliceOOBRecord } = await aliceAgent.oob.createInvitation({
         autoAcceptConnection: false,
@@ -106,12 +107,11 @@ describe('ConnectionController', () => {
 
       // Bob receives the oob invitation and manually accepts the invitation,
       // creating a connection request with Alice
-      const { outOfBandRecord: bobOOBRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation, {
-        autoAcceptConnection: false,
-      })
-      const { connectionRecord: bobConnectionRecord } = await bobAgent.oob.acceptInvitation(bobOOBRecord.id, {
-        autoAcceptConnection: false,
-      })
+      const { outOfBandRecord: bobOOBRecord, connectionRecord: bobConnectionRecord } =
+        await bobAgent.oob.receiveInvitation(outOfBandInvitation, {
+          autoAcceptConnection: false,
+        })
+      await bobAgent.oob.acceptInvitation(bobOOBRecord.id, { autoAcceptConnection: false })
 
       // Alice finds the connection associated with the oob record and if it exists accepts the connection,
       // sends a connection response to Bob

@@ -12,7 +12,7 @@ import { setupAgent } from './agent'
 export async function getTestAgent(name: string, port: number) {
   return await setupAgent({
     port: port,
-    publicDidSeed: 'testagenttestagenttestagent',
+    publicDidSeed: '00000000000000000000000000000000',
     endpoints: [`http://localhost:${port}`],
     name: name,
   })
