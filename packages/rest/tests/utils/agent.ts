@@ -48,6 +48,7 @@ export const setupAgent = async ({
           isProduction: false,
         },
       ],
+      autoUpdateStorageOnStartup: true,
     },
     agentDependencies
   )
