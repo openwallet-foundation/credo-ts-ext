@@ -43,6 +43,14 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
 
   RegisterRoutes(server)
 
+  server.use((req, res, next) => {
+    if (req.url == '/') {
+      res.redirect('/docs')
+      return
+    }
+    next()
+  })
+
   server.use(function errorHandler(err: unknown, res: ExResponse, next: NextFunction): ExResponse | void {
     if (err instanceof ValidateError) {
       return res.status(422).json({
