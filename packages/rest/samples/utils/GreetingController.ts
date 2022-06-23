@@ -1,8 +1,9 @@
 import { Agent, AgentConfig } from '@aries-framework/core'
-import { Get, JsonController } from 'routing-controllers'
+import { Get, Route, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-@JsonController('/greeting')
+@Tags('Greetings')
+@Route('/greeting')
 @injectable()
 export class GreetingController {
   private agent: Agent

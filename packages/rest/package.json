@@ -21,7 +21,8 @@
     "afj-rest": "bin/afj-rest.js"
   },
   "scripts": {
-    "dev": "tsnd --respawn samples/sampleWithApp.ts",
+    "tsoa": "tsoa spec-and-routes",
+    "dev": "yarn tsoa && tsnd --respawn samples/sampleWithApp.ts",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./build",
     "compile": "tsc -p tsconfig.build.json",
@@ -35,13 +36,10 @@
     "body-parser": "^1.20.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.1",
-    "class-validator-jsonschema": "^3.1.1",
     "cors": "^2.8.5",
     "express": "^4.18.1",
     "node-fetch": "^2.6.7",
     "reflect-metadata": "^0.1.13",
-    "routing-controllers": "^0.9.0",
-    "routing-controllers-openapi": "^3.1.0",
     "swagger-ui-express": "^4.4.0",
     "tslog": "^3.3.3",
     "tsoa": "^4.1.0",

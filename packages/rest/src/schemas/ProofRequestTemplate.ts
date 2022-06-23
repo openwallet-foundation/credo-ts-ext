@@ -1,8 +1,6 @@
-import { AutoAcceptProof } from '@aries-framework/core'
+import { AutoAcceptProof, ProofRequest } from '@aries-framework/core'
 import { Type } from 'class-transformer'
 import { IsString, IsOptional, ValidateNested, IsEnum, IsInstance } from 'class-validator'
-
-import { ProofRequest } from '../utils/ProofRequest'
 
 export class ProofRequestTemplate {
   @ValidateNested()

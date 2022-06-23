@@ -2,26 +2,20 @@ import { Agent, IndySdkError } from '@aries-framework/core'
 import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
 import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
 import { isIndyError } from '@aries-framework/core/build/utils/indyError'
-import {
-  BadRequestError,
-  Body,
-  Get,
-  InternalServerError,
-  JsonController,
-  NotFoundError,
-  Param,
-  Post,
-} from 'routing-controllers'
+import { Body, Controller, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
+import { CredentialDefinitionId } from '../types'
 
-@JsonController('/credential-definitions')
+@Tags('Credential Definitions')
+@Route('/credential-definitions')
 @injectable()
-export class CredentialDefinitionController {
+export class CredentialDefinitionController extends Controller {
   private agent: Agent
 
   public constructor(agent: Agent) {
+    super()
     this.agent = agent
   }
 
@@ -32,20 +26,27 @@ export class CredentialDefinitionController {
    * @returns CredDef
    */
   @Get('/:credentialDefinitionId')
-  public async getCredentialDefinitionById(@Param('credentialDefinitionId') credentialDefinitionId: string) {
+  public async getCredentialDefinitionById(
+    @Path('credentialDefinitionId') credentialDefinitionId: CredentialDefinitionId,
+    @Res() badRequestError: TsoaResponse<400, { reason: string }>,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+  ) {
     try {
       return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
     } catch (error) {
       if (error instanceof IndySdkError && error.message === 'IndyError(LedgerNotFound): LedgerNotFound') {
-        throw new NotFoundError(
-          `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`
-        )
+        throw notFoundError(404, {
+          reason: `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`,
+        })
       } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
         if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw new BadRequestError(`credentialDefinitionId "${credentialDefinitionId}" has invalid structure.`)
+          throw badRequestError(400, {
+            reason: `credentialDefinitionId "${credentialDefinitionId}" has invalid structure.`,
+          })
         }
       }
-      throw new InternalServerError(`something went wrong: ${error}`)
+      throw internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -56,7 +57,11 @@ export class CredentialDefinitionController {
    * @returns CredDef
    */
   @Post('/')
-  public async createCredentialDefinition(@Body() credentialDefinitionRequest: CredentialDefinitionRequest) {
+  public async createCredentialDefinition(
+    @Body() credentialDefinitionRequest: CredentialDefinitionRequest,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+  ) {
     try {
       const schema = await this.agent.ledger.getSchema(credentialDefinitionRequest.schemaId)
 
@@ -67,10 +72,12 @@ export class CredentialDefinitionController {
       })
     } catch (error) {
       if (error instanceof LedgerNotFoundError) {
-        throw new NotFoundError(`schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`)
+        throw notFoundError(404, {
+          reason: `schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`,
+        })
       }
 
-      throw new InternalServerError(`something went wrong: ${error}`)
+      throw internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }

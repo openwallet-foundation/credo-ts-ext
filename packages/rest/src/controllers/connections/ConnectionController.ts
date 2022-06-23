@@ -1,50 +1,61 @@
-import { Agent, AriesFrameworkError, RecordNotFoundError } from '@aries-framework/core'
-import {
-  BadRequestError,
-  Delete,
-  Get,
-  InternalServerError,
-  JsonController,
-  NotFoundError,
-  OnUndefined,
-  Param,
-  Post,
-} from 'routing-controllers'
+import { Agent, RecordNotFoundError } from '@aries-framework/core'
+import { Controller, Delete, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-@JsonController('/connections')
+import { RecordId } from '../types'
+
+@Tags('Connections')
+@Route('/connections')
 @injectable()
-export class ConnectionController {
+export class ConnectionController extends Controller {
   private agent: Agent
 
   public constructor(agent: Agent) {
+    super()
     this.agent = agent
   }
 
   /**
    * Retrieve all connections records
-   *
+   * @example alias "Bob"
+   * @example state "abandoned, response, start, error, init, active, request, invitation, completed"
+   * @example myDid "WgWxqztrNooG92RXvxSTWv"
+   * @example theirDid "WgWxqztrNooG92RXvxSTWv"
+   * @example theirLabel "Alice"
    * @returns ConnectionRecord[]
    */
   @Get('/')
-  public async getAllConnections() {
-    const connections = await this.agent.connections.getAll()
+  public async getAllConnections(
+    @Query('alias') alias?: string,
+    @Query('state') state?: string,
+    @Query('myDid') myDid?: string,
+    @Query('theirDid') theirDid?: string,
+    @Query('theirLabel') theirLabel?: string
+  ) {
+    let connections = await this.agent.connections.getAll()
+
+    if (alias) connections = connections.filter((c) => c.alias === alias)
+    if (state) connections = connections.filter((c) => c.state === state)
+    if (myDid) connections = connections.filter((c) => c.did === myDid)
+    if (theirDid) connections = connections.filter((c) => c.theirDid === theirDid)
+    if (theirLabel) connections = connections.filter((c) => c.theirLabel === theirLabel)
+
     return connections.map((c) => c.toJSON())
   }
 
   /**
    * Retrieve connection record by connection id
-   *
-   * @param connectionId
+   * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
   @Get('/:connectionId')
-  public async getConnectionById(@Param('connectionId') connectionId: string) {
+  public async getConnectionById(
+    @Path('connectionId') connectionId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>
+  ) {
     const connection = await this.agent.connections.findById(connectionId)
 
-    if (!connection) {
-      throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
-    }
+    if (!connection) throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
 
     return connection.toJSON()
   }
@@ -52,18 +63,22 @@ export class ConnectionController {
   /**
    * Deletes a connection record from the connection repository.
    *
-   * @param connectionId
+   * @param connectionId Connection identifier
    */
   @Delete('/:connectionId')
-  @OnUndefined(204)
-  public async deleteConnection(@Param('connectionId') connectionId: string) {
+  public async deleteConnection(
+    @Path('connectionId') connectionId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+  ) {
     try {
+      this.setStatus(204)
       await this.agent.connections.deleteById(connectionId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
+        throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw new InternalServerError(`something went wrong: ${error}`)
+      throw internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -73,19 +88,23 @@ export class ConnectionController {
    *
    * This is not needed when auto accepting of connection is enabled.
    *
-   * @param connectionId
+   * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
   @Post('/:connectionId/accept-request')
-  public async acceptRequest(@Param('connectionId') connectionId: string) {
+  public async acceptRequest(
+    @Path('connectionId') connectionId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+  ) {
     try {
       const connection = await this.agent.connections.acceptRequest(connectionId)
       return connection.toJSON()
     } catch (error) {
-      if (error instanceof AriesFrameworkError && error.message === `Connection record ${connectionId} not found.`) {
-        throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
+      if (error instanceof RecordNotFoundError) {
+        throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw new InternalServerError(`something went wrong: ${error}`)
+      throw internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -95,19 +114,23 @@ export class ConnectionController {
    *
    * This is not needed when auto accepting of connection is enabled.
    *
-   * @param connectionId
+   * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
   @Post('/:connectionId/accept-response')
-  public async acceptResponse(@Param('connectionId') connectionId: string) {
+  public async acceptResponse(
+    @Path('connectionId') connectionId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+  ) {
     try {
       const connection = await this.agent.connections.acceptResponse(connectionId)
       return connection.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`connection with connectionId "${connectionId}" not found.`)
+        throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw new BadRequestError(`something went wrong: ${error}`)
+      throw internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }
