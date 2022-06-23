@@ -38,10 +38,10 @@
     tsyringe "^4.5.0"
     uuid "^8.3.2"
 
-"@aries-framework/core@0.2.0-alpha.112":
-  version "0.2.0-alpha.112"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.112.tgz#c6aaa5063e0190e21def2c67b89d09d16d7cc865"
-  integrity sha512-4/JRAWBc1smIhwjynsjdEPu7LC0km+vZGHZTNFQ1aW/VHmyDAGAm7eUy/5v1ZLv2jZjN5AxU7fWVydISJzyOow==
+"@aries-framework/core@0.2.0-alpha.129", "@aries-framework/core@0.2.0-alpha.129+8d67e63":
+  version "0.2.0-alpha.129"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.129.tgz#44d7cd2e2b476b02ddfbaf0e3c942951d6434999"
+  integrity sha512-DvXFNjnCWddEx4Ow/dV30zNvnonE3OdqU32qYovaRsj4aNFdxSMH9swl6OOMIOtIvjHniXawPOiduII6r/WhSg==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -68,10 +68,10 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@0.2.0-alpha.129", "@aries-framework/core@0.2.0-alpha.129+8d67e63":
-  version "0.2.0-alpha.129"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.129.tgz#44d7cd2e2b476b02ddfbaf0e3c942951d6434999"
-  integrity sha512-DvXFNjnCWddEx4Ow/dV30zNvnonE3OdqU32qYovaRsj4aNFdxSMH9swl6OOMIOtIvjHniXawPOiduII6r/WhSg==
+"@aries-framework/core@^0.2.0-alpha.139":
+  version "0.2.0-alpha.139"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.139.tgz#c320b0736e1c00c721959625194d15b82c017cf4"
+  integrity sha512-S5QhoUZj/IexRTUyhnj9ICaF/FN5rcQput7hTGnC9kxDMTm9lyGLJRiocYLbdCyzuDWP9lm06q/Bu+7Q4qq8qw==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@stablelib/ed25519" "^1.0.2"
