@@ -53,20 +53,35 @@ In order for this plugin to work we have to inject it into the agent to access a
 > This is the current way however this will be changed someday to improve plugin management
 
 ```ts
-import { PushNotificationsModule } from '@aries-framework/push-notifications'
+import { PushNotificationsApnsModule, PushNotificationsFcmModule } from '@aries-framework/push-notifications'
 
 const agent = new Agent(/** agent config... */)
 
-const pushNotificationsModule = agent.injectionContainer.resolve(PushNotificationsModule)
+const pushNotificationsApnsModule = agent.injectionContainer.resolve(PushNotificationsApnsModule)
+const pushNotificationsFcmModule = agent.injectionContainer.resolve(PushNotificationsFcmModule)
 
 await agent.initialize()
 
-// To send native device info to another agent you have to accquire the device token and vendor yourself.
-pushNotificationsModule.sendNativeDeviceInfo(
-  { deviceToken: '123', deviceVendor: DeviceVendor.android },
+/* -- iOS -- */
+
+// To send apns device info to another agent you have to accquire the device token and send it.
+pushNotificationsApnsModule.sendDeviceInfo(
   'a-valid-connection-id'
+  { deviceToken: '123' },
 )
 
 // To get the device info and the used service back from the other agent
-pushNotificationsModule.getNativeDeviceInfo('a-valid-connection')
+pushNotificationsApnsModule.getDeviceInfo('a-valid-connection')
+
+/* -- fcm -- */
+
+// To send fcm, primarily Android, device info to another agent you have to accquire the device token and send it.
+pushNotificationsFcmModule.sendDeviceInfo(
+  'a-valid-connection-id'
+  { deviceToken: '123' },
+)
+
+// To get the device info and the used service back from the other agent
+pushNotificationsFcmModule.getDeviceInfo('a-valid-connection')
+
 ```

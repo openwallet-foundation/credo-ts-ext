@@ -10,7 +10,7 @@ export const sendWebhookEvent = async (webhookUrl: string, body: Record<string, 
       headers: { 'Content-Type': 'application/json' },
     })
   } catch (error) {
-    logger.error(`Error sending ${body.topic} webhook event to ${webhookUrl}`, {
+    logger.error(`Error sending ${body.type} webhook event to ${webhookUrl}`, {
       cause: error,
     })
   }
