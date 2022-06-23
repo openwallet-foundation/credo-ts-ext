@@ -1,12 +1,12 @@
 import type {
   Agent,
   CredentialState,
-  CredentialStateChangedEvent,
-  RevocationNotificationReceivedEvent,
   RecordDeletedEvent,
+  RecordUpdatedEvent,
+  RecordSavedEvent,
 } from '@aries-framework/core'
 
-import { RepositoryEventTypes, CredentialEventTypes, CredentialExchangeRecord } from '@aries-framework/core'
+import { RepositoryEventTypes, CredentialExchangeRecord } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
@@ -62,13 +62,29 @@ const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
 
   useEffect(() => {
     if (!credentialState.loading) {
-      const stateChangedListener = async (event: CredentialStateChangedEvent | RevocationNotificationReceivedEvent) => {
+      const savedListener = async (event: RecordSavedEvent<CredentialExchangeRecord>) => {
+        const { record } = event.payload
+        if (record.type !== CredentialExchangeRecord.type) {
+          return
+        }
         const newCredentialsState = [...credentialState.credentials]
-        const index = newCredentialsState.findIndex((credential) => credential.id === event.payload.credentialRecord.id)
+        newCredentialsState.unshift(record)
+
+        setCredentialState({
+          loading: credentialState.loading,
+          credentials: newCredentialsState,
+        })
+      }
+
+      const updatedListener = async (event: RecordUpdatedEvent<CredentialExchangeRecord>) => {
+        const { record } = event.payload
+        if (record.type !== CredentialExchangeRecord.type) {
+          return
+        }
+        const newCredentialsState = [...credentialState.credentials]
+        const index = newCredentialsState.findIndex((credential) => credential.id === record.id)
         if (index > -1) {
-          newCredentialsState[index] = event.payload.credentialRecord
-        } else {
-          newCredentialsState.unshift(event.payload.credentialRecord)
+          newCredentialsState[index] = record
         }
 
         setCredentialState({
@@ -78,25 +94,25 @@ const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
       }
 
       const deletedListener = async (event: RecordDeletedEvent<CredentialExchangeRecord>) => {
-        if (event.payload.record.type !== CredentialExchangeRecord.type) {
+        const { record } = event.payload
+        if (record.type !== CredentialExchangeRecord.type) {
           return
         }
-        const newCredentialsState = credentialState.credentials.filter(
-          (credential) => credential.id != event.payload.record.id
-        )
+        const newCredentialsState = credentialState.credentials.filter((credential) => credential.id !== record.id)
+
         setCredentialState({
           loading: credentialState.loading,
           credentials: newCredentialsState,
         })
       }
 
-      agent?.events.on(CredentialEventTypes.CredentialStateChanged, stateChangedListener)
-      agent?.events.on(CredentialEventTypes.RevocationNotificationReceived, stateChangedListener)
+      agent?.events.on(RepositoryEventTypes.RecordSaved, savedListener)
+      agent?.events.on(RepositoryEventTypes.RecordUpdated, updatedListener)
       agent?.events.on(RepositoryEventTypes.RecordDeleted, deletedListener)
 
       return () => {
-        agent?.events.off(CredentialEventTypes.CredentialStateChanged, stateChangedListener)
-        agent?.events.off(CredentialEventTypes.RevocationNotificationReceived, stateChangedListener)
+        agent?.events.off(RepositoryEventTypes.RecordSaved, savedListener)
+        agent?.events.off(RepositoryEventTypes.RecordUpdated, updatedListener)
         agent?.events.off(RepositoryEventTypes.RecordDeleted, deletedListener)
       }
     }
