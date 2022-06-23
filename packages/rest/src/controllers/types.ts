@@ -1,4 +1,4 @@
-import type { ProofRecord, RequestPresentationMessage } from '@aries-framework/core'
+import type { ProofRecord } from '@aries-framework/core'
 import type { DidInfo } from '@aries-framework/core/build/wallet/Wallet'
 
 export interface AgentInfo {
