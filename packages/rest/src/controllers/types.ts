@@ -15,13 +15,11 @@ export type RecordId = string
 
 /**
  * @example "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag"
- * @pattern "(/^([a-zA-Z0-9]{21,22}):3:CL:(([1-9][0-9]*)|([a-zA-Z0-9]{21,22}:2:.+:[0-9.]+)):(.+)?$/)"
  */
 export type CredentialDefinitionId = string
 
 /**
  * @example "WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0"
- * @pattern /^[a-zA-Z0-9]{21,22}:2:.+:[0-9.]+$/
  */
 export type SchemaId = string
 

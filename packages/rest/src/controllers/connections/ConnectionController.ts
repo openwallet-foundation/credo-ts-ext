@@ -1,4 +1,4 @@
-import { Agent, RecordNotFoundError } from '@aries-framework/core'
+import { Agent, AriesFrameworkError, RecordNotFoundError } from '@aries-framework/core'
 import { Controller, Delete, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -101,7 +101,7 @@ export class ConnectionController extends Controller {
       const connection = await this.agent.connections.acceptRequest(connectionId)
       return connection.toJSON()
     } catch (error) {
-      if (error instanceof RecordNotFoundError) {
+      if (error instanceof AriesFrameworkError) {
         throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
       throw internalServerError(500, { message: `something went wrong`, error: error })

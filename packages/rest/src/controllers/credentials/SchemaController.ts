@@ -27,8 +27,8 @@ export class SchemaController {
   public async getSchemaById(
     @Path('schemaId') schemaId: SchemaId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() forbiddenError: TsoaResponse<400, { reason: string }>,
-    @Res() badRequestError: TsoaResponse<403, { reason: string }>,
+    @Res() forbiddenError: TsoaResponse<403, { reason: string }>,
+    @Res() badRequestError: TsoaResponse<400, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
     try {
@@ -40,12 +40,12 @@ export class SchemaController {
         })
       } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
         if (isIndyError(error.cause.cause, 'LedgerInvalidTransaction')) {
-          throw forbiddenError(400, {
+          throw forbiddenError(403, {
             reason: `schema definition with schemaId "${schemaId}" can not be returned.`,
           })
         }
         if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw badRequestError(403, {
+          throw badRequestError(400, {
             reason: `schemaId "${schemaId}" has invalid structure.`,
           })
         }
