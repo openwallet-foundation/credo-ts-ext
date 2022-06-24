@@ -8,15 +8,15 @@ import { setupServer } from '../src/server'
 
 import { getTestAgent, objectToJson } from './utils/helpers'
 
-describe.skip('BasicMessageController', () => {
+describe('BasicMessageController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
   let bobConnectionToAlice: ConnectionRecord
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('REST Agent Test Alice', 3002)
-    bobAgent = await getTestAgent('REST Agent Test Bob', 3003)
+    aliceAgent = await getTestAgent('Basic Message REST Agent Test Alice', 3002)
+    bobAgent = await getTestAgent('Basic Message REST Agent Test Bob', 3003)
     app = await setupServer(bobAgent, { port: 3000 })
 
     const { outOfBandInvitation } = await aliceAgent.oob.createInvitation()
@@ -34,7 +34,7 @@ describe.skip('BasicMessageController', () => {
     test('should give 204 no content when message is sent', async () => {
       const response = await request(app)
         .post(`/basic-messages/${bobConnectionToAlice?.id}`)
-        .send({ message: 'Hello!' })
+        .send({ content: 'Hello!' })
 
       expect(response.statusCode).toBe(204)
     })
@@ -42,7 +42,7 @@ describe.skip('BasicMessageController', () => {
     test('should give 404 not found when connection is not found', async () => {
       const response = await request(app)
         .post(`/basic-messages/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
-        .send({ message: 'Hello!' })
+        .send({ content: 'Hello!' })
 
       expect(response.statusCode).toBe(404)
     })

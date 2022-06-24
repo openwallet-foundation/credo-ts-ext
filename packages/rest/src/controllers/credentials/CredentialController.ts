@@ -127,6 +127,7 @@ export class CredentialController extends Controller {
   ) {
     try {
       const credential = await this.agent.credentials.acceptProposal(options)
+
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {

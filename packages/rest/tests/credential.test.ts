@@ -14,8 +14,8 @@ describe('CredentialController', () => {
   let testCredential: CredentialExchangeRecord
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Rest Credential Test Alice', 3022)
-    bobAgent = await getTestAgent('Rest Credential Test Bob', 3023)
+    aliceAgent = await getTestAgent('Credential REST Agent Test Alice', 3022)
+    bobAgent = await getTestAgent('Credential REST Agent Test Bob', 3023)
     app = await setupServer(bobAgent, { port: 3000 })
 
     testCredential = getTestCredential() as CredentialExchangeRecord
