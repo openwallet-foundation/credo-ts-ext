@@ -6,7 +6,6 @@ import request from 'supertest'
 import { setupServer } from '../src/server'
 
 import { getTestAgent, objectToJson } from './utils/helpers'
-import { sleep } from './utils/webhook'
 
 describe('ConnectionController', () => {
   let app: Express
