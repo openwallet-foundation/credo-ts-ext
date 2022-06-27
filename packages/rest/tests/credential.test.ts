@@ -73,7 +73,7 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'proposeCredential').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      // todo: No credential service registered for protocol version V1
+      // todo: https://github.com/hyperledger/aries-framework-javascript/issues/902
       const proposalRequest = {
         connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
         protocolVersion: 'V1',
