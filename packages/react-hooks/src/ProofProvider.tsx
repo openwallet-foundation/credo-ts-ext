@@ -1,6 +1,6 @@
-import type { Agent, ProofState, ProofStateChangedEvent, RecordDeletedEvent } from '@aries-framework/core'
+import type { Agent, ProofState, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
 
-import { ProofEventTypes, ProofRecord, RepositoryEventTypes } from '@aries-framework/core'
+import { RepositoryEventTypes, ProofRecord } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
@@ -53,13 +53,29 @@ const ProofProvider: React.FC<Props> = ({ agent, children }) => {
 
   useEffect(() => {
     if (!proofState.loading) {
-      const stateChangedListener = (event: ProofStateChangedEvent) => {
+      const savedListener = async (event: RecordSavedEvent<ProofRecord>) => {
+        const { record } = event.payload
+        if (record.type !== ProofRecord.type) {
+          return
+        }
         const newProofsState = [...proofState.proofs]
-        const index = newProofsState.findIndex((proof) => proof.id === event.payload.proofRecord.id)
+        newProofsState.unshift(record)
+
+        setProofState({
+          loading: proofState.loading,
+          proofs: newProofsState,
+        })
+      }
+
+      const updatedListener = async (event: RecordUpdatedEvent<ProofRecord>) => {
+        const { record } = event.payload
+        if (record.type !== ProofRecord.type) {
+          return
+        }
+        const newProofsState = [...proofState.proofs]
+        const index = newProofsState.findIndex((proof) => proof.id === record.id)
         if (index > -1) {
-          newProofsState[index] = event.payload.proofRecord
-        } else {
-          newProofsState.unshift(event.payload.proofRecord)
+          newProofsState[index] = record
         }
 
         setProofState({
@@ -69,21 +85,25 @@ const ProofProvider: React.FC<Props> = ({ agent, children }) => {
       }
 
       const deletedListener = async (event: RecordDeletedEvent<ProofRecord>) => {
-        if (event.payload.record.type !== ProofRecord.type) {
+        const { record } = event.payload
+        if (record.type !== ProofRecord.type) {
           return
         }
-        const newProofsState = proofState.proofs.filter((proof) => proof.id != event.payload.record.id)
+        const newProofsState = proofState.proofs.filter((proof) => proof.id !== record.id)
+
         setProofState({
           loading: proofState.loading,
           proofs: newProofsState,
         })
       }
 
-      agent?.events.on(ProofEventTypes.ProofStateChanged, stateChangedListener)
+      agent?.events.on(RepositoryEventTypes.RecordSaved, savedListener)
+      agent?.events.on(RepositoryEventTypes.RecordUpdated, updatedListener)
       agent?.events.on(RepositoryEventTypes.RecordDeleted, deletedListener)
 
       return () => {
-        agent?.events.off(ProofEventTypes.ProofStateChanged, stateChangedListener)
+        agent?.events.off(RepositoryEventTypes.RecordSaved, savedListener)
+        agent?.events.off(RepositoryEventTypes.RecordUpdated, updatedListener)
         agent?.events.off(RepositoryEventTypes.RecordDeleted, deletedListener)
       }
     }
