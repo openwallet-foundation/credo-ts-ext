@@ -10,10 +10,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aries-framework/core@0.2.0-alpha.112":
-  version "0.2.0-alpha.112"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.112.tgz#c6aaa5063e0190e21def2c67b89d09d16d7cc865"
-  integrity sha512-4/JRAWBc1smIhwjynsjdEPu7LC0km+vZGHZTNFQ1aW/VHmyDAGAm7eUy/5v1ZLv2jZjN5AxU7fWVydISJzyOow==
+"@aries-framework/core@0.2.0", "@aries-framework/core@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0.tgz#27732aa32854fb8bf77d703af0479134bee469b3"
+  integrity sha512-dGZjJ/ek1SGBzyTbYp2msS1BghVABXR7hGUV2j0vNFvDApCj4D2XUmfJNoa586QN065ecVl654I4nqh90/OsvQ==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -40,10 +40,10 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@0.2.0-alpha.114+16b316c", "@aries-framework/core@^0.2.0-alpha.114":
-  version "0.2.0-alpha.114"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.114.tgz#2ede50b96e763eb11423f75124f39df4db4d047b"
-  integrity sha512-J+imLyZxI081sjn2gUjgy29yMfm9Ba3GcLom5HOHEGHLanXl6fOEQDgbW18nl3/EPBBO/iENi516depXA8iDLg==
+"@aries-framework/core@0.2.0-alpha.112":
+  version "0.2.0-alpha.112"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.112.tgz#c6aaa5063e0190e21def2c67b89d09d16d7cc865"
+  integrity sha512-4/JRAWBc1smIhwjynsjdEPu7LC0km+vZGHZTNFQ1aW/VHmyDAGAm7eUy/5v1ZLv2jZjN5AxU7fWVydISJzyOow==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -141,12 +141,12 @@
     ref-napi "^3.0.3"
     ws "^7.5.3"
 
-"@aries-framework/node@^0.2.0-alpha.114":
-  version "0.2.0-alpha.114"
-  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.2.0-alpha.114.tgz#ed1b88ae1b48ad66313ada61ed4b48b40a8c91fa"
-  integrity sha512-jaNUsaM1haYwTiNQ2rO143WxBxQqzuH3iJzVVE/b/Y/Nwa0RDmaHjk0/uD+eJv9rrUVA9w8bszvhR4PB6dETlg==
+"@aries-framework/node@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.2.0.tgz#ec253618e7f5c73357264916cac31497d6182942"
+  integrity sha512-B/3ZlHVDdudL83LD3gwYMULJMTbDUggUOpLCsRHBskdZyDQzc4LZCFQw0+ttAIjnKrU/HiJs94UccoF4SyIvGA==
   dependencies:
-    "@aries-framework/core" "0.2.0-alpha.114+16b316c"
+    "@aries-framework/core" "0.2.0"
     express "^4.17.1"
     ffi-napi "^4.0.3"
     indy-sdk "^1.16.0-dev-1636"
