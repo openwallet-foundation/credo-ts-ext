@@ -51,7 +51,7 @@ export class SchemaController {
         }
       }
 
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -81,7 +81,7 @@ export class SchemaController {
           })
         }
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 }

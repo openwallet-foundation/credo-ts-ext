@@ -54,7 +54,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -78,7 +78,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -104,7 +104,7 @@ export class CredentialController extends Controller {
           reason: `connection with connection record id "${options.connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -132,7 +132,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -158,7 +158,7 @@ export class CredentialController extends Controller {
           reason: `connection with connection record id "${options.connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -184,7 +184,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -210,7 +210,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -236,7 +236,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 }

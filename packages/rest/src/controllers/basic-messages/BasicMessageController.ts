@@ -48,7 +48,7 @@ export class BasicMessageController extends Controller {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 }

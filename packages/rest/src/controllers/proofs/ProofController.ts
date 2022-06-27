@@ -59,7 +59,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -83,7 +83,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -113,7 +113,7 @@ export class ProofController extends Controller {
           reason: `connection with connectionId "${connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -141,7 +141,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -185,7 +185,7 @@ export class ProofController extends Controller {
           reason: `connection with connectionId "${connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -224,7 +224,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -251,7 +251,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 }
