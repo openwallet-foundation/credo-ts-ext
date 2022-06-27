@@ -1,8 +1,9 @@
 import type { ProofRequestMessageResponse } from '../types'
+import type { ProofRecordProps } from '@aries-framework/core'
 
 import { Agent, JsonTransformer, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
-import { Body, Controller, Delete, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { AcceptProofProposalRequest } from '../../schemas/AcceptProofProposalRequest'
@@ -10,7 +11,7 @@ import { PresentationProofRequest } from '../../schemas/PresentationProofRequest
 import { ProofPresentationRequest } from '../../schemas/ProofPresentationRequest'
 import { ProofProposalRequest } from '../../schemas/ProofProposalRequest'
 import { ProofRequestTemplate } from '../../schemas/ProofRequestTemplate'
-import { RecordId } from '../types'
+import { ProofRecordExample, RecordId } from '../examples'
 
 @Tags('Proofs')
 @Route('/proofs')
@@ -29,6 +30,7 @@ export class ProofController extends Controller {
    * @param threadId
    * @returns ProofRecord[]
    */
+  @Example<ProofRecordProps[]>([ProofRecordExample])
   @Get('/')
   public async getAllProofs(@Query('threadId') threadId?: string) {
     const proofs = await this.agent.proofs.getAll()

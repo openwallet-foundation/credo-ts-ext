@@ -1,12 +1,14 @@
+import type { CredDef } from 'indy-sdk'
+
 import { Agent, IndySdkError } from '@aries-framework/core'
 import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
 import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
 import { isIndyError } from '@aries-framework/core/build/utils/indyError'
-import { Body, Controller, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
-import { CredentialDefinitionId } from '../types'
+import { CredentialDefinitionExample, CredentialDefinitionId } from '../examples'
 
 @Tags('Credential Definitions')
 @Route('/credential-definitions')
@@ -25,6 +27,7 @@ export class CredentialDefinitionController extends Controller {
    * @param credentialDefinitionId
    * @returns CredDef
    */
+  @Example<CredDef>(CredentialDefinitionExample)
   @Get('/:credentialDefinitionId')
   public async getCredentialDefinitionById(
     @Path('credentialDefinitionId') credentialDefinitionId: CredentialDefinitionId,
@@ -56,6 +59,7 @@ export class CredentialDefinitionController extends Controller {
    * @param credentialDefinitionRequest
    * @returns CredDef
    */
+  @Example<CredDef>(CredentialDefinitionExample)
   @Post('/')
   public async createCredentialDefinition(
     @Body() credentialDefinitionRequest: CredentialDefinitionRequest,
