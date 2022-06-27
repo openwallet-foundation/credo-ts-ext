@@ -1,5 +1,5 @@
 import { Agent, AriesFrameworkError, RecordNotFoundError } from '@aries-framework/core'
-import { Controller, Delete, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import { Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { RecordId } from '../types'
@@ -17,11 +17,11 @@ export class ConnectionController extends Controller {
 
   /**
    * Retrieve all connections records
-   * @example alias "Bob"
-   * @example state "abandoned, response, start, error, init, active, request, invitation, completed"
-   * @example myDid "WgWxqztrNooG92RXvxSTWv"
-   * @example theirDid "WgWxqztrNooG92RXvxSTWv"
-   * @example theirLabel "Alice"
+   * @param alias Alias
+   * @param state Connection state
+   * @param myDid My DID
+   * @param theirDid Their DID
+   * @param theirLabel Their label
    * @returns ConnectionRecord[]
    */
   @Get('/')

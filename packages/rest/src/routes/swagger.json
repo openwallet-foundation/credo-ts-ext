@@ -6,22 +6,6 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
-			"DidInfo": {
-				"properties": {
-					"did": {
-						"type": "string"
-					},
-					"verkey": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"did",
-					"verkey"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"AgentInfo": {
 				"properties": {
 					"label": {
@@ -37,7 +21,19 @@
 						"type": "boolean"
 					},
 					"publicDid": {
-						"$ref": "#/components/schemas/DidInfo"
+						"properties": {
+							"verkey": {
+								"type": "string"
+							},
+							"did": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"verkey",
+							"did"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -423,25 +419,37 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CredentialFormatPayload_CredentialFormat-Array.acceptOffer_": {
-				"properties": {},
+			"IndyAcceptOfferFormat": {
+				"properties": {
+					"holderDid": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatPayload_CredentialFormats.acceptOffer_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/IndyAcceptOfferFormat"
+					}
+				},
 				"type": "object",
 				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
 			},
-			"AcceptOfferOptions": {
-				"description": "Interface for CredentialsModule.acceptOffer. Will send a request\n\ncredentialFormats is optional because this is an accept method",
+			"AcceptCredentialOfferOptions": {
 				"properties": {
+					"credentialRecordId": {
+						"type": "string"
+					},
+					"credentialFormats": {
+						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptOffer_"
+					},
 					"autoAcceptCredential": {
 						"$ref": "#/components/schemas/AutoAcceptCredential"
 					},
 					"comment": {
 						"type": "string"
-					},
-					"credentialRecordId": {
-						"type": "string"
-					},
-					"credentialFormats": {
-						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormat-Array.acceptOffer_"
 					}
 				},
 				"required": [
@@ -450,25 +458,28 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CredentialFormatPayload_CredentialFormat-Array.acceptRequest_": {
-				"properties": {},
+			"CredentialFormatPayload_CredentialFormats.acceptRequest_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/Record_string.any_"
+					}
+				},
 				"type": "object",
 				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
 			},
-			"AcceptRequestOptions": {
-				"description": "Interface for CredentialsModule.acceptRequest. Will send a credential\n\ncredentialFormats is optional because this is an accept method",
+			"AcceptCredentialRequestOptions": {
 				"properties": {
+					"credentialRecordId": {
+						"type": "string"
+					},
+					"credentialFormats": {
+						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptRequest_"
+					},
 					"autoAcceptCredential": {
 						"$ref": "#/components/schemas/AutoAcceptCredential"
 					},
 					"comment": {
 						"type": "string"
-					},
-					"credentialRecordId": {
-						"type": "string"
-					},
-					"credentialFormats": {
-						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormat-Array.acceptRequest_"
 					}
 				},
 				"required": [
@@ -1012,49 +1023,49 @@
 				"security": [],
 				"parameters": [
 					{
+						"description": "Alias",
 						"in": "query",
 						"name": "alias",
 						"required": false,
 						"schema": {
 							"type": "string"
-						},
-						"example": "Bob"
+						}
 					},
 					{
+						"description": "Connection state",
 						"in": "query",
 						"name": "state",
 						"required": false,
 						"schema": {
 							"type": "string"
-						},
-						"example": "abandoned, response, start, error, init, active, request, invitation, completed"
+						}
 					},
 					{
+						"description": "My DID",
 						"in": "query",
 						"name": "myDid",
 						"required": false,
 						"schema": {
 							"type": "string"
-						},
-						"example": "WgWxqztrNooG92RXvxSTWv"
+						}
 					},
 					{
+						"description": "Their DID",
 						"in": "query",
 						"name": "theirDid",
 						"required": false,
 						"schema": {
 							"type": "string"
-						},
-						"example": "WgWxqztrNooG92RXvxSTWv"
+						}
 					},
 					{
+						"description": "Their label",
 						"in": "query",
 						"name": "theirLabel",
 						"required": false,
 						"schema": {
 							"type": "string"
-						},
-						"example": "Alice"
+						}
 					}
 				]
 			}
@@ -1737,7 +1748,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/AcceptOfferOptions"
+								"$ref": "#/components/schemas/AcceptCredentialOfferOptions"
 							}
 						}
 					}
@@ -1806,7 +1817,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/AcceptRequestOptions"
+								"$ref": "#/components/schemas/AcceptCredentialRequestOptions"
 							}
 						}
 					}

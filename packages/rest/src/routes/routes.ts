@@ -24,22 +24,13 @@ import * as express from 'express';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
-    "DidInfo": {
-        "dataType": "refObject",
-        "properties": {
-            "did": {"dataType":"string","required":true},
-            "verkey": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AgentInfo": {
         "dataType": "refObject",
         "properties": {
             "label": {"dataType":"string","required":true},
             "endpoints": {"dataType":"array","array":{"dataType":"string"},"required":true},
             "isInitialized": {"dataType":"boolean","required":true},
-            "publicDid": {"ref":"DidInfo"},
+            "publicDid": {"dataType":"nestedObjectLiteral","nestedProperties":{"verkey":{"dataType":"string","required":true},"did":{"dataType":"string","required":true}}},
         },
         "additionalProperties": false,
     },
@@ -232,34 +223,42 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CredentialFormatPayload_CredentialFormat-Array.acceptOffer_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "AcceptOfferOptions": {
+    "IndyAcceptOfferFormat": {
         "dataType": "refObject",
         "properties": {
-            "autoAcceptCredential": {"ref":"AutoAcceptCredential"},
-            "comment": {"dataType":"string"},
-            "credentialRecordId": {"dataType":"string","required":true},
-            "credentialFormats": {"ref":"CredentialFormatPayload_CredentialFormat-Array.acceptOffer_"},
+            "holderDid": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CredentialFormatPayload_CredentialFormat-Array.acceptRequest_": {
+    "CredentialFormatPayload_CredentialFormats.acceptOffer_": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"IndyAcceptOfferFormat"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "AcceptRequestOptions": {
+    "AcceptCredentialOfferOptions": {
         "dataType": "refObject",
         "properties": {
+            "credentialRecordId": {"dataType":"string","required":true},
+            "credentialFormats": {"ref":"CredentialFormatPayload_CredentialFormats.acceptOffer_"},
             "autoAcceptCredential": {"ref":"AutoAcceptCredential"},
             "comment": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CredentialFormatPayload_CredentialFormats.acceptRequest_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"Record_string.any_"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AcceptCredentialRequestOptions": {
+        "dataType": "refObject",
+        "properties": {
             "credentialRecordId": {"dataType":"string","required":true},
-            "credentialFormats": {"ref":"CredentialFormatPayload_CredentialFormat-Array.acceptRequest_"},
+            "credentialFormats": {"ref":"CredentialFormatPayload_CredentialFormats.acceptRequest_"},
+            "autoAcceptCredential": {"ref":"AutoAcceptCredential"},
+            "comment": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
@@ -883,7 +882,7 @@ export function RegisterRoutes(app: express.Router) {
 
             async function CredentialController_acceptOffer(request: any, response: any, next: any) {
             const args = {
-                    options: {"in":"body","name":"options","required":true,"ref":"AcceptOfferOptions"},
+                    options: {"in":"body","name":"options","required":true,"ref":"AcceptCredentialOfferOptions"},
                     notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
             };
@@ -915,7 +914,7 @@ export function RegisterRoutes(app: express.Router) {
 
             async function CredentialController_acceptRequest(request: any, response: any, next: any) {
             const args = {
-                    options: {"in":"body","name":"options","required":true,"ref":"AcceptRequestOptions"},
+                    options: {"in":"body","name":"options","required":true,"ref":"AcceptCredentialRequestOptions"},
                     notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
             };
