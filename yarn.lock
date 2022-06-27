@@ -68,10 +68,10 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@^0.2.0-alpha.139":
-  version "0.2.0-alpha.139"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.139.tgz#c320b0736e1c00c721959625194d15b82c017cf4"
-  integrity sha512-S5QhoUZj/IexRTUyhnj9ICaF/FN5rcQput7hTGnC9kxDMTm9lyGLJRiocYLbdCyzuDWP9lm06q/Bu+7Q4qq8qw==
+"@aries-framework/core@^0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0.tgz#27732aa32854fb8bf77d703af0479134bee469b3"
+  integrity sha512-dGZjJ/ek1SGBzyTbYp2msS1BghVABXR7hGUV2j0vNFvDApCj4D2XUmfJNoa586QN065ecVl654I4nqh90/OsvQ==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@stablelib/ed25519" "^1.0.2"
