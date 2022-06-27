@@ -36,17 +36,17 @@ export class CredentialDefinitionController extends Controller {
       return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
     } catch (error) {
       if (error instanceof IndySdkError && error.message === 'IndyError(LedgerNotFound): LedgerNotFound') {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`,
         })
       } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
         if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw badRequestError(400, {
+          return badRequestError(400, {
             reason: `credentialDefinitionId "${credentialDefinitionId}" has invalid structure.`,
           })
         }
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -72,12 +72,12 @@ export class CredentialDefinitionController extends Controller {
       })
     } catch (error) {
       if (error instanceof LedgerNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`,
         })
       }
 
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }

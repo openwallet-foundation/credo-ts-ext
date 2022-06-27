@@ -22,13 +22,15 @@ export const setupAgent = async ({
   publicDidSeed,
   endpoints,
   port,
+  log,
 }: {
   name: string
   publicDidSeed: string
   endpoints: string[]
   port: number
+  log?: boolean
 }) => {
-  const logger = new TsLogger(LogLevel.fatal)
+  const logger = new TsLogger(log ? LogLevel.off : LogLevel.fatal)
 
   const agent = new Agent(
     {

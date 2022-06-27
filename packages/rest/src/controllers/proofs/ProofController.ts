@@ -1,6 +1,6 @@
 import type { ProofRequestMessageResponse } from '../types'
 
-import { Agent, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
+import { Agent, JsonTransformer, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import { Body, Controller, Delete, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
@@ -55,11 +55,11 @@ export class ProofController extends Controller {
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -79,11 +79,11 @@ export class ProofController extends Controller {
       await this.agent.proofs.deleteById(proofRecordId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -103,20 +103,17 @@ export class ProofController extends Controller {
     const { attributes, predicates, connectionId, ...proposalOptions } = proposal
 
     try {
-      const presentationPreview = new PresentationPreview({
-        attributes,
-        predicates,
-      })
+      const presentationPreview = JsonTransformer.fromJSON({ attributes, predicates }, PresentationPreview)
 
       const proof = await this.agent.proofs.proposeProof(connectionId, presentationPreview, proposalOptions)
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `connection with connectionId "${connectionId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -140,11 +137,11 @@ export class ProofController extends Controller {
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -184,11 +181,11 @@ export class ProofController extends Controller {
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `connection with connectionId "${connectionId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -223,11 +220,11 @@ export class ProofController extends Controller {
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -250,11 +247,11 @@ export class ProofController extends Controller {
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }

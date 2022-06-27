@@ -51,8 +51,14 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
     next()
   })
 
-  server.use(function errorHandler(err: unknown, res: ExResponse, next: NextFunction): ExResponse | void {
+  server.use(function errorHandler(
+    err: unknown,
+    req: ExRequest,
+    res: ExResponse,
+    next: NextFunction
+  ): ExResponse | void {
     if (err instanceof ValidateError) {
+      agent.config.logger.warn(`Caught Validation Error for ${req.path}:`, err.fields)
       return res.status(422).json({
         message: 'Validation Failed',
         details: err?.fields,

@@ -35,23 +35,23 @@ export class SchemaController {
       return await this.agent.ledger.getSchema(schemaId)
     } catch (error) {
       if (error instanceof IndySdkError && error.message === 'IndyError(LedgerNotFound): LedgerNotFound') {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `schema definition with schemaId "${schemaId}" not found.`,
         })
       } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
         if (isIndyError(error.cause.cause, 'LedgerInvalidTransaction')) {
-          throw forbiddenError(403, {
+          return forbiddenError(403, {
             reason: `schema definition with schemaId "${schemaId}" can not be returned.`,
           })
         }
         if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          throw badRequestError(400, {
+          return badRequestError(400, {
             reason: `schemaId "${schemaId}" has invalid structure.`,
           })
         }
       }
 
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -76,12 +76,12 @@ export class SchemaController {
     } catch (error) {
       if (error instanceof AriesFrameworkError) {
         if (error.message.includes('UnauthorizedClientRequest')) {
-          throw forbiddenError(400, {
+          return forbiddenError(400, {
             reason: 'this action is not allowed.',
           })
         }
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }
