@@ -1,14 +1,15 @@
-import {
-  Agent,
-  RecordNotFoundError,
-  AcceptOfferOptions,
-  AcceptProposalOptions,
-  AcceptRequestOptions,
-} from '@aries-framework/core'
+import { Agent, RecordNotFoundError } from '@aries-framework/core'
 import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { AcceptCredentialProposalOptions, OfferCredentialOptions, ProposeCredentialOptions, RecordId } from '../types'
+import {
+  AcceptCredentialOfferOptions,
+  AcceptCredentialProposalOptions,
+  AcceptCredentialRequestOptions,
+  OfferCredentialOptions,
+  ProposeCredentialOptions,
+  RecordId,
+} from '../types'
 
 @Tags('Credentials')
 @Route('/credentials')
@@ -170,7 +171,7 @@ export class CredentialController extends Controller {
    */
   @Post('/accept-offer')
   public async acceptOffer(
-    @Body() options: AcceptOfferOptions,
+    @Body() options: AcceptCredentialOfferOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
@@ -196,7 +197,7 @@ export class CredentialController extends Controller {
    */
   @Post('/accept-request')
   public async acceptRequest(
-    @Body() options: AcceptRequestOptions,
+    @Body() options: AcceptCredentialRequestOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
