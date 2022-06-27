@@ -46,7 +46,7 @@ export class CredentialDefinitionController extends Controller {
           })
         }
       }
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 
@@ -77,7 +77,7 @@ export class CredentialDefinitionController extends Controller {
         })
       }
 
-      return internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 }
