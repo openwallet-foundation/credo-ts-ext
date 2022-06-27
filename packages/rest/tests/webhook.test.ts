@@ -5,7 +5,6 @@ import type { Server } from 'http'
 
 import {
   CredentialExchangeRecord,
-  CredentialProtocolVersion,
   ProofEventTypes,
   ProofState,
   ProofRecord,
@@ -74,7 +73,7 @@ describe('WebhookTest', () => {
       id: 'testest',
       state: CredentialState.OfferSent,
       threadId: 'random',
-      protocolVersion: CredentialProtocolVersion.V1,
+      protocolVersion: 'v1',
     })
 
     const eventEmitter = bobAgent.injectionContainer.resolve(EventEmitter)

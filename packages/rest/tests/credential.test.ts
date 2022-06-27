@@ -239,16 +239,20 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptCredential').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const response = await request(app).post(`/credentials/${testCredential.id}/accept-credential`)
+      const response = await request(app)
+        .post(`/credentials/accept-credential`)
+        .send({ credentialRecordId: testCredential.id })
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(testCredential.id)
+      expect(spy).toHaveBeenCalledWith({ credentialRecordId: testCredential.id })
       expect(response.body).toEqual(objectToJson(result))
     })
 
     test('should give 404 not found when credential is not found', async () => {
-      const response = await request(app).post('/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-credential')
+      const response = await request(app)
+        .post('/credentials/accept-credential')
+        .send({ credentialRecordId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' })
 
       expect(response.statusCode).toBe(404)
     })

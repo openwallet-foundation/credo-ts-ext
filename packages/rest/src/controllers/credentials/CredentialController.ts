@@ -1,10 +1,14 @@
+import type {
+  OfferCredentialOptions,
+  ProposeCredentialOptions,
+} from '@aries-framework/core/build/modules/credentials/CredentialsModuleOptions'
+
 import { Agent, RecordNotFoundError } from '@aries-framework/core'
 import {
+  AcceptCredentialOptions,
   AcceptOfferOptions,
   AcceptProposalOptions,
   AcceptRequestOptions,
-  OfferCredentialOptions,
-  ProposeCredentialOptions,
 } from '@aries-framework/core/build/modules/credentials/CredentialsModuleOptions'
 import {
   Get,
@@ -86,7 +90,7 @@ export class CredentialController {
   @Post('/propose-credential')
   public async proposeCredential(
     @Body()
-    options: ProposeCredentialOptions
+    options: ProposeCredentialOptions & { protocolVersion: 'v1' | 'v2' }
   ) {
     try {
       const credential = await this.agent.credentials.proposeCredential(options)
@@ -134,7 +138,7 @@ export class CredentialController {
   @Post('/offer-credential')
   public async offerCredential(
     @Body()
-    options: OfferCredentialOptions
+    options: OfferCredentialOptions & { protocolVersion: 'v1' | 'v2' }
   ) {
     try {
       const credential = await this.agent.credentials.offerCredential(options)
@@ -200,16 +204,20 @@ export class CredentialController {
    * Accept a credential as holder by sending an accept credential message
    * to the connection associated with the credential exchange record.
    *
-   * @param credentialRecordId
+   * @param options
    * @returns CredentialExchangeRecord
    */
-  @Post('/:credentialRecordId/accept-credential')
-  public async acceptCredential(@Param('credentialRecordId') credentialRecordId: string) {
+  @Post('/accept-credential')
+  public async acceptCredential(
+    @Body()
+    options: AcceptCredentialOptions
+  ) {
     try {
-      const credential = await this.agent.credentials.acceptCredential(credentialRecordId)
+      const credential = await this.agent.credentials.acceptCredential(options)
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
+        const { credentialRecordId } = options
         throw new NotFoundError(`Credential with credential record id "${credentialRecordId}" not found.`)
       }
       throw new InternalServerError(`Something went wrong: ${error}`)

@@ -1,4 +1,4 @@
-import { ProofAttributeInfo, ProofPredicateInfo, RevocationInterval } from '@aries-framework/core'
+import { IndyRevocationInterval, ProofAttributeInfo, ProofPredicateInfo } from '@aries-framework/core'
 import { IsMap } from '@aries-framework/core/build/utils/transformers'
 import { Expose, Type } from 'class-transformer'
 import { IsString, ValidateNested, IsInstance, IsOptional, IsIn } from 'class-validator'
@@ -30,10 +30,10 @@ export class ProofRequest {
 
   @Expose({ name: 'non_revoked' })
   @ValidateNested()
-  @Type(() => RevocationInterval)
+  @Type(() => IndyRevocationInterval)
   @IsOptional()
-  @IsInstance(RevocationInterval)
-  public nonRevoked?: RevocationInterval
+  @IsInstance(IndyRevocationInterval)
+  public nonRevoked?: IndyRevocationInterval
 
   @IsIn(['1.0', '2.0'])
   @IsOptional()
