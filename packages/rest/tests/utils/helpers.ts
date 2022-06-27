@@ -9,12 +9,13 @@ import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 
 import { setupAgent } from './agent'
 
-export async function getTestAgent(name: string, port: number) {
+export async function getTestAgent(name: string, port: number, log?: boolean) {
   return await setupAgent({
     port: port,
     publicDidSeed: '00000000000000000000000000000000',
     endpoints: [`http://localhost:${port}`],
     name: name,
+    log: log,
   })
 }
 

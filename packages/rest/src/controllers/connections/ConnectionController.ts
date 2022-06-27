@@ -55,7 +55,7 @@ export class ConnectionController extends Controller {
   ) {
     const connection = await this.agent.connections.findById(connectionId)
 
-    if (!connection) throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
+    if (!connection) return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
 
     return connection.toJSON()
   }
@@ -76,9 +76,9 @@ export class ConnectionController extends Controller {
       await this.agent.connections.deleteById(connectionId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
+        return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -102,9 +102,9 @@ export class ConnectionController extends Controller {
       return connection.toJSON()
     } catch (error) {
       if (error instanceof AriesFrameworkError) {
-        throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
+        return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -128,9 +128,9 @@ export class ConnectionController extends Controller {
       return connection.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
+        return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }

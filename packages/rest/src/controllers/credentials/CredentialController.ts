@@ -1,18 +1,14 @@
-import type { IndyCredentialFormat, V1CredentialService, V2CredentialService } from '@aries-framework/core'
-
 import {
   Agent,
   RecordNotFoundError,
   AcceptOfferOptions,
   AcceptProposalOptions,
   AcceptRequestOptions,
-  OfferCredentialOptions,
-  ProposeCredentialOptions,
 } from '@aries-framework/core'
 import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RecordId } from '../types'
+import { AcceptCredentialProposalOptions, OfferCredentialOptions, ProposeCredentialOptions, RecordId } from '../types'
 
 @Tags('Credentials')
 @Route('/credentials')
@@ -53,11 +49,11 @@ export class CredentialController extends Controller {
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -77,11 +73,11 @@ export class CredentialController extends Controller {
       await this.agent.credentials.deleteById(credentialRecordId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -94,7 +90,7 @@ export class CredentialController extends Controller {
    */
   @Post('/propose-credential')
   public async proposeCredential(
-    @Body() options: ProposeCredentialOptions<[IndyCredentialFormat], [V1CredentialService, V2CredentialService]>,
+    @Body() options: ProposeCredentialOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
@@ -103,11 +99,11 @@ export class CredentialController extends Controller {
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `connection with connection record id "${options.connectionId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -121,7 +117,7 @@ export class CredentialController extends Controller {
   @Post('/accept-proposal')
   public async acceptProposal(
     @Body()
-    options: AcceptProposalOptions,
+    options: AcceptCredentialProposalOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
@@ -131,11 +127,11 @@ export class CredentialController extends Controller {
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -148,7 +144,7 @@ export class CredentialController extends Controller {
    */
   @Post('/offer-credential')
   public async offerCredential(
-    @Body() options: OfferCredentialOptions<[IndyCredentialFormat], [V1CredentialService, V2CredentialService]>,
+    @Body() options: OfferCredentialOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
@@ -157,11 +153,11 @@ export class CredentialController extends Controller {
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `connection with connection record id "${options.connectionId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -183,11 +179,11 @@ export class CredentialController extends Controller {
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -209,11 +205,11 @@ export class CredentialController extends Controller {
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 
@@ -235,11 +231,11 @@ export class CredentialController extends Controller {
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, {
+        return notFoundError(404, {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }

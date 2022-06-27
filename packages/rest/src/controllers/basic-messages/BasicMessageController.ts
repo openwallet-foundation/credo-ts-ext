@@ -46,9 +46,9 @@ export class BasicMessageController extends Controller {
       await this.agent.basicMessages.sendMessage(connectionId, request.content)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
+        return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw internalServerError(500, { message: `something went wrong`, error: error })
+      return internalServerError(500, { message: `something went wrong`, error: error })
     }
   }
 }

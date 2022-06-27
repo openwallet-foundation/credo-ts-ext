@@ -73,23 +73,25 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'proposeCredential').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
+      // todo: No credential service registered for protocol version V1
       const proposalRequest = {
         connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
-        credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-        issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-        schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
-        schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-        schemaName: 'test',
-        schemaVersion: '1.0',
-        credentialProposal: {
-          '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-          attributes: [
-            {
-              'mime-type': 'text/plain',
-              name: 'name',
-              value: 'test',
-            },
-          ],
+        protocolVersion: 'V1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
+            schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaName: 'test',
+            schemaVersion: '1.0',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
         },
       }
 
@@ -115,8 +117,12 @@ describe('CredentialController', () => {
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const proposalRequest = {
-        credentialRecordID: testCredential.id,
-        credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+        credentialRecordId: testCredential.id,
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+          },
+        },
         autoAcceptCredential: 'always',
         comment: 'test',
       }
@@ -151,18 +157,19 @@ describe('CredentialController', () => {
   })
 
   describe('Offer a credential', () => {
-    const proposalReq = {
+    const offerRequest = {
       connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
-      credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-      preview: {
-        '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-        attributes: [
-          {
-            'mime-type': 'text/plain',
-            name: 'name',
-            value: 'test',
-          },
-        ],
+      protocolVersion: 'V1',
+      credentialFormats: {
+        indy: {
+          credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+          attributes: [
+            {
+              name: 'name',
+              value: 'test',
+            },
+          ],
+        },
       },
     }
 
@@ -170,7 +177,7 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'offerCredential').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const response = await request(app).post(`/credentials/offer-credential`).send(proposalReq)
+      const response = await request(app).post(`/credentials/offer-credential`).send(offerRequest)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)

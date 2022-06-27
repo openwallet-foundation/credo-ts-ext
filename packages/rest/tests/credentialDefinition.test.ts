@@ -86,7 +86,7 @@ describe('CredentialDefinitionController', () => {
         tag: 'latest',
         supportRevocation: false,
       })
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(422)
     })
   })
 

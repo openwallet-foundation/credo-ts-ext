@@ -90,16 +90,13 @@ describe('ProofController', () => {
   describe('Propose proof', () => {
     const proposalRequest = {
       connectionId: '123456aa-aa78-90a1-aa23-456a7da89010',
-      attributes: {
-        additionalProp1: {
+      attributes: [
+        {
           name: 'test',
-          restrictions: [
-            {
-              credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-            },
-          ],
+          credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
         },
-      },
+      ],
+      predicates: [],
       comment: 'test',
     }
     test('should return proof record', async () => {
@@ -158,9 +155,7 @@ describe('ProofController', () => {
 
   describe('Request out of band proof', () => {
     test('should return proof record', async () => {
-      const response = await request(app)
-        .post(`/proofs/request-outofband-proof`)
-        .send({ connectionId: 'string', proofRequest: testRequest })
+      const response = await request(app).post(`/proofs/request-outofband-proof`).send({ proofRequest: testRequest })
 
       expect(response.statusCode).toBe(200)
       expect(response.body.message).toBeDefined()

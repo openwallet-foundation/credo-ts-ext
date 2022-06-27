@@ -1,4 +1,12 @@
-import type { ProofRecord } from '@aries-framework/core'
+import type {
+  AutoAcceptCredential,
+  CredentialFormatPayload,
+  IndyCredentialFormat,
+  ProofRecord,
+  ProtocolVersionType,
+  V1CredentialService,
+  V2CredentialService,
+} from '@aries-framework/core'
 import type { DidInfo } from '@aries-framework/core/build/wallet/Wallet'
 
 export interface AgentInfo {
@@ -26,4 +34,30 @@ export type SchemaId = string
 export interface ProofRequestMessageResponse {
   message: string
   proofRecord: ProofRecord
+}
+
+type CredentialFormats = [IndyCredentialFormat]
+type CredentialServices = [V1CredentialService, V2CredentialService]
+
+export interface OfferCredentialOptions {
+  protocolVersion: ProtocolVersionType<CredentialServices>
+  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createOffer'>
+  autoAcceptCredential?: AutoAcceptCredential
+  comment?: string
+  connectionId: string
+}
+
+export interface ProposeCredentialOptions {
+  protocolVersion: ProtocolVersionType<CredentialServices>
+  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createProposal'>
+  autoAcceptCredential?: AutoAcceptCredential
+  comment?: string
+  connectionId: string
+}
+
+export interface AcceptCredentialProposalOptions {
+  credentialRecordId: string
+  credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptProposal'>
+  autoAcceptCredential?: AutoAcceptCredential
+  comment?: string
 }

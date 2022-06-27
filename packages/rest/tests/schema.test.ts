@@ -82,7 +82,7 @@ describe('AgentController', () => {
         version: '1.0',
       })
 
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(422)
     })
   })
 
