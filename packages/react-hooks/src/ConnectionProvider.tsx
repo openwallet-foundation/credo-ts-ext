@@ -1,6 +1,12 @@
-import type { Agent, ConnectionStateChangedEvent, DidExchangeState, RecordDeletedEvent } from '@aries-framework/core'
+import type {
+  Agent,
+  DidExchangeState,
+  RecordDeletedEvent,
+  RecordSavedEvent,
+  RecordUpdatedEvent,
+} from '@aries-framework/core'
 
-import { ConnectionEventTypes, ConnectionRecord, RepositoryEventTypes } from '@aries-framework/core'
+import { ConnectionRecord, RepositoryEventTypes } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
@@ -56,14 +62,29 @@ const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
 
   useEffect(() => {
     if (!connectionState.loading) {
-      const stateChangedListener = (event: ConnectionStateChangedEvent) => {
+      const savedListener = async (event: RecordSavedEvent<ConnectionRecord>) => {
+        const { record } = event.payload
+        if (record.type !== ConnectionRecord.type) {
+          return
+        }
         const newConnectionsState = [...connectionState.connections]
+        newConnectionsState.unshift(record)
 
-        const index = newConnectionsState.findIndex((connection) => connection.id === event.payload.connectionRecord.id)
+        setConnectionState({
+          loading: connectionState.loading,
+          connections: newConnectionsState,
+        })
+      }
+
+      const updatedListener = async (event: RecordUpdatedEvent<ConnectionRecord>) => {
+        const { record } = event.payload
+        if (record.type !== ConnectionRecord.type) {
+          return
+        }
+        const newConnectionsState = [...connectionState.connections]
+        const index = newConnectionsState.findIndex((connection) => connection.id === record.id)
         if (index > -1) {
-          newConnectionsState[index] = event.payload.connectionRecord
-        } else {
-          newConnectionsState.unshift(event.payload.connectionRecord)
+          newConnectionsState[index] = record
         }
 
         setConnectionState({
@@ -73,23 +94,25 @@ const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
       }
 
       const deletedListener = async (event: RecordDeletedEvent<ConnectionRecord>) => {
-        if (event.payload.record.type !== ConnectionRecord.type) {
+        const { record } = event.payload
+        if (record.type !== ConnectionRecord.type) {
           return
         }
-        const newConnectionsState = connectionState.connections.filter(
-          (connection) => connection.id != event.payload.record.id
-        )
+        const newConnectionsState = connectionState.connections.filter((connection) => connection.id !== record.id)
+
         setConnectionState({
           loading: connectionState.loading,
           connections: newConnectionsState,
         })
       }
 
-      agent?.events.on(ConnectionEventTypes.ConnectionStateChanged, stateChangedListener)
+      agent?.events.on(RepositoryEventTypes.RecordSaved, savedListener)
+      agent?.events.on(RepositoryEventTypes.RecordUpdated, updatedListener)
       agent?.events.on(RepositoryEventTypes.RecordDeleted, deletedListener)
 
       return () => {
-        agent?.events.off(ConnectionEventTypes.ConnectionStateChanged, stateChangedListener)
+        agent?.events.off(RepositoryEventTypes.RecordSaved, savedListener)
+        agent?.events.off(RepositoryEventTypes.RecordUpdated, updatedListener)
         agent?.events.off(RepositoryEventTypes.RecordDeleted, deletedListener)
       }
     }
