@@ -1,14 +1,16 @@
+import type { CredentialExchangeRecordProps } from '@aries-framework/core'
+
 import { Agent, RecordNotFoundError } from '@aries-framework/core'
-import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { CredentialExchangeRecordExample, RecordId } from '../examples'
 import {
   AcceptCredentialOfferOptions,
   AcceptCredentialProposalOptions,
   AcceptCredentialRequestOptions,
   OfferCredentialOptions,
   ProposeCredentialOptions,
-  RecordId,
 } from '../types'
 
 @Tags('Credentials')
@@ -27,6 +29,7 @@ export class CredentialController extends Controller {
    *
    * @returns CredentialExchangeRecord[]
    */
+  @Example<CredentialExchangeRecordProps[]>([CredentialExchangeRecordExample])
   @Get('/')
   public async getAllCredentials() {
     const credentials = await this.agent.credentials.getAll()
@@ -39,6 +42,7 @@ export class CredentialController extends Controller {
    * @param credentialRecordId
    * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Get('/:credentialRecordId')
   public async getCredentialById(
     @Path('credentialRecordId') credentialRecordId: RecordId,
@@ -89,6 +93,7 @@ export class CredentialController extends Controller {
    * @param options
    * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/propose-credential')
   public async proposeCredential(
     @Body() options: ProposeCredentialOptions,
@@ -115,6 +120,7 @@ export class CredentialController extends Controller {
    * @param options
    * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/accept-proposal')
   public async acceptProposal(
     @Body()
@@ -143,6 +149,7 @@ export class CredentialController extends Controller {
    * @param options
    * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/offer-credential')
   public async offerCredential(
     @Body() options: OfferCredentialOptions,
@@ -169,6 +176,7 @@ export class CredentialController extends Controller {
    * @param options
    * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/accept-offer')
   public async acceptOffer(
     @Body() options: AcceptCredentialOfferOptions,
@@ -195,6 +203,7 @@ export class CredentialController extends Controller {
    * @param options
    * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/accept-request')
   public async acceptRequest(
     @Body() options: AcceptCredentialRequestOptions,
@@ -221,6 +230,7 @@ export class CredentialController extends Controller {
    * @param options
    * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/:credentialRecordId/accept-credential')
   public async acceptCredential(
     @Path('credentialRecordId') credentialRecordId: RecordId,

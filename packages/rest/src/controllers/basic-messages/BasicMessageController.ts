@@ -4,7 +4,7 @@ import { Agent, RecordNotFoundError } from '@aries-framework/core'
 import { Body, Controller, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RecordId } from '../types'
+import { RecordId } from '../examples'
 
 @Tags('Basic Messages')
 @Route('/basic-messages')

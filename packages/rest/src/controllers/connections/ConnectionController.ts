@@ -1,8 +1,10 @@
+import type { ConnectionRecordProps } from '@aries-framework/core'
+
 import { Agent, AriesFrameworkError, RecordNotFoundError } from '@aries-framework/core'
-import { Controller, Delete, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import { Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RecordId } from '../types'
+import { ConnectionRecordExample, RecordId } from '../examples'
 
 @Tags('Connections')
 @Route('/connections')
@@ -24,6 +26,7 @@ export class ConnectionController extends Controller {
    * @param theirLabel Their label
    * @returns ConnectionRecord[]
    */
+  @Example<ConnectionRecordProps[]>([ConnectionRecordExample])
   @Get('/')
   public async getAllConnections(
     @Query('alias') alias?: string,
@@ -48,6 +51,7 @@ export class ConnectionController extends Controller {
    * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
+  @Example<ConnectionRecordProps>(ConnectionRecordExample)
   @Get('/:connectionId')
   public async getConnectionById(
     @Path('connectionId') connectionId: RecordId,
@@ -91,6 +95,7 @@ export class ConnectionController extends Controller {
    * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
+  @Example<ConnectionRecordProps>(ConnectionRecordExample)
   @Post('/:connectionId/accept-request')
   public async acceptRequest(
     @Path('connectionId') connectionId: RecordId,
@@ -117,6 +122,7 @@ export class ConnectionController extends Controller {
    * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
+  @Example<ConnectionRecordProps>(ConnectionRecordExample)
   @Post('/:connectionId/accept-response')
   public async acceptResponse(
     @Path('connectionId') connectionId: RecordId,
