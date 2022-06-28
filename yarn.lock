@@ -70,36 +70,6 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@0.2.0-alpha.129", "@aries-framework/core@0.2.0-alpha.129+8d67e63":
-  version "0.2.0-alpha.129"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.0-alpha.129.tgz#44d7cd2e2b476b02ddfbaf0e3c942951d6434999"
-  integrity sha512-DvXFNjnCWddEx4Ow/dV30zNvnonE3OdqU32qYovaRsj4aNFdxSMH9swl6OOMIOtIvjHniXawPOiduII6r/WhSg==
-  dependencies:
-    "@multiformats/base-x" "^4.0.1"
-    "@stablelib/ed25519" "^1.0.2"
-    "@stablelib/sha256" "^1.0.1"
-    "@types/indy-sdk" "^1.16.16"
-    "@types/node-fetch" "^2.5.10"
-    "@types/ws" "^7.4.6"
-    abort-controller "^3.0.0"
-    bn.js "^5.2.0"
-    borc "^3.0.0"
-    buffer "^6.0.3"
-    class-transformer "0.5.1"
-    class-validator "0.13.1"
-    did-resolver "^3.1.3"
-    lru_map "^0.4.1"
-    luxon "^1.27.0"
-    make-error "^1.3.6"
-    object-inspect "^1.10.3"
-    query-string "^7.0.1"
-    reflect-metadata "^0.1.13"
-    rxjs "^7.2.0"
-    tsyringe "^4.5.0"
-    uuid "^8.3.2"
-    varint "^6.0.0"
-    web-did-resolver "^2.0.8"
-
 "@aries-framework/core@^0.1.0":
   version "0.1.0"
   resolved "https://registry.npmjs.org/@aries-framework/core/-/core-0.1.0.tgz"
@@ -127,19 +97,6 @@
     rxjs "^7.1.0"
     tsyringe "^4.5.0"
     uuid "^8.3.2"
-
-"@aries-framework/node@0.2.0-alpha.129":
-  version "0.2.0-alpha.129"
-  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.2.0-alpha.129.tgz#1485d24fc332da5cd7ef8b9b15b1bf0bc9f98253"
-  integrity sha512-kE/wPxlZLJjx61xbaSAnKDgXHnm50xxBUmaSOYXDYmWxTeiMSYblttGKzK7Q3EQf1H3iDocG7NepV1LxwNpBZg==
-  dependencies:
-    "@aries-framework/core" "0.2.0-alpha.129+8d67e63"
-    express "^4.17.1"
-    ffi-napi "^4.0.3"
-    indy-sdk "^1.16.0-dev-1636"
-    node-fetch "^2.6.1"
-    ref-napi "^3.0.3"
-    ws "^7.5.3"
 
 "@aries-framework/node@^0.2.0":
   version "0.2.0"
