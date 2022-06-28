@@ -1,10 +1,11 @@
 import type { Agent, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent, BaseRecord } from '@aries-framework/core'
+import type { Constructor } from '@aries-framework/core/build/utils/mixins'
 
 import { RepositoryEventTypes } from '@aries-framework/core'
 import * as React from 'react'
-import { createContext, useEffect, useState } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 
-interface RecordContextInterface {
+export interface RecordContextInterface {
   loading: boolean
   records: BaseRecord[]
 }
@@ -14,6 +15,21 @@ interface Props {
 }
 
 const RecordContext = createContext<RecordContextInterface | undefined>(undefined)
+
+export const useRecords = () => {
+  const recordContext = useContext(RecordContext)
+  if (!recordContext) {
+    throw new Error('useRecords must be used within a RecordContextProvider')
+  }
+  return recordContext
+}
+
+export const useRecordsByType = <R extends BaseRecord<any, any, any>>(
+  recordClass: Constructor<R> & { type: string }
+): R[] => {
+  const { records } = useRecords()
+  return records.filter((record) => record.type === recordClass.type) as R[]
+}
 
 const RecordProvider: React.FC<Props> = ({ agent, children }) => {
   const [recordState, setRecordState] = useState<RecordContextInterface>({
