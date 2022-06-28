@@ -1,5 +1,19 @@
 # Changelog
 
+### [0.8.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.8.0...rest-v0.8.1) (2022-06-28)
+
+
+### Features
+
+* **rest:** added multi use param to create invitation ([#100](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/100)) ([d00f11d](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/d00f11d78e9f65de3907bd6bf94dd6c38e2ddc3b))
+* **rest:** improved class validation ([#108](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/108)) ([cb48752](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/cb48752f0e222080f46c0699528e901de1226211))
+
+
+### Bug Fixes
+
+* **rest:** changed webhook event topic to type ([#117](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/117)) ([fed645e](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/fed645ec4ba77313e092bce097444a96aa66cf6e))
+* **rest:** ledger not found error ([2374b42](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/2374b4232a0b11738fb57e23dd2a3ac1b81ad073))
+
 ## [0.8.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.7.0...rest-v0.8.0) (2022-02-26)
 
 
