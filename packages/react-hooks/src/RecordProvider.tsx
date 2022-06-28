@@ -43,6 +43,7 @@ const RecordProvider: React.FC<Props> = ({ agent, children }) => {
         ...((await agent.connections.getAll()) as unknown as BaseRecord[]),
         ...((await agent.credentials.getAll()) as unknown as BaseRecord[]),
         ...((await agent.proofs.getAll()) as unknown as BaseRecord[]),
+        ...((await agent.basicMessages.findAllByQuery({})) as unknown as BaseRecord[]),
       ]
       setRecordState({ loading: false, records })
     }
