@@ -7,18 +7,16 @@ export {
   AgentThunks,
   // Connections
   connectionsSlice,
-  startConnectionsListener,
   ConnectionsSelectors,
   // Credentials
   credentialsSlice,
-  startCredentialsListener,
   CredentialsSelectors,
   // Proofs
   proofsSlice,
-  startProofsListener,
   ProofsSelectors,
   // Mediation
   mediationSlice,
-  startMediationListener,
   MediationSelectors,
 } from './slices'
+
+export { startRecordListeners } from './recordListener'

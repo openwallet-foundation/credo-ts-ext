@@ -1,9 +1,17 @@
 import type { SerializedInstance } from '../../types'
-import type { ProofRecord } from '@aries-framework/core'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 
-import { JsonTransformer } from '@aries-framework/core'
+import { ProofRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
+
+import {
+  addRecord,
+  addRecordInState,
+  updateRecord,
+  updateRecordInState,
+  removeRecord,
+  removeRecordInState,
+} from '../../recordListener'
 
 interface ProofsState {
   proofs: {
@@ -28,19 +36,17 @@ const proofsSlice = createSlice({
     setProofRecords: (state, action: PayloadAction<ProofRecord[]>) => {
       state.proofs.records = action.payload.map((record) => JsonTransformer.toJSON(record))
     },
-    updateOrAdd: (state, action: PayloadAction<ProofRecord>) => {
-      const index = state.proofs.records.findIndex((record) => record.id == action.payload.id)
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addRecord, (state, action) => addRecordInState(ProofRecord, state.proofs.records, action.payload))
 
-      if (index == -1) {
-        // records doesn't exist, add it
-        state.proofs.records.push(JsonTransformer.toJSON(action.payload))
-        return state
-      }
+    builder.addCase(removeRecord, (state, action) =>
+      removeRecordInState(ProofRecord, state.proofs.records, action.payload)
+    )
 
-      // record does exist, update it
-      state.proofs.records[index] = JsonTransformer.toJSON(action.payload)
-      return state
-    },
+    builder.addCase(updateRecord, (state, action) =>
+      updateRecordInState(ProofRecord, state.proofs.records, action.payload)
+    )
   },
 })
 

@@ -1,9 +1,17 @@
 import type { SerializedInstance } from '../../types'
-import type { CredentialExchangeRecord } from '@aries-framework/core'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 
-import { JsonTransformer } from '@aries-framework/core'
+import { CredentialExchangeRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
+
+import {
+  addRecord,
+  addRecordInState,
+  updateRecord,
+  updateRecordInState,
+  removeRecord,
+  removeRecordInState,
+} from '../../recordListener'
 
 interface CredentialsState {
   credentials: {
@@ -28,19 +36,19 @@ const credentialsSlice = createSlice({
     setCredentialExchangeRecords: (state, action: PayloadAction<CredentialExchangeRecord[]>) => {
       state.credentials.records = action.payload.map((record) => JsonTransformer.toJSON(record))
     },
-    updateOrAdd: (state, action: PayloadAction<CredentialExchangeRecord>) => {
-      const index = state.credentials.records.findIndex((record) => record.id == action.payload.id)
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addRecord, (state, action) =>
+      addRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+    )
 
-      if (index == -1) {
-        // records doesn't exist, add it
-        state.credentials.records.push(JsonTransformer.toJSON(action.payload))
-        return state
-      }
+    builder.addCase(removeRecord, (state, action) =>
+      removeRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+    )
 
-      // record does exist, update it
-      state.credentials.records[index] = JsonTransformer.toJSON(action.payload)
-      return state
-    },
+    builder.addCase(updateRecord, (state, action) =>
+      updateRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+    )
   },
 })
 

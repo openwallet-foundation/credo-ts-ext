@@ -1,9 +1,18 @@
 import type { SerializedInstance } from '../../types'
-import type { ConnectionRecord, ConnectionInvitationMessage } from '@aries-framework/core'
+import type { ConnectionInvitationMessage } from '@aries-framework/core'
 import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
 
-import { JsonTransformer } from '@aries-framework/core'
+import { ConnectionRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
+
+import {
+  addRecord,
+  removeRecord,
+  updateRecord,
+  updateRecordInState,
+  addRecordInState,
+  removeRecordInState,
+} from '../../recordListener'
 
 interface ConnectionsState {
   connections: {
@@ -40,19 +49,19 @@ const connectionsSlice = createSlice({
     setConnectionRecords: (state, action: PayloadAction<ConnectionRecord[]>) => {
       state.connections.records = action.payload.map((record) => JsonTransformer.toJSON(record))
     },
-    updateOrAdd: (state, action: PayloadAction<ConnectionRecord>) => {
-      const index = state.connections.records.findIndex((record) => record.id == action.payload.id)
+  },
+  extraReducers: (builder) => {
+    builder.addCase(addRecord, (state, action) =>
+      addRecordInState(ConnectionRecord, state.connections.records, action.payload)
+    )
 
-      if (index == -1) {
-        // records doesn't exist, add it
-        state.connections.records.push(JsonTransformer.toJSON(action.payload))
-        return state
-      }
+    builder.addCase(removeRecord, (state, action) =>
+      removeRecordInState(ConnectionRecord, state.connections.records, action.payload)
+    )
 
-      // record does exist, update it
-      state.connections.records[index] = JsonTransformer.toJSON(action.payload)
-      return state
-    },
+    builder.addCase(updateRecord, (state, action) =>
+      updateRecordInState(ConnectionRecord, state.connections.records, action.payload)
+    )
   },
 })
 
