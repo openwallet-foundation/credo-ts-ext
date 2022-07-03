@@ -1,6 +1,6 @@
 import type { SerializedInstance } from '../../types'
 import type { ConnectionInvitationMessage } from '@aries-framework/core'
-import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
+import type { SerializedError } from '@reduxjs/toolkit'
 
 import { ConnectionRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
@@ -13,6 +13,8 @@ import {
   addRecordInState,
   removeRecordInState,
 } from '../../recordListener'
+
+import { ConnectionThunks } from './connectionsThunks'
 
 interface ConnectionsState {
   connections: {
@@ -45,23 +47,32 @@ const initialState: ConnectionsState = {
 const connectionsSlice = createSlice({
   name: 'connections',
   initialState,
-  reducers: {
-    setConnectionRecords: (state, action: PayloadAction<ConnectionRecord[]>) => {
-      state.connections.records = action.payload.map((record) => JsonTransformer.toJSON(record))
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(addRecord, (state, action) =>
-      addRecordInState(ConnectionRecord, state.connections.records, action.payload)
-    )
+    builder
+      // fetchAllConnections
+      .addCase(ConnectionThunks.getAllConnections.pending, (state) => {
+        state.connections.isLoading = true
+      })
+      .addCase(ConnectionThunks.getAllConnections.rejected, (state, action) => {
+        state.connections.isLoading = false
+        state.connections.error = action.error
+      })
+      .addCase(ConnectionThunks.getAllConnections.fulfilled, (state, action) => {
+        state.connections.isLoading = false
+        state.connections.records = action.payload.map((c) => JsonTransformer.toJSON(c))
+      })
 
-    builder.addCase(removeRecord, (state, action) =>
-      removeRecordInState(ConnectionRecord, state.connections.records, action.payload)
-    )
-
-    builder.addCase(updateRecord, (state, action) =>
-      updateRecordInState(ConnectionRecord, state.connections.records, action.payload)
-    )
+      // record event
+      .addCase(addRecord, (state, action) =>
+        addRecordInState(ConnectionRecord, state.connections.records, action.payload)
+      )
+      .addCase(removeRecord, (state, action) =>
+        removeRecordInState(ConnectionRecord, state.connections.records, action.payload)
+      )
+      .addCase(updateRecord, (state, action) =>
+        updateRecordInState(ConnectionRecord, state.connections.records, action.payload)
+      )
   },
 })
 

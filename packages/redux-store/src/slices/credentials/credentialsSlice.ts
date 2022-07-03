@@ -1,5 +1,5 @@
 import type { SerializedInstance } from '../../types'
-import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
+import type { SerializedError } from '@reduxjs/toolkit'
 
 import { CredentialExchangeRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
@@ -12,6 +12,8 @@ import {
   removeRecord,
   removeRecordInState,
 } from '../../recordListener'
+
+import { CredentialsThunks } from './credentialsThunks'
 
 interface CredentialsState {
   credentials: {
@@ -32,23 +34,31 @@ const initialState: CredentialsState = {
 const credentialsSlice = createSlice({
   name: 'credentials',
   initialState,
-  reducers: {
-    setCredentialExchangeRecords: (state, action: PayloadAction<CredentialExchangeRecord[]>) => {
-      state.credentials.records = action.payload.map((record) => JsonTransformer.toJSON(record))
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(addRecord, (state, action) =>
-      addRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
-    )
-
-    builder.addCase(removeRecord, (state, action) =>
-      removeRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
-    )
-
-    builder.addCase(updateRecord, (state, action) =>
-      updateRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
-    )
+    builder
+      // getAllCredentials
+      .addCase(CredentialsThunks.getAllCredentials.pending, (state) => {
+        state.credentials.isLoading = true
+      })
+      .addCase(CredentialsThunks.getAllCredentials.rejected, (state, action) => {
+        state.credentials.isLoading = false
+        state.error = action.error
+      })
+      .addCase(CredentialsThunks.getAllCredentials.fulfilled, (state, action) => {
+        state.credentials.isLoading = false
+        state.credentials.records = action.payload.map((c) => JsonTransformer.toJSON(c))
+      })
+      // record events
+      .addCase(addRecord, (state, action) =>
+        addRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+      )
+      .addCase(removeRecord, (state, action) =>
+        removeRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+      )
+      .addCase(updateRecord, (state, action) =>
+        updateRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+      )
   },
 })
 

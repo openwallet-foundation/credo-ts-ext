@@ -7,15 +7,19 @@ export {
   AgentThunks,
   // Connections
   connectionsSlice,
+  ConnectionThunks,
   ConnectionsSelectors,
   // Credentials
   credentialsSlice,
+  CredentialsThunks,
   CredentialsSelectors,
   // Proofs
   proofsSlice,
+  ProofsThunks,
   ProofsSelectors,
   // Mediation
   mediationSlice,
+  MediationThunks,
   MediationSelectors,
 } from './slices'
 

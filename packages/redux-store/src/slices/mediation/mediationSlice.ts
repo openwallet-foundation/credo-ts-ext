@@ -1,5 +1,5 @@
 import type { SerializedInstance } from '../../types'
-import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
+import type { SerializedError } from '@reduxjs/toolkit'
 
 import { MediationRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
@@ -12,6 +12,8 @@ import {
   removeRecord,
   removeRecordInState,
 } from '../../recordListener'
+
+import { MediationThunks } from './mediationThunks'
 
 interface MediationState {
   mediation: {
@@ -32,23 +34,29 @@ const initialState: MediationState = {
 const mediationSlice = createSlice({
   name: 'mediation',
   initialState,
-  reducers: {
-    setMediationRecords: (state, action: PayloadAction<MediationRecord[]>) => {
-      state.mediation.records = action.payload.map((record) => JsonTransformer.toJSON(record))
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
-    builder.addCase(addRecord, (state, action) =>
-      addRecordInState(MediationRecord, state.mediation.records, action.payload)
-    )
-
-    builder.addCase(removeRecord, (state, action) =>
-      removeRecordInState(MediationRecord, state.mediation.records, action.payload)
-    )
-
-    builder.addCase(updateRecord, (state, action) =>
-      updateRecordInState(MediationRecord, state.mediation.records, action.payload)
-    )
+    builder
+      // getAllMediators
+      .addCase(MediationThunks.getAllMediationRecords.pending, (state) => {
+        state.mediation.isLoading = true
+      })
+      .addCase(MediationThunks.getAllMediationRecords.rejected, (state, action) => {
+        state.mediation.isLoading = false
+        state.error = action.error
+      })
+      .addCase(MediationThunks.getAllMediationRecords.fulfilled, (state, action) => {
+        state.mediation.isLoading = false
+        state.mediation.records = action.payload.map((m) => JsonTransformer.toJSON(m))
+      })
+      // record events
+      .addCase(addRecord, (state, action) => addRecordInState(MediationRecord, state.mediation.records, action.payload))
+      .addCase(removeRecord, (state, action) =>
+        removeRecordInState(MediationRecord, state.mediation.records, action.payload)
+      )
+      .addCase(updateRecord, (state, action) =>
+        updateRecordInState(MediationRecord, state.mediation.records, action.payload)
+      )
   },
 })
 
