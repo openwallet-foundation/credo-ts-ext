@@ -8,21 +8,19 @@ export {
   // Connections
   connectionsSlice,
   ConnectionThunks,
-  startConnectionsListener,
   ConnectionsSelectors,
   // Credentials
   credentialsSlice,
   CredentialsThunks,
-  startCredentialsListener,
   CredentialsSelectors,
   // Proofs
   proofsSlice,
   ProofsThunks,
-  startProofsListener,
   ProofsSelectors,
   // Mediation
   mediationSlice,
   MediationThunks,
-  startMediationListener,
   MediationSelectors,
 } from './slices'
+
+export { startRecordListeners } from './recordListener'
