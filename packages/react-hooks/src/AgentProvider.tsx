@@ -3,7 +3,7 @@ import type { Agent } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
-import RecordProvider from './RecordProvider'
+import ConnectionProvider from './ConnectionProvider'
 
 interface AgentContextInterface {
   loading: boolean
@@ -42,7 +42,13 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
 
   return (
     <AgentContext.Provider value={agentState}>
-      <RecordProvider agent={agent}>{children}</RecordProvider>
+      <ConnectionProvider agent={agent}>
+        {/* <CredentialProvider agent={agent}>
+          <ProofProvider agent={agent}>
+            <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
+          </ProofProvider>
+        </CredentialProvider> */}
+      </ConnectionProvider>
     </AgentContext.Provider>
   )
 }
