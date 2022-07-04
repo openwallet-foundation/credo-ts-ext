@@ -1337,17 +1337,10 @@
   resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
   integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
-"@types/indy-sdk@^1.16.16":
-  version "1.16.17"
-  resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.17.tgz#cb090033951d078809f493036746804a1a594497"
-  integrity sha512-FI5urEpXiu/NHOoL1TciJDU38QusUBtPZv9FDMUOWPczl87fVb08CYHWYtAZoLnsKfi5zeGD+WEBpYC14aF9Uw==
-  dependencies:
-    buffer "^6.0.0"
-
-"@types/indy-sdk@^1.16.6":
-  version "1.16.8"
-  resolved "https://registry.npmjs.org/@types/indy-sdk/-/indy-sdk-1.16.8.tgz"
-  integrity sha512-UUfbZ+/6pAYOxRmeWgKaDSg0MJicf+KLFPZv8ckRU+R8AD7oemj9lLjvrOFnv+yYBFsyEw1AfqLg4RfioFZXCA==
+"@types/indy-sdk@1.16.9", "@types/indy-sdk@^1.16.16", "@types/indy-sdk@^1.16.6":
+  version "1.16.9"
+  resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.9.tgz#647a77ead1e93c77b2b0ef5f2c399ba2ea461b89"
+  integrity sha512-X8fdwcGaXfCxayBOb4NUny37JDd9Q3ZDKnm7WBhPRcdOXw3kmsy+WX52751nJQRBcltu883rbqYAIzcZE83XRA==
   dependencies:
     buffer "^6.0.0"
 
