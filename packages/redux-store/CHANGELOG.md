@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.2.0...redux-store-v0.3.0) (2022-07-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* **redux-store:** The thunks that exposed all module methods from AFJ are now removed. Instead of using the thunks, you should use the agent directly.
+
+### Features
+
+* **redux-store:** update to afj 0.2.0 ([#133](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/133)) ([969ab1f](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/969ab1f167923f70e5f3441679d5de97af922282))
+
 ## [0.2.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.1.2...redux-store-v0.2.0) (2022-01-04)
 
 
