@@ -3,7 +3,7 @@ import type { ServerConfig } from '../src/utils/ServerConfig'
 import { connect } from 'ngrok'
 
 import { startServer } from '../src/index'
-import { setupAgent } from '../tests/utils/agent'
+import { setupAgent } from '../src/utils/agent'
 
 const run = async () => {
   const endpoint = await connect(3001)

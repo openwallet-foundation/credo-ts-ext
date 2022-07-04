@@ -1,13 +1,17 @@
+import type { AgentInfo } from '../types'
+
 import { Agent } from '@aries-framework/core'
-import { Get, JsonController } from 'routing-controllers'
+import { Controller, Get, Route, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-@JsonController('/agent')
+@Tags('Agent')
+@Route('/agent')
 @injectable()
-export class AgentController {
+export class AgentController extends Controller {
   private agent: Agent
 
   public constructor(agent: Agent) {
+    super()
     this.agent = agent
   }
 
@@ -15,7 +19,7 @@ export class AgentController {
    * Retrieve basic agent information
    */
   @Get('/')
-  public async getAgentInfo() {
+  public async getAgentInfo(): Promise<AgentInfo> {
     return {
       label: this.agent.config.label,
       endpoints: this.agent.config.endpoints,

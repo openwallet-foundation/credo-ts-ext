@@ -12,7 +12,7 @@ describe('AgentController', () => {
   let agent: Agent
 
   beforeAll(async () => {
-    agent = await getTestAgent('Rest Schema Test', 3021)
+    agent = await getTestAgent('Schema REST Agent Test', 3021)
     app = await setupServer(agent, { port: 3000 })
   })
 
@@ -82,7 +82,7 @@ describe('AgentController', () => {
         version: '1.0',
       })
 
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(422)
     })
   })
 

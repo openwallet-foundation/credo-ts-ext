@@ -1,13 +1,11 @@
 import type { ServerConfig } from '../src/utils/ServerConfig'
-import type { Express } from 'express'
 
+import bodyParser from 'body-parser'
+import express from 'express'
 import { connect } from 'ngrok'
-import { createExpressServer } from 'routing-controllers'
 
 import { startServer } from '../src/index'
-import { setupAgent } from '../tests/utils/agent'
-
-import { GreetingController } from './utils/GreetingController'
+import { setupAgent } from '../src/utils/agent'
 
 const run = async () => {
   const endpoint = await connect(3001)
@@ -19,14 +17,17 @@ const run = async () => {
     name: 'Aries Test Agent',
   })
 
-  const app: Express = createExpressServer({
-    controllers: [GreetingController],
+  const app = express()
+  const jsonParser = bodyParser.json()
+
+  app.post('/greeting/:name', jsonParser, (req, res) => {
+    res.send(`Hello ${req.params.name}!`)
   })
 
   const conf: ServerConfig = {
     port: 3000,
-    app: app,
     webhookUrl: 'http://localhost:5000/agent-events',
+    app: app,
   }
 
   await startServer(agent, conf)

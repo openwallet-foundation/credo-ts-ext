@@ -1,58 +1,54 @@
+import type { BasicMessageRecord } from '@aries-framework/core'
+
 import { Agent, RecordNotFoundError } from '@aries-framework/core'
-import {
-  Body,
-  Get,
-  InternalServerError,
-  JsonController,
-  NotFoundError,
-  OnUndefined,
-  Param,
-  Post,
-} from 'routing-controllers'
+import { Body, Controller, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-@JsonController('/basic-messages')
+import { RecordId } from '../examples'
+
+@Tags('Basic Messages')
+@Route('/basic-messages')
 @injectable()
-export class BasicMessageController {
+export class BasicMessageController extends Controller {
   private agent: Agent
 
   public constructor(agent: Agent) {
+    super()
     this.agent = agent
   }
 
   /**
    * Retrieve basic messages by connection id
    *
-   * @param connectionId
+   * @param connectionId Connection identifier
    * @returns BasicMessageRecord[]
    */
   @Get('/:connectionId')
-  public async getBasicMessages(@Param('connectionId') connectionId: string) {
-    const basicMessages = await this.agent.basicMessages.findAllByQuery({ connectionId })
-    return basicMessages.map((m) => m.toJSON())
+  public async getBasicMessages(@Path('connectionId') connectionId: RecordId): Promise<BasicMessageRecord[]> {
+    return await this.agent.basicMessages.findAllByQuery({ connectionId })
   }
 
   /**
    * Send a basic message to a connection
    *
-   * @param connectionId
-   * @param message
+   * @param connectionId Connection identifier
+   * @param content The content of the message
    */
   @Post('/:connectionId')
-  @OnUndefined(204)
   public async sendMessage(
-    @Param('connectionId') connectionId: string,
-    @Body()
-    request: Record<'message', string>
+    @Path('connectionId') connectionId: RecordId,
+    @Body() request: Record<'content', string>,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
     try {
-      const { message } = request
-      await this.agent.basicMessages.sendMessage(connectionId, message)
+      this.setStatus(204)
+      await this.agent.basicMessages.sendMessage(connectionId, request.content)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`connection with connection id "${connectionId}" not found.`)
+        return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      throw new InternalServerError(`something went wrong: ${error}`)
+      return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
 }

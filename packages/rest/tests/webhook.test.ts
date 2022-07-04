@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { WebhookData } from './utils/webhook'
+import type { WebhookData } from '../src/utils/webhook'
 import type { Agent, CredentialStateChangedEvent, ProofStateChangedEvent } from '@aries-framework/core'
 import type { Server } from 'http'
 
@@ -14,9 +14,9 @@ import {
 import { EventEmitter } from '@aries-framework/core/build/agent/EventEmitter'
 
 import { setupServer } from '../src/server'
+import { sleep, webhookListener } from '../src/utils/webhook'
 
 import { getTestAgent } from './utils/helpers'
-import { sleep, webhookListener } from './utils/webhook'
 
 describe('WebhookTest', () => {
   let aliceAgent: Agent
@@ -25,8 +25,8 @@ describe('WebhookTest', () => {
   const webhooks: WebhookData[] = []
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Rest Webhook Test Alice', 3042)
-    bobAgent = await getTestAgent('Rest Webhook Test Bob', 3043)
+    aliceAgent = await getTestAgent('Webhook REST Agent Test Alice', 3042)
+    bobAgent = await getTestAgent('Webhook REST Agent Bob', 3043)
     server = await webhookListener(3044, webhooks)
     await setupServer(bobAgent, { webhookUrl: 'http://localhost:3044', port: 3000 })
   })

@@ -1,5 +1,10 @@
+import type { ConnectionRecordProps } from '@aries-framework/core'
+
 import {
+  ConnectionRecord,
   CredentialExchangeRecord,
+  DidExchangeRole,
+  DidExchangeState,
   JsonTransformer,
   // OfferCredentialMessage,
   ProofRecord,
@@ -7,7 +12,7 @@ import {
 } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 
-import { setupAgent } from './agent'
+import { setupAgent } from '../../src/utils/agent'
 
 export async function getTestAgent(name: string, port: number) {
   return await setupAgent({
@@ -182,4 +187,26 @@ export function getTestProofRequest() {
     ver: '1.0',
   }
   return JsonTransformer.fromJSON(json, ProofRequest)
+}
+
+export function getTestConnection({
+  state = DidExchangeState.InvitationReceived,
+  role = DidExchangeRole.Requester,
+  id = 'test',
+  did = 'test-did',
+  threadId = 'threadId',
+  tags = {},
+  theirLabel,
+  theirDid = 'their-did',
+}: Partial<ConnectionRecordProps> = {}) {
+  return new ConnectionRecord({
+    did,
+    threadId,
+    theirDid,
+    id,
+    role,
+    state,
+    tags,
+    theirLabel,
+  })
 }
