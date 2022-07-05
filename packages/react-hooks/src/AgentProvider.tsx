@@ -5,6 +5,7 @@ import { createContext, useState, useEffect, useContext } from 'react'
 
 import ConnectionProvider from './ConnectionProvider'
 import CredentialProvider from './CredentialProvider'
+import ProofProvider from './ProofProvider'
 
 interface AgentContextInterface {
   loading: boolean
@@ -45,9 +46,9 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
     <AgentContext.Provider value={agentState}>
       <ConnectionProvider agent={agent}>
         <CredentialProvider agent={agent}>
-          {/* <ProofProvider agent={agent}>
-            <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
-          </ProofProvider> */}
+          <ProofProvider agent={agent}>
+            {/* <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider> */}
+          </ProofProvider>
         </CredentialProvider>
       </ConnectionProvider>
     </AgentContext.Provider>
