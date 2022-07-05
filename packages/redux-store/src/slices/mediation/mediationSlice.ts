@@ -1,9 +1,17 @@
 import type { SerializedInstance } from '../../types'
-import type { MediationRecord } from '@aries-framework/core'
-import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
+import type { SerializedError } from '@reduxjs/toolkit'
 
-import { JsonTransformer } from '@aries-framework/core'
+import { MediationRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
+
+import {
+  addRecord,
+  addRecordInState,
+  updateRecord,
+  updateRecordInState,
+  removeRecord,
+  removeRecordInState,
+} from '../../recordListener'
 
 import { MediationThunks } from './mediationThunks'
 
@@ -26,21 +34,7 @@ const initialState: MediationState = {
 const mediationSlice = createSlice({
   name: 'mediation',
   initialState,
-  reducers: {
-    updateOrAdd: (state, action: PayloadAction<MediationRecord>) => {
-      const index = state.mediation.records.findIndex((record) => record.id == action.payload.id)
-
-      if (index == -1) {
-        // records doesn't exist, add it
-        state.mediation.records.push(JsonTransformer.toJSON(action.payload))
-        return state
-      }
-
-      // record does exist, update it
-      state.mediation.records[index] = JsonTransformer.toJSON(action.payload)
-      return state
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // getAllMediators
@@ -55,6 +49,14 @@ const mediationSlice = createSlice({
         state.mediation.isLoading = false
         state.mediation.records = action.payload.map((m) => JsonTransformer.toJSON(m))
       })
+      // record events
+      .addCase(addRecord, (state, action) => addRecordInState(MediationRecord, state.mediation.records, action.payload))
+      .addCase(removeRecord, (state, action) =>
+        removeRecordInState(MediationRecord, state.mediation.records, action.payload)
+      )
+      .addCase(updateRecord, (state, action) =>
+        updateRecordInState(MediationRecord, state.mediation.records, action.payload)
+      )
   },
 })
 

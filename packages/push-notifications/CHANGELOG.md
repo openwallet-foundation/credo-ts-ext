@@ -1,5 +1,21 @@
 # Changelog
 
+## [0.4.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.3.0...push-notifications-v0.4.0) (2022-06-28)
+
+
+### ⚠ BREAKING CHANGES
+
+* **push-notifications:** update to afj 0.2.0 (#126)
+
+### Features
+
+* **push-notifications:** update to afj 0.2.0 ([#126](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/126)) ([196a323](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/196a3233f7284ed2acdba9d3724acc5c55cd2be4))
+
+
+### Bug Fixes
+
+* **push-notifications:** validation method ([f8b9c1b](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/f8b9c1b1d18780227b7db6a30efe11f407da5ef3))
+
 ## [0.3.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.2.1...push-notifications-v0.3.0) (2022-05-27)
 
 

@@ -3,9 +3,37 @@
   "private": true,
   "license": "Apache-2.0",
   "description": "Monorepo containing extensions for Aries Framework JavaScript",
-  "workspaces": [
-    "packages/*"
-  ],
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "@aries-framework/node",
+      "**/@aries-framework/node",
+      "**/@aries-framework/node/**",
+      "@aries-framework/node/**",
+      "@aries-framework/core",
+      "**/@aries-framework/core",
+      "**/@aries-framework/core/**",
+      "@aries-framework/core/**",
+      "tsyringe",
+      "**/tsyringe",
+      "**/tsyringe/**",
+      "tsyringe/**",
+      "reflect-metadata",
+      "**/reflect-metadata",
+      "**/reflect-metadata/**",
+      "reflect-metadata/**",
+      "class-validator",
+      "**/class-validator",
+      "**/class-validator/**",
+      "class-validator/**",
+      "class-transformer",
+      "**/class-transformer",
+      "**/class-transformer/**",
+      "class-transformer/**"
+    ]
+  },
   "repository": {
     "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
     "type": "git"
@@ -45,5 +73,8 @@
   },
   "engines": {
     "node": ">= 12"
+  },
+  "resolutions": {
+    "@types/indy-sdk": "1.16.9"
   }
 }
