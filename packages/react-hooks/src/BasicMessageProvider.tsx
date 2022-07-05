@@ -1,17 +1,101 @@
-import { BasicMessageRecord } from '@aries-framework/core'
-import { useMemo } from 'react'
+import type { RecordsState } from './RecordProvider'
+import type { Agent, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
 
-import { useRecordsByType } from './RecordProvider'
+import { RepositoryEventTypes, BasicMessageRecord } from '@aries-framework/core'
+import { createContext, useContext, useEffect, useMemo } from 'react'
+import * as React from 'react'
 
-export const useBasicMessages = (): BasicMessageRecord[] => {
-  return useRecordsByType(BasicMessageRecord)
+import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
+
+const BasicMessageContext = createContext<RecordsState<BasicMessageRecord> | undefined>(undefined)
+
+export const useBasicMessages = () => {
+  const basicMessageContext = useContext(BasicMessageContext)
+  if (!basicMessageContext) {
+    throw new Error('useBasicMessages must be used within a BasicMessageContextProvider')
+  }
+  return basicMessageContext
 }
 
 export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessageRecord[] => {
-  const basicMessages = useBasicMessages()
+  const { records: basicMessages } = useBasicMessages()
   const messages = useMemo(
     () => basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId),
     [basicMessages, connectionId]
   )
   return messages
 }
+
+interface Props {
+  agent: Agent | undefined
+}
+
+const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
+  const [basicMessageState, dispatch] = useRecordReducer<BasicMessageRecord>({
+    records: [],
+    loading: true,
+  })
+
+  const setInitialState = async () => {
+    if (agent) {
+      const records = await agent.basicMessages.findAllByQuery({})
+      dispatch({
+        event: { type: RecordProviderEventTypes.RecordsLoaded, payload: { records, loading: false } },
+      })
+    }
+  }
+
+  useEffect(() => {
+    setInitialState()
+  }, [agent])
+
+  useEffect(() => {
+    if (!basicMessageState.loading) {
+      const basicMessageSaved$ = agent?.events
+        .observable<RecordSavedEvent<BasicMessageRecord>>(RepositoryEventTypes.RecordSaved)
+        .subscribe((event) => {
+          const { record } = event.payload
+          if (record.type !== BasicMessageRecord.type) {
+            return
+          }
+          dispatch({
+            event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
+          })
+        })
+
+      const basicMessageUpdated$ = agent?.events
+        .observable<RecordUpdatedEvent<BasicMessageRecord>>(RepositoryEventTypes.RecordUpdated)
+        .subscribe((event) => {
+          const { record } = event.payload
+          if (record.type !== BasicMessageRecord.type) {
+            return
+          }
+          dispatch({
+            event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
+          })
+        })
+
+      const basicMessageDeleted$ = agent?.events
+        .observable<RecordDeletedEvent<BasicMessageRecord>>(RepositoryEventTypes.RecordDeleted)
+        .subscribe((event) => {
+          const { record } = event.payload
+          if (record.type !== BasicMessageRecord.type) {
+            return
+          }
+          dispatch({
+            event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
+          })
+        })
+
+      return () => {
+        basicMessageSaved$?.unsubscribe()
+        basicMessageUpdated$?.unsubscribe()
+        basicMessageDeleted$?.unsubscribe()
+      }
+    }
+  }, [basicMessageState, agent])
+
+  return <BasicMessageContext.Provider value={basicMessageState}>{children}</BasicMessageContext.Provider>
+}
+
+export default BasicMessageProvider

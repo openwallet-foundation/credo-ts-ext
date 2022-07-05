@@ -3,6 +3,7 @@ import type { Agent } from '@aries-framework/core'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
+import BasicMessageProvider from './BasicMessageProvider'
 import ConnectionProvider from './ConnectionProvider'
 import CredentialProvider from './CredentialProvider'
 import ProofProvider from './ProofProvider'
@@ -47,7 +48,7 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
       <ConnectionProvider agent={agent}>
         <CredentialProvider agent={agent}>
           <ProofProvider agent={agent}>
-            {/* <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider> */}
+            <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
           </ProofProvider>
         </CredentialProvider>
       </ConnectionProvider>
