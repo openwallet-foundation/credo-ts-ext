@@ -24,20 +24,45 @@ export interface ReducerAction<R extends BaseRecord<any, any, any>> {
 export const useRecordReducer = <R extends BaseRecord<any, any, any>>(initialState: RecordsState<R>) => {
   const reducer = (state: RecordsState<R>, action: ReducerAction<R>) => {
     switch (action.event.type) {
-      case RecordProviderEventTypes.RecordsLoaded:
-        // TODO
+      case RecordProviderEventTypes.RecordsLoaded: {
+        const { records, loading } = action.event.payload
+        return {
+          records: [...records],
+          loading,
+        }
+      }
+      case RepositoryEventTypes.RecordSaved: {
+        const { record } = action.event.payload
+        const newRecordsState = [...state.records]
+        newRecordsState.unshift(record)
+        return {
+          loading: state.loading,
+          records: newRecordsState,
+        }
+      }
+      case RepositoryEventTypes.RecordUpdated: {
+        const { record } = action.event.payload
+        const newRecordsState = [...state.records]
+        const index = newRecordsState.findIndex((r) => r.id === record.id)
+        if (index > -1) {
+          newRecordsState[index] = record
+        }
+        return {
+          loading: state.loading,
+          records: newRecordsState,
+        }
+      }
+      case RepositoryEventTypes.RecordDeleted: {
+        const { record } = action.event.payload
+        const newRecordsState = state.records.filter((r) => r.id !== record.id)
+        return {
+          loading: state.loading,
+          records: newRecordsState,
+        }
+      }
+      default: {
         return state
-      case RepositoryEventTypes.RecordSaved:
-        // TODO
-        return state
-      case RepositoryEventTypes.RecordUpdated:
-        // TODO
-        return state
-      case RepositoryEventTypes.RecordDeleted:
-        // TODO
-        return state
-      default:
-        return state
+      }
     }
   }
   return useReducer(reducer, initialState)
