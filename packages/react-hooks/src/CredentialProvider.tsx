@@ -1,24 +1,112 @@
-import type { CredentialState } from '@aries-framework/core'
+import type { RecordsState } from './RecordProvider'
+import type {
+  Agent,
+  CredentialState,
+  RecordDeletedEvent,
+  RecordSavedEvent,
+  RecordUpdatedEvent,
+} from '@aries-framework/core'
 
-import { CredentialExchangeRecord } from '@aries-framework/core'
-import { useMemo } from 'react'
+import { CredentialExchangeRecord, RepositoryEventTypes } from '@aries-framework/core'
+import { createContext, useContext, useEffect, useMemo } from 'react'
+import * as React from 'react'
 
-import { useRecordsByType } from './RecordProvider'
+import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
+
+const CredentialContext = createContext<RecordsState<CredentialExchangeRecord> | undefined>(undefined)
 
 export const useCredentials = () => {
-  return useRecordsByType(CredentialExchangeRecord)
+  const credentialContext = useContext(CredentialContext)
+  if (!credentialContext) {
+    throw new Error('useCredentials must be used within a CredentialContextProvider')
+  }
+  return credentialContext
 }
 
 export const useCredentialById = (id: string): CredentialExchangeRecord | undefined => {
-  const credentials = useCredentials()
+  const { records: credentials } = useCredentials()
   return credentials.find((c: CredentialExchangeRecord) => c.id === id)
 }
 
 export const useCredentialByState = (state: CredentialState): CredentialExchangeRecord[] => {
-  const credentials = useCredentials()
+  const { records: credentials } = useCredentials()
   const filteredCredentials = useMemo(
     () => credentials.filter((c: CredentialExchangeRecord) => c.state === state),
     [credentials, state]
   )
   return filteredCredentials
 }
+
+interface Props {
+  agent: Agent | undefined
+}
+
+const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
+  const [credentialState, dispatch] = useRecordReducer<CredentialExchangeRecord>({
+    records: [],
+    loading: true,
+  })
+
+  const setInitialState = async () => {
+    if (agent) {
+      const records = await agent.credentials.getAll()
+      dispatch({
+        event: { type: RecordProviderEventTypes.RecordsLoaded, payload: { records, loading: false } },
+      })
+    }
+  }
+
+  useEffect(() => {
+    setInitialState()
+  }, [agent])
+
+  useEffect(() => {
+    if (!credentialState.loading) {
+      const credentialSaved$ = agent?.events
+        .observable<RecordSavedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordSaved)
+        .subscribe((event) => {
+          const { record } = event.payload
+          if (record.type !== CredentialExchangeRecord.type) {
+            return
+          }
+          dispatch({
+            event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
+          })
+        })
+
+      const credentialUpdated$ = agent?.events
+        .observable<RecordUpdatedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordUpdated)
+        .subscribe((event) => {
+          const { record } = event.payload
+          if (record.type !== CredentialExchangeRecord.type) {
+            return
+          }
+          dispatch({
+            event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
+          })
+        })
+
+      const credentialDeleted$ = agent?.events
+        .observable<RecordDeletedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordDeleted)
+        .subscribe((event) => {
+          const { record } = event.payload
+          if (record.type !== CredentialExchangeRecord.type) {
+            return
+          }
+          dispatch({
+            event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
+          })
+        })
+
+      return () => {
+        credentialSaved$?.unsubscribe()
+        credentialUpdated$?.unsubscribe()
+        credentialDeleted$?.unsubscribe()
+      }
+    }
+  }, [credentialState, agent])
+
+  return <CredentialContext.Provider value={credentialState}>{children}</CredentialContext.Provider>
+}
+
+export default CredentialProvider

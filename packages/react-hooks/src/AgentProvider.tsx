@@ -4,6 +4,7 @@ import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
 
 import ConnectionProvider from './ConnectionProvider'
+import CredentialProvider from './CredentialProvider'
 
 interface AgentContextInterface {
   loading: boolean
@@ -43,11 +44,11 @@ const AgentProvider: React.FC<Props> = ({ agent, children }) => {
   return (
     <AgentContext.Provider value={agentState}>
       <ConnectionProvider agent={agent}>
-        {/* <CredentialProvider agent={agent}>
-          <ProofProvider agent={agent}>
+        <CredentialProvider agent={agent}>
+          {/* <ProofProvider agent={agent}>
             <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
-          </ProofProvider>
-        </CredentialProvider> */}
+          </ProofProvider> */}
+        </CredentialProvider>
       </ConnectionProvider>
     </AgentContext.Provider>
   )
