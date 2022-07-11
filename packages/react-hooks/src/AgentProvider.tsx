@@ -25,6 +25,7 @@ export const useAgent = () => {
 
 interface Props {
   agent: Agent | undefined
+  children: React.ReactNode
 }
 
 const AgentProvider: React.FC<Props> = ({ agent, children }) => {

@@ -10,6 +10,7 @@ import type {
 import { RepositoryEventTypes, ConnectionRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
+import { map, filter } from 'rxjs'
 
 import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
 
@@ -39,6 +40,7 @@ export const useConnectionByState = (state: DidExchangeState): ConnectionRecord[
 
 interface Props {
   agent: Agent | undefined
+  children: React.ReactNode
 }
 
 const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
@@ -64,39 +66,39 @@ const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
     if (!connectionState.loading) {
       const connectionSaved$ = agent?.events
         .observable<RecordSavedEvent<ConnectionRecord>>(RepositoryEventTypes.RecordSaved)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== ConnectionRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== ConnectionRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
           })
-        })
+        )
 
       const connectionUpdated$ = agent?.events
         .observable<RecordUpdatedEvent<ConnectionRecord>>(RepositoryEventTypes.RecordUpdated)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== ConnectionRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== ConnectionRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
           })
-        })
+        )
 
       const connectionDeleted$ = agent?.events
         .observable<RecordDeletedEvent<ConnectionRecord>>(RepositoryEventTypes.RecordDeleted)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== ConnectionRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== ConnectionRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
           })
-        })
+        )
 
       return () => {
         connectionSaved$?.unsubscribe()

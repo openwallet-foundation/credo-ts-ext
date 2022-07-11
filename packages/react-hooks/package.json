@@ -24,6 +24,9 @@
     "prepublishOnly": "yarn run build",
     "test": "jest"
   },
+  "dependencies": {
+    "rxjs": "^7.2.0"
+  },
   "devDependencies": {
     "@aries-framework/core": "^0.2.0",
     "react": "^17.0.2",

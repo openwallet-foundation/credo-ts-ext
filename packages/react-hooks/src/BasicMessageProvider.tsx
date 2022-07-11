@@ -4,6 +4,7 @@ import type { Agent, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } 
 import { RepositoryEventTypes, BasicMessageRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
+import { map, filter } from 'rxjs'
 
 import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
 
@@ -28,6 +29,7 @@ export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessa
 
 interface Props {
   agent: Agent | undefined
+  children: React.ReactNode
 }
 
 const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
@@ -53,39 +55,39 @@ const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
     if (!basicMessageState.loading) {
       const basicMessageSaved$ = agent?.events
         .observable<RecordSavedEvent<BasicMessageRecord>>(RepositoryEventTypes.RecordSaved)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== BasicMessageRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== BasicMessageRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
           })
-        })
+        )
 
       const basicMessageUpdated$ = agent?.events
         .observable<RecordUpdatedEvent<BasicMessageRecord>>(RepositoryEventTypes.RecordUpdated)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== BasicMessageRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== BasicMessageRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
           })
-        })
+        )
 
       const basicMessageDeleted$ = agent?.events
         .observable<RecordDeletedEvent<BasicMessageRecord>>(RepositoryEventTypes.RecordDeleted)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== BasicMessageRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== BasicMessageRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
           })
-        })
+        )
 
       return () => {
         basicMessageSaved$?.unsubscribe()

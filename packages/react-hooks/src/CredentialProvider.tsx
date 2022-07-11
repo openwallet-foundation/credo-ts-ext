@@ -7,9 +7,10 @@ import type {
   RecordUpdatedEvent,
 } from '@aries-framework/core'
 
-import { CredentialExchangeRecord, RepositoryEventTypes } from '@aries-framework/core'
+import { RepositoryEventTypes, CredentialExchangeRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
+import { map, filter } from 'rxjs'
 
 import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
 
@@ -39,6 +40,7 @@ export const useCredentialByState = (state: CredentialState): CredentialExchange
 
 interface Props {
   agent: Agent | undefined
+  children: React.ReactNode
 }
 
 const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
@@ -64,39 +66,39 @@ const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
     if (!credentialState.loading) {
       const credentialSaved$ = agent?.events
         .observable<RecordSavedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordSaved)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== CredentialExchangeRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== CredentialExchangeRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
           })
-        })
+        )
 
       const credentialUpdated$ = agent?.events
         .observable<RecordUpdatedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordUpdated)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== CredentialExchangeRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== CredentialExchangeRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
           })
-        })
+        )
 
       const credentialDeleted$ = agent?.events
         .observable<RecordDeletedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordDeleted)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== CredentialExchangeRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== CredentialExchangeRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
           })
-        })
+        )
 
       return () => {
         credentialSaved$?.unsubscribe()

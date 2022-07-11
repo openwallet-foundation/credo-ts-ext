@@ -4,6 +4,7 @@ import type { Agent, ProofState, RecordDeletedEvent, RecordSavedEvent, RecordUpd
 import { RepositoryEventTypes, ProofRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
+import { map, filter } from 'rxjs'
 
 import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
 
@@ -30,6 +31,7 @@ export const useProofByState = (state: ProofState): ProofRecord[] => {
 
 interface Props {
   agent: Agent | undefined
+  children: React.ReactNode
 }
 
 const ProofProvider: React.FC<Props> = ({ agent, children }) => {
@@ -55,39 +57,39 @@ const ProofProvider: React.FC<Props> = ({ agent, children }) => {
     if (!proofState.loading) {
       const proofSaved$ = agent?.events
         .observable<RecordSavedEvent<ProofRecord>>(RepositoryEventTypes.RecordSaved)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== ProofRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== ProofRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
           })
-        })
+        )
 
       const proofUpdated$ = agent?.events
         .observable<RecordUpdatedEvent<ProofRecord>>(RepositoryEventTypes.RecordUpdated)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== ProofRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== ProofRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
           })
-        })
+        )
 
       const proofDeleted$ = agent?.events
         .observable<RecordDeletedEvent<ProofRecord>>(RepositoryEventTypes.RecordDeleted)
-        .subscribe((event) => {
-          const { record } = event.payload
-          if (record.type !== ProofRecord.type) {
-            return
-          }
+        .pipe(
+          map((event) => event.payload.record),
+          filter((record) => record.type !== ProofRecord.type)
+        )
+        .subscribe((record) =>
           dispatch({
             event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
           })
-        })
+        )
 
       return () => {
         proofSaved$?.unsubscribe()
