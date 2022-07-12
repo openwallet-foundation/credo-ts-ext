@@ -1,5 +1,6 @@
 import type { RecordsState } from './RecordProvider'
 import type { Agent, ProofState, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
 import { RepositoryEventTypes, ProofRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
@@ -31,10 +32,9 @@ export const useProofByState = (state: ProofState): ProofRecord[] => {
 
 interface Props {
   agent: Agent | undefined
-  children: React.ReactNode
 }
 
-const ProofProvider: React.FC<Props> = ({ agent, children }) => {
+const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
   const [proofState, dispatch] = useRecordReducer<ProofRecord>({
     records: [],
     loading: true,

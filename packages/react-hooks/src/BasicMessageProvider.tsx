@@ -1,5 +1,6 @@
 import type { RecordsState } from './RecordProvider'
 import type { Agent, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
 import { RepositoryEventTypes, BasicMessageRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
@@ -29,10 +30,9 @@ export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessa
 
 interface Props {
   agent: Agent | undefined
-  children: React.ReactNode
 }
 
-const BasicMessageProvider: React.FC<Props> = ({ agent, children }) => {
+const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
   const [basicMessageState, dispatch] = useRecordReducer<BasicMessageRecord>({
     records: [],
     loading: true,

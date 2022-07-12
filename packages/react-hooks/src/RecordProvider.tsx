@@ -3,25 +3,28 @@ import type { BaseRecord, RecordSavedEvent, RecordDeletedEvent, RecordUpdatedEve
 import { RepositoryEventTypes } from '@aries-framework/core'
 import { useReducer } from 'react'
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BaseRecordAny = BaseRecord<any, any, any>
+
 export enum RecordProviderEventTypes {
   RecordsLoaded = 'RecordsLoaded',
 }
 
-export interface RecordsState<R extends BaseRecord<any, any, any>> {
+export interface RecordsState<R extends BaseRecordAny> {
   loading: boolean
   records: R[]
 }
 
-export interface RecordsLoadedEvent<R extends BaseRecord<any, any, any>> {
+export interface RecordsLoadedEvent<R extends BaseRecordAny> {
   type: typeof RecordProviderEventTypes.RecordsLoaded
   payload: RecordsState<R>
 }
 
-export interface ReducerAction<R extends BaseRecord<any, any, any>> {
+export interface ReducerAction<R extends BaseRecordAny> {
   event: RecordSavedEvent<R> | RecordUpdatedEvent<R> | RecordDeletedEvent<R> | RecordsLoadedEvent<R>
 }
 
-export const useRecordReducer = <R extends BaseRecord<any, any, any>>(initialState: RecordsState<R>) => {
+export const useRecordReducer = <R extends BaseRecordAny>(initialState: RecordsState<R>) => {
   const reducer = (state: RecordsState<R>, action: ReducerAction<R>) => {
     switch (action.event.type) {
       case RecordProviderEventTypes.RecordsLoaded: {

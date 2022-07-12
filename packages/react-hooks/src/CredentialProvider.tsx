@@ -6,6 +6,7 @@ import type {
   RecordSavedEvent,
   RecordUpdatedEvent,
 } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
 import { RepositoryEventTypes, CredentialExchangeRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
@@ -40,10 +41,9 @@ export const useCredentialByState = (state: CredentialState): CredentialExchange
 
 interface Props {
   agent: Agent | undefined
-  children: React.ReactNode
 }
 
-const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
+const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
   const [credentialState, dispatch] = useRecordReducer<CredentialExchangeRecord>({
     records: [],
     loading: true,

@@ -6,6 +6,7 @@ import type {
   RecordUpdatedEvent,
   RecordDeletedEvent,
 } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
 import { RepositoryEventTypes, ConnectionRecord } from '@aries-framework/core'
 import { createContext, useContext, useEffect, useMemo } from 'react'
@@ -40,10 +41,9 @@ export const useConnectionByState = (state: DidExchangeState): ConnectionRecord[
 
 interface Props {
   agent: Agent | undefined
-  children: React.ReactNode
 }
 
-const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
+const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
   const [connectionState, dispatch] = useRecordReducer<ConnectionRecord>({
     loading: true,
     records: [],
