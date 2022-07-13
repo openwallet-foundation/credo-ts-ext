@@ -63,7 +63,7 @@ export const recordsAddedByType = <R extends BaseRecordAny>(
   }
   return agent?.events.observable<RecordSavedEvent<R>>(RepositoryEventTypes.RecordSaved).pipe(
     map((event) => event.payload.record),
-    filter((record) => record.type !== recordClass.type)
+    filter((record) => record.type === recordClass.type)
   )
 }
 
@@ -76,7 +76,7 @@ export const recordsUpdatedByType = <R extends BaseRecordAny>(
   }
   return agent?.events.observable<RecordUpdatedEvent<R>>(RepositoryEventTypes.RecordUpdated).pipe(
     map((event) => event.payload.record),
-    filter((record) => record.type !== recordClass.type)
+    filter((record) => record.type === recordClass.type)
   )
 }
 
@@ -89,6 +89,6 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
   }
   return agent?.events.observable<RecordDeletedEvent<R>>(RepositoryEventTypes.RecordDeleted).pipe(
     map((event) => event.payload.record),
-    filter((record) => record.type !== recordClass.type)
+    filter((record) => record.type === recordClass.type)
   )
 }
