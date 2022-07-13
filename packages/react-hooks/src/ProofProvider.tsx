@@ -1,13 +1,19 @@
-import type { RecordsState } from './RecordProvider'
-import type { Agent, ProofState, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
+import type { RecordsState } from './recordUtils'
+import type { Agent, ProofState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { RepositoryEventTypes, ProofRecord } from '@aries-framework/core'
-import { createContext, useContext, useEffect, useMemo } from 'react'
+import { ProofRecord } from '@aries-framework/core'
+import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
-import { map, filter } from 'rxjs'
 
-import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
+import {
+  recordsRemovedByType,
+  recordsUpdatedByType,
+  recordsAddedByType,
+  removeRecord,
+  updateRecord,
+  addRecord,
+} from './recordUtils'
 
 const ProofContext = createContext<RecordsState<ProofRecord> | undefined>(undefined)
 
@@ -35,7 +41,7 @@ interface Props {
 }
 
 const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
-  const [proofState, dispatch] = useRecordReducer<ProofRecord>({
+  const [state, setState] = useState<RecordsState<ProofRecord>>({
     records: [],
     loading: true,
   })
@@ -43,9 +49,7 @@ const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
   const setInitialState = async () => {
     if (agent) {
       const records = await agent.proofs.getAll()
-      dispatch({
-        event: { type: RecordProviderEventTypes.RecordsLoaded, payload: { records, loading: false } },
-      })
+      setState({ records, loading: false })
     }
   }
 
@@ -54,52 +58,28 @@ const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
   }, [agent])
 
   useEffect(() => {
-    if (!proofState.loading) {
-      const proofSaved$ = agent?.events
-        .observable<RecordSavedEvent<ProofRecord>>(RepositoryEventTypes.RecordSaved)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== ProofRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
-          })
-        )
+    if (!state.loading) {
+      const proofAdded$ = recordsAddedByType(agent, ProofRecord).subscribe((record) =>
+        setState(addRecord(record, state))
+      )
 
-      const proofUpdated$ = agent?.events
-        .observable<RecordUpdatedEvent<ProofRecord>>(RepositoryEventTypes.RecordUpdated)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== ProofRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
-          })
-        )
+      const proofUpdated$ = recordsUpdatedByType(agent, ProofRecord).subscribe((record) =>
+        setState(updateRecord(record, state))
+      )
 
-      const proofDeleted$ = agent?.events
-        .observable<RecordDeletedEvent<ProofRecord>>(RepositoryEventTypes.RecordDeleted)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== ProofRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
-          })
-        )
+      const proofRemoved$ = recordsRemovedByType(agent, ProofRecord).subscribe((record) =>
+        setState(removeRecord(record, state))
+      )
 
       return () => {
-        proofSaved$?.unsubscribe()
+        proofAdded$?.unsubscribe()
         proofUpdated$?.unsubscribe()
-        proofDeleted$?.unsubscribe()
+        proofRemoved$?.unsubscribe()
       }
     }
-  }, [proofState, agent])
+  }, [state, agent])
 
-  return <ProofContext.Provider value={proofState}>{children}</ProofContext.Provider>
+  return <ProofContext.Provider value={state}>{children}</ProofContext.Provider>
 }
 
 export default ProofProvider

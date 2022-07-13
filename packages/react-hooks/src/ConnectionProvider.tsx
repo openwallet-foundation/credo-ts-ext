@@ -1,19 +1,19 @@
-import type { RecordsState } from './RecordProvider'
-import type {
-  Agent,
-  DidExchangeState,
-  RecordSavedEvent,
-  RecordUpdatedEvent,
-  RecordDeletedEvent,
-} from '@aries-framework/core'
+import type { RecordsState } from './recordUtils'
+import type { Agent, DidExchangeState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { RepositoryEventTypes, ConnectionRecord } from '@aries-framework/core'
-import { createContext, useContext, useEffect, useMemo } from 'react'
+import { ConnectionRecord } from '@aries-framework/core'
+import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
-import { map, filter } from 'rxjs'
 
-import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
+import {
+  recordsAddedByType,
+  recordsRemovedByType,
+  recordsUpdatedByType,
+  removeRecord,
+  updateRecord,
+  addRecord,
+} from './recordUtils'
 
 const ConnectionContext = createContext<RecordsState<ConnectionRecord> | undefined>(undefined)
 
@@ -44,17 +44,15 @@ interface Props {
 }
 
 const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
-  const [connectionState, dispatch] = useRecordReducer<ConnectionRecord>({
-    loading: true,
+  const [state, setState] = useState<RecordsState<ConnectionRecord>>({
     records: [],
+    loading: true,
   })
 
   const setInitialState = async () => {
     if (agent) {
       const records = await agent.connections.getAll()
-      dispatch({
-        event: { type: RecordProviderEventTypes.RecordsLoaded, payload: { records, loading: false } },
-      })
+      setState({ records, loading: false })
     }
   }
 
@@ -63,52 +61,28 @@ const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   }, [agent])
 
   useEffect(() => {
-    if (!connectionState.loading) {
-      const connectionSaved$ = agent?.events
-        .observable<RecordSavedEvent<ConnectionRecord>>(RepositoryEventTypes.RecordSaved)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== ConnectionRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
-          })
-        )
+    if (!state.loading) {
+      const connectionAdded$ = recordsAddedByType(agent, ConnectionRecord).subscribe((record) =>
+        setState(addRecord(record, state))
+      )
 
-      const connectionUpdated$ = agent?.events
-        .observable<RecordUpdatedEvent<ConnectionRecord>>(RepositoryEventTypes.RecordUpdated)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== ConnectionRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
-          })
-        )
+      const connectionUpdated$ = recordsUpdatedByType(agent, ConnectionRecord).subscribe((record) =>
+        setState(updateRecord(record, state))
+      )
 
-      const connectionDeleted$ = agent?.events
-        .observable<RecordDeletedEvent<ConnectionRecord>>(RepositoryEventTypes.RecordDeleted)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== ConnectionRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
-          })
-        )
+      const connectionRemoved$ = recordsRemovedByType(agent, ConnectionRecord).subscribe((record) =>
+        setState(removeRecord(record, state))
+      )
 
       return () => {
-        connectionSaved$?.unsubscribe()
-        connectionUpdated$?.unsubscribe()
-        connectionDeleted$?.unsubscribe()
+        connectionAdded$.unsubscribe()
+        connectionUpdated$.unsubscribe()
+        connectionRemoved$.unsubscribe()
       }
     }
-  }, [connectionState, agent])
+  }, [state, agent])
 
-  return <ConnectionContext.Provider value={connectionState}>{children}</ConnectionContext.Provider>
+  return <ConnectionContext.Provider value={state}>{children}</ConnectionContext.Provider>
 }
 
 export default ConnectionProvider

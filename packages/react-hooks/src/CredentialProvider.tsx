@@ -1,19 +1,19 @@
-import type { RecordsState } from './RecordProvider'
-import type {
-  Agent,
-  CredentialState,
-  RecordDeletedEvent,
-  RecordSavedEvent,
-  RecordUpdatedEvent,
-} from '@aries-framework/core'
+import type { RecordsState } from './recordUtils'
+import type { Agent, CredentialState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { RepositoryEventTypes, CredentialExchangeRecord } from '@aries-framework/core'
-import { createContext, useContext, useEffect, useMemo } from 'react'
+import { CredentialExchangeRecord } from '@aries-framework/core'
+import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
-import { map, filter } from 'rxjs'
 
-import { RecordProviderEventTypes, useRecordReducer } from './RecordProvider'
+import {
+  recordsRemovedByType,
+  recordsUpdatedByType,
+  recordsAddedByType,
+  removeRecord,
+  updateRecord,
+  addRecord,
+} from './recordUtils'
 
 const CredentialContext = createContext<RecordsState<CredentialExchangeRecord> | undefined>(undefined)
 
@@ -44,7 +44,7 @@ interface Props {
 }
 
 const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
-  const [credentialState, dispatch] = useRecordReducer<CredentialExchangeRecord>({
+  const [state, setState] = useState<RecordsState<CredentialExchangeRecord>>({
     records: [],
     loading: true,
   })
@@ -52,9 +52,7 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   const setInitialState = async () => {
     if (agent) {
       const records = await agent.credentials.getAll()
-      dispatch({
-        event: { type: RecordProviderEventTypes.RecordsLoaded, payload: { records, loading: false } },
-      })
+      setState({ records, loading: false })
     }
   }
 
@@ -63,52 +61,28 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   }, [agent])
 
   useEffect(() => {
-    if (!credentialState.loading) {
-      const credentialSaved$ = agent?.events
-        .observable<RecordSavedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordSaved)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== CredentialExchangeRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordSaved, payload: { record } },
-          })
-        )
+    if (!state.loading) {
+      const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+        setState(addRecord(record, state))
+      )
 
-      const credentialUpdated$ = agent?.events
-        .observable<RecordUpdatedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordUpdated)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== CredentialExchangeRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordUpdated, payload: { record } },
-          })
-        )
+      const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+        setState(updateRecord(record, state))
+      )
 
-      const credentialDeleted$ = agent?.events
-        .observable<RecordDeletedEvent<CredentialExchangeRecord>>(RepositoryEventTypes.RecordDeleted)
-        .pipe(
-          map((event) => event.payload.record),
-          filter((record) => record.type !== CredentialExchangeRecord.type)
-        )
-        .subscribe((record) =>
-          dispatch({
-            event: { type: RepositoryEventTypes.RecordDeleted, payload: { record } },
-          })
-        )
+      const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+        setState(removeRecord(record, state))
+      )
 
       return () => {
-        credentialSaved$?.unsubscribe()
+        credentialAdded$?.unsubscribe()
         credentialUpdated$?.unsubscribe()
-        credentialDeleted$?.unsubscribe()
+        credentialRemoved$?.unsubscribe()
       }
     }
-  }, [credentialState, agent])
+  }, [state, agent])
 
-  return <CredentialContext.Provider value={credentialState}>{children}</CredentialContext.Provider>
+  return <CredentialContext.Provider value={state}>{children}</CredentialContext.Provider>
 }
 
 export default CredentialProvider
