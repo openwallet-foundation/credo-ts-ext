@@ -7,10 +7,6 @@ import { map, filter } from 'rxjs'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BaseRecordAny = BaseRecord<any, any, any>
 
-export enum RecordProviderEventTypes {
-  RecordsLoaded = 'RecordsLoaded',
-}
-
 export interface RecordsState<R extends BaseRecordAny> {
   loading: boolean
   records: R[]
