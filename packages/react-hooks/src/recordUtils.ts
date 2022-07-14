@@ -16,15 +16,6 @@ export interface RecordsState<R extends BaseRecordAny> {
   records: R[]
 }
 
-export interface RecordsLoadedEvent<R extends BaseRecordAny> {
-  type: typeof RecordProviderEventTypes.RecordsLoaded
-  payload: RecordsState<R>
-}
-
-export interface ReducerAction<R extends BaseRecordAny> {
-  event: RecordSavedEvent<R> | RecordUpdatedEvent<R> | RecordDeletedEvent<R> | RecordsLoadedEvent<R>
-}
-
 export const addRecord = <R extends BaseRecordAny>(record: R, state: RecordsState<R>): RecordsState<R> => {
   const newRecordsState = [...state.records]
   newRecordsState.unshift(record)
