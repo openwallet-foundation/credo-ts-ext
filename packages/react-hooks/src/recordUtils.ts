@@ -1,12 +1,19 @@
-import type { BaseRecord, RecordSavedEvent, RecordDeletedEvent, RecordUpdatedEvent, Agent } from '@aries-framework/core'
+import type {
+  BaseRecord,
+  RecordSavedEvent,
+  RecordDeletedEvent,
+  RecordUpdatedEvent,
+  Agent,
+  BaseEvent,
+} from '@aries-framework/core'
 import type { Constructor } from '@aries-framework/core/build/utils/mixins'
 
 import { RepositoryEventTypes } from '@aries-framework/core'
-import { map, filter } from 'rxjs'
+import { map, filter, pipe } from 'rxjs'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BaseRecordAny = BaseRecord<any, any, any>
-
+type RecordClass<R extends BaseRecordAny> = Constructor<R> & { type: string }
 export interface RecordsState<R extends BaseRecordAny> {
   loading: boolean
   records: R[]
@@ -41,41 +48,40 @@ export const removeRecord = <R extends BaseRecordAny>(record: R, state: RecordsS
   }
 }
 
-export const recordsAddedByType = <R extends BaseRecordAny>(
-  agent: Agent | undefined,
-  recordClass: Constructor<R> & { type: string }
-) => {
+const filterByType = <R extends BaseRecordAny>(recordClass: RecordClass<R>) => {
+  return pipe(
+    map((event: BaseEvent) => (event.payload as Record<string, R>).record),
+    filter((record: R) => record.type === recordClass.type)
+  )
+}
+
+export const recordsAddedByType = <R extends BaseRecordAny>(agent: Agent | undefined, recordClass: RecordClass<R>) => {
   if (!agent) {
     throw new Error('Agent is required to subscribe to events')
   }
-  return agent?.events.observable<RecordSavedEvent<R>>(RepositoryEventTypes.RecordSaved).pipe(
-    map((event) => event.payload.record),
-    filter((record) => record.type === recordClass.type)
-  )
+  return agent?.events.observable<RecordSavedEvent<R>>(RepositoryEventTypes.RecordSaved).pipe(filterByType(recordClass))
 }
 
 export const recordsUpdatedByType = <R extends BaseRecordAny>(
   agent: Agent | undefined,
-  recordClass: Constructor<R> & { type: string }
+  recordClass: RecordClass<R>
 ) => {
   if (!agent) {
     throw new Error('Agent is required to subscribe to events')
   }
-  return agent?.events.observable<RecordUpdatedEvent<R>>(RepositoryEventTypes.RecordUpdated).pipe(
-    map((event) => event.payload.record),
-    filter((record) => record.type === recordClass.type)
-  )
+  return agent?.events
+    .observable<RecordUpdatedEvent<R>>(RepositoryEventTypes.RecordUpdated)
+    .pipe(filterByType(recordClass))
 }
 
 export const recordsRemovedByType = <R extends BaseRecordAny>(
   agent: Agent | undefined,
-  recordClass: Constructor<R> & { type: string }
+  recordClass: RecordClass<R>
 ) => {
   if (!agent) {
     throw new Error('Agent is required to subscribe to events')
   }
-  return agent?.events.observable<RecordDeletedEvent<R>>(RepositoryEventTypes.RecordDeleted).pipe(
-    map((event) => event.payload.record),
-    filter((record) => record.type === recordClass.type)
-  )
+  return agent?.events
+    .observable<RecordDeletedEvent<R>>(RepositoryEventTypes.RecordDeleted)
+    .pipe(filterByType(recordClass))
 }
