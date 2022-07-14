@@ -1,7 +1,7 @@
 import type { SerializedInstance } from './types'
 import type { RecordConstructor } from './utils'
 import type { Agent, BaseRecord, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
-import type { EnhancedStore } from '@reduxjs/toolkit'
+import type { Store } from '@reduxjs/toolkit'
 
 import { JsonTransformer, RepositoryEventTypes } from '@aries-framework/core'
 import { createAction } from '@reduxjs/toolkit'
@@ -19,7 +19,7 @@ export const removeRecord = createAction<BaseRecord>('record/remove')
  *
  * This function **must** be called. If you don't, the store won't be updated.
  */
-export const startRecordListeners = (agent: Agent, store: EnhancedStore) => {
+export const startRecordListeners = (agent: Agent, store: Store) => {
   const onDeleted = (event: RecordDeletedEvent<BaseRecord>) => {
     store.dispatch(removeRecord(event.payload.record))
   }
