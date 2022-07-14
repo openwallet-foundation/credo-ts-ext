@@ -1,4 +1,5 @@
 import type { Agent } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext } from 'react'
@@ -27,7 +28,7 @@ interface Props {
   agent: Agent | undefined
 }
 
-const AgentProvider: React.FC<Props> = ({ agent, children }) => {
+const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
   const [agentState, setAgentState] = useState<AgentContextInterface>({
     loading: true,
     agent,
