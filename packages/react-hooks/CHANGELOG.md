@@ -1,5 +1,22 @@
 # Changelog
 
+## [0.3.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.2.0...react-hooks-v0.3.0) (2022-07-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **react-hooks:** update AFJ to stable 0.2.0 (#136)
+* **react-hooks:** `useConnectionByState` now needs a `DidExchangeState` state value instead of a `ConnectionState` state value.
+
+### Bug Fixes
+
+* **react-hooks:** update providers on delete events ([#113](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/113)) ([d1e5292](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/d1e52929275e69c963bb0dd35a878aba4f250bd9))
+
+
+### Code Refactoring
+
+* **react-hooks:** update AFJ to stable 0.2.0 ([#136](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/136)) ([6ef96a8](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/6ef96a8c01a8568b2c6d1808fbdce3b4476dd13b))
+
 ## [0.2.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.1.4...react-hooks-v0.2.0) (2022-01-04)
 
 
