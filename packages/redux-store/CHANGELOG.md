@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.3.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.3.0...redux-store-v0.3.1) (2022-07-14)
+
+
+### Bug Fixes
+
+* **redux-store:** update store listener type ([#137](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/137)) ([c630696](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/c630696cfaa8b99dd3806e656b954bd99cc5c4f2))
+
 ## [0.3.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.2.0...redux-store-v0.3.0) (2022-07-04)
 
 
