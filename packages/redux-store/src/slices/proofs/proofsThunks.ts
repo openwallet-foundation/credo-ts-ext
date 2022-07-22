@@ -7,9 +7,7 @@ const ProofsThunks = {
   /**
    * Retrieve all ProofRecords
    */
-  getAllProofs: createAsyncAgentThunk('proofs/getAll', async (_, thunkApi) => {
-    return thunkApi.extra.agent.proofs.getAll()
-  }),
+  getAllProofs: createAsyncAgentThunk('proofs/getAll', async (_, thunkApi) => thunkApi.extra.agent.proofs.getAll()),
 }
 
 export { ProofsThunks }

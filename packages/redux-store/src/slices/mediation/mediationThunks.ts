@@ -7,9 +7,9 @@ const MediationThunks = {
   /**
    * Retrieve all Mediation records
    */
-  getAllMediationRecords: createAsyncAgentThunk('mediation/getAll', async (_, thunkApi) => {
-    return thunkApi.extra.agent.mediationRecipient.getMediators()
-  }),
+  getAllMediationRecords: createAsyncAgentThunk('mediation/getAll', async (_, thunkApi) =>
+    thunkApi.extra.agent.mediationRecipient.getMediators()
+  ),
 }
 
 export { MediationThunks }

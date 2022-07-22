@@ -47,7 +47,7 @@ const credentialsSlice = createSlice({
       })
       .addCase(CredentialsThunks.getAllCredentials.fulfilled, (state, action) => {
         state.credentials.isLoading = false
-        state.credentials.records = action.payload.map((c) => JsonTransformer.toJSON(c))
+        state.credentials.records = action.payload.map(JsonTransformer.toJSON)
       })
       // record events
       .addCase(addRecord, (state, action) =>
