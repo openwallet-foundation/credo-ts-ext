@@ -60,7 +60,7 @@ const connectionsSlice = createSlice({
       })
       .addCase(ConnectionThunks.getAllConnections.fulfilled, (state, action) => {
         state.connections.isLoading = false
-        state.connections.records = action.payload.map((c) => JsonTransformer.toJSON(c))
+        state.connections.records = action.payload.map(JsonTransformer.toJSON)
       })
 
       // record event

@@ -47,7 +47,7 @@ const ConnectionsSelectors = {
    */
   connectionRecordByIdSelector: (connectionRecordId: string) =>
     createSelector(connectionsStateSelector, (connectionsState) => {
-      const record = connectionsState.records.find((x) => x.id === connectionRecordId)
+      const record = connectionsState.records.find((r) => r.id === connectionRecordId)
 
       return record ? JsonTransformer.fromJSON(record, ConnectionRecord) : null
     }),

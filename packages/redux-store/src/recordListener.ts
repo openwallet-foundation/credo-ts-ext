@@ -51,10 +51,10 @@ export const removeRecordInState = (
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return
 
-  const index = records.findIndex((record) => record.id == record.id)
+  const index = records.findIndex((r) => r.id === record.id)
 
   // Record does not exist, not needed to remove anything
-  if (index == -1) return
+  if (index === -1) return
 
   records.splice(index, 1)
 }
@@ -78,10 +78,10 @@ export const updateRecordInState = (
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return
 
-  const index = records.findIndex((record) => record.id == record.id)
+  const index = records.findIndex((r) => r.id === record.id)
 
   // Record does not exist, add it
-  if (index == -1) {
+  if (index === -1) {
     records.push(JsonTransformer.toJSON(record))
   } else {
     records[index] = JsonTransformer.toJSON(record)
