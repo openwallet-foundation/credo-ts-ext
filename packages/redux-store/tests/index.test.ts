@@ -1,11 +1,14 @@
-import { BaseRecord, ConnectionRecord, DidExchangeRole, DidExchangeState } from '@aries-framework/core'
+import type { SerializedInstance } from '../src/types'
+import type { BaseRecord } from '@aries-framework/core'
+
+import { ConnectionRecord, DidExchangeRole, DidExchangeState } from '@aries-framework/core'
+
 import { addRecordInState, removeRecordInState, updateRecordInState } from '../src/recordListener'
-import { SerializedInstance } from '../src/types'
 
 describe('@aries-framework/redux-store', () => {
   test('Should add record', () => {
     const records: SerializedInstance<BaseRecord>[] = []
-    const record: ConnectionRecord = new ConnectionRecord({
+    const record = new ConnectionRecord({
       role: DidExchangeRole.Requester,
       state: DidExchangeState.Start,
     })
@@ -20,17 +23,17 @@ describe('@aries-framework/redux-store', () => {
   test('Should update record', () => {
     const records: SerializedInstance<BaseRecord>[] = []
 
-    const recordOne: ConnectionRecord = new ConnectionRecord({
+    const recordOne = new ConnectionRecord({
       role: DidExchangeRole.Requester,
       state: DidExchangeState.Start,
     })
 
-    const recordTwo: ConnectionRecord = new ConnectionRecord({
+    const recordTwo = new ConnectionRecord({
       role: DidExchangeRole.Requester,
       state: DidExchangeState.Start,
     })
 
-    const modifiedRecordOne: ConnectionRecord = new ConnectionRecord({
+    const modifiedRecordOne = new ConnectionRecord({
       id: recordOne.id,
       role: DidExchangeRole.Requester,
       state: DidExchangeState.InvitationSent,
@@ -48,7 +51,7 @@ describe('@aries-framework/redux-store', () => {
 
   test('Should remove record', () => {
     const records: SerializedInstance<BaseRecord>[] = []
-    const record: ConnectionRecord = new ConnectionRecord({
+    const record = new ConnectionRecord({
       role: DidExchangeRole.Requester,
       state: DidExchangeState.Start,
     })
