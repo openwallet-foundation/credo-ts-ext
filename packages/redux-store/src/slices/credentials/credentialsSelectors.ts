@@ -23,7 +23,7 @@ const CredentialsSelectors = {
    * Selector that retrieves all CredentialRecords from the store.
    */
   credentialRecordsSelector: createSelector(credentialsStateSelector, (credentialsState) =>
-    credentialsState.records.map((c) => JsonTransformer.fromJSON(c, CredentialExchangeRecord))
+    credentialsState.records.map((r) => JsonTransformer.fromJSON(r, CredentialExchangeRecord))
   ),
 
   /**
@@ -32,7 +32,7 @@ const CredentialsSelectors = {
   credentialsRecordsByStateSelector: (state: CredentialState) =>
     createSelector(credentialsStateSelector, (credentialsState) =>
       credentialsState.records
-        .filter((record) => record.state === state)
+        .filter((r) => r.state === state)
         .map((c) => JsonTransformer.fromJSON(c, CredentialExchangeRecord))
     ),
 
@@ -41,7 +41,7 @@ const CredentialsSelectors = {
    */
   credentialRecordByIdSelector: (credentialRecordId: string) =>
     createSelector(credentialsStateSelector, (credentialsState) => {
-      const record = credentialsState.records.find((x) => x.id === credentialRecordId)
+      const record = credentialsState.records.find((r) => r.id === credentialRecordId)
 
       return record ? JsonTransformer.fromJSON(record, CredentialExchangeRecord) : null
     }),

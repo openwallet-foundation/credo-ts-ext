@@ -47,7 +47,7 @@ const mediationSlice = createSlice({
       })
       .addCase(MediationThunks.getAllMediationRecords.fulfilled, (state, action) => {
         state.mediation.isLoading = false
-        state.mediation.records = action.payload.map((m) => JsonTransformer.toJSON(m))
+        state.mediation.records = action.payload.map(JsonTransformer.toJSON)
       })
       // record events
       .addCase(addRecord, (state, action) => addRecordInState(MediationRecord, state.mediation.records, action.payload))
