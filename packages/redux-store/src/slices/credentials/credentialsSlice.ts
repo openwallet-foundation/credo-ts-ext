@@ -1,15 +1,23 @@
 import type { SerializedInstance } from '../../types'
-import type { CredentialRecord } from '@aries-framework/core'
-import type { PayloadAction, SerializedError } from '@reduxjs/toolkit'
+import type { SerializedError } from '@reduxjs/toolkit'
 
-import { JsonTransformer } from '@aries-framework/core'
+import { CredentialExchangeRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
+
+import {
+  addRecord,
+  addRecordInState,
+  updateRecord,
+  updateRecordInState,
+  removeRecord,
+  removeRecordInState,
+} from '../../recordListener'
 
 import { CredentialsThunks } from './credentialsThunks'
 
 interface CredentialsState {
   credentials: {
-    records: SerializedInstance<CredentialRecord>[]
+    records: SerializedInstance<CredentialExchangeRecord>[]
     isLoading: boolean
   }
   error: null | SerializedError
@@ -26,21 +34,7 @@ const initialState: CredentialsState = {
 const credentialsSlice = createSlice({
   name: 'credentials',
   initialState,
-  reducers: {
-    updateOrAdd: (state, action: PayloadAction<CredentialRecord>) => {
-      const index = state.credentials.records.findIndex((record) => record.id == action.payload.id)
-
-      if (index == -1) {
-        // records doesn't exist, add it
-        state.credentials.records.push(JsonTransformer.toJSON(action.payload))
-        return state
-      }
-
-      // record does exist, update it
-      state.credentials.records[index] = JsonTransformer.toJSON(action.payload)
-      return state
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     builder
       // getAllCredentials
@@ -53,38 +47,18 @@ const credentialsSlice = createSlice({
       })
       .addCase(CredentialsThunks.getAllCredentials.fulfilled, (state, action) => {
         state.credentials.isLoading = false
-        state.credentials.records = action.payload.map((c) => JsonTransformer.toJSON(c))
+        state.credentials.records = action.payload.map(JsonTransformer.toJSON)
       })
-      // proposeCredential
-      .addCase(CredentialsThunks.proposeCredential.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // acceptProposal
-      .addCase(CredentialsThunks.acceptProposal.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // offerCredential
-      .addCase(CredentialsThunks.offerCredential.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // acceptOffer
-      .addCase(CredentialsThunks.acceptOffer.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // acceptRequest
-      .addCase(CredentialsThunks.acceptRequest.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // acceptCredential
-      .addCase(CredentialsThunks.acceptCredential.rejected, (state, action) => {
-        state.error = action.error
-      })
-      // deleteCredential
-      .addCase(CredentialsThunks.deleteCredential.fulfilled, (state, action) => {
-        const credentialId = action.meta.arg
-        const index = state.credentials.records.findIndex((record) => record.id == credentialId)
-        state.credentials.records.splice(index, 1)
-      })
+      // record events
+      .addCase(addRecord, (state, action) =>
+        addRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+      )
+      .addCase(removeRecord, (state, action) =>
+        removeRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+      )
+      .addCase(updateRecord, (state, action) =>
+        updateRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+      )
   },
 })
 

@@ -34,7 +34,7 @@ describe('Push Notifications apns', () => {
 
       const jsonMessage = JsonTransformer.toJSON(message)
 
-      await expect(MessageValidator.validate(message)).resolves.toBeUndefined()
+      expect(MessageValidator.validateSync(message)).toBeUndefined()
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),
@@ -50,7 +50,7 @@ describe('Push Notifications apns', () => {
 
       const jsonMessage = JsonTransformer.toJSON(message)
 
-      await expect(MessageValidator.validate(message)).resolves.toBeUndefined()
+      expect(MessageValidator.validateSync(message)).toBeUndefined()
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),
@@ -67,7 +67,7 @@ describe('Push Notifications apns', () => {
 
       const jsonMessage = JsonTransformer.toJSON(message)
 
-      await expect(MessageValidator.validate(message)).resolves.toBeUndefined()
+      expect(MessageValidator.validateSync(message)).toBeUndefined()
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),

@@ -1,5 +1,30 @@
 # Changelog
 
+### [0.3.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.3.1...redux-store-v0.3.2) (2022-07-22)
+
+
+### Bug Fixes
+
+* **redux-store:** tests and proper record update ([#140](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/140)) ([6ddbeca](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/6ddbecacbd6b50776e8dccaa18fa06ca97439e9a))
+
+### [0.3.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.3.0...redux-store-v0.3.1) (2022-07-14)
+
+
+### Bug Fixes
+
+* **redux-store:** update store listener type ([#137](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/137)) ([c630696](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/c630696cfaa8b99dd3806e656b954bd99cc5c4f2))
+
+## [0.3.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.2.0...redux-store-v0.3.0) (2022-07-04)
+
+
+### ⚠ BREAKING CHANGES
+
+* **redux-store:** The thunks that exposed all module methods from AFJ are now removed. Instead of using the thunks, you should use the agent directly.
+
+### Features
+
+* **redux-store:** update to afj 0.2.0 ([#133](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/133)) ([969ab1f](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/969ab1f167923f70e5f3441679d5de97af922282))
+
 ## [0.2.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.1.2...redux-store-v0.2.0) (2022-01-04)
 
 

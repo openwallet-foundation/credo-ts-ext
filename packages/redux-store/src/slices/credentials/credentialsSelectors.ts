@@ -1,7 +1,7 @@
 import type { CredentialsState } from './credentialsSlice'
 import type { CredentialState } from '@aries-framework/core'
 
-import { CredentialRecord, JsonTransformer } from '@aries-framework/core'
+import { CredentialExchangeRecord, JsonTransformer } from '@aries-framework/core'
 import { createSelector } from '@reduxjs/toolkit'
 
 interface PartialCredentialState {
@@ -23,7 +23,7 @@ const CredentialsSelectors = {
    * Selector that retrieves all CredentialRecords from the store.
    */
   credentialRecordsSelector: createSelector(credentialsStateSelector, (credentialsState) =>
-    credentialsState.records.map((c) => JsonTransformer.fromJSON(c, CredentialRecord))
+    credentialsState.records.map((r) => JsonTransformer.fromJSON(r, CredentialExchangeRecord))
   ),
 
   /**
@@ -32,8 +32,8 @@ const CredentialsSelectors = {
   credentialsRecordsByStateSelector: (state: CredentialState) =>
     createSelector(credentialsStateSelector, (credentialsState) =>
       credentialsState.records
-        .filter((record) => record.state === state)
-        .map((c) => JsonTransformer.fromJSON(c, CredentialRecord))
+        .filter((r) => r.state === state)
+        .map((c) => JsonTransformer.fromJSON(c, CredentialExchangeRecord))
     ),
 
   /**
@@ -41,9 +41,9 @@ const CredentialsSelectors = {
    */
   credentialRecordByIdSelector: (credentialRecordId: string) =>
     createSelector(credentialsStateSelector, (credentialsState) => {
-      const record = credentialsState.records.find((x) => x.id === credentialRecordId)
+      const record = credentialsState.records.find((r) => r.id === credentialRecordId)
 
-      return record ? JsonTransformer.fromJSON(record, CredentialRecord) : null
+      return record ? JsonTransformer.fromJSON(record, CredentialExchangeRecord) : null
     }),
 }
 

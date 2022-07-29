@@ -1,4 +1,4 @@
-import type { Agent } from '@aries-framework/core'
+import type { Agent, BaseRecord } from '@aries-framework/core'
 import type { AsyncThunkPayloadCreator } from '@reduxjs/toolkit'
 
 import { createAsyncThunk } from '@reduxjs/toolkit'
@@ -31,6 +31,18 @@ function createAsyncAgentThunk<Returned, ThunkArg = void>(
   })
 }
 
-export { createAsyncAgentThunk }
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BaseRecordAny = BaseRecord<any, any, any>
 
-export type { AgentThunkApiConfig, ClassMethodParameters }
+type RecordConstructor<RecordType extends BaseRecordAny = BaseRecordAny> = Constructor<RecordType> & { type: string }
+
+const isRecordType = <RecordType extends BaseRecordAny>(
+  record: BaseRecord,
+  expectedRecordType: RecordConstructor<RecordType>
+): record is RecordType => {
+  return record.type === expectedRecordType.type
+}
+
+export { createAsyncAgentThunk, isRecordType }
+
+export type { AgentThunkApiConfig, ClassMethodParameters, RecordConstructor }
