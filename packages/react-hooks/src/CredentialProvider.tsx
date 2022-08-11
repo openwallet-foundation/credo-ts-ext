@@ -1,5 +1,5 @@
-import type { RecordsState } from './recordUtils'
-import type { Agent, CredentialState } from '@aries-framework/core'
+import type { CombinedRecordsState, RecordsState } from './recordUtils'
+import type { Agent, CredentialState, GetFormatDataReturn, IndyCredentialFormat } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
 import { CredentialExchangeRecord } from '@aries-framework/core'
@@ -7,22 +7,27 @@ import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
 import {
+  addCombinedRecord,
+  removeCombinedRecord,
+  updateCombinedRecord,
   recordsRemovedByType,
   recordsUpdatedByType,
   recordsAddedByType,
-  removeRecord,
-  updateRecord,
-  addRecord,
 } from './recordUtils'
 
-const CredentialContext = createContext<RecordsState<CredentialExchangeRecord> | undefined>(undefined)
+const CredentialContext = createContext<CombinedRecordsState<CredentialExchangeRecord> | undefined>(undefined)
 
-export const useCredentials = () => {
+export const useCombinedCredentials = () => {
   const credentialContext = useContext(CredentialContext)
   if (!credentialContext) {
     throw new Error('useCredentials must be used within a CredentialContextProvider')
   }
   return credentialContext
+}
+
+export const useCredentials = (): RecordsState<CredentialExchangeRecord> => {
+  const { records: combinedRecords, loading } = useCombinedCredentials()
+  return { records: combinedRecords.map(({ record }) => record), loading }
 }
 
 export const useCredentialById = (id: string): CredentialExchangeRecord | undefined => {
@@ -39,20 +44,34 @@ export const useCredentialByState = (state: CredentialState): CredentialExchange
   return filteredCredentials
 }
 
+export const useFormatDataForCredentialById = (id: string): GetFormatDataReturn<[IndyCredentialFormat]> | undefined => {
+  const { records: combinedRecords } = useCombinedCredentials()
+  return combinedRecords.find(({ record: c }) => c.id === id)?.formatData
+}
+
 interface Props {
   agent: Agent | undefined
 }
 
 const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
-  const [state, setState] = useState<RecordsState<CredentialExchangeRecord>>({
+  const [state, setState] = useState<CombinedRecordsState<CredentialExchangeRecord>>({
     records: [],
     loading: true,
   })
 
+  const combineRecord = async (record: CredentialExchangeRecord) => {
+    let formatData: GetFormatDataReturn<[IndyCredentialFormat]> = {}
+    if (agent) {
+      formatData = await agent.credentials.getFormatData(record.id)
+    }
+    return { record, formatData }
+  }
+
   const setInitialState = async () => {
     if (agent) {
       const records = await agent.credentials.getAll()
-      setState({ records, loading: false })
+      const combinedRecords = await Promise.all(records.map(combineRecord))
+      setState({ records: combinedRecords, loading: false })
     }
   }
 
@@ -62,17 +81,20 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
 
   useEffect(() => {
     if (!state.loading) {
-      const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+      const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe(async (record) => {
+        const combinedRecord = await combineRecord(record)
+        return setState(addCombinedRecord(combinedRecord, state))
+      })
 
-      const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+      const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe(async (record) => {
+        const combinedRecord = await combineRecord(record)
+        setState(updateCombinedRecord(combinedRecord, state))
+      })
 
-      const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+      const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe(async (record) => {
+        const combinedRecord = await combineRecord(record)
+        setState(removeCombinedRecord(combinedRecord, state))
+      })
 
       return () => {
         credentialAdded$?.unsubscribe()

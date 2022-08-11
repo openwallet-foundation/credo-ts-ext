@@ -5,6 +5,8 @@ import type {
   RecordUpdatedEvent,
   Agent,
   BaseEvent,
+  GetFormatDataReturn,
+  IndyCredentialFormat,
 } from '@aries-framework/core'
 import type { Constructor } from '@aries-framework/core/build/utils/mixins'
 
@@ -14,9 +16,20 @@ import { map, filter, pipe } from 'rxjs'
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BaseRecordAny = BaseRecord<any, any, any>
 type RecordClass<R extends BaseRecordAny> = Constructor<R> & { type: string }
+
+interface CombinedRecord<R extends BaseRecord> {
+  record: R
+  formatData: GetFormatDataReturn<[IndyCredentialFormat]>
+}
+
 export interface RecordsState<R extends BaseRecordAny> {
   loading: boolean
-  records: R[]
+  records: Array<R>
+}
+
+export interface CombinedRecordsState<R extends BaseRecordAny> {
+  loading: boolean
+  records: Array<CombinedRecord<R>>
 }
 
 export const addRecord = <R extends BaseRecordAny>(record: R, state: RecordsState<R>): RecordsState<R> => {
@@ -42,6 +55,46 @@ export const updateRecord = <R extends BaseRecordAny>(record: R, state: RecordsS
 
 export const removeRecord = <R extends BaseRecordAny>(record: R, state: RecordsState<R>): RecordsState<R> => {
   const newRecordsState = state.records.filter((r) => r.id !== record.id)
+  return {
+    loading: state.loading,
+    records: newRecordsState,
+  }
+}
+
+export const addCombinedRecord = <R extends BaseRecordAny>(
+  combinedRecord: CombinedRecord<R>,
+  state: CombinedRecordsState<R>
+): CombinedRecordsState<R> => {
+  const newRecordsState = [...state.records]
+  newRecordsState.unshift(combinedRecord)
+  return {
+    loading: state.loading,
+    records: newRecordsState,
+  }
+}
+
+export const updateCombinedRecord = <R extends BaseRecordAny>(
+  combinedRecord: CombinedRecord<R>,
+  state: CombinedRecordsState<R>
+): CombinedRecordsState<R> => {
+  const { record } = combinedRecord
+  const newRecordsState = [...state.records]
+  const index = newRecordsState.findIndex(({ record: r }) => r.id === record.id)
+  if (index > -1) {
+    newRecordsState[index] = combinedRecord
+  }
+  return {
+    loading: state.loading,
+    records: newRecordsState,
+  }
+}
+
+export const removeCombinedRecord = <R extends BaseRecordAny>(
+  combinedRecord: CombinedRecord<R>,
+  state: CombinedRecordsState<R>
+): CombinedRecordsState<R> => {
+  const { record } = combinedRecord
+  const newRecordsState = state.records.filter(({ record: r }) => r.id !== record.id)
   return {
     loading: state.loading,
     records: newRecordsState,
