@@ -1,11 +1,16 @@
 import type {
   AutoAcceptProof,
+  BasicMessageRole,
   CredentialState,
   DidExchangeRole,
   DidExchangeState,
+  OutOfBandInvitationOptions,
+  OutOfBandRecordProps,
   ProofRecordProps,
   ProofState,
 } from '@aries-framework/core'
+import type { OutOfBandRole } from '@aries-framework/core/build/modules/oob/domain/OutOfBandRole'
+import type { OutOfBandState } from '@aries-framework/core/build/modules/oob/domain/OutOfBandState'
 
 /**
  * @example "821f9b26-ad04-4f56-89b6-e2ef9c72b36e"
@@ -21,6 +26,20 @@ export type CredentialDefinitionId = string
  * @example "WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0"
  */
 export type SchemaId = string
+
+export const BasicMessageRecordExample = {
+  _tags: {
+    role: 'sender',
+    connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
+  },
+  metadata: {},
+  id: '74bcf865-1fdc-45b4-b517-9def02dfd25f',
+  createdAt: new Date('2022-08-18T08:38:40.216Z'),
+  content: 'string',
+  sentTime: '2022-08-18T08:38:40.216Z',
+  connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
+  role: 'sender' as BasicMessageRole,
+}
 
 export const ConnectionRecordExample = {
   _tags: {
@@ -42,6 +61,49 @@ export const ConnectionRecordExample = {
   invitationDid:
     'did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119',
   outOfBandId: 'edbc89fe-785f-4774-a288-46012486881d',
+}
+
+type OutOfBandRecordProperties = Omit<OutOfBandRecordProps, 'outOfBandInvitation'>
+export type OutOfBandInvitationProps = Omit<
+  OutOfBandInvitationOptions,
+  'handshakeProtocols' | 'services' | 'appendedAttachments'
+>
+
+export interface OutOfBandRecordWithInvitationProps extends OutOfBandRecordProperties {
+  outOfBandInvitation: OutOfBandInvitationProps
+}
+
+export const outOfBandInvitationExample = {
+  '@type': 'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation',
+  '@id': 'd6472943-e5d0-4d95-8b48-790ed5a41931',
+  label: 'Aries Test Agent',
+  accept: ['didcomm/aip1', 'didcomm/aip2;env=rfc19'],
+  handshake_protocols: ['https://didcomm.org/didexchange/1.0', 'https://didcomm.org/connections/1.0'],
+  services: [
+    {
+      id: '#inline-0',
+      serviceEndpoint: 'https://6b77-89-20-162-146.ngrok.io',
+      type: 'did-communication',
+      recipientKeys: ['did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM'],
+      routingKeys: [],
+    },
+  ],
+}
+
+export const outOfBandRecordExample = {
+  _tags: {
+    invitationId: '1cbd22e4-1906-41e9-8807-83d84437f978',
+    state: 'await-response',
+    role: 'sender',
+    recipientKeyFingerprints: ['z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj'],
+  },
+  outOfBandInvitation: outOfBandInvitationExample,
+  metadata: {},
+  id: '42a95528-0e30-4f86-a462-0efb02178b53',
+  createdAt: new Date('2022-01-01T00:00:00.000Z'),
+  role: 'sender' as OutOfBandRole,
+  state: 'await-response' as OutOfBandState,
+  reusable: false,
 }
 
 export const CredentialExchangeRecordExample = {

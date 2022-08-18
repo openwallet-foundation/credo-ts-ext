@@ -15,6 +15,8 @@ import { CredentialDefinitionController } from './../controllers/credentials/Cre
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { SchemaController } from './../controllers/credentials/SchemaController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { OutOfBandController } from './../controllers/outofband/OutOfBandController';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProofController } from './../controllers/proofs/ProofController';
 import { iocContainer } from './../utils/tsyringeTsoaIocContainer';
 import { IocContainer, IocContainerFactory } from '@tsoa/runtime';
@@ -289,6 +291,106 @@ const models: TsoaRoute.Models = {
             "name": {"dataType":"string","required":true},
             "version": {"dataType":"string","required":true},
             "attributes": {"dataType":"array","array":{"dataType":"string"},"required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "HandshakeProtocol": {
+        "dataType": "refEnum",
+        "enums": ["https://didcomm.org/connections/1.0","https://didcomm.org/didexchange/1.0"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AgentMessage": {
+        "dataType": "refAlias",
+        "type": {"ref":"Record_string.unknown_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "KeyType": {
+        "dataType": "refEnum",
+        "enums": ["ed25519","bls12381g1g2","bls12381g1","bls12381g2","x25519"],
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Key": {
+        "dataType": "refObject",
+        "properties": {
+            "publicKey": {"dataType":"buffer","required":true},
+            "keyType": {"ref":"KeyType","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Routing": {
+        "dataType": "refObject",
+        "properties": {
+            "endpoints": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "recipientKey": {"ref":"Key","required":true},
+            "routingKeys": {"dataType":"array","array":{"dataType":"refObject","ref":"Key"},"required":true},
+            "mediatorId": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateOutOfBandInvitationConfig": {
+        "dataType": "refObject",
+        "properties": {
+            "label": {"dataType":"string"},
+            "alias": {"dataType":"string"},
+            "imageUrl": {"dataType":"string"},
+            "goalCode": {"dataType":"string"},
+            "goal": {"dataType":"string"},
+            "handshake": {"dataType":"boolean"},
+            "handshakeProtocols": {"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},
+            "messages": {"dataType":"array","array":{"dataType":"refAlias","ref":"AgentMessage"}},
+            "multiUseInvitation": {"dataType":"boolean"},
+            "autoAcceptConnection": {"dataType":"boolean"},
+            "routing": {"ref":"Routing"},
+            "appendedAttachments": {"dataType":"array","array":{"dataType":"refObject","ref":"Attachment"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateLegacyInvitationConfig": {
+        "dataType": "refObject",
+        "properties": {
+            "label": {"dataType":"string"},
+            "alias": {"dataType":"string"},
+            "imageUrl": {"dataType":"string"},
+            "multiUseInvitation": {"dataType":"boolean"},
+            "autoAcceptConnection": {"dataType":"boolean"},
+            "routing": {"ref":"Routing"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OutOfBandInvitation": {
+        "dataType": "refAlias",
+        "type": {"ref":"Record_string.unknown_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReceiveOutOfBandInvitationConfig": {
+        "dataType": "refObject",
+        "properties": {
+            "label": {"dataType":"string"},
+            "alias": {"dataType":"string"},
+            "imageUrl": {"dataType":"string"},
+            "autoAcceptInvitation": {"dataType":"boolean"},
+            "autoAcceptConnection": {"dataType":"boolean"},
+            "reuseConnection": {"dataType":"boolean"},
+            "routing": {"ref":"Routing"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AcceptInvitationConfig": {
+        "dataType": "refObject",
+        "properties": {
+            "autoAcceptConnection": {"dataType":"boolean"},
+            "reuseConnection": {"dataType":"boolean"},
+            "label": {"dataType":"string"},
+            "alias": {"dataType":"string"},
+            "imageUrl": {"dataType":"string"},
+            "mediatorId": {"dataType":"string"},
+            "routing": {"ref":"Routing"},
         },
         "additionalProperties": false,
     },
@@ -1097,6 +1199,288 @@ export function RegisterRoutes(app: express.Router) {
 
 
               const promise = controller.createSchema.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/oob',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.getAllOutOfBandRecords)),
+
+            async function OutOfBandController_getAllOutOfBandRecords(request: any, response: any, next: any) {
+            const args = {
+                    invitationId: {"in":"query","name":"invitationId","dataType":"string"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.getAllOutOfBandRecords.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/oob/:outOfBandId',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.getOutOfBandRecordById)),
+
+            async function OutOfBandController_getOutOfBandRecordById(request: any, response: any, next: any) {
+            const args = {
+                    outOfBandId: {"in":"path","name":"outOfBandId","required":true,"ref":"RecordId"},
+                    notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.getOutOfBandRecordById.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/oob/create-invitation',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.createInvitation)),
+
+            async function OutOfBandController_createInvitation(request: any, response: any, next: any) {
+            const args = {
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+                    invitationConfig: {"in":"body","name":"invitationConfig","ref":"CreateOutOfBandInvitationConfig"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.createInvitation.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/oob/create-legacy-invitation',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.createLegacyInvitation)),
+
+            async function OutOfBandController_createLegacyInvitation(request: any, response: any, next: any) {
+            const args = {
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+                    config: {"in":"body","name":"config","ref":"CreateLegacyInvitationConfig"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.createLegacyInvitation.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/oob/create-legacy-connectionless-invitation',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.createLegacyConnectionlessInvitation)),
+
+            async function OutOfBandController_createLegacyConnectionlessInvitation(request: any, response: any, next: any) {
+            const args = {
+                    config: {"in":"body","name":"config","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"domain":{"dataType":"string","required":true},"message":{"ref":"AgentMessage","required":true},"recordId":{"dataType":"string","required":true}}},
+                    notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.createLegacyConnectionlessInvitation.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/oob/receive-invitation',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.receiveInvitation)),
+
+            async function OutOfBandController_receiveInvitation(request: any, response: any, next: any) {
+            const args = {
+                    invitationRequest: {"in":"body","name":"invitationRequest","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"config":{"ref":"ReceiveOutOfBandInvitationConfig","required":true},"invitation":{"ref":"OutOfBandInvitation","required":true}}},
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.receiveInvitation.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/oob/receive-invitation-url',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.receiveInvitationFromUrl)),
+
+            async function OutOfBandController_receiveInvitationFromUrl(request: any, response: any, next: any) {
+            const args = {
+                    invitationRequest: {"in":"body","name":"invitationRequest","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"config":{"ref":"ReceiveOutOfBandInvitationConfig","required":true},"invitationUrl":{"dataType":"string","required":true}}},
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.receiveInvitationFromUrl.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/oob/:outOfBandId/accept-invitation',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.acceptInvitation)),
+
+            async function OutOfBandController_acceptInvitation(request: any, response: any, next: any) {
+            const args = {
+                    outOfBandId: {"in":"path","name":"outOfBandId","required":true,"ref":"RecordId"},
+                    acceptInvitationConfig: {"in":"body","name":"acceptInvitationConfig","required":true,"ref":"AcceptInvitationConfig"},
+                    notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.acceptInvitation.apply(controller, validatedArgs as any);
+              promiseHandler(controller, promise, response, undefined, next);
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.delete('/oob/:outOfBandId',
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
+            ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.deleteOutOfBandRecord)),
+
+            async function OutOfBandController_deleteOutOfBandRecord(request: any, response: any, next: any) {
+            const args = {
+                    outOfBandId: {"in":"path","name":"outOfBandId","required":true,"ref":"RecordId"},
+                    notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<OutOfBandController>(OutOfBandController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+
+              const promise = controller.deleteOutOfBandRecord.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

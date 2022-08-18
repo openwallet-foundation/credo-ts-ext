@@ -1,12 +1,13 @@
 import type { ConnectionRecordProps } from '@aries-framework/core'
 
 import {
+  OutOfBandInvitation,
+  OutOfBandRecord,
   ConnectionRecord,
   CredentialExchangeRecord,
   DidExchangeRole,
   DidExchangeState,
   JsonTransformer,
-  // OfferCredentialMessage,
   ProofRecord,
   ProofRequest,
 } from '@aries-framework/core'
@@ -26,6 +27,60 @@ export async function getTestAgent(name: string, port: number) {
 export function objectToJson<T>(result: T) {
   const serialized = JsonTransformer.serialize(result)
   return JsonEncoder.fromString(serialized)
+}
+
+export function getTestOutOfBandInvitation() {
+  const json = {
+    '@type': 'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation',
+    '@id': 'd6472943-e5d0-4d95-8b48-790ed5a41931',
+    label: 'Aries Test Agent',
+    accept: ['didcomm/aip1', 'didcomm/aip2;env=rfc19'],
+    handshake_protocols: ['https://didcomm.org/didexchange/1.0', 'https://didcomm.org/connections/1.0'],
+    services: [
+      {
+        id: '#inline-0',
+        serviceEndpoint: 'https://6b77-89-20-162-146.ngrok.io',
+        type: 'did-communication',
+        recipientKeys: ['did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM'],
+        routingKeys: [],
+      },
+    ],
+  }
+  return JsonTransformer.fromJSON(json, OutOfBandInvitation)
+}
+
+export function getTestOutOfBandRecord() {
+  const json = {
+    _tags: {
+      invitationId: '1cbd22e4-1906-41e9-8807-83d84437f978',
+      state: 'await-response',
+      role: 'sender',
+      recipientKeyFingerprints: ['z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj'],
+    },
+    metadata: {},
+    id: '42a95528-0e30-4f86-a462-0efb02178b53',
+    createdAt: new Date('2022-01-01T00:00:00.000Z'),
+    outOfBandInvitation: {
+      '@type': 'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation',
+      '@id': 'd6472943-e5d0-4d95-8b48-790ed5a41931',
+      label: 'Aries Test Agent',
+      accept: ['didcomm/aip1', 'didcomm/aip2;env=rfc19'],
+      handshake_protocols: ['https://didcomm.org/didexchange/1.0', 'https://didcomm.org/connections/1.0'],
+      services: [
+        {
+          id: '#inline-0',
+          serviceEndpoint: 'https://6b77-89-20-162-146.ngrok.io',
+          type: 'did-communication',
+          recipientKeys: ['did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM'],
+          routingKeys: [],
+        },
+      ],
+    },
+    role: 'sender',
+    state: 'await-response',
+    reusable: false,
+  }
+  return JsonTransformer.fromJSON(json, OutOfBandRecord)
 }
 
 export function getTestCredential() {

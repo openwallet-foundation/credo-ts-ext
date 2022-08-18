@@ -539,6 +539,204 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"HandshakeProtocol": {
+				"enum": [
+					"https://didcomm.org/connections/1.0",
+					"https://didcomm.org/didexchange/1.0"
+				],
+				"type": "string"
+			},
+			"AgentMessage": {
+				"$ref": "#/components/schemas/Record_string.unknown_"
+			},
+			"KeyType": {
+				"enum": [
+					"ed25519",
+					"bls12381g1g2",
+					"bls12381g1",
+					"bls12381g2",
+					"x25519"
+				],
+				"type": "string"
+			},
+			"Key": {
+				"properties": {
+					"publicKey": {
+						"type": "string",
+						"format": "byte"
+					},
+					"keyType": {
+						"$ref": "#/components/schemas/KeyType"
+					}
+				},
+				"required": [
+					"publicKey",
+					"keyType"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Routing": {
+				"properties": {
+					"endpoints": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"recipientKey": {
+						"$ref": "#/components/schemas/Key"
+					},
+					"routingKeys": {
+						"items": {
+							"$ref": "#/components/schemas/Key"
+						},
+						"type": "array"
+					},
+					"mediatorId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"endpoints",
+					"recipientKey",
+					"routingKeys"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateOutOfBandInvitationConfig": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"goal": {
+						"type": "string"
+					},
+					"handshake": {
+						"type": "boolean"
+					},
+					"handshakeProtocols": {
+						"items": {
+							"$ref": "#/components/schemas/HandshakeProtocol"
+						},
+						"type": "array"
+					},
+					"messages": {
+						"items": {
+							"$ref": "#/components/schemas/AgentMessage"
+						},
+						"type": "array"
+					},
+					"multiUseInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"routing": {
+						"$ref": "#/components/schemas/Routing"
+					},
+					"appendedAttachments": {
+						"items": {
+							"$ref": "#/components/schemas/Attachment"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateLegacyInvitationConfig": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"multiUseInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"routing": {
+						"$ref": "#/components/schemas/Routing"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OutOfBandInvitation": {
+				"$ref": "#/components/schemas/Record_string.unknown_"
+			},
+			"ReceiveOutOfBandInvitationConfig": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"autoAcceptInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
+					},
+					"routing": {
+						"$ref": "#/components/schemas/Routing"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AcceptInvitationConfig": {
+				"properties": {
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
+					},
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"mediatorId": {
+						"type": "string"
+					},
+					"routing": {
+						"$ref": "#/components/schemas/Routing"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"PresentationPreviewAttributeOptions": {
 				"properties": {
 					"name": {
@@ -898,6 +1096,24 @@
 										"$ref": "#/components/schemas/BasicMessageRecord"
 									},
 									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"_tags": {
+													"role": "sender",
+													"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834"
+												},
+												"metadata": {},
+												"id": "74bcf865-1fdc-45b4-b517-9def02dfd25f",
+												"createdAt": "2022-08-18T08:38:40.216Z",
+												"content": "string",
+												"sentTime": "2022-08-18T08:38:40.216Z",
+												"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834"
+											}
+										]
+									}
 								}
 							}
 						}
@@ -2586,6 +2802,924 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/SchemaRequest"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob": {
+			"get": {
+				"operationId": "GetAllOutOfBandRecords",
+				"responses": {
+					"200": {
+						"description": "OutOfBandRecord[]",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Record_string.any_"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve all out of band records",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "invitationId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/oob/{outOfBandId}": {
+			"get": {
+				"operationId": "GetOutOfBandRecordById",
+				"responses": {
+					"200": {
+						"description": "OutOfBandRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+												"state": "await-response",
+												"role": "sender",
+												"recipientKeyFingerprints": [
+													"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+												]
+											},
+											"outOfBandInvitation": {
+												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+												"label": "Aries Test Agent",
+												"accept": [
+													"didcomm/aip1",
+													"didcomm/aip2;env=rfc19"
+												],
+												"handshake_protocols": [
+													"https://didcomm.org/didexchange/1.0",
+													"https://didcomm.org/connections/1.0"
+												],
+												"services": [
+													{
+														"id": "#inline-0",
+														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+														"type": "did-communication",
+														"recipientKeys": [
+															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+														],
+														"routingKeys": []
+													}
+												]
+											},
+											"metadata": {},
+											"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"reusable": false
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve an out of band record by id",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "outOfBandId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteOutOfBandRecord",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"error",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deletes an out of band record from the repository.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Record identifier",
+						"in": "path",
+						"name": "outOfBandId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/oob/create-invitation": {
+			"post": {
+				"operationId": "CreateInvitation",
+				"responses": {
+					"200": {
+						"description": "out-of-band record",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"invitationUrl": "string",
+											"invitation": {
+												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+												"label": "Aries Test Agent",
+												"accept": [
+													"didcomm/aip1",
+													"didcomm/aip2;env=rfc19"
+												],
+												"handshake_protocols": [
+													"https://didcomm.org/didexchange/1.0",
+													"https://didcomm.org/connections/1.0"
+												],
+												"services": [
+													{
+														"id": "#inline-0",
+														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+														"type": "did-communication",
+														"recipientKeys": [
+															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+														],
+														"routingKeys": []
+													}
+												]
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"error",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates an outbound out-of-band record containing out-of-band invitation message defined in\nAries RFC 0434: Out-of-Band Protocol 1.1.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOutOfBandInvitationConfig"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/create-legacy-invitation": {
+			"post": {
+				"operationId": "CreateLegacyInvitation",
+				"responses": {
+					"200": {
+						"description": "out-of-band record and invitation",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											},
+											"invitation": {
+												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+												"label": "Aries Test Agent",
+												"accept": [
+													"didcomm/aip1",
+													"didcomm/aip2;env=rfc19"
+												],
+												"handshake_protocols": [
+													"https://didcomm.org/didexchange/1.0",
+													"https://didcomm.org/connections/1.0"
+												],
+												"services": [
+													{
+														"id": "#inline-0",
+														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+														"type": "did-communication",
+														"recipientKeys": [
+															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+														],
+														"routingKeys": []
+													}
+												]
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"error",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates an outbound out-of-band record in the same way how `createInvitation` method does it,\nbut it also converts out-of-band invitation message to an \"legacy\" invitation message defined\nin RFC 0160: Connection Protocol and returns it together with out-of-band record.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "configuration of how a invitation should be created",
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateLegacyInvitationConfig",
+								"description": "configuration of how a invitation should be created"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/create-legacy-connectionless-invitation": {
+			"post": {
+				"operationId": "CreateLegacyConnectionlessInvitation",
+				"responses": {
+					"200": {
+						"description": "a message and a invitationUrl",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": {
+												"id": "lol",
+												"type": "lol"
+											},
+											"invitationUrl": "hi"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"error",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a new connectionless legacy invitation.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "configuration of how a connection invitation should be created",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"domain": {
+										"type": "string"
+									},
+									"message": {
+										"$ref": "#/components/schemas/AgentMessage"
+									},
+									"recordId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"domain",
+									"message",
+									"recordId"
+								],
+								"type": "object",
+								"description": "configuration of how a connection invitation should be created"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/receive-invitation": {
+			"post": {
+				"operationId": "ReceiveInvitation",
+				"responses": {
+					"200": {
+						"description": "out-of-band record and connection record if one has been created.",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											},
+											"connectionRecord": {
+												"_tags": {
+													"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+													"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+													"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+													"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+													"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+												},
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"error",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates inbound out-of-band record and assigns out-of-band invitation message to it if the\nmessage is valid.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"config": {
+										"$ref": "#/components/schemas/ReceiveOutOfBandInvitationConfig"
+									},
+									"invitation": {
+										"$ref": "#/components/schemas/OutOfBandInvitation"
+									}
+								},
+								"required": [
+									"config",
+									"invitation"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/receive-invitation-url": {
+			"post": {
+				"operationId": "ReceiveInvitationFromUrl",
+				"responses": {
+					"200": {
+						"description": "out-of-band record and connection record if one has been created.",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											},
+											"connectionRecord": {
+												"_tags": {
+													"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+													"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+													"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+													"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+													"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+												},
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"error",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates inbound out-of-band record and assigns out-of-band invitation message to it if the\nmessage is valid.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"config": {
+										"$ref": "#/components/schemas/ReceiveOutOfBandInvitationConfig"
+									},
+									"invitationUrl": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"config",
+									"invitationUrl"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/{outOfBandId}/accept-invitation": {
+			"post": {
+				"operationId": "AcceptInvitation",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											},
+											"connectionRecord": {
+												"_tags": {
+													"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+													"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+													"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+													"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+													"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+												},
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"error": {},
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"error",
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a connection invitation as invitee (by sending a connection request message) for the connection with the specified connection id.\nThis is not needed when auto accepting of connections is enabled.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "outOfBandId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AcceptInvitationConfig"
 							}
 						}
 					}

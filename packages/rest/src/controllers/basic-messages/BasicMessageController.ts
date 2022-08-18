@@ -1,10 +1,10 @@
-import type { BasicMessageRecord } from '@aries-framework/core'
+import type { BasicMessageRecord, BasicMessageStorageProps } from '@aries-framework/core'
 
 import { Agent, RecordNotFoundError } from '@aries-framework/core'
-import { Body, Controller, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RecordId } from '../examples'
+import { BasicMessageRecordExample, RecordId } from '../examples'
 
 @Tags('Basic Messages')
 @Route('/basic-messages')
@@ -23,6 +23,7 @@ export class BasicMessageController extends Controller {
    * @param connectionId Connection identifier
    * @returns BasicMessageRecord[]
    */
+  @Example<BasicMessageStorageProps[]>([BasicMessageRecordExample])
   @Get('/:connectionId')
   public async getBasicMessages(@Path('connectionId') connectionId: RecordId): Promise<BasicMessageRecord[]> {
     return await this.agent.basicMessages.findAllByQuery({ connectionId })
