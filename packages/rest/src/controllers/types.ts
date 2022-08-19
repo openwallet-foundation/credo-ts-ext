@@ -1,12 +1,15 @@
 import type {
+  Attachment,
   AutoAcceptCredential,
   CredentialFormatPayload,
+  HandshakeProtocol,
   IndyCredentialFormat,
   ProofRecord,
   ProtocolVersionType,
   V1CredentialService,
   V2CredentialService,
 } from '@aries-framework/core'
+import type { OutOfBandDidCommService } from '@aries-framework/core/build/modules/oob/domain/OutOfBandDidCommService'
 
 export interface AgentInfo {
   label: string
@@ -61,4 +64,17 @@ export interface AcceptCredentialRequestOptions {
   credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptRequest'>
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
+}
+
+export interface OutOfBandInvitationSchema {
+  '@id'?: string
+  '@type': string
+  label: string
+  goalCode?: string
+  goal?: string
+  accept?: string[]
+  handshake_protocols?: HandshakeProtocol[]
+  services: Array<OutOfBandDidCommService | string>
+  imageUrl?: string
+  appendedAttachments?: Attachment[]
 }

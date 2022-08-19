@@ -1,23 +1,38 @@
 import type { OutOfBandInvitationProps, OutOfBandRecordWithInvitationProps } from '../examples'
+import type { OutOfBandInvitationSchema } from '../types'
 import type {
   AgentMessage,
-  ConnectionRecord,
   ConnectionRecordProps,
-  OutOfBandInvitation,
   ReceiveOutOfBandInvitationConfig,
   Routing,
+  CreateOutOfBandInvitationConfig,
+  CreateLegacyInvitationConfig,
+  OutOfBandInvitationOptions,
 } from '@aries-framework/core'
 
-import {
-  Agent,
-  CreateOutOfBandInvitationConfig,
-  RecordNotFoundError,
-  CreateLegacyInvitationConfig,
-} from '@aries-framework/core'
+import { JsonTransformer, OutOfBandInvitation, Agent, RecordNotFoundError } from '@aries-framework/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { ConnectionRecordExample, outOfBandInvitationExample, outOfBandRecordExample, RecordId } from '../examples'
+
+type ChangeProp<Input, Old, New> = {
+  [Property in keyof Input]: Input[Property] extends Old
+    ? New
+    : Input[Property] extends Record<string, unknown>
+    ? ChangeProp<Input[Property], Old, New>
+    : Input[Property]
+}
+
+type Ay = ChangeProp<{ a: string; b: boolean }, string, boolean>
+
+interface ReceiveInvitationProps extends ReceiveOutOfBandInvitationConfig {
+  invitation: OutOfBandInvitationSchema
+}
+
+interface ReceiveInvitationByUrlProps extends ReceiveOutOfBandInvitationConfig {
+  invitationUrl: string
+}
 
 @Tags('Out Of Band')
 @Route('/oob')
@@ -77,10 +92,12 @@ export class OutOfBandController extends Controller {
   @Post('/create-invitation')
   public async createInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>,
-    @Body() invitationConfig?: CreateOutOfBandInvitationConfig
+    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing'>
   ) {
+    // routing prop removed because of issues with public key serialization
+
     try {
-      const oobRecord = await this.agent.oob.createInvitation(invitationConfig)
+      const oobRecord = await this.agent.oob.createInvitation(config)
       return {
         invitationUrl: oobRecord.outOfBandInvitation.toUrl({
           domain: this.agent.config.endpoints[0],
@@ -109,8 +126,10 @@ export class OutOfBandController extends Controller {
   @Post('/create-legacy-invitation')
   public async createLegacyInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>,
-    @Body() config?: CreateLegacyInvitationConfig
+    @Body() config?: Omit<CreateLegacyInvitationConfig, 'routing'>
   ) {
+    // routing prop removed because of issues with public key serialization
+
     try {
       const { outOfBandRecord, invitation } = await this.agent.oob.createLegacyInvitation(config)
       return {
@@ -169,14 +188,15 @@ export class OutOfBandController extends Controller {
   })
   @Post('/receive-invitation')
   public async receiveInvitation(
-    @Body() invitationRequest: { invitation: OutOfBandInvitation; config: ReceiveOutOfBandInvitationConfig },
+    @Body() invitationRequest: ReceiveInvitationProps,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
-    // TODO: ask how to merge this
-    const { invitation, config } = invitationRequest
+    const { invitation, ...config } = invitationRequest
+
+    const inv = JsonTransformer.fromJSON(invitation, OutOfBandInvitation)
 
     try {
-      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(invitation, config)
+      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(inv, config)
       return {
         outOfBandRecord: outOfBandRecord.toJSON(),
         connectionRecord: connectionRecord?.toJSON(),
@@ -200,11 +220,10 @@ export class OutOfBandController extends Controller {
   })
   @Post('/receive-invitation-url')
   public async receiveInvitationFromUrl(
-    @Body() invitationRequest: { invitationUrl: string; config: ReceiveOutOfBandInvitationConfig },
+    @Body() invitationRequest: ReceiveInvitationByUrlProps,
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
   ) {
-    // TODO: ask how to merge this
-    const { invitationUrl, config } = invitationRequest
+    const { invitationUrl, ...config } = invitationRequest
 
     try {
       const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitationFromUrl(invitationUrl, config)

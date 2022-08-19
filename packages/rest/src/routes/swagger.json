@@ -549,6 +549,182 @@
 			"AgentMessage": {
 				"$ref": "#/components/schemas/Record_string.unknown_"
 			},
+			"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"goal": {
+						"type": "string"
+					},
+					"handshake": {
+						"type": "boolean"
+					},
+					"handshakeProtocols": {
+						"items": {
+							"$ref": "#/components/schemas/HandshakeProtocol"
+						},
+						"type": "array"
+					},
+					"messages": {
+						"items": {
+							"$ref": "#/components/schemas/AgentMessage"
+						},
+						"type": "array"
+					},
+					"multiUseInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"appendedAttachments": {
+						"items": {
+							"$ref": "#/components/schemas/Attachment"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_CreateOutOfBandInvitationConfig.routing_": {
+				"$ref": "#/components/schemas/Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"multiUseInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_CreateLegacyInvitationConfig.routing_": {
+				"$ref": "#/components/schemas/Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"OutOfBandDidCommService": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"serviceEndpoint": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"recipientKeys": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"routingKeys": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"accept": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"serviceEndpoint",
+					"type",
+					"recipientKeys"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OutOfBandInvitationSchema": {
+				"properties": {
+					"@id": {
+						"type": "string"
+					},
+					"@type": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"goal": {
+						"type": "string"
+					},
+					"accept": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"handshake_protocols": {
+						"items": {
+							"$ref": "#/components/schemas/HandshakeProtocol"
+						},
+						"type": "array"
+					},
+					"services": {
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/components/schemas/OutOfBandDidCommService"
+								},
+								{
+									"type": "string"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"appendedAttachments": {
+						"items": {
+							"$ref": "#/components/schemas/Attachment"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"@type",
+					"label",
+					"services"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"KeyType": {
 				"enum": [
 					"ed25519",
@@ -605,85 +781,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CreateOutOfBandInvitationConfig": {
-				"properties": {
-					"label": {
-						"type": "string"
-					},
-					"alias": {
-						"type": "string"
-					},
-					"imageUrl": {
-						"type": "string"
-					},
-					"goalCode": {
-						"type": "string"
-					},
-					"goal": {
-						"type": "string"
-					},
-					"handshake": {
-						"type": "boolean"
-					},
-					"handshakeProtocols": {
-						"items": {
-							"$ref": "#/components/schemas/HandshakeProtocol"
-						},
-						"type": "array"
-					},
-					"messages": {
-						"items": {
-							"$ref": "#/components/schemas/AgentMessage"
-						},
-						"type": "array"
-					},
-					"multiUseInvitation": {
-						"type": "boolean"
-					},
-					"autoAcceptConnection": {
-						"type": "boolean"
-					},
-					"routing": {
-						"$ref": "#/components/schemas/Routing"
-					},
-					"appendedAttachments": {
-						"items": {
-							"$ref": "#/components/schemas/Attachment"
-						},
-						"type": "array"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CreateLegacyInvitationConfig": {
-				"properties": {
-					"label": {
-						"type": "string"
-					},
-					"alias": {
-						"type": "string"
-					},
-					"imageUrl": {
-						"type": "string"
-					},
-					"multiUseInvitation": {
-						"type": "boolean"
-					},
-					"autoAcceptConnection": {
-						"type": "boolean"
-					},
-					"routing": {
-						"$ref": "#/components/schemas/Routing"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"OutOfBandInvitation": {
-				"$ref": "#/components/schemas/Record_string.unknown_"
-			},
-			"ReceiveOutOfBandInvitationConfig": {
+			"ReceiveInvitationProps": {
 				"properties": {
 					"label": {
 						"type": "string"
@@ -705,8 +803,47 @@
 					},
 					"routing": {
 						"$ref": "#/components/schemas/Routing"
+					},
+					"invitation": {
+						"$ref": "#/components/schemas/OutOfBandInvitationSchema"
 					}
 				},
+				"required": [
+					"invitation"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReceiveInvitationByUrlProps": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"autoAcceptInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
+					},
+					"routing": {
+						"$ref": "#/components/schemas/Routing"
+					},
+					"invitationUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"invitationUrl"
+				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -3115,11 +3252,13 @@
 				"security": [],
 				"parameters": [],
 				"requestBody": {
+					"description": "configuration of how out-of-band invitation should be created",
 					"required": false,
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateOutOfBandInvitationConfig"
+								"$ref": "#/components/schemas/Omit_CreateOutOfBandInvitationConfig.routing_",
+								"description": "configuration of how out-of-band invitation should be created"
 							}
 						}
 					}
@@ -3239,7 +3378,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateLegacyInvitationConfig",
+								"$ref": "#/components/schemas/Omit_CreateLegacyInvitationConfig.routing_",
 								"description": "configuration of how a invitation should be created"
 							}
 						}
@@ -3448,19 +3587,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"config": {
-										"$ref": "#/components/schemas/ReceiveOutOfBandInvitationConfig"
-									},
-									"invitation": {
-										"$ref": "#/components/schemas/OutOfBandInvitation"
-									}
-								},
-								"required": [
-									"config",
-									"invitation"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/ReceiveInvitationProps"
 							}
 						}
 					}
@@ -3570,19 +3697,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"config": {
-										"$ref": "#/components/schemas/ReceiveOutOfBandInvitationConfig"
-									},
-									"invitationUrl": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"config",
-									"invitationUrl"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/ReceiveInvitationByUrlProps"
 							}
 						}
 					}

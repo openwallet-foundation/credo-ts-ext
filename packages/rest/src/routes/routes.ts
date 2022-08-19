@@ -305,6 +305,56 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"Record_string.unknown_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string"},"alias":{"dataType":"string"},"imageUrl":{"dataType":"string"},"goalCode":{"dataType":"string"},"goal":{"dataType":"string"},"handshake":{"dataType":"boolean"},"handshakeProtocols":{"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},"messages":{"dataType":"array","array":{"dataType":"refAlias","ref":"AgentMessage"}},"multiUseInvitation":{"dataType":"boolean"},"autoAcceptConnection":{"dataType":"boolean"},"appendedAttachments":{"dataType":"array","array":{"dataType":"refObject","ref":"Attachment"}}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Omit_CreateOutOfBandInvitationConfig.routing_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string"},"alias":{"dataType":"string"},"imageUrl":{"dataType":"string"},"multiUseInvitation":{"dataType":"boolean"},"autoAcceptConnection":{"dataType":"boolean"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Omit_CreateLegacyInvitationConfig.routing_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OutOfBandDidCommService": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"dataType":"string","required":true},
+            "serviceEndpoint": {"dataType":"string","required":true},
+            "type": {"dataType":"string","required":true},
+            "recipientKeys": {"dataType":"array","array":{"dataType":"string"},"required":true},
+            "routingKeys": {"dataType":"array","array":{"dataType":"string"}},
+            "accept": {"dataType":"array","array":{"dataType":"string"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "OutOfBandInvitationSchema": {
+        "dataType": "refObject",
+        "properties": {
+            "@id": {"dataType":"string"},
+            "@type": {"dataType":"string","required":true},
+            "label": {"dataType":"string","required":true},
+            "goalCode": {"dataType":"string"},
+            "goal": {"dataType":"string"},
+            "accept": {"dataType":"array","array":{"dataType":"string"}},
+            "handshake_protocols": {"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},
+            "services": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"ref":"OutOfBandDidCommService"},{"dataType":"string"}]},"required":true},
+            "imageUrl": {"dataType":"string"},
+            "appendedAttachments": {"dataType":"array","array":{"dataType":"refObject","ref":"Attachment"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "KeyType": {
         "dataType": "refEnum",
         "enums": ["ed25519","bls12381g1g2","bls12381g1","bls12381g2","x25519"],
@@ -330,44 +380,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateOutOfBandInvitationConfig": {
-        "dataType": "refObject",
-        "properties": {
-            "label": {"dataType":"string"},
-            "alias": {"dataType":"string"},
-            "imageUrl": {"dataType":"string"},
-            "goalCode": {"dataType":"string"},
-            "goal": {"dataType":"string"},
-            "handshake": {"dataType":"boolean"},
-            "handshakeProtocols": {"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},
-            "messages": {"dataType":"array","array":{"dataType":"refAlias","ref":"AgentMessage"}},
-            "multiUseInvitation": {"dataType":"boolean"},
-            "autoAcceptConnection": {"dataType":"boolean"},
-            "routing": {"ref":"Routing"},
-            "appendedAttachments": {"dataType":"array","array":{"dataType":"refObject","ref":"Attachment"}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CreateLegacyInvitationConfig": {
-        "dataType": "refObject",
-        "properties": {
-            "label": {"dataType":"string"},
-            "alias": {"dataType":"string"},
-            "imageUrl": {"dataType":"string"},
-            "multiUseInvitation": {"dataType":"boolean"},
-            "autoAcceptConnection": {"dataType":"boolean"},
-            "routing": {"ref":"Routing"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "OutOfBandInvitation": {
-        "dataType": "refAlias",
-        "type": {"ref":"Record_string.unknown_","validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ReceiveOutOfBandInvitationConfig": {
+    "ReceiveInvitationProps": {
         "dataType": "refObject",
         "properties": {
             "label": {"dataType":"string"},
@@ -377,6 +390,22 @@ const models: TsoaRoute.Models = {
             "autoAcceptConnection": {"dataType":"boolean"},
             "reuseConnection": {"dataType":"boolean"},
             "routing": {"ref":"Routing"},
+            "invitation": {"ref":"OutOfBandInvitationSchema","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ReceiveInvitationByUrlProps": {
+        "dataType": "refObject",
+        "properties": {
+            "label": {"dataType":"string"},
+            "alias": {"dataType":"string"},
+            "imageUrl": {"dataType":"string"},
+            "autoAcceptInvitation": {"dataType":"boolean"},
+            "autoAcceptConnection": {"dataType":"boolean"},
+            "reuseConnection": {"dataType":"boolean"},
+            "routing": {"ref":"Routing"},
+            "invitationUrl": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -1273,7 +1302,7 @@ export function RegisterRoutes(app: express.Router) {
             async function OutOfBandController_createInvitation(request: any, response: any, next: any) {
             const args = {
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
-                    invitationConfig: {"in":"body","name":"invitationConfig","ref":"CreateOutOfBandInvitationConfig"},
+                    config: {"in":"body","name":"config","ref":"Omit_CreateOutOfBandInvitationConfig.routing_"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1304,7 +1333,7 @@ export function RegisterRoutes(app: express.Router) {
             async function OutOfBandController_createLegacyInvitation(request: any, response: any, next: any) {
             const args = {
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
-                    config: {"in":"body","name":"config","ref":"CreateLegacyInvitationConfig"},
+                    config: {"in":"body","name":"config","ref":"Omit_CreateLegacyInvitationConfig.routing_"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1366,7 +1395,7 @@ export function RegisterRoutes(app: express.Router) {
 
             async function OutOfBandController_receiveInvitation(request: any, response: any, next: any) {
             const args = {
-                    invitationRequest: {"in":"body","name":"invitationRequest","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"config":{"ref":"ReceiveOutOfBandInvitationConfig","required":true},"invitation":{"ref":"OutOfBandInvitation","required":true}}},
+                    invitationRequest: {"in":"body","name":"invitationRequest","required":true,"ref":"ReceiveInvitationProps"},
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
             };
 
@@ -1397,7 +1426,7 @@ export function RegisterRoutes(app: express.Router) {
 
             async function OutOfBandController_receiveInvitationFromUrl(request: any, response: any, next: any) {
             const args = {
-                    invitationRequest: {"in":"body","name":"invitationRequest","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"config":{"ref":"ReceiveOutOfBandInvitationConfig","required":true},"invitationUrl":{"dataType":"string","required":true}}},
+                    invitationRequest: {"in":"body","name":"invitationRequest","required":true,"ref":"ReceiveInvitationByUrlProps"},
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
             };
 
