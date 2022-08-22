@@ -2,7 +2,7 @@ import type { RecordsState } from './recordUtils'
 import type { Agent, DidExchangeState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { ConnectionRecord } from '@aries-framework/core'
+import { ConnectionRecord, ConnectionType } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -17,10 +17,16 @@ import {
 
 const ConnectionContext = createContext<RecordsState<ConnectionRecord> | undefined>(undefined)
 
-export const useConnections = () => {
+export const useConnections = ( noMediators?: boolean ) => {
   const connectionContext = useContext(ConnectionContext)
   if (!connectionContext) {
     throw new Error('useConnections must be used within a ConnectionContextProvider')
+  }
+  if (noMediators) {
+    let filteredConnections = connectionContext.records.filter((record: ConnectionRecord) => {
+      return record.getTag('connectionType') !== ConnectionType.Mediator
+    })
+    return { loading: false, records: filteredConnections }
   }
   return connectionContext
 }

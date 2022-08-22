@@ -2,7 +2,7 @@
   "name": "@aries-framework/react-hooks",
   "main": "build/index",
   "types": "build/index",
-  "version": "0.3.0",
+  "version": "0.3.0-connectionType.0",
   "files": [
     "build"
   ],
@@ -28,7 +28,7 @@
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
-    "@aries-framework/core": "^0.2.0",
+    "@aries-framework/core": "file:aries-framework-core-v0.2.2-connectionType.1.tgz",
     "react": "^17.0.2",
     "rimraf": "~3.0.2",
     "typescript": "~4.4.2"
