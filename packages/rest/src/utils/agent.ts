@@ -28,7 +28,8 @@ export const setupAgent = async ({
   endpoints: string[]
   port: number
 }) => {
-  const logger = new TsLogger(LogLevel.off)
+  // Logger disabled because LogLevel.off doesn't work
+  // const logger = new TsLogger(LogLevel.off)
 
   const agent = new Agent(
     {
@@ -40,7 +41,7 @@ export const setupAgent = async ({
       autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
       walletConfig: { id: name, key: name },
       useLegacyDidSovPrefix: true,
-      logger: logger,
+      // logger: logger,
       indyLedgers: [
         {
           id: 'TestLedger',
