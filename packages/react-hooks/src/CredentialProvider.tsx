@@ -34,17 +34,14 @@ export const useCredentialByState = (
   state: CredentialState | CredentialState[],
   invertSearch = false
 ): CredentialExchangeRecord[] => {
-  let filters: CredentialState[] = []
-  const inputStates = typeof state === 'string' ? [state] : state
+  let states = typeof state === 'string' ? [state] : state
 
   if (invertSearch) {
-    filters = Object.values(CredentialState).filter((v) => !inputStates.includes(v))
-  } else {
-    filters = inputStates
+    states = Object.values(CredentialState).filter((v) => !states.includes(v))
   }
 
   const { records: credentials } = useCredentials()
-  const filteredCredentials = filters
+  const filteredCredentials = states
     .map((filterState: CredentialState) =>
       useMemo(() => credentials.filter((c: CredentialExchangeRecord) => c.state === filterState), [credentials, state])
     )
