@@ -43,7 +43,10 @@ export const useCredentialByState = (
   const { records: credentials } = useCredentials()
   const filteredCredentials = states
     .map((filterState: CredentialState) =>
-      useMemo(() => credentials.filter((c: CredentialExchangeRecord) => c.state === filterState), [credentials, state])
+      useMemo(
+        () => credentials.filter((c: CredentialExchangeRecord) => c.state === filterState),
+        [credentials, filterState]
+      )
     )
     .flat()
   return filteredCredentials

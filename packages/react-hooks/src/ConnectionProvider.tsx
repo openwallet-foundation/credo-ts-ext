@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, DidExchangeState } from '@aries-framework/core'
+import type { Agent } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { ConnectionRecord } from '@aries-framework/core'
+import { DidExchangeState, ConnectionRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -30,12 +30,22 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-export const useConnectionByState = (state: DidExchangeState): ConnectionRecord[] => {
+export const useConnectionByState = (
+  state: DidExchangeState | DidExchangeState[],
+  invertSearch = false
+): ConnectionRecord[] => {
+  let states = typeof state === 'string' ? [state] : state
+
+  if (invertSearch) {
+    states = Object.values(DidExchangeState).filter((v) => !states.includes(v))
+  }
   const { records: connections } = useConnections()
-  const filteredConnections = useMemo(
-    () => connections.filter((c: ConnectionRecord) => c.state === state),
-    [connections, state]
-  )
+
+  const filteredConnections = states
+    .map((filterState: DidExchangeState) =>
+      useMemo(() => connections.filter((c: ConnectionRecord) => c.state === filterState), [connections, filterState])
+    )
+    .flat()
   return filteredConnections
 }
 
