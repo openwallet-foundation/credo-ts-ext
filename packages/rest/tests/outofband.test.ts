@@ -23,8 +23,8 @@ describe('OutOfBandController', () => {
   let connectionRecord: ConnectionRecord
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Connection REST Agent Test Alice', 3014)
-    bobAgent = await getTestAgent('Connection REST Agent Test Bob', 3015)
+    aliceAgent = await getTestAgent('OutOfBand REST Agent Test Alice', 3014)
+    bobAgent = await getTestAgent('OutOfBand REST Agent Test Bob', 3015)
     app = await setupServer(bobAgent, { port: 3000 })
     outOfBandRecord = getTestOutOfBandRecord()
     outOfBandInvitation = getTestOutOfBandInvitation()
