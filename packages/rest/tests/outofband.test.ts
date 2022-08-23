@@ -1,4 +1,4 @@
-import type { Agent, OutOfBandInvitation, OutOfBandRecord, ConnectionRecord } from '@aries-framework/core'
+import type { Agent, OutOfBandRecord, ConnectionRecord, OutOfBandInvitation } from '@aries-framework/core'
 import type { Express } from 'express'
 
 import { AgentMessage } from '@aries-framework/core'
@@ -14,7 +14,7 @@ import {
   objectToJson,
 } from './utils/helpers'
 
-describe('ConnectionController', () => {
+describe('OutOfBandController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
@@ -204,7 +204,7 @@ describe('ConnectionController', () => {
     })
   })
 
-  xdescribe('Receive out of band invitation', () => {
+  describe('Receive out of band invitation', () => {
     test('should return out of band invitation', async () => {
       const spy = jest.spyOn(bobAgent.oob, 'receiveInvitation').mockResolvedValueOnce({
         outOfBandRecord: outOfBandRecord,
@@ -237,14 +237,27 @@ describe('ConnectionController', () => {
 
       const response = await request(app)
         .post('/oob/receive-invitation')
-        .send({ invitation: outOfBandInvitation, ...params })
+        .send({
+          invitation: outOfBandInvitation,
+          ...params,
+        })
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(params)
+      expect(spy).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          label: params.label,
+          alias: params.alias,
+          imageUrl: params.imageUrl,
+          autoAcceptInvitation: params.autoAcceptInvitation,
+          autoAcceptConnection: params.autoAcceptConnection,
+          reuseConnection: params.reuseConnection,
+        })
+      )
     })
   })
 
-  xdescribe('Receive out of band invitation by url', () => {
+  describe('Receive out of band invitation by url', () => {
     test('should return out of band invitation', async () => {
       const spy = jest.spyOn(bobAgent.oob, 'receiveInvitationFromUrl').mockResolvedValueOnce({
         outOfBandRecord: outOfBandRecord,
@@ -254,7 +267,7 @@ describe('ConnectionController', () => {
 
       const response = await request(app)
         .post('/oob/receive-invitation-url')
-        .send({ invitation: 'https://example.com/test' })
+        .send({ invitationUrl: 'https://example.com/test' })
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(objectToJson(await getResult()))
@@ -280,11 +293,21 @@ describe('ConnectionController', () => {
         .send({ invitationUrl: 'https://example.com/test', ...params })
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(params)
+      expect(spy).toHaveBeenCalledWith(
+        expect.stringMatching('https://example.com/test'),
+        expect.objectContaining({
+          label: params.label,
+          alias: params.alias,
+          imageUrl: params.imageUrl,
+          autoAcceptInvitation: params.autoAcceptInvitation,
+          autoAcceptConnection: params.autoAcceptConnection,
+          reuseConnection: params.reuseConnection,
+        })
+      )
     })
   })
 
-  xdescribe('Accept out of band invitation', () => {
+  describe('Accept out of band invitation', () => {
     test('should return record from accepted invitation', async () => {
       const spy = jest.spyOn(bobAgent.oob, 'acceptInvitation').mockResolvedValueOnce({
         outOfBandRecord: outOfBandRecord,
@@ -330,7 +353,7 @@ describe('ConnectionController', () => {
         .send(params)
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(params)
+      expect(spy).toHaveBeenCalledWith('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', params)
     })
     test('should throw 404 if out of band record is not found', async () => {
       const response = await request(app).post('/oob/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-invitation')

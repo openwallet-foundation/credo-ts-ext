@@ -3399,10 +3399,10 @@
 									"Example 1": {
 										"value": {
 											"message": {
-												"id": "lol",
-												"type": "lol"
+												"id": "eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00",
+												"type": "https://didcomm.org/connections/1.0/invitation"
 											},
-											"invitationUrl": "hi"
+											"invitationUrl": "http://example.com/invitation_url"
 										}
 									}
 								}

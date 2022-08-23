@@ -1,38 +1,17 @@
 import type { OutOfBandInvitationProps, OutOfBandRecordWithInvitationProps } from '../examples'
-import type { OutOfBandInvitationSchema } from '../types'
 import type {
   AgentMessage,
   ConnectionRecordProps,
-  ReceiveOutOfBandInvitationConfig,
-  Routing,
   CreateOutOfBandInvitationConfig,
   CreateLegacyInvitationConfig,
-  OutOfBandInvitationOptions,
 } from '@aries-framework/core'
 
-import { JsonTransformer, OutOfBandInvitation, Agent, RecordNotFoundError } from '@aries-framework/core'
+import { OutOfBandInvitation, Agent, RecordNotFoundError } from '@aries-framework/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { ConnectionRecordExample, outOfBandInvitationExample, outOfBandRecordExample, RecordId } from '../examples'
-
-type ChangeProp<Input, Old, New> = {
-  [Property in keyof Input]: Input[Property] extends Old
-    ? New
-    : Input[Property] extends Record<string, unknown>
-    ? ChangeProp<Input[Property], Old, New>
-    : Input[Property]
-}
-
-type Ay = ChangeProp<{ a: string; b: boolean }, string, boolean>
-
-interface ReceiveInvitationProps extends ReceiveOutOfBandInvitationConfig {
-  invitation: OutOfBandInvitationSchema
-}
-
-interface ReceiveInvitationByUrlProps extends ReceiveOutOfBandInvitationConfig {
-  invitationUrl: string
-}
+import { AcceptInvitationConfig, ReceiveInvitationByUrlProps, ReceiveInvitationProps } from '../types'
 
 @Tags('Out Of Band')
 @Route('/oob')
@@ -92,10 +71,8 @@ export class OutOfBandController extends Controller {
   @Post('/create-invitation')
   public async createInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>,
-    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing'>
+    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing'> // routing prop removed because of issues with public key serialization
   ) {
-    // routing prop removed because of issues with public key serialization
-
     try {
       const oobRecord = await this.agent.oob.createInvitation(config)
       return {
@@ -126,10 +103,8 @@ export class OutOfBandController extends Controller {
   @Post('/create-legacy-invitation')
   public async createLegacyInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>,
-    @Body() config?: Omit<CreateLegacyInvitationConfig, 'routing'>
+    @Body() config?: Omit<CreateLegacyInvitationConfig, 'routing'> // routing prop removed because of issues with public key serialization
   ) {
-    // routing prop removed because of issues with public key serialization
-
     try {
       const { outOfBandRecord, invitation } = await this.agent.oob.createLegacyInvitation(config)
       return {
@@ -150,8 +125,8 @@ export class OutOfBandController extends Controller {
    * @returns a message and a invitationUrl
    */
   @Example<{ message: Pick<AgentMessage, 'id' | 'type'>; invitationUrl: string }>({
-    message: { id: 'lol', type: 'lol' },
-    invitationUrl: 'hi',
+    message: { id: 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00', type: 'https://didcomm.org/connections/1.0/invitation' },
+    invitationUrl: 'http://example.com/invitation_url',
   })
   @Post('/create-legacy-connectionless-invitation')
   public async createLegacyConnectionlessInvitation(
@@ -193,7 +168,7 @@ export class OutOfBandController extends Controller {
   ) {
     const { invitation, ...config } = invitationRequest
 
-    const inv = JsonTransformer.fromJSON(invitation, OutOfBandInvitation)
+    const inv = new OutOfBandInvitation({ ...invitation, handshakeProtocols: invitation.handshake_protocols })
 
     try {
       const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(inv, config)
@@ -292,16 +267,4 @@ export class OutOfBandController extends Controller {
       return internalServerError(500, { message: 'something went wrong', error: error })
     }
   }
-
-  // this.agent.oob.deleteById
-}
-
-interface AcceptInvitationConfig {
-  autoAcceptConnection?: boolean
-  reuseConnection?: boolean
-  label?: string
-  alias?: string
-  imageUrl?: string
-  mediatorId?: string
-  routing?: Routing
 }

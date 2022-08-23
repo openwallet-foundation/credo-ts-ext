@@ -245,9 +245,7 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptCredential').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const response = await request(app)
-        .post(`/credentials/accept-credential`)
-        .send({ credentialRecordId: testCredential.id })
+      const response = await request(app).post(`/credentials/${testCredential.id}/accept-credential`)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)

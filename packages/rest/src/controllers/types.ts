@@ -6,6 +6,8 @@ import type {
   IndyCredentialFormat,
   ProofRecord,
   ProtocolVersionType,
+  ReceiveOutOfBandInvitationConfig,
+  Routing,
   V1CredentialService,
   V2CredentialService,
 } from '@aries-framework/core'
@@ -66,6 +68,24 @@ export interface AcceptCredentialRequestOptions {
   comment?: string
 }
 
+export interface ReceiveInvitationProps extends ReceiveOutOfBandInvitationConfig {
+  invitation: OutOfBandInvitationSchema
+}
+
+export interface ReceiveInvitationByUrlProps extends ReceiveOutOfBandInvitationConfig {
+  invitationUrl: string
+}
+
+export interface AcceptInvitationConfig {
+  autoAcceptConnection?: boolean
+  reuseConnection?: boolean
+  label?: string
+  alias?: string
+  imageUrl?: string
+  mediatorId?: string
+  routing?: Routing
+}
+
 export interface OutOfBandInvitationSchema {
   '@id'?: string
   '@type': string
@@ -75,6 +95,18 @@ export interface OutOfBandInvitationSchema {
   accept?: string[]
   handshake_protocols?: HandshakeProtocol[]
   services: Array<OutOfBandDidCommService | string>
+  imageUrl?: string
+  appendedAttachments?: Attachment[]
+}
+
+export interface ConnectionInvitationSchema {
+  id?: string
+  '@type': string
+  label: string
+  did?: string
+  recipientKeys?: string[]
+  serviceEndpoint?: string
+  routingKeys?: string[]
   imageUrl?: string
   appendedAttachments?: Attachment[]
 }
