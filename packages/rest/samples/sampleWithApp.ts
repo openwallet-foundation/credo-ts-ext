@@ -1,5 +1,6 @@
 import type { ServerConfig } from '../src/utils/ServerConfig'
 
+import { AgentConfig } from '@aries-framework/core'
 import bodyParser from 'body-parser'
 import express from 'express'
 import { connect } from 'ngrok'
@@ -20,8 +21,10 @@ const run = async () => {
   const app = express()
   const jsonParser = bodyParser.json()
 
-  app.post('/greeting/:name', jsonParser, (req, res) => {
-    res.send(`Hello ${req.params.name}!`)
+  app.post('/greeting', jsonParser, (req, res) => {
+    const config = agent.injectionContainer.resolve(AgentConfig)
+
+    res.send(`Hello, ${config.label}!`)
   })
 
   const conf: ServerConfig = {

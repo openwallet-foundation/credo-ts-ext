@@ -33,10 +33,10 @@ export class ProofController extends Controller {
   @Example<ProofRecordProps[]>([ProofRecordExample])
   @Get('/')
   public async getAllProofs(@Query('threadId') threadId?: string) {
-    const proofs = await this.agent.proofs.getAll()
-    if (threadId) {
-      return proofs.flatMap((proof) => (proof.threadId === threadId ? proof.toJSON() : []))
-    }
+    let proofs = await this.agent.proofs.getAll()
+
+    if (threadId) proofs = proofs.filter((p) => p.threadId === threadId)
+
     return proofs.map((proof) => proof.toJSON())
   }
 
@@ -50,7 +50,7 @@ export class ProofController extends Controller {
   public async getProofById(
     @Path('proofRecordId') proofRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const proof = await this.agent.proofs.getById(proofRecordId)
@@ -61,7 +61,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -74,7 +74,7 @@ export class ProofController extends Controller {
   public async deleteProof(
     @Path('proofRecordId') proofRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       this.setStatus(204)
@@ -85,7 +85,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -100,7 +100,7 @@ export class ProofController extends Controller {
   public async proposeProof(
     @Body() proposal: ProofProposalRequest,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     const { attributes, predicates, connectionId, ...proposalOptions } = proposal
 
@@ -115,7 +115,7 @@ export class ProofController extends Controller {
           reason: `connection with connectionId "${connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -132,7 +132,7 @@ export class ProofController extends Controller {
     @Path('proofRecordId') proofRecordId: string,
     @Body() proposal: AcceptProofProposalRequest,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const proof = await this.agent.proofs.acceptProposal(proofRecordId, proposal)
@@ -143,7 +143,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -175,7 +175,7 @@ export class ProofController extends Controller {
   public async requestProof(
     @Body() request: ProofPresentationRequest,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     const { connectionId, proofRequest, ...requestOptions } = request
     try {
@@ -187,7 +187,7 @@ export class ProofController extends Controller {
           reason: `connection with connectionId "${connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -204,7 +204,7 @@ export class ProofController extends Controller {
     @Path('proofRecordId') proofRecordId: string,
     @Body() request: PresentationProofRequest,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const { filterByPresentationPreview, comment } = request
@@ -226,7 +226,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -241,7 +241,7 @@ export class ProofController extends Controller {
   public async acceptPresentation(
     @Path('proofRecordId') proofRecordId: string,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const proof = await this.agent.proofs.acceptPresentation(proofRecordId)
@@ -253,7 +253,7 @@ export class ProofController extends Controller {
           reason: `proof with proofRecordId "${proofRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 }

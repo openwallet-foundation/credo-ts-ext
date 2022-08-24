@@ -1308,13 +1308,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -1901,8 +1899,13 @@
 			"delete": {
 				"operationId": "DeleteCredential",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
 					},
 					"404": {
 						"description": "",
@@ -3014,11 +3017,12 @@
 				"security": [],
 				"parameters": [
 					{
+						"description": "invitation identifier",
 						"in": "query",
 						"name": "invitationId",
 						"required": false,
 						"schema": {
-							"type": "string"
+							"$ref": "#/components/schemas/RecordId"
 						}
 					}
 				]
@@ -3850,7 +3854,9 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"items": {},
+									"items": {
+										"$ref": "#/components/schemas/Record_string.any_"
+									},
 									"type": "array"
 								},
 								"examples": {

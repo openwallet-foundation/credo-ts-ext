@@ -33,7 +33,7 @@ export class CredentialDefinitionController extends Controller {
     @Path('credentialDefinitionId') credentialDefinitionId: CredentialDefinitionId,
     @Res() badRequestError: TsoaResponse<400, { reason: string }>,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
@@ -49,7 +49,7 @@ export class CredentialDefinitionController extends Controller {
           })
         }
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -64,7 +64,7 @@ export class CredentialDefinitionController extends Controller {
   public async createCredentialDefinition(
     @Body() credentialDefinitionRequest: CredentialDefinitionRequest,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const schema = await this.agent.ledger.getSchema(credentialDefinitionRequest.schemaId)
@@ -81,7 +81,7 @@ export class CredentialDefinitionController extends Controller {
         })
       }
 
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 }

@@ -633,7 +633,7 @@ export function RegisterRoutes(app: express.Router) {
                     connectionId: {"in":"path","name":"connectionId","required":true,"ref":"RecordId"},
                     request: {"in":"body","name":"request","required":true,"ref":"Record_content.string_"},
                     notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
-                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"error":{"dataType":"any","required":true},"message":{"dataType":"string","required":true}}},
+                    internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}}},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -1240,7 +1240,7 @@ export function RegisterRoutes(app: express.Router) {
 
             async function OutOfBandController_getAllOutOfBandRecords(request: any, response: any, next: any) {
             const args = {
-                    invitationId: {"in":"query","name":"invitationId","dataType":"string"},
+                    invitationId: {"in":"query","name":"invitationId","ref":"RecordId"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

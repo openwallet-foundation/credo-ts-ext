@@ -47,7 +47,7 @@ export class CredentialController extends Controller {
   public async getCredentialById(
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const credential = await this.agent.credentials.getById(credentialRecordId)
@@ -58,7 +58,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -71,8 +71,8 @@ export class CredentialController extends Controller {
   public async deleteCredential(
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
-  ): Promise<void> {
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
+  ) {
     try {
       this.setStatus(204)
       await this.agent.credentials.deleteById(credentialRecordId)
@@ -82,7 +82,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -98,7 +98,7 @@ export class CredentialController extends Controller {
   public async proposeCredential(
     @Body() options: ProposeCredentialOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const credential = await this.agent.credentials.proposeCredential(options)
@@ -109,7 +109,7 @@ export class CredentialController extends Controller {
           reason: `connection with connection record id "${options.connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -126,7 +126,7 @@ export class CredentialController extends Controller {
     @Body()
     options: AcceptCredentialProposalOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const credential = await this.agent.credentials.acceptProposal(options)
@@ -138,7 +138,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -154,7 +154,7 @@ export class CredentialController extends Controller {
   public async offerCredential(
     @Body() options: OfferCredentialOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const credential = await this.agent.credentials.offerCredential(options)
@@ -165,7 +165,7 @@ export class CredentialController extends Controller {
           reason: `connection with connection record id "${options.connectionId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -181,7 +181,7 @@ export class CredentialController extends Controller {
   public async acceptOffer(
     @Body() options: AcceptCredentialOfferOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const credential = await this.agent.credentials.acceptOffer(options)
@@ -192,7 +192,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -208,7 +208,7 @@ export class CredentialController extends Controller {
   public async acceptRequest(
     @Body() options: AcceptCredentialRequestOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const credential = await this.agent.credentials.acceptRequest(options)
@@ -219,7 +219,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -235,7 +235,7 @@ export class CredentialController extends Controller {
   public async acceptCredential(
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const credential = await this.agent.credentials.acceptCredential({ credentialRecordId: credentialRecordId })
@@ -246,7 +246,7 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 }

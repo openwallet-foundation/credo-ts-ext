@@ -26,12 +26,12 @@ export class OutOfBandController extends Controller {
 
   /**
    * Retrieve all out of band records
-   * @param recordId record identifier
+   * @param invitationId invitation identifier
    * @returns OutOfBandRecord[]
    */
   @Example<OutOfBandRecordWithInvitationProps[]>([outOfBandRecordExample])
   @Get()
-  public async getAllOutOfBandRecords(@Query('invitationId') invitationId?: string) {
+  public async getAllOutOfBandRecords(@Query('invitationId') invitationId?: RecordId) {
     let outOfBandRecords = await this.agent.oob.getAll()
 
     if (invitationId) outOfBandRecords = outOfBandRecords.filter((o) => o.outOfBandInvitation.id === invitationId)
@@ -70,7 +70,7 @@ export class OutOfBandController extends Controller {
   })
   @Post('/create-invitation')
   public async createInvitation(
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
     @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing'> // routing prop removed because of issues with public key serialization
   ) {
     try {
@@ -84,7 +84,7 @@ export class OutOfBandController extends Controller {
         }),
       }
     } catch (error) {
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -102,7 +102,7 @@ export class OutOfBandController extends Controller {
   })
   @Post('/create-legacy-invitation')
   public async createLegacyInvitation(
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
     @Body() config?: Omit<CreateLegacyInvitationConfig, 'routing'> // routing prop removed because of issues with public key serialization
   ) {
     try {
@@ -114,7 +114,7 @@ export class OutOfBandController extends Controller {
         }),
       }
     } catch (error) {
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -137,7 +137,7 @@ export class OutOfBandController extends Controller {
       domain: string
     },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       return await this.agent.oob.createLegacyConnectionlessInvitation(config)
@@ -145,7 +145,7 @@ export class OutOfBandController extends Controller {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, { reason: `connection with connection id "${config.recordId}" not found.` })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -164,20 +164,20 @@ export class OutOfBandController extends Controller {
   @Post('/receive-invitation')
   public async receiveInvitation(
     @Body() invitationRequest: ReceiveInvitationProps,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     const { invitation, ...config } = invitationRequest
 
-    const inv = new OutOfBandInvitation({ ...invitation, handshakeProtocols: invitation.handshake_protocols })
-
     try {
-      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(inv, config)
+      const invite = new OutOfBandInvitation({ ...invitation, handshakeProtocols: invitation.handshake_protocols })
+      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(invite, config)
+
       return {
         outOfBandRecord: outOfBandRecord.toJSON(),
         connectionRecord: connectionRecord?.toJSON(),
       }
     } catch (error) {
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -196,7 +196,7 @@ export class OutOfBandController extends Controller {
   @Post('/receive-invitation-url')
   public async receiveInvitationFromUrl(
     @Body() invitationRequest: ReceiveInvitationByUrlProps,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     const { invitationUrl, ...config } = invitationRequest
 
@@ -207,7 +207,7 @@ export class OutOfBandController extends Controller {
         connectionRecord: connectionRecord?.toJSON(),
       }
     } catch (error) {
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -224,7 +224,7 @@ export class OutOfBandController extends Controller {
     @Path('outOfBandId') outOfBandId: RecordId,
     @Body() acceptInvitationConfig: AcceptInvitationConfig,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const { outOfBandRecord, connectionRecord } = await this.agent.oob.acceptInvitation(
@@ -242,7 +242,7 @@ export class OutOfBandController extends Controller {
           reason: `mediator with mediatorId ${acceptInvitationConfig?.mediatorId} not found`,
         })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
@@ -255,7 +255,7 @@ export class OutOfBandController extends Controller {
   public async deleteOutOfBandRecord(
     @Path('outOfBandId') outOfBandId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       this.setStatus(204)
@@ -264,7 +264,7 @@ export class OutOfBandController extends Controller {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, { reason: `Out of band record with id "${outOfBandId}" not found.` })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 }

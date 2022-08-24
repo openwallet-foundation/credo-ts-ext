@@ -40,7 +40,7 @@ export class BasicMessageController extends Controller {
     @Path('connectionId') connectionId: RecordId,
     @Body() request: Record<'content', string>,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string; error: unknown }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       this.setStatus(204)
@@ -49,7 +49,7 @@ export class BasicMessageController extends Controller {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
       }
-      return internalServerError(500, { message: 'something went wrong', error: error })
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 }
