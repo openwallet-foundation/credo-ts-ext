@@ -62,7 +62,7 @@ export class OutOfBandController extends Controller {
    * Creates an outbound out-of-band record containing out-of-band invitation message defined in
    * Aries RFC 0434: Out-of-Band Protocol 1.1.
    * @param config configuration of how out-of-band invitation should be created
-   * @returns out-of-band record
+   * @returns Out of band record
    */
   @Example<{ invitationUrl: string; invitation: OutOfBandInvitationProps }>({
     invitationUrl: 'string',
