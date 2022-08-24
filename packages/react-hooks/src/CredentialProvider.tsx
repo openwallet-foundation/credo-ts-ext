@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, CredentialState } from '@aries-framework/core'
+import type { Agent } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { CredentialExchangeRecord } from '@aries-framework/core'
+import { CredentialState, CredentialExchangeRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -30,12 +30,25 @@ export const useCredentialById = (id: string): CredentialExchangeRecord | undefi
   return credentials.find((c: CredentialExchangeRecord) => c.id === id)
 }
 
-export const useCredentialByState = (state: CredentialState): CredentialExchangeRecord[] => {
+export const useCredentialByState = (
+  state: CredentialState | CredentialState[],
+  invertSearch = false
+): CredentialExchangeRecord[] => {
+  let states = typeof state === 'string' ? [state] : state
+
+  if (invertSearch) {
+    states = Object.values(CredentialState).filter((v) => !states.includes(v))
+  }
+
   const { records: credentials } = useCredentials()
-  const filteredCredentials = useMemo(
-    () => credentials.filter((c: CredentialExchangeRecord) => c.state === state),
-    [credentials, state]
-  )
+  const filteredCredentials = states
+    .map((filterState: CredentialState) =>
+      useMemo(
+        () => credentials.filter((c: CredentialExchangeRecord) => c.state === filterState),
+        [credentials, filterState]
+      )
+    )
+    .flat()
   return filteredCredentials
 }
 
