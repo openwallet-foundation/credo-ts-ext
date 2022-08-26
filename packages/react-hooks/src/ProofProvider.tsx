@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, ProofState } from '@aries-framework/core'
+import type { Agent } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { ProofRecord } from '@aries-framework/core'
+import { ProofState, ProofRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -26,13 +26,23 @@ export const useProofs = () => {
 }
 
 export const useProofById = (id: string): ProofRecord | undefined => {
-  const { records: records: proofs } = useProofs()
+  const { records: proofs } = useProofs()
   return proofs.find((p: ProofRecord) => p.id === id)
 }
 
-export const useProofByState = (state: ProofState): ProofRecord[] => {
+export const useProofByState = (state: ProofState | ProofState[], invertSearch = false): ProofRecord[] => {
+  let states = typeof state === 'string' ? [state] : state
+
+  if (invertSearch) {
+    states = Object.values(ProofState).filter((v) => !states.includes(v))
+  }
+
   const { records: proofs } = useProofs()
-  const filteredProofs = useMemo(() => proofs.filter((p: ProofRecord) => p.state === state), [proofs, state])
+  const filteredProofs = states
+    .map((filterState: ProofState) =>
+      useMemo(() => proofs.filter((p: ProofRecord) => p.state === filterState), [proofs, filterState])
+    )
+    .flat()
   return filteredProofs
 }
 
