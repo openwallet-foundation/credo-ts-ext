@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 import type { ServerConfig } from './utils/ServerConfig'
 import type { Response as ExResponse, Request as ExRequest, NextFunction } from 'express'
+import type { Exception } from 'tsoa'
 
 import { Agent } from '@aries-framework/core'
 import bodyParser from 'body-parser'
@@ -64,7 +65,16 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
         details: err?.fields,
       })
     }
+
     if (err instanceof Error) {
+      const exceptionError = err as Exception
+      if (exceptionError.status === 400) {
+        return res.status(400).json({
+          message: `Bad Request`,
+          details: err.message,
+        })
+      }
+
       agent.config.logger.error('Internal Server Error.', err)
       return res.status(500).json({
         message: 'Internal Server Error. Check server logging.',

@@ -1544,13 +1544,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -1632,13 +1630,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -1720,13 +1716,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -1865,13 +1859,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -1931,13 +1923,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2023,13 +2013,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2116,13 +2104,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2209,13 +2195,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2302,13 +2286,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2395,13 +2377,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2488,13 +2468,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2610,13 +2588,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2714,13 +2690,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2833,13 +2807,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -2915,13 +2887,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3152,13 +3122,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3190,7 +3158,7 @@
 				"operationId": "CreateInvitation",
 				"responses": {
 					"200": {
-						"description": "out-of-band record",
+						"description": "Out of band record",
 						"content": {
 							"application/json": {
 								"schema": {},
@@ -3234,13 +3202,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3355,13 +3321,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3437,13 +3401,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3565,13 +3527,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3675,13 +3635,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3803,13 +3761,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3929,13 +3885,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -3995,13 +3949,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -4063,13 +4015,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -4132,13 +4082,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -4243,13 +4191,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -4312,13 +4258,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
@@ -4390,13 +4334,11 @@
 							"application/json": {
 								"schema": {
 									"properties": {
-										"error": {},
 										"message": {
 											"type": "string"
 										}
 									},
 									"required": [
-										"error",
 										"message"
 									],
 									"type": "object"
