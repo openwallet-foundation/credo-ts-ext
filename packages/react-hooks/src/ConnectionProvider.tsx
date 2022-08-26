@@ -17,6 +17,12 @@ import {
 
 const ConnectionContext = createContext<RecordsState<ConnectionRecord> | undefined>(undefined)
 
+/**
+ * This method retreives the connection context for the current agent.
+ * From this you can access all connection records for the agent.
+ * @param noMediators Optional boolean to filter out mediators from the returned connection context, defualts to false
+ * @returns a connection context containing information about the agents connections
+ */
 export const useConnections = ( noMediators?: boolean ) => {
   const connectionContext = useContext(ConnectionContext)
   if (!connectionContext) {
