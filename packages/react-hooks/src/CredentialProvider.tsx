@@ -25,9 +25,9 @@ export const useCredentials = () => {
   return credentialContext
 }
 
-export const useCredentialById = (id: string): CredentialExchangeRecord | undefined => {
-  const { records: credentials } = useCredentials()
-  return credentials.find((c: CredentialExchangeRecord) => c.id === id)
+export const useCredentialById = (id: string): CredentialExchangeExchangeRecord | undefined => {
+  const { records: records: credentials } = useCredentials()
+  return credentials.find((c: CredentialExchangeExchangeRecord) => c.id === id)
 }
 
 export const useCredentialByState = (state: CredentialState): CredentialExchangeRecord[] => {

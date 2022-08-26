@@ -26,7 +26,7 @@ export const useProofs = () => {
 }
 
 export const useProofById = (id: string): ProofRecord | undefined => {
-  const { records: proofs } = useProofs()
+  const { records: records: proofs } = useProofs()
   return proofs.find((p: ProofRecord) => p.id === id)
 }
 

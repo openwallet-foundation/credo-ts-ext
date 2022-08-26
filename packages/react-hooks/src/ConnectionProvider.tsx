@@ -26,7 +26,7 @@ export const useConnections = () => {
 }
 
 export const useConnectionById = (id: string): ConnectionRecord | undefined => {
-  const { records: connections } = useConnections()
+  const { records: records: connections } = useConnections()
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 

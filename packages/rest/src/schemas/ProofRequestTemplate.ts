@@ -6,6 +6,7 @@ export class ProofRequestTemplate {
   @ValidateNested()
   @Type(() => ProofRequest)
   @IsInstance(ProofRequest)
+  @IsInstance(ProofRequest)
   public proofRequest!: ProofRequest
 
   @IsOptional()
