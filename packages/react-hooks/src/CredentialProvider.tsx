@@ -30,26 +30,32 @@ export const useCredentialById = (id: string): CredentialExchangeRecord | undefi
   return credentials.find((c: CredentialExchangeRecord) => c.id === id)
 }
 
-export const useCredentialByState = (state: CredentialState | CredentialState[]): CredentialExchangeRecord[] => {
-  const states = typeof state === 'string' ? [state] : state
+export const useCredentialsByState = (state: CredentialState | CredentialState[]): CredentialExchangeRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: credentials } = useCredentials()
-  const filteredCredentials = credentials.filter((r: CredentialExchangeRecord) =>
-    useMemo(() => {
-      if (states.includes(r.state)) return r
-    }, [credentials])
+
+  const filteredCredentials = useMemo(
+    () =>
+      credentials.filter((r: CredentialExchangeRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [credentials]
   )
   return filteredCredentials
 }
 
 export const useCredentialsNotInState = (state: CredentialState | CredentialState[]) => {
-  const states = typeof state === 'string' ? [state] : state
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: credentials } = useCredentials()
-  const filteredCredentials = credentials.filter((r: CredentialExchangeRecord) =>
-    useMemo(() => {
-      if (!states.includes(r.state)) return r
-    }, [credentials])
+
+  const filteredCredentials = useMemo(
+    () =>
+      credentials.filter((r: CredentialExchangeRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [credentials]
   )
   return filteredCredentials
 }

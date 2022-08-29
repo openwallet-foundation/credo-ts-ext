@@ -30,28 +30,32 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
-  const states = typeof state === 'string' ? [state] : state
+export const useConnectionsByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: connections } = useConnections()
 
-  const filteredConnections = connections.filter((r: ConnectionRecord) =>
-    useMemo(() => {
-      if (states.includes(r.state)) return r
-    }, [connections])
+  const filteredConnections = useMemo(
+    () =>
+      connections.filter((r: ConnectionRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [connections]
   )
   return filteredConnections
 }
 
-export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
-  const states = typeof state === 'string' ? [state] : state
+export const useConnectionsNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: connections } = useConnections()
 
-  const filteredConnections = connections.filter((r: ConnectionRecord) =>
-    useMemo(() => {
-      if (!states.includes(r.state)) return r
-    }, [connections])
+  const filteredConnections = useMemo(
+    () =>
+      connections.filter((r: ConnectionRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [connections]
   )
   return filteredConnections
 }
