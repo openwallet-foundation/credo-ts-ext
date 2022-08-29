@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent } from '@aries-framework/core'
+import type { Agent, DidExchangeState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { DidExchangeState, ConnectionRecord } from '@aries-framework/core'
+import { ConnectionRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -30,22 +30,29 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-export const useConnectionByState = (
-  state: DidExchangeState | DidExchangeState[],
-  invertSearch = false
-): ConnectionRecord[] => {
-  let states = typeof state === 'string' ? [state] : state
+export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = typeof state === 'string' ? [state] : state
 
-  if (invertSearch) {
-    states = Object.values(DidExchangeState).filter((v) => !states.includes(v))
-  }
   const { records: connections } = useConnections()
 
-  const filteredConnections = states
-    .map((filterState: DidExchangeState) =>
-      useMemo(() => connections.filter((c: ConnectionRecord) => c.state === filterState), [connections, filterState])
-    )
-    .flat()
+  const filteredConnections = connections.filter((r: ConnectionRecord) =>
+    useMemo(() => {
+      if (states.includes(r.state)) return r
+    }, [connections])
+  )
+  return filteredConnections
+}
+
+export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = typeof state === 'string' ? [state] : state
+
+  const { records: connections } = useConnections()
+
+  const filteredConnections = connections.filter((r: ConnectionRecord) =>
+    useMemo(() => {
+      if (!states.includes(r.state)) return r
+    }, [connections])
+  )
   return filteredConnections
 }
 

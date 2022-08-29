@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent } from '@aries-framework/core'
+import type { Agent, ProofState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { ProofState, ProofRecord } from '@aries-framework/core'
+import { ProofRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -30,19 +30,29 @@ export const useProofById = (id: string): ProofRecord | undefined => {
   return proofs.find((p: ProofRecord) => p.id === id)
 }
 
-export const useProofByState = (state: ProofState | ProofState[], invertSearch = false): ProofRecord[] => {
-  let states = typeof state === 'string' ? [state] : state
-
-  if (invertSearch) {
-    states = Object.values(ProofState).filter((v) => !states.includes(v))
-  }
+export const useProofByState = (state: ProofState | ProofState[]): ProofRecord[] => {
+  const states = typeof state === 'string' ? [state] : state
 
   const { records: proofs } = useProofs()
-  const filteredProofs = states
-    .map((filterState: ProofState) =>
-      useMemo(() => proofs.filter((p: ProofRecord) => p.state === filterState), [proofs, filterState])
-    )
-    .flat()
+
+  const filteredProofs = proofs.filter((r: ProofRecord) =>
+    useMemo(() => {
+      if (states.includes(r.state)) return r
+    }, [proofs])
+  )
+  return filteredProofs
+}
+
+export const useProofNotInState = (state: ProofState | ProofState[]): ProofRecord[] => {
+  const states = typeof state === 'string' ? [state] : state
+
+  const { records: proofs } = useProofs()
+
+  const filteredProofs = proofs.filter((r: ProofRecord) =>
+    useMemo(() => {
+      if (!states.includes(r.state)) return r
+    }, [proofs])
+  )
   return filteredProofs
 }
 
