@@ -30,7 +30,7 @@ export const useProofById = (id: string): ProofRecord | undefined => {
   return proofs.find((p: ProofRecord) => p.id === id)
 }
 
-export const useProofsByState = (state: ProofState | ProofState[]): ProofRecord[] => {
+export const useProofByState = (state: ProofState | ProofState[]): ProofRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: proofs } = useProofs()
@@ -46,7 +46,7 @@ export const useProofsByState = (state: ProofState | ProofState[]): ProofRecord[
   return filteredProofs
 }
 
-export const useProofsNotInState = (state: ProofState | ProofState[]): ProofRecord[] => {
+export const useProofNotInState = (state: ProofState | ProofState[]): ProofRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: proofs } = useProofs()

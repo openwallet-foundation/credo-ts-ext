@@ -30,7 +30,7 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-export const useConnectionsByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: connections } = useConnections()
@@ -45,7 +45,7 @@ export const useConnectionsByState = (state: DidExchangeState | DidExchangeState
   return filteredConnections
 }
 
-export const useConnectionsNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: connections } = useConnections()
