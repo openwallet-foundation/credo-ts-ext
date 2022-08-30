@@ -87,6 +87,7 @@ describe('OutOfBandController', () => {
         invitation: outOfBandRecord.outOfBandInvitation.toJSON({
           useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
         }),
+        outOfBandRecord: outOfBandRecord.toJSON(),
       })
     })
     test('should use parameters', async () => {
@@ -144,10 +145,13 @@ describe('OutOfBandController', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual({
-        outOfBandRecord: outOfBandRecord.toJSON(),
+        invitationUrl: outOfBandInvitation.toUrl({
+          domain: bobAgent.config.endpoints[0],
+        }),
         invitation: outOfBandInvitation.toJSON({
           useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
         }),
+        outOfBandRecord: outOfBandRecord.toJSON(),
       })
     })
     test('should use parameters', async () => {

@@ -6,12 +6,8 @@ import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { AcceptProofProposalRequest } from '../../schemas/AcceptProofProposalRequest'
-import { PresentationProofRequest } from '../../schemas/PresentationProofRequest'
-import { ProofPresentationRequest } from '../../schemas/ProofPresentationRequest'
-import { ProofProposalRequest } from '../../schemas/ProofProposalRequest'
-import { ProofRequestTemplate } from '../../schemas/ProofRequestTemplate'
 import { ProofRecordExample, RecordId } from '../examples'
+import { RequestProofOptions, RequestProofProposalOptions } from '../types'
 
 @Tags('Proofs')
 @Route('/proofs')
@@ -98,7 +94,7 @@ export class ProofController extends Controller {
    */
   @Post('/propose-proof')
   public async proposeProof(
-    @Body() proposal: ProofProposalRequest,
+    @Body() proposal: RequestProofProposalOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
@@ -130,7 +126,11 @@ export class ProofController extends Controller {
   @Post('/:proofRecordId/accept-proposal')
   public async acceptProposal(
     @Path('proofRecordId') proofRecordId: string,
-    @Body() proposal: AcceptProofProposalRequest,
+    @Body()
+    proposal: {
+      request: { name?: string; version?: string; nonce?: string }
+      comment?: string
+    },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
@@ -154,9 +154,11 @@ export class ProofController extends Controller {
    * @returns ProofRequestMessageResponse
    */
   @Post('/request-outofband-proof')
-  public async requestProofOutOfBand(@Body() request: ProofRequestTemplate): Promise<ProofRequestMessageResponse> {
-    const { proofRequest, ...requestOptions } = request
-    const proof = await this.agent.proofs.createOutOfBandRequest(proofRequest, requestOptions)
+  public async requestProofOutOfBand(
+    @Body() request: Omit<RequestProofOptions, 'connectionId'>
+  ): Promise<ProofRequestMessageResponse> {
+    const { proofRequestOptions, ...requestOptions } = request
+    const proof = await this.agent.proofs.createOutOfBandRequest(proofRequestOptions, requestOptions)
     return {
       message: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
         proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
@@ -173,13 +175,14 @@ export class ProofController extends Controller {
    */
   @Post('/request-proof')
   public async requestProof(
-    @Body() request: ProofPresentationRequest,
+    @Body() request: RequestProofOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
-    const { connectionId, proofRequest, ...requestOptions } = request
+    const { connectionId, proofRequestOptions, ...config } = request
+
     try {
-      const proof = await this.agent.proofs.requestProof(connectionId, proofRequest, requestOptions)
+      const proof = await this.agent.proofs.requestProof(connectionId, proofRequestOptions, config)
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -202,7 +205,11 @@ export class ProofController extends Controller {
   @Post('/:proofRecordId/accept-request')
   public async acceptRequest(
     @Path('proofRecordId') proofRecordId: string,
-    @Body() request: PresentationProofRequest,
+    @Body()
+    request: {
+      filterByPresentationPreview: boolean
+      comment: string
+    },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {

@@ -9,7 +9,6 @@ import {
   DidExchangeState,
   JsonTransformer,
   ProofRecord,
-  ProofRequest,
 } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 
@@ -138,25 +137,6 @@ export function getTestCredential() {
   return JsonTransformer.fromJSON(json, CredentialExchangeRecord)
 }
 
-// export function getTestCredentialOfferMsg() {
-//   const offerMsg = {
-//     '@type': 'https://didcomm.org/issue-credential/1.0/offer-credential',
-//     id: 'string',
-//     credentialPreview: {
-//       '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-//       attributes: [
-//         {
-//           'mime-type': 'text/plain',
-//           name: 'name',
-//           value: 'test',
-//         },
-//       ],
-//     },
-//   }
-
-//   return JsonTransformer.fromJSON(offerMsg, OfferCredentialMessage)
-// }
-
 export function getTestCredDef() {
   return {
     ver: '1.0',
@@ -228,22 +208,6 @@ export function getTestProof() {
     },
   }
   return JsonTransformer.fromJSON(json, ProofRecord)
-}
-
-export function getTestProofRequest() {
-  const json = {
-    name: 'string',
-    version: 'string',
-    nonce: 'string',
-    requestedAttributes: {
-      additionalProp1: {
-        name: 'string',
-      },
-    },
-    requestedPredicates: {},
-    ver: '1.0',
-  }
-  return JsonTransformer.fromJSON(json, ProofRequest)
 }
 
 export function getTestConnection({

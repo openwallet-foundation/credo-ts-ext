@@ -4,7 +4,8 @@
   "types": "build/index",
   "version": "0.8.1",
   "files": [
-    "build"
+    "build",
+    "tsoa.json"
   ],
   "publishConfig": {
     "access": "public"
@@ -31,8 +32,8 @@
     "postinstall": "tsoa spec-and-routes"
   },
   "dependencies": {
-    "@aries-framework/core": "^0.2.0",
-    "@aries-framework/node": "^0.2.0",
+    "@aries-framework/core": "^0.2.3",
+    "@aries-framework/node": "^0.2.3",
     "body-parser": "^1.20.0",
     "class-transformer": "0.5.1",
     "class-validator": "0.13.1",

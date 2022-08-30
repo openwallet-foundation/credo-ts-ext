@@ -1,17 +1,23 @@
 import type {
   Attachment,
   AutoAcceptCredential,
+  AutoAcceptProof,
   CredentialFormatPayload,
   HandshakeProtocol,
   IndyCredentialFormat,
+  PresentationPreviewAttributeOptions,
+  PresentationPreviewPredicateOptions,
+  ProofAttributeInfo,
+  ProofPredicateInfo,
   ProofRecord,
+  ProofRequestConfig,
   ProtocolVersionType,
   ReceiveOutOfBandInvitationConfig,
   Routing,
   V1CredentialService,
   V2CredentialService,
+  OutOfBandDidCommService,
 } from '@aries-framework/core'
-import type { OutOfBandDidCommService } from '@aries-framework/core/build/modules/oob/domain/OutOfBandDidCommService'
 
 export interface AgentInfo {
   label: string
@@ -109,4 +115,22 @@ export interface ConnectionInvitationSchema {
   routingKeys?: string[]
   imageUrl?: string
   appendedAttachments?: Attachment[]
+}
+
+export interface RequestProofOptions extends ProofRequestConfig {
+  connectionId: string
+  proofRequestOptions: {
+    name: string
+    version: string
+    requestedAttributes?: { [key: string]: ProofAttributeInfo }
+    requestedPredicates?: { [key: string]: ProofPredicateInfo }
+  }
+}
+
+export interface RequestProofProposalOptions {
+  connectionId: string
+  attributes: PresentationPreviewAttributeOptions[]
+  predicates: PresentationPreviewPredicateOptions[]
+  comment?: string
+  autoAcceptProof?: AutoAcceptProof
 }

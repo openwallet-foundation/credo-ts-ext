@@ -492,52 +492,13 @@
 				"type": "string",
 				"example": "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag"
 			},
-			"CredentialDefinitionRequest": {
-				"properties": {
-					"tag": {
-						"type": "string"
-					},
-					"supportRevocation": {
-						"type": "boolean"
-					},
-					"schemaId": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"tag",
-					"supportRevocation",
-					"schemaId"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
 			"SchemaId": {
 				"type": "string",
 				"example": "WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0"
 			},
-			"SchemaRequest": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"version": {
-						"type": "string"
-					},
-					"attributes": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"name",
-					"version",
-					"attributes"
-				],
-				"type": "object",
-				"additionalProperties": false
+			"Version": {
+				"type": "string",
+				"example": "1.0.0"
 			},
 			"HandshakeProtocol": {
 				"enum": [
@@ -941,7 +902,7 @@
 				],
 				"type": "string"
 			},
-			"ProofProposalRequest": {
+			"RequestProofProposalOptions": {
 				"properties": {
 					"connectionId": {
 						"type": "string"
@@ -958,11 +919,11 @@
 						},
 						"type": "array"
 					},
-					"autoAcceptProof": {
-						"$ref": "#/components/schemas/AutoAcceptProof"
-					},
 					"comment": {
 						"type": "string"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
 					}
 				},
 				"required": [
@@ -970,29 +931,6 @@
 					"attributes",
 					"predicates"
 				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"AcceptProofProposalRequest": {
-				"properties": {
-					"request": {
-						"properties": {
-							"nonce": {
-								"type": "string"
-							},
-							"version": {
-								"type": "string"
-							},
-							"name": {
-								"type": "string"
-							}
-						},
-						"type": "object"
-					},
-					"comment": {
-						"type": "string"
-					}
-				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -1015,10 +953,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"WalletQuery": {
-				"$ref": "#/components/schemas/Record_string.unknown_"
-			},
-			"NonRevokedInterval": {
+			"IndyRevocationInterval": {
 				"properties": {
 					"from": {
 						"type": "number",
@@ -1032,154 +967,202 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IndyProofRequest": {
+			"AttributeValue": {
 				"properties": {
 					"name": {
 						"type": "string"
 					},
-					"version": {
+					"value": {
 						"type": "string"
-					},
-					"nonce": {
-						"type": "string"
-					},
-					"requested_attributes": {
-						"properties": {},
-						"additionalProperties": {
-							"properties": {
-								"non_revoked": {
-									"$ref": "#/components/schemas/NonRevokedInterval"
-								},
-								"restrictions": {
-									"items": {
-										"$ref": "#/components/schemas/WalletQuery"
-									},
-									"type": "array"
-								},
-								"names": {
-									"type": "string"
-								},
-								"name": {
-									"type": "string"
-								}
-							},
-							"type": "object"
-						},
-						"type": "object"
-					},
-					"requested_predicates": {
-						"properties": {},
-						"additionalProperties": {
-							"properties": {
-								"non_revoked": {
-									"$ref": "#/components/schemas/NonRevokedInterval"
-								},
-								"restrictions": {
-									"items": {
-										"$ref": "#/components/schemas/WalletQuery"
-									},
-									"type": "array"
-								},
-								"p_value": {
-									"type": "number",
-									"format": "double"
-								},
-								"p_type": {
-									"type": "string",
-									"enum": [
-										">=",
-										">",
-										"<=",
-										"<"
-									]
-								},
-								"name": {
-									"type": "string"
-								}
-							},
-							"required": [
-								"p_value",
-								"p_type",
-								"name"
-							],
-							"type": "object"
-						},
-						"type": "object"
-					},
-					"non_revoked": {
-						"$ref": "#/components/schemas/NonRevokedInterval"
-					},
-					"ver": {
-						"type": "string",
-						"enum": [
-							"1.0",
-							"2.0"
-						]
 					}
 				},
 				"required": [
 					"name",
-					"version",
-					"nonce",
-					"requested_attributes",
-					"requested_predicates"
+					"value"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ProofRequest": {
-				"$ref": "#/components/schemas/IndyProofRequest",
-				"description": "Proof Request for Indy based proof format"
-			},
-			"ProofRequestTemplate": {
+			"AttributeFilter": {
 				"properties": {
-					"proofRequest": {
-						"$ref": "#/components/schemas/ProofRequest"
-					},
-					"comment": {
+					"schemaId": {
 						"type": "string"
 					},
-					"autoAcceptProof": {
-						"$ref": "#/components/schemas/AutoAcceptProof"
+					"schemaIssuerDid": {
+						"type": "string"
+					},
+					"schemaName": {
+						"type": "string"
+					},
+					"schemaVersion": {
+						"type": "string"
+					},
+					"issuerDid": {
+						"type": "string"
+					},
+					"credentialDefinitionId": {
+						"type": "string"
+					},
+					"attributeValue": {
+						"$ref": "#/components/schemas/AttributeValue"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProofAttributeInfo": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"names": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"nonRevoked": {
+						"$ref": "#/components/schemas/IndyRevocationInterval"
+					},
+					"restrictions": {
+						"items": {
+							"$ref": "#/components/schemas/AttributeFilter"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProofPredicateInfo": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"predicateType": {
+						"$ref": "#/components/schemas/PredicateType"
+					},
+					"predicateValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"nonRevoked": {
+						"$ref": "#/components/schemas/IndyRevocationInterval"
+					},
+					"restrictions": {
+						"items": {
+							"$ref": "#/components/schemas/AttributeFilter"
+						},
+						"type": "array"
 					}
 				},
 				"required": [
-					"proofRequest"
+					"name",
+					"predicateType",
+					"predicateValue"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ProofPresentationRequest": {
+			"Pick_RequestProofOptions.Exclude_keyofRequestProofOptions.connectionId__": {
 				"properties": {
-					"proofRequest": {
-						"$ref": "#/components/schemas/ProofRequest"
-					},
 					"comment": {
 						"type": "string"
 					},
 					"autoAcceptProof": {
 						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"proofRequestOptions": {
+						"properties": {
+							"requestedPredicates": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofPredicateInfo"
+								},
+								"type": "object"
+							},
+							"requestedAttributes": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofAttributeInfo"
+								},
+								"type": "object"
+							},
+							"version": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"version",
+							"name"
+						],
+						"type": "object"
+					},
+					"parentThreadId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"proofRequestOptions"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_RequestProofOptions.connectionId_": {
+				"$ref": "#/components/schemas/Pick_RequestProofOptions.Exclude_keyofRequestProofOptions.connectionId__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"RequestProofOptions": {
+				"properties": {
+					"comment": {
+						"type": "string"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"parentThreadId": {
+						"type": "string"
 					},
 					"connectionId": {
 						"type": "string"
+					},
+					"proofRequestOptions": {
+						"properties": {
+							"requestedPredicates": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofPredicateInfo"
+								},
+								"type": "object"
+							},
+							"requestedAttributes": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofAttributeInfo"
+								},
+								"type": "object"
+							},
+							"version": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"version",
+							"name"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
-					"proofRequest",
-					"connectionId"
+					"connectionId",
+					"proofRequestOptions"
 				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"PresentationProofRequest": {
-				"properties": {
-					"filterByPresentationPreview": {
-						"type": "boolean"
-					},
-					"comment": {
-						"type": "string"
-					}
-				},
 				"type": "object",
 				"additionalProperties": false
 			}
@@ -1188,7 +1171,7 @@
 	},
 	"info": {
 		"title": "@aries-framework/rest",
-		"version": "0.8.1",
+		"version": "0.8.16",
 		"description": "Rest endpoint wrapper for using your agent over HTTP",
 		"license": {
 			"name": "Apache-2.0"
@@ -1357,12 +1340,7 @@
 						"description": "ConnectionRecord[]",
 						"content": {
 							"application/json": {
-								"schema": {
-									"items": {
-										"$ref": "#/components/schemas/Record_string.any_"
-									},
-									"type": "array"
-								},
+								"schema": {},
 								"examples": {
 									"Example 1": {
 										"value": [
@@ -1394,6 +1372,14 @@
 				],
 				"security": [],
 				"parameters": [
+					{
+						"in": "query",
+						"name": "outOfBandId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
 					{
 						"description": "Alias",
 						"in": "query",
@@ -2714,7 +2700,23 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CredentialDefinitionRequest"
+								"properties": {
+									"tag": {
+										"type": "string"
+									},
+									"supportRevocation": {
+										"type": "boolean"
+									},
+									"schemaId": {
+										"$ref": "#/components/schemas/SchemaId"
+									}
+								},
+								"required": [
+									"tag",
+									"supportRevocation",
+									"schemaId"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -2911,7 +2913,26 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/SchemaRequest"
+								"properties": {
+									"attributes": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									},
+									"version": {
+										"$ref": "#/components/schemas/Version"
+									},
+									"name": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"version",
+									"name"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -3189,6 +3210,44 @@
 														"routingKeys": []
 													}
 												]
+											},
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
 											}
 										}
 									}
@@ -3247,6 +3306,30 @@
 								"examples": {
 									"Example 1": {
 										"value": {
+											"invitation": {
+												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+												"label": "Aries Test Agent",
+												"accept": [
+													"didcomm/aip1",
+													"didcomm/aip2;env=rfc19"
+												],
+												"handshake_protocols": [
+													"https://didcomm.org/didexchange/1.0",
+													"https://didcomm.org/connections/1.0"
+												],
+												"services": [
+													{
+														"id": "#inline-0",
+														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+														"type": "did-communication",
+														"recipientKeys": [
+															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+														],
+														"routingKeys": []
+													}
+												]
+											},
 											"outOfBandRecord": {
 												"_tags": {
 													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
@@ -3284,30 +3367,6 @@
 												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
 												"createdAt": "2022-01-01T00:00:00.000Z",
 												"reusable": false
-											},
-											"invitation": {
-												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
-												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
-												"label": "Aries Test Agent",
-												"accept": [
-													"didcomm/aip1",
-													"didcomm/aip2;env=rfc19"
-												],
-												"handshake_protocols": [
-													"https://didcomm.org/didexchange/1.0",
-													"https://didcomm.org/connections/1.0"
-												],
-												"services": [
-													{
-														"id": "#inline-0",
-														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
-														"type": "did-communication",
-														"recipientKeys": [
-															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
-														],
-														"routingKeys": []
-													}
-												]
 											}
 										}
 									}
@@ -4039,7 +4098,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ProofProposalRequest"
+								"$ref": "#/components/schemas/RequestProofProposalOptions"
 							}
 						}
 					}
@@ -4115,7 +4174,29 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/AcceptProofProposalRequest"
+								"properties": {
+									"comment": {
+										"type": "string"
+									},
+									"request": {
+										"properties": {
+											"nonce": {
+												"type": "string"
+											},
+											"version": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											}
+										},
+										"type": "object"
+									}
+								},
+								"required": [
+									"request"
+								],
+								"type": "object"
 							}
 						}
 					}
@@ -4148,7 +4229,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ProofRequestTemplate"
+								"$ref": "#/components/schemas/Omit_RequestProofOptions.connectionId_"
 							}
 						}
 					}
@@ -4215,7 +4296,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/ProofPresentationRequest"
+								"$ref": "#/components/schemas/RequestProofOptions"
 							}
 						}
 					}
@@ -4291,7 +4372,19 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/PresentationProofRequest"
+								"properties": {
+									"comment": {
+										"type": "string"
+									},
+									"filterByPresentationPreview": {
+										"type": "boolean"
+									}
+								},
+								"required": [
+									"comment",
+									"filterByPresentationPreview"
+								],
+								"type": "object"
 							}
 						}
 					}

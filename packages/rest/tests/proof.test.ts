@@ -1,18 +1,17 @@
-import type { Agent, ProofRecord, ProofRequest } from '@aries-framework/core'
+import type { Agent, ProofRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { getTestAgent, getTestProof, getTestProofRequest, objectToJson } from './utils/helpers'
+import { getTestAgent, getTestProof, objectToJson } from './utils/helpers'
 
 describe('ProofController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
   let testProof: ProofRecord
-  let testRequest: ProofRequest
 
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Proof REST Agent Test Alice', 3032)
@@ -20,7 +19,6 @@ describe('ProofController', () => {
     app = await setupServer(bobAgent, { port: 3000 })
 
     testProof = getTestProof()
-    testRequest = getTestProofRequest()
   })
 
   afterEach(() => {
@@ -155,7 +153,20 @@ describe('ProofController', () => {
 
   describe('Request out of band proof', () => {
     test('should return proof record', async () => {
-      const response = await request(app).post(`/proofs/request-outofband-proof`).send({ proofRequest: testRequest })
+      const response = await request(app)
+        .post(`/proofs/request-outofband-proof`)
+        .send({
+          proofRequestOptions: {
+            name: 'string',
+            version: '1.0',
+            requestedAttributes: {
+              additionalProp1: {
+                name: 'string',
+              },
+            },
+            requestedPredicates: {},
+          },
+        })
 
       expect(response.statusCode).toBe(200)
       expect(response.body.message).toBeDefined()
@@ -170,7 +181,19 @@ describe('ProofController', () => {
 
       const response = await request(app)
         .post(`/proofs/request-proof`)
-        .send({ connectionId: 'string', proofRequest: testRequest })
+        .send({
+          connectionId: 'string',
+          proofRequestOptions: {
+            name: 'string',
+            version: '1.0',
+            requestedAttributes: {
+              additionalProp1: {
+                name: 'string',
+              },
+            },
+            requestedPredicates: {},
+          },
+        })
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(objectToJson(await getResult()))
@@ -179,7 +202,19 @@ describe('ProofController', () => {
     test('should give 404 not found when connection is not found', async () => {
       const response = await request(app)
         .post(`/proofs/request-proof`)
-        .send({ connectionId: 'string', proofRequest: testRequest })
+        .send({
+          connectionId: 'string',
+          proofRequestOptions: {
+            name: 'string',
+            version: '1.0',
+            requestedAttributes: {
+              additionalProp1: {
+                name: 'string',
+              },
+            },
+            requestedPredicates: {},
+          },
+        })
 
       expect(response.statusCode).toBe(404)
     })

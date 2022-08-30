@@ -1,3 +1,4 @@
+import type { Version } from '../examples'
 import type { Schema } from 'indy-sdk'
 
 import { Agent, AriesFrameworkError, IndySdkError } from '@aries-framework/core'
@@ -6,7 +7,6 @@ import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import { Body, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { SchemaRequest } from '../../schemas/SchemaRequest'
 import { SchemaId, SchemaExample } from '../examples'
 
 @Tags('Schemas')
@@ -67,7 +67,12 @@ export class SchemaController {
   @Example<Schema>(SchemaExample)
   @Post('/')
   public async createSchema(
-    @Body() schema: SchemaRequest,
+    @Body()
+    schema: {
+      name: string
+      version: Version
+      attributes: string[]
+    },
     @Res() forbiddenError: TsoaResponse<400, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {

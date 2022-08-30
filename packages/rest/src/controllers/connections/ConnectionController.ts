@@ -29,13 +29,20 @@ export class ConnectionController extends Controller {
   @Example<ConnectionRecordProps[]>([ConnectionRecordExample])
   @Get('/')
   public async getAllConnections(
+    @Query('outOfBandId') outOfBandId?: string,
     @Query('alias') alias?: string,
     @Query('state') state?: string,
     @Query('myDid') myDid?: string,
     @Query('theirDid') theirDid?: string,
     @Query('theirLabel') theirLabel?: string
   ) {
-    let connections = await this.agent.connections.getAll()
+    let connections
+
+    if (outOfBandId) {
+      connections = await this.agent.connections.findAllByOutOfBandId(outOfBandId)
+    } else {
+      connections = await this.agent.connections.getAll()
+    }
 
     if (alias) connections = connections.filter((c) => c.alias === alias)
     if (state) connections = connections.filter((c) => c.state === state)

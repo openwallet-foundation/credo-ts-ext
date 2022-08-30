@@ -64,9 +64,14 @@ export class OutOfBandController extends Controller {
    * @param config configuration of how out-of-band invitation should be created
    * @returns Out of band record
    */
-  @Example<{ invitationUrl: string; invitation: OutOfBandInvitationProps }>({
+  @Example<{
+    invitationUrl: string
+    invitation: OutOfBandInvitationProps
+    outOfBandRecord: OutOfBandRecordWithInvitationProps
+  }>({
     invitationUrl: 'string',
     invitation: outOfBandInvitationExample,
+    outOfBandRecord: outOfBandRecordExample,
   })
   @Post('/create-invitation')
   public async createInvitation(
@@ -74,14 +79,15 @@ export class OutOfBandController extends Controller {
     @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing'> // routing prop removed because of issues with public key serialization
   ) {
     try {
-      const oobRecord = await this.agent.oob.createInvitation(config)
+      const outOfBandRecord = await this.agent.oob.createInvitation(config)
       return {
-        invitationUrl: oobRecord.outOfBandInvitation.toUrl({
+        invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({
           domain: this.agent.config.endpoints[0],
         }),
-        invitation: oobRecord.outOfBandInvitation.toJSON({
+        invitation: outOfBandRecord.outOfBandInvitation.toJSON({
           useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
         }),
+        outOfBandRecord: outOfBandRecord.toJSON(),
       }
     } catch (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })
@@ -96,9 +102,9 @@ export class OutOfBandController extends Controller {
    * @param config configuration of how a invitation should be created
    * @returns out-of-band record and invitation
    */
-  @Example<{ outOfBandRecord: OutOfBandRecordWithInvitationProps; invitation: OutOfBandInvitationProps }>({
-    outOfBandRecord: outOfBandRecordExample,
+  @Example<{ invitation: OutOfBandInvitationProps; outOfBandRecord: OutOfBandRecordWithInvitationProps }>({
     invitation: outOfBandInvitationExample,
+    outOfBandRecord: outOfBandRecordExample,
   })
   @Post('/create-legacy-invitation')
   public async createLegacyInvitation(
@@ -107,11 +113,16 @@ export class OutOfBandController extends Controller {
   ) {
     try {
       const { outOfBandRecord, invitation } = await this.agent.oob.createLegacyInvitation(config)
+
       return {
-        outOfBandRecord: outOfBandRecord.toJSON(),
+        invitationUrl: invitation.toUrl({
+          domain: this.agent.config.endpoints[0],
+          useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
+        }),
         invitation: invitation.toJSON({
           useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
         }),
+        outOfBandRecord: outOfBandRecord.toJSON(),
       }
     } catch (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })

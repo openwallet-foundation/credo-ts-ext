@@ -8,14 +8,19 @@ import type {
   OutOfBandRecordProps,
   ProofRecordProps,
   ProofState,
+  OutOfBandRole,
+  OutOfBandState,
 } from '@aries-framework/core'
-import type { OutOfBandRole } from '@aries-framework/core/build/modules/oob/domain/OutOfBandRole'
-import type { OutOfBandState } from '@aries-framework/core/build/modules/oob/domain/OutOfBandState'
 
 /**
  * @example "821f9b26-ad04-4f56-89b6-e2ef9c72b36e"
  */
 export type RecordId = string
+
+/**
+ * @example "1.0.0"
+ */
+export type Version = string
 
 /**
  * @example "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag"

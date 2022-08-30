@@ -1,12 +1,9 @@
-import type { ClassConstructor, IocAdapter } from 'routing-controllers'
-import type { DependencyContainer } from 'tsyringe'
+import type { IocContainer } from '@tsoa/runtime'
 
-class TsyringeAdapter implements IocAdapter {
-  public constructor(private readonly TsyringeContainer: DependencyContainer) {}
+import { container } from 'tsyringe'
 
-  public get<T>(someClass: ClassConstructor<T>): T {
-    return this.TsyringeContainer.resolve<T>(someClass)
-  }
+export const iocContainer: IocContainer = {
+  get: <T>(controller: { prototype: T }): T => {
+    return container.resolve<T>(controller as never)
+  },
 }
-
-export default TsyringeAdapter

@@ -1,3 +1,4 @@
+import type { SchemaId } from '../examples'
 import type { CredDef } from 'indy-sdk'
 
 import { Agent, IndySdkError } from '@aries-framework/core'
@@ -7,7 +8,6 @@ import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { CredentialDefinitionRequest } from '../../schemas/CredentialDefinitionRequest'
 import { CredentialDefinitionExample, CredentialDefinitionId } from '../examples'
 
 @Tags('Credential Definitions')
@@ -62,7 +62,12 @@ export class CredentialDefinitionController extends Controller {
   @Example<CredDef>(CredentialDefinitionExample)
   @Post('/')
   public async createCredentialDefinition(
-    @Body() credentialDefinitionRequest: CredentialDefinitionRequest,
+    @Body()
+    credentialDefinitionRequest: {
+      schemaId: SchemaId
+      supportRevocation: boolean
+      tag: string
+    },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
