@@ -339,9 +339,6 @@
 			},
 			"AcceptCredentialProposalOptions": {
 				"properties": {
-					"credentialRecordId": {
-						"type": "string"
-					},
 					"credentialFormats": {
 						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptProposal_"
 					},
@@ -352,9 +349,6 @@
 						"type": "string"
 					}
 				},
-				"required": [
-					"credentialRecordId"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -439,9 +433,6 @@
 			},
 			"AcceptCredentialOfferOptions": {
 				"properties": {
-					"credentialRecordId": {
-						"type": "string"
-					},
 					"credentialFormats": {
 						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptOffer_"
 					},
@@ -452,9 +443,6 @@
 						"type": "string"
 					}
 				},
-				"required": [
-					"credentialRecordId"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -469,9 +457,6 @@
 			},
 			"AcceptCredentialRequestOptions": {
 				"properties": {
-					"credentialRecordId": {
-						"type": "string"
-					},
 					"credentialFormats": {
 						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptRequest_"
 					},
@@ -482,9 +467,6 @@
 						"type": "string"
 					}
 				},
-				"required": [
-					"credentialRecordId"
-				],
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -2030,7 +2012,7 @@
 				}
 			}
 		},
-		"/credentials/accept-proposal": {
+		"/credentials/{credentialRecordId}/accept-proposal": {
 			"post": {
 				"operationId": "AcceptProposal",
 				"responses": {
@@ -2108,9 +2090,19 @@
 					"Credentials"
 				],
 				"security": [],
-				"parameters": [],
+				"parameters": [
+					{
+						"description": "credential identifier",
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
 				"requestBody": {
-					"required": true,
+					"required": false,
 					"content": {
 						"application/json": {
 							"schema": {
@@ -2212,7 +2204,7 @@
 				}
 			}
 		},
-		"/credentials/accept-offer": {
+		"/credentials/{credentialRecordId}/accept-offer": {
 			"post": {
 				"operationId": "AcceptOffer",
 				"responses": {
@@ -2290,9 +2282,19 @@
 					"Credentials"
 				],
 				"security": [],
-				"parameters": [],
+				"parameters": [
+					{
+						"description": "credential identifier",
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
 				"requestBody": {
-					"required": true,
+					"required": false,
 					"content": {
 						"application/json": {
 							"schema": {
@@ -2303,7 +2305,7 @@
 				}
 			}
 		},
-		"/credentials/accept-request": {
+		"/credentials/{credentialRecordId}/accept-request": {
 			"post": {
 				"operationId": "AcceptRequest",
 				"responses": {
@@ -2381,9 +2383,19 @@
 					"Credentials"
 				],
 				"security": [],
-				"parameters": [],
+				"parameters": [
+					{
+						"description": "credential identifier",
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
 				"requestBody": {
-					"required": true,
+					"required": false,
 					"content": {
 						"application/json": {
 							"schema": {

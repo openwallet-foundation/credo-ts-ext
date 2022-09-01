@@ -46,7 +46,6 @@ export interface ProposeCredentialOptions {
 }
 
 export interface AcceptCredentialProposalOptions {
-  credentialRecordId: string
   credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptProposal'>
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
@@ -61,14 +60,12 @@ export interface OfferCredentialOptions {
 }
 
 export interface AcceptCredentialOfferOptions {
-  credentialRecordId: string
   credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptOffer'>
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
 }
 
 export interface AcceptCredentialRequestOptions {
-  credentialRecordId: string
   credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptRequest'>
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string

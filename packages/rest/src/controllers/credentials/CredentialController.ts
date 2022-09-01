@@ -6,11 +6,11 @@ import { injectable } from 'tsyringe'
 
 import { CredentialExchangeRecordExample, RecordId } from '../examples'
 import {
-  AcceptCredentialOfferOptions,
-  AcceptCredentialProposalOptions,
   AcceptCredentialRequestOptions,
   OfferCredentialOptions,
   ProposeCredentialOptions,
+  AcceptCredentialProposalOptions,
+  AcceptCredentialOfferOptions,
 } from '../types'
 
 @Tags('Credentials')
@@ -117,25 +117,29 @@ export class CredentialController extends Controller {
    * Accept a credential proposal as issuer by sending an accept proposal message
    * to the connection associated with the credential exchange record.
    *
+   * @param credentialRecordId credential identifier
    * @param options
    * @returns CredentialExchangeRecord
    */
   @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
-  @Post('/accept-proposal')
+  @Post('/:credentialRecordId/accept-proposal')
   public async acceptProposal(
-    @Body()
-    options: AcceptCredentialProposalOptions,
+    @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() options?: AcceptCredentialProposalOptions
   ) {
     try {
-      const credential = await this.agent.credentials.acceptProposal(options)
+      const credential = await this.agent.credentials.acceptProposal({
+        ...options,
+        credentialRecordId: credentialRecordId,
+      })
 
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
-          reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
       return internalServerError(500, { message: `something went wrong: ${error}` })
@@ -173,23 +177,28 @@ export class CredentialController extends Controller {
    * Accept a credential offer as holder by sending an accept offer message
    * to the connection associated with the credential exchange record.
    *
+   * @param credentialRecordId credential identifier
    * @param options
    * @returns CredentialExchangeRecord
    */
   @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
-  @Post('/accept-offer')
+  @Post('/:credentialRecordId/accept-offer')
   public async acceptOffer(
-    @Body() options: AcceptCredentialOfferOptions,
+    @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() options?: AcceptCredentialOfferOptions
   ) {
     try {
-      const credential = await this.agent.credentials.acceptOffer(options)
+      const credential = await this.agent.credentials.acceptOffer({
+        ...options,
+        credentialRecordId: credentialRecordId,
+      })
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
-          reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
       return internalServerError(500, { message: `something went wrong: ${error}` })
@@ -200,23 +209,28 @@ export class CredentialController extends Controller {
    * Accept a credential request as issuer by sending an accept request message
    * to the connection associated with the credential exchange record.
    *
+   * @param credentialRecordId credential identifier
    * @param options
    * @returns CredentialExchangeRecord
    */
   @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
-  @Post('/accept-request')
+  @Post('/:credentialRecordId/accept-request')
   public async acceptRequest(
-    @Body() options: AcceptCredentialRequestOptions,
+    @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() options?: AcceptCredentialRequestOptions
   ) {
     try {
-      const credential = await this.agent.credentials.acceptRequest(options)
+      const credential = await this.agent.credentials.acceptRequest({
+        ...options,
+        credentialRecordId: credentialRecordId,
+      })
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
-          reason: `credential with credential record id "${options.credentialRecordId}" not found.`,
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
       return internalServerError(500, { message: `something went wrong: ${error}` })
