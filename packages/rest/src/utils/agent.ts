@@ -9,9 +9,8 @@ import {
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 import path from 'path'
 
-import { BCOVRIN_TEST_GENESIS } from '../../tests/utils/util'
-
 import { TsLogger } from './logger'
+import { BCOVRIN_TEST_GENESIS } from './util'
 
 export const genesisPath = process.env.GENESIS_TXN_PATH
   ? path.resolve(process.env.GENESIS_TXN_PATH)
