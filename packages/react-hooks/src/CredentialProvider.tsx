@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent } from '@aries-framework/core'
+import type { Agent, CredentialState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { CredentialState, CredentialExchangeRecord } from '@aries-framework/core'
+import { CredentialExchangeRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -30,25 +30,33 @@ export const useCredentialById = (id: string): CredentialExchangeRecord | undefi
   return credentials.find((c: CredentialExchangeRecord) => c.id === id)
 }
 
-export const useCredentialByState = (
-  state: CredentialState | CredentialState[],
-  invertSearch = false
-): CredentialExchangeRecord[] => {
-  let states = typeof state === 'string' ? [state] : state
-
-  if (invertSearch) {
-    states = Object.values(CredentialState).filter((v) => !states.includes(v))
-  }
+export const useCredentialByState = (state: CredentialState | CredentialState[]): CredentialExchangeRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
   const { records: credentials } = useCredentials()
-  const filteredCredentials = states
-    .map((filterState: CredentialState) =>
-      useMemo(
-        () => credentials.filter((c: CredentialExchangeRecord) => c.state === filterState),
-        [credentials, filterState]
-      )
-    )
-    .flat()
+
+  const filteredCredentials = useMemo(
+    () =>
+      credentials.filter((r: CredentialExchangeRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [credentials]
+  )
+  return filteredCredentials
+}
+
+export const useCredentialNotInState = (state: CredentialState | CredentialState[]) => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: credentials } = useCredentials()
+
+  const filteredCredentials = useMemo(
+    () =>
+      credentials.filter((r: CredentialExchangeRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [credentials]
+  )
   return filteredCredentials
 }
 

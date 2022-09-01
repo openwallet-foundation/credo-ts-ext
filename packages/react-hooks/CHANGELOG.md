@@ -1,5 +1,17 @@
 # Changelog
 
+### [0.3.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.3.0...react-hooks-v0.3.1) (2022-08-30)
+
+
+### Features
+
+* **hooks:** filter by multiple states with inverse ([#149](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/149)) ([56e3880](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/56e3880a51a72e1504ed051036c5e782ed53a684))
+
+
+### Bug Fixes
+
+* **react-hooks:** update react peer dependency ([#151](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/151)) ([b1e08b6](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/b1e08b658407b67018f945ca30ce8b8417226751))
+
 ## [0.3.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.2.0...react-hooks-v0.3.0) (2022-07-14)
 
 
