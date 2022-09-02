@@ -1,7 +1,7 @@
 import type { Agent, OutOfBandRecord, ConnectionRecord, OutOfBandInvitation } from '@aries-framework/core'
 import type { Express } from 'express'
 
-import { AgentMessage } from '@aries-framework/core'
+import { JsonTransformer, AgentMessage } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
@@ -102,30 +102,8 @@ describe('OutOfBandController', () => {
         goal: 'string',
         handshake: true,
         handshakeProtocols: ['https://didcomm.org/connections/1.0'],
-        messages: [{}],
         multiUseInvitation: true,
         autoAcceptConnection: true,
-        appendedAttachments: [
-          {
-            id: 'string',
-            description: 'string',
-            filename: 'string',
-            mimeType: 'string',
-            lastmodTime: new Date('2022-08-18T09:58:57.033Z'),
-            byteCount: 0,
-            data: {
-              base64: 'string',
-              json: {},
-              links: ['string'],
-              jws: {
-                header: {},
-                signature: 'string',
-                protected: 'string',
-              },
-              sha256: 'string',
-            },
-          },
-        ],
       }
       const response = await request(app).post('/oob/create-invitation').send(params)
 
@@ -175,10 +153,20 @@ describe('OutOfBandController', () => {
   })
 
   describe('Create legacy connectionless invitation', () => {
-    const msg = new AgentMessage()
+    const msg = JsonTransformer.fromJSON(
+      {
+        '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
+        '@type': 'https://didcomm.org/connections/1.0/invitation',
+      },
+      AgentMessage
+    )
+
     const inputParams = {
       domain: 'string',
-      message: msg,
+      message: {
+        '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
+        '@type': 'https://didcomm.org/connections/1.0/invitation',
+      },
       recordId: 'string',
     }
 
@@ -204,7 +192,10 @@ describe('OutOfBandController', () => {
       const response = await request(app).post('/oob/create-legacy-connectionless-invitation').send(inputParams)
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(inputParams)
+      expect(spy).toHaveBeenCalledWith({
+        ...inputParams,
+        message: msg,
+      })
     })
   })
 

@@ -1,12 +1,12 @@
 import type { OutOfBandInvitationProps, OutOfBandRecordWithInvitationProps } from '../examples'
+import type { AgentMessageType } from '../types'
 import type {
-  AgentMessage,
   ConnectionRecordProps,
   CreateOutOfBandInvitationConfig,
   CreateLegacyInvitationConfig,
 } from '@aries-framework/core'
 
-import { OutOfBandInvitation, Agent, RecordNotFoundError } from '@aries-framework/core'
+import { AgentMessage, JsonTransformer, OutOfBandInvitation, Agent, RecordNotFoundError } from '@aries-framework/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -76,7 +76,7 @@ export class OutOfBandController extends Controller {
   @Post('/create-invitation')
   public async createInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing' | 'appendedAttachments'> // props removed because of issues with serialization
+    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing' | 'appendedAttachments' | 'messages'> // props removed because of issues with serialization
   ) {
     try {
       const outOfBandRecord = await this.agent.oob.createInvitation(config)
@@ -135,8 +135,11 @@ export class OutOfBandController extends Controller {
    * @param config configuration of how a connection invitation should be created
    * @returns a message and a invitationUrl
    */
-  @Example<{ message: Pick<AgentMessage, 'id' | 'type'>; invitationUrl: string }>({
-    message: { id: 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00', type: 'https://didcomm.org/connections/1.0/invitation' },
+  @Example<{ message: AgentMessageType; invitationUrl: string }>({
+    message: {
+      '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
+      '@type': 'https://didcomm.org/connections/1.0/invitation',
+    },
     invitationUrl: 'http://example.com/invitation_url',
   })
   @Post('/create-legacy-connectionless-invitation')
@@ -144,14 +147,19 @@ export class OutOfBandController extends Controller {
     @Body()
     config: {
       recordId: string
-      message: AgentMessage
+      message: AgentMessageType
       domain: string
     },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
-      return await this.agent.oob.createLegacyConnectionlessInvitation(config)
+      const agentMessage = JsonTransformer.fromJSON(config.message, AgentMessage)
+
+      return await this.agent.oob.createLegacyConnectionlessInvitation({
+        ...config,
+        message: agentMessage,
+      })
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, { reason: `connection with connection id "${config.recordId}" not found.` })

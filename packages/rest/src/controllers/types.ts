@@ -1,5 +1,4 @@
 import type {
-  Attachment,
   AutoAcceptCredential,
   AutoAcceptProof,
   CredentialFormatPayload,
@@ -13,7 +12,6 @@ import type {
   ProofRequestConfig,
   ProtocolVersionType,
   ReceiveOutOfBandInvitationConfig,
-  Routing,
   V1CredentialService,
   V2CredentialService,
   OutOfBandDidCommService,
@@ -27,6 +25,12 @@ export interface AgentInfo {
     did: string
     verkey: string
   }
+}
+
+export interface AgentMessageType {
+  '@id': string
+  '@type': string
+  [key: string]: unknown
 }
 
 export interface ProofRequestMessageResponse {
