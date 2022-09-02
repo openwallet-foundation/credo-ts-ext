@@ -1,4 +1,3 @@
-import type { ProofRequestMessageResponse } from '../types'
 import type { ProofRecordProps } from '@aries-framework/core'
 
 import { Agent, JsonTransformer, PresentationPreview, RecordNotFoundError } from '@aries-framework/core'
@@ -43,6 +42,7 @@ export class ProofController extends Controller {
    * @returns ProofRecord
    */
   @Get('/:proofRecordId')
+  @Example<ProofRecordProps>(ProofRecordExample)
   public async getProofById(
     @Path('proofRecordId') proofRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
@@ -50,6 +50,7 @@ export class ProofController extends Controller {
   ) {
     try {
       const proof = await this.agent.proofs.getById(proofRecordId)
+
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -93,6 +94,7 @@ export class ProofController extends Controller {
    * @returns ProofRecord
    */
   @Post('/propose-proof')
+  @Example<ProofRecordProps>(ProofRecordExample)
   public async proposeProof(
     @Body() proposal: RequestProofProposalOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
@@ -104,6 +106,7 @@ export class ProofController extends Controller {
       const presentationPreview = JsonTransformer.fromJSON({ attributes, predicates }, PresentationPreview)
 
       const proof = await this.agent.proofs.proposeProof(connectionId, presentationPreview, proposalOptions)
+
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -124,6 +127,7 @@ export class ProofController extends Controller {
    * @returns ProofRecord
    */
   @Post('/:proofRecordId/accept-proposal')
+  @Example<ProofRecordProps>(ProofRecordExample)
   public async acceptProposal(
     @Path('proofRecordId') proofRecordId: string,
     @Body()
@@ -136,6 +140,7 @@ export class ProofController extends Controller {
   ) {
     try {
       const proof = await this.agent.proofs.acceptProposal(proofRecordId, proposal)
+
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -154,13 +159,16 @@ export class ProofController extends Controller {
    * @returns ProofRequestMessageResponse
    */
   @Post('/request-outofband-proof')
-  public async requestProofOutOfBand(
-    @Body() request: Omit<RequestProofOptions, 'connectionId'>
-  ): Promise<ProofRequestMessageResponse> {
+  @Example<{ proofUrl: string; proofRecord: ProofRecordProps }>({
+    proofUrl: 'https://example.com/proof-url',
+    proofRecord: ProofRecordExample,
+  })
+  public async requestProofOutOfBand(@Body() request: Omit<RequestProofOptions, 'connectionId'>) {
     const { proofRequestOptions, ...requestOptions } = request
     const proof = await this.agent.proofs.createOutOfBandRequest(proofRequestOptions, requestOptions)
+
     return {
-      message: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
+      proofUrl: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
         proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
       )}`,
       proofRecord: proof.proofRecord,
@@ -174,6 +182,7 @@ export class ProofController extends Controller {
    * @returns ProofRecord
    */
   @Post('/request-proof')
+  @Example<ProofRecordProps>(ProofRecordExample)
   public async requestProof(
     @Body() request: RequestProofOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
@@ -183,6 +192,7 @@ export class ProofController extends Controller {
 
     try {
       const proof = await this.agent.proofs.requestProof(connectionId, proofRequestOptions, config)
+
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -203,6 +213,7 @@ export class ProofController extends Controller {
    * @returns ProofRecord
    */
   @Post('/:proofRecordId/accept-request')
+  @Example<ProofRecordProps>(ProofRecordExample)
   public async acceptRequest(
     @Path('proofRecordId') proofRecordId: string,
     @Body()
@@ -245,6 +256,7 @@ export class ProofController extends Controller {
    * @returns ProofRecord
    */
   @Post('/:proofRecordId/accept-presentation')
+  @Example<ProofRecordProps>(ProofRecordExample)
   public async acceptPresentation(
     @Path('proofRecordId') proofRecordId: string,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,

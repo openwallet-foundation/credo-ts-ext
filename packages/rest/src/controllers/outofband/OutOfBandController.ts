@@ -76,7 +76,7 @@ export class OutOfBandController extends Controller {
   @Post('/create-invitation')
   public async createInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing'> // routing prop removed because of issues with public key serialization
+    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing' | 'appendedAttachments'> // props removed because of issues with serialization
   ) {
     try {
       const outOfBandRecord = await this.agent.oob.createInvitation(config)

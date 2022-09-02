@@ -74,203 +74,6 @@
 				"type": "string",
 				"description": "Get the supported protocol versions based on the provided credential services."
 			},
-			"CredentialPreviewAttributeOptions": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"mimeType": {
-						"type": "string"
-					},
-					"value": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"name",
-					"value"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"JwsGeneralFormat": {
-				"properties": {
-					"header": {
-						"$ref": "#/components/schemas/Record_string.unknown_"
-					},
-					"signature": {
-						"type": "string"
-					},
-					"protected": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"header",
-					"signature",
-					"protected"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"JwsFlattenedFormat": {
-				"properties": {
-					"signatures": {
-						"items": {
-							"$ref": "#/components/schemas/JwsGeneralFormat"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"signatures"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Jws": {
-				"anyOf": [
-					{
-						"$ref": "#/components/schemas/JwsGeneralFormat"
-					},
-					{
-						"$ref": "#/components/schemas/JwsFlattenedFormat"
-					}
-				]
-			},
-			"AttachmentData": {
-				"description": "A JSON object that gives access to the actual content of the attachment",
-				"properties": {
-					"base64": {
-						"type": "string",
-						"description": "Base64-encoded data, when representing arbitrary content inline instead of via links. Optional."
-					},
-					"json": {
-						"$ref": "#/components/schemas/Record_string.unknown_",
-						"description": "Directly embedded JSON data, when representing content inline instead of via links, and when the content is natively conveyable as JSON. Optional."
-					},
-					"links": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array",
-						"description": "A list of zero or more locations at which the content may be fetched. Optional."
-					},
-					"jws": {
-						"$ref": "#/components/schemas/Jws",
-						"description": "A JSON Web Signature over the content of the attachment. Optional."
-					},
-					"sha256": {
-						"type": "string",
-						"description": "The hash of the content. Optional."
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Attachment": {
-				"description": "Represents DIDComm attachment\nhttps://github.com/hyperledger/aries-rfcs/blob/master/concepts/0017-attachments/README.md",
-				"properties": {
-					"id": {
-						"type": "string"
-					},
-					"description": {
-						"type": "string",
-						"description": "An optional human-readable description of the content."
-					},
-					"filename": {
-						"type": "string",
-						"description": "A hint about the name that might be used if this attachment is persisted as a file. It is not required, and need not be unique. If this field is present and mime-type is not, the extension on the filename may be used to infer a MIME type."
-					},
-					"mimeType": {
-						"type": "string",
-						"description": "Describes the MIME type of the attached content. Optional but recommended."
-					},
-					"lastmodTime": {
-						"type": "string",
-						"format": "date-time",
-						"description": "A hint about when the content in this attachment was last modified."
-					},
-					"byteCount": {
-						"type": "number",
-						"format": "double",
-						"description": "Optional, and mostly relevant when content is included by reference instead of by value. Lets the receiver guess how expensive it will be, in time, bandwidth, and storage, to fully fetch the attachment."
-					},
-					"data": {
-						"$ref": "#/components/schemas/AttachmentData"
-					}
-				},
-				"required": [
-					"id",
-					"data"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"LinkedAttachment": {
-				"properties": {
-					"attributeName": {
-						"type": "string",
-						"description": "The name that will be used to generate the linked credential"
-					},
-					"attachment": {
-						"$ref": "#/components/schemas/Attachment",
-						"description": "The attachment that needs to be linked to the credential"
-					}
-				},
-				"required": [
-					"attributeName",
-					"attachment"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"IndyProposeCredentialFormat": {
-				"description": "This defines the module payload for calling CredentialsModule.createProposal\nor CredentialsModule.negotiateOffer",
-				"properties": {
-					"schemaIssuerDid": {
-						"type": "string"
-					},
-					"schemaId": {
-						"type": "string"
-					},
-					"schemaName": {
-						"type": "string"
-					},
-					"schemaVersion": {
-						"type": "string"
-					},
-					"credentialDefinitionId": {
-						"type": "string"
-					},
-					"issuerDid": {
-						"type": "string"
-					},
-					"attributes": {
-						"items": {
-							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
-						},
-						"type": "array"
-					},
-					"linkedAttachments": {
-						"items": {
-							"$ref": "#/components/schemas/LinkedAttachment"
-						},
-						"type": "array"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CredentialFormatPayload_CredentialFormats.createProposal_": {
-				"properties": {
-					"indy": {
-						"$ref": "#/components/schemas/IndyProposeCredentialFormat"
-					}
-				},
-				"type": "object",
-				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
-			},
 			"AutoAcceptCredential": {
 				"description": "Typing of the state for auto acceptance",
 				"enum": [
@@ -286,7 +89,66 @@
 						"$ref": "#/components/schemas/ProtocolVersionType_CredentialServices_"
 					},
 					"credentialFormats": {
-						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.createProposal_"
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"mimeType": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"mimeType",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"issuerDid": {
+										"type": "string"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									},
+									"schemaVersion": {
+										"type": "string"
+									},
+									"schemaName": {
+										"type": "string"
+									},
+									"schemaId": {
+										"type": "string"
+									},
+									"schemaIssuerDid": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"issuerDid",
+									"credentialDefinitionId",
+									"schemaVersion",
+									"schemaName",
+									"schemaId",
+									"schemaIssuerDid"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
 					},
 					"autoAcceptCredential": {
 						"$ref": "#/components/schemas/AutoAcceptCredential"
@@ -306,41 +168,49 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IndyAcceptProposalFormat": {
-				"description": "This defines the module payload for calling CredentialsModule.acceptProposal",
-				"properties": {
-					"credentialDefinitionId": {
-						"type": "string"
-					},
-					"attributes": {
-						"items": {
-							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
-						},
-						"type": "array"
-					},
-					"linkedAttachments": {
-						"items": {
-							"$ref": "#/components/schemas/LinkedAttachment"
-						},
-						"type": "array"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CredentialFormatPayload_CredentialFormats.acceptProposal_": {
-				"properties": {
-					"indy": {
-						"$ref": "#/components/schemas/IndyAcceptProposalFormat"
-					}
-				},
-				"type": "object",
-				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
-			},
 			"AcceptCredentialProposalOptions": {
 				"properties": {
 					"credentialFormats": {
-						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptProposal_"
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"mimeType": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"mimeType",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"credentialDefinitionId"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
 					},
 					"autoAcceptCredential": {
 						"$ref": "#/components/schemas/AutoAcceptCredential"
@@ -352,48 +222,52 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"IndyOfferCredentialFormat": {
-				"description": "This defines the module payload for calling CredentialsModule.offerCredential\nor CredentialsModule.negotiateProposal",
-				"properties": {
-					"credentialDefinitionId": {
-						"type": "string"
-					},
-					"attributes": {
-						"items": {
-							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
-						},
-						"type": "array"
-					},
-					"linkedAttachments": {
-						"items": {
-							"$ref": "#/components/schemas/LinkedAttachment"
-						},
-						"type": "array"
-					}
-				},
-				"required": [
-					"credentialDefinitionId",
-					"attributes"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"CredentialFormatPayload_CredentialFormats.createOffer_": {
-				"properties": {
-					"indy": {
-						"$ref": "#/components/schemas/IndyOfferCredentialFormat"
-					}
-				},
-				"type": "object",
-				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
-			},
 			"OfferCredentialOptions": {
 				"properties": {
 					"protocolVersion": {
 						"$ref": "#/components/schemas/ProtocolVersionType_CredentialServices_"
 					},
 					"credentialFormats": {
-						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.createOffer_"
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"mimeType": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"mimeType",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"credentialDefinitionId"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
 					},
 					"autoAcceptCredential": {
 						"$ref": "#/components/schemas/AutoAcceptCredential"
@@ -492,7 +366,7 @@
 			"AgentMessage": {
 				"$ref": "#/components/schemas/Record_string.unknown_"
 			},
-			"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__": {
+			"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments__": {
 				"properties": {
 					"label": {
 						"type": "string"
@@ -529,19 +403,13 @@
 					},
 					"autoAcceptConnection": {
 						"type": "boolean"
-					},
-					"appendedAttachments": {
-						"items": {
-							"$ref": "#/components/schemas/Attachment"
-						},
-						"type": "array"
 					}
 				},
 				"type": "object",
 				"description": "From T, pick a set of properties whose keys are in the union K"
 			},
-			"Omit_CreateOutOfBandInvitationConfig.routing_": {
-				"$ref": "#/components/schemas/Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__",
+			"Omit_CreateOutOfBandInvitationConfig.routing-or-appendedAttachments_": {
+				"$ref": "#/components/schemas/Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments__",
 				"description": "Construct a type with the properties of T except for those in type K."
 			},
 			"Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__": {
@@ -608,21 +476,24 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"OutOfBandInvitationSchema": {
+			"Pick_OutOfBandInvitationSchema.Exclude_keyofOutOfBandInvitationSchema.appendedAttachments__": {
 				"properties": {
-					"@id": {
-						"type": "string"
-					},
-					"@type": {
-						"type": "string"
-					},
 					"label": {
+						"type": "string"
+					},
+					"imageUrl": {
 						"type": "string"
 					},
 					"goalCode": {
 						"type": "string"
 					},
 					"goal": {
+						"type": "string"
+					},
+					"@id": {
+						"type": "string"
+					},
+					"@type": {
 						"type": "string"
 					},
 					"accept": {
@@ -649,80 +520,47 @@
 							]
 						},
 						"type": "array"
+					}
+				},
+				"required": [
+					"label",
+					"@type",
+					"services"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_OutOfBandInvitationSchema.appendedAttachments_": {
+				"$ref": "#/components/schemas/Pick_OutOfBandInvitationSchema.Exclude_keyofOutOfBandInvitationSchema.appendedAttachments__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"Pick_ReceiveOutOfBandInvitationConfig.Exclude_keyofReceiveOutOfBandInvitationConfig.routing__": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
 					},
 					"imageUrl": {
 						"type": "string"
 					},
-					"appendedAttachments": {
-						"items": {
-							"$ref": "#/components/schemas/Attachment"
-						},
-						"type": "array"
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"autoAcceptInvitation": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
 					}
 				},
-				"required": [
-					"@type",
-					"label",
-					"services"
-				],
 				"type": "object",
-				"additionalProperties": false
+				"description": "From T, pick a set of properties whose keys are in the union K"
 			},
-			"KeyType": {
-				"enum": [
-					"ed25519",
-					"bls12381g1g2",
-					"bls12381g1",
-					"bls12381g2",
-					"x25519"
-				],
-				"type": "string"
-			},
-			"Key": {
-				"properties": {
-					"publicKey": {
-						"type": "string",
-						"format": "byte"
-					},
-					"keyType": {
-						"$ref": "#/components/schemas/KeyType"
-					}
-				},
-				"required": [
-					"publicKey",
-					"keyType"
-				],
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Routing": {
-				"properties": {
-					"endpoints": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
-					},
-					"recipientKey": {
-						"$ref": "#/components/schemas/Key"
-					},
-					"routingKeys": {
-						"items": {
-							"$ref": "#/components/schemas/Key"
-						},
-						"type": "array"
-					},
-					"mediatorId": {
-						"type": "string"
-					}
-				},
-				"required": [
-					"endpoints",
-					"recipientKey",
-					"routingKeys"
-				],
-				"type": "object",
-				"additionalProperties": false
+			"Omit_ReceiveOutOfBandInvitationConfig.routing_": {
+				"$ref": "#/components/schemas/Pick_ReceiveOutOfBandInvitationConfig.Exclude_keyofReceiveOutOfBandInvitationConfig.routing__",
+				"description": "Construct a type with the properties of T except for those in type K."
 			},
 			"ReceiveInvitationProps": {
 				"properties": {
@@ -735,20 +573,17 @@
 					"imageUrl": {
 						"type": "string"
 					},
-					"autoAcceptInvitation": {
+					"autoAcceptConnection": {
 						"type": "boolean"
 					},
-					"autoAcceptConnection": {
+					"autoAcceptInvitation": {
 						"type": "boolean"
 					},
 					"reuseConnection": {
 						"type": "boolean"
 					},
-					"routing": {
-						"$ref": "#/components/schemas/Routing"
-					},
 					"invitation": {
-						"$ref": "#/components/schemas/OutOfBandInvitationSchema"
+						"$ref": "#/components/schemas/Omit_OutOfBandInvitationSchema.appendedAttachments_"
 					}
 				},
 				"required": [
@@ -768,17 +603,14 @@
 					"imageUrl": {
 						"type": "string"
 					},
-					"autoAcceptInvitation": {
+					"autoAcceptConnection": {
 						"type": "boolean"
 					},
-					"autoAcceptConnection": {
+					"autoAcceptInvitation": {
 						"type": "boolean"
 					},
 					"reuseConnection": {
 						"type": "boolean"
-					},
-					"routing": {
-						"$ref": "#/components/schemas/Routing"
 					},
 					"invitationUrl": {
 						"type": "string"
@@ -809,9 +641,6 @@
 					},
 					"mediatorId": {
 						"type": "string"
-					},
-					"routing": {
-						"$ref": "#/components/schemas/Routing"
 					}
 				},
 				"type": "object",
@@ -918,22 +747,6 @@
 			},
 			"ProofRecord": {
 				"$ref": "#/components/schemas/Record_string.unknown_"
-			},
-			"ProofRequestMessageResponse": {
-				"properties": {
-					"message": {
-						"type": "string"
-					},
-					"proofRecord": {
-						"$ref": "#/components/schemas/ProofRecord"
-					}
-				},
-				"required": [
-					"message",
-					"proofRecord"
-				],
-				"type": "object",
-				"additionalProperties": false
 			},
 			"IndyRevocationInterval": {
 				"properties": {
@@ -3298,7 +3111,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/Omit_CreateOutOfBandInvitationConfig.routing_",
+								"$ref": "#/components/schemas/Omit_CreateOutOfBandInvitationConfig.routing-or-appendedAttachments_",
 								"description": "configuration of how out-of-band invitation should be created"
 							}
 						}
@@ -3928,7 +3741,18 @@
 						"description": "ProofRecord",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
 							}
 						}
 					},
@@ -4058,7 +3882,18 @@
 						"description": "ProofRecord",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
 							}
 						}
 					},
@@ -4125,7 +3960,18 @@
 						"description": "ProofRecord",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
 							}
 						}
 					},
@@ -4224,7 +4070,33 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/ProofRequestMessageResponse"
+									"properties": {
+										"proofRecord": {
+											"$ref": "#/components/schemas/ProofRecord"
+										},
+										"proofUrl": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"proofRecord",
+										"proofUrl"
+									],
+									"type": "object"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"proofUrl": "https://example.com/proof-url",
+											"proofRecord": {
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+												"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+											}
+										}
+									}
 								}
 							}
 						}
@@ -4256,7 +4128,18 @@
 						"description": "ProofRecord",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
 							}
 						}
 					},
@@ -4323,7 +4206,18 @@
 						"description": "ProofRecord",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
 							}
 						}
 					},
@@ -4411,7 +4305,18 @@
 						"description": "ProofRecord",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
 							}
 						}
 					},

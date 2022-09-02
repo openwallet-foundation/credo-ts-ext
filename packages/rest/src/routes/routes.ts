@@ -67,94 +67,6 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"string","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CredentialPreviewAttributeOptions": {
-        "dataType": "refObject",
-        "properties": {
-            "name": {"dataType":"string","required":true},
-            "mimeType": {"dataType":"string"},
-            "value": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "JwsGeneralFormat": {
-        "dataType": "refObject",
-        "properties": {
-            "header": {"ref":"Record_string.unknown_","required":true},
-            "signature": {"dataType":"string","required":true},
-            "protected": {"dataType":"string","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "JwsFlattenedFormat": {
-        "dataType": "refObject",
-        "properties": {
-            "signatures": {"dataType":"array","array":{"dataType":"refObject","ref":"JwsGeneralFormat"},"required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Jws": {
-        "dataType": "refAlias",
-        "type": {"dataType":"union","subSchemas":[{"ref":"JwsGeneralFormat"},{"ref":"JwsFlattenedFormat"}],"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "AttachmentData": {
-        "dataType": "refObject",
-        "properties": {
-            "base64": {"dataType":"string"},
-            "json": {"ref":"Record_string.unknown_"},
-            "links": {"dataType":"array","array":{"dataType":"string"}},
-            "jws": {"ref":"Jws"},
-            "sha256": {"dataType":"string"},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Attachment": {
-        "dataType": "refObject",
-        "properties": {
-            "id": {"dataType":"string","required":true},
-            "description": {"dataType":"string"},
-            "filename": {"dataType":"string"},
-            "mimeType": {"dataType":"string"},
-            "lastmodTime": {"dataType":"datetime"},
-            "byteCount": {"dataType":"double"},
-            "data": {"ref":"AttachmentData","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "LinkedAttachment": {
-        "dataType": "refObject",
-        "properties": {
-            "attributeName": {"dataType":"string","required":true},
-            "attachment": {"ref":"Attachment","required":true},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IndyProposeCredentialFormat": {
-        "dataType": "refObject",
-        "properties": {
-            "schemaIssuerDid": {"dataType":"string"},
-            "schemaId": {"dataType":"string"},
-            "schemaName": {"dataType":"string"},
-            "schemaVersion": {"dataType":"string"},
-            "credentialDefinitionId": {"dataType":"string"},
-            "issuerDid": {"dataType":"string"},
-            "attributes": {"dataType":"array","array":{"dataType":"refObject","ref":"CredentialPreviewAttributeOptions"}},
-            "linkedAttachments": {"dataType":"array","array":{"dataType":"refObject","ref":"LinkedAttachment"}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CredentialFormatPayload_CredentialFormats.createProposal_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"IndyProposeCredentialFormat"}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AutoAcceptCredential": {
         "dataType": "refEnum",
         "enums": ["always","contentApproved","never"],
@@ -164,7 +76,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "protocolVersion": {"ref":"ProtocolVersionType_CredentialServices_","required":true},
-            "credentialFormats": {"ref":"CredentialFormatPayload_CredentialFormats.createProposal_","required":true},
+            "credentialFormats": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"dataType":"nestedObjectLiteral","nestedProperties":{"attributes":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"mimeType":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}}},"required":true},"issuerDid":{"dataType":"string","required":true},"credentialDefinitionId":{"dataType":"string","required":true},"schemaVersion":{"dataType":"string","required":true},"schemaName":{"dataType":"string","required":true},"schemaId":{"dataType":"string","required":true},"schemaIssuerDid":{"dataType":"string","required":true}},"required":true}},"required":true},
             "autoAcceptCredential": {"ref":"AutoAcceptCredential"},
             "comment": {"dataType":"string"},
             "connectionId": {"dataType":"string","required":true},
@@ -172,51 +84,21 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IndyAcceptProposalFormat": {
-        "dataType": "refObject",
-        "properties": {
-            "credentialDefinitionId": {"dataType":"string"},
-            "attributes": {"dataType":"array","array":{"dataType":"refObject","ref":"CredentialPreviewAttributeOptions"}},
-            "linkedAttachments": {"dataType":"array","array":{"dataType":"refObject","ref":"LinkedAttachment"}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CredentialFormatPayload_CredentialFormats.acceptProposal_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"IndyAcceptProposalFormat"}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "AcceptCredentialProposalOptions": {
         "dataType": "refObject",
         "properties": {
-            "credentialFormats": {"ref":"CredentialFormatPayload_CredentialFormats.acceptProposal_"},
+            "credentialFormats": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"dataType":"nestedObjectLiteral","nestedProperties":{"attributes":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"mimeType":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}}},"required":true},"credentialDefinitionId":{"dataType":"string","required":true}},"required":true}}},
             "autoAcceptCredential": {"ref":"AutoAcceptCredential"},
             "comment": {"dataType":"string"},
         },
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "IndyOfferCredentialFormat": {
-        "dataType": "refObject",
-        "properties": {
-            "credentialDefinitionId": {"dataType":"string","required":true},
-            "attributes": {"dataType":"array","array":{"dataType":"refObject","ref":"CredentialPreviewAttributeOptions"},"required":true},
-            "linkedAttachments": {"dataType":"array","array":{"dataType":"refObject","ref":"LinkedAttachment"}},
-        },
-        "additionalProperties": false,
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "CredentialFormatPayload_CredentialFormats.createOffer_": {
-        "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"IndyOfferCredentialFormat"}},"validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "OfferCredentialOptions": {
         "dataType": "refObject",
         "properties": {
             "protocolVersion": {"ref":"ProtocolVersionType_CredentialServices_","required":true},
-            "credentialFormats": {"ref":"CredentialFormatPayload_CredentialFormats.createOffer_","required":true},
+            "credentialFormats": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"dataType":"nestedObjectLiteral","nestedProperties":{"attributes":{"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"mimeType":{"dataType":"string","required":true},"name":{"dataType":"string","required":true}}},"required":true},"credentialDefinitionId":{"dataType":"string","required":true}},"required":true}},"required":true},
             "autoAcceptCredential": {"ref":"AutoAcceptCredential"},
             "comment": {"dataType":"string"},
             "connectionId": {"dataType":"string","required":true},
@@ -287,14 +169,14 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"Record_string.unknown_","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__": {
+    "Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string"},"alias":{"dataType":"string"},"imageUrl":{"dataType":"string"},"goalCode":{"dataType":"string"},"goal":{"dataType":"string"},"handshake":{"dataType":"boolean"},"handshakeProtocols":{"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},"messages":{"dataType":"array","array":{"dataType":"refAlias","ref":"AgentMessage"}},"multiUseInvitation":{"dataType":"boolean"},"autoAcceptConnection":{"dataType":"boolean"},"appendedAttachments":{"dataType":"array","array":{"dataType":"refObject","ref":"Attachment"}}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string"},"alias":{"dataType":"string"},"imageUrl":{"dataType":"string"},"goalCode":{"dataType":"string"},"goal":{"dataType":"string"},"handshake":{"dataType":"boolean"},"handshakeProtocols":{"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},"messages":{"dataType":"array","array":{"dataType":"refAlias","ref":"AgentMessage"}},"multiUseInvitation":{"dataType":"boolean"},"autoAcceptConnection":{"dataType":"boolean"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Omit_CreateOutOfBandInvitationConfig.routing_": {
+    "Omit_CreateOutOfBandInvitationConfig.routing-or-appendedAttachments_": {
         "dataType": "refAlias",
-        "type": {"ref":"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing__","validators":{}},
+        "type": {"ref":"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments__","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__": {
@@ -320,46 +202,24 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "OutOfBandInvitationSchema": {
-        "dataType": "refObject",
-        "properties": {
-            "@id": {"dataType":"string"},
-            "@type": {"dataType":"string","required":true},
-            "label": {"dataType":"string","required":true},
-            "goalCode": {"dataType":"string"},
-            "goal": {"dataType":"string"},
-            "accept": {"dataType":"array","array":{"dataType":"string"}},
-            "handshake_protocols": {"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},
-            "services": {"dataType":"array","array":{"dataType":"union","subSchemas":[{"ref":"OutOfBandDidCommService"},{"dataType":"string"}]},"required":true},
-            "imageUrl": {"dataType":"string"},
-            "appendedAttachments": {"dataType":"array","array":{"dataType":"refObject","ref":"Attachment"}},
-        },
-        "additionalProperties": false,
+    "Pick_OutOfBandInvitationSchema.Exclude_keyofOutOfBandInvitationSchema.appendedAttachments__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string","required":true},"imageUrl":{"dataType":"string"},"goalCode":{"dataType":"string"},"goal":{"dataType":"string"},"@id":{"dataType":"string"},"@type":{"dataType":"string","required":true},"accept":{"dataType":"array","array":{"dataType":"string"}},"handshake_protocols":{"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},"services":{"dataType":"array","array":{"dataType":"union","subSchemas":[{"ref":"OutOfBandDidCommService"},{"dataType":"string"}]},"required":true}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "KeyType": {
-        "dataType": "refEnum",
-        "enums": ["ed25519","bls12381g1g2","bls12381g1","bls12381g2","x25519"],
+    "Omit_OutOfBandInvitationSchema.appendedAttachments_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_OutOfBandInvitationSchema.Exclude_keyofOutOfBandInvitationSchema.appendedAttachments__","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Key": {
-        "dataType": "refObject",
-        "properties": {
-            "publicKey": {"dataType":"buffer","required":true},
-            "keyType": {"ref":"KeyType","required":true},
-        },
-        "additionalProperties": false,
+    "Pick_ReceiveOutOfBandInvitationConfig.Exclude_keyofReceiveOutOfBandInvitationConfig.routing__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string"},"alias":{"dataType":"string"},"imageUrl":{"dataType":"string"},"autoAcceptConnection":{"dataType":"boolean"},"autoAcceptInvitation":{"dataType":"boolean"},"reuseConnection":{"dataType":"boolean"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "Routing": {
-        "dataType": "refObject",
-        "properties": {
-            "endpoints": {"dataType":"array","array":{"dataType":"string"},"required":true},
-            "recipientKey": {"ref":"Key","required":true},
-            "routingKeys": {"dataType":"array","array":{"dataType":"refObject","ref":"Key"},"required":true},
-            "mediatorId": {"dataType":"string"},
-        },
-        "additionalProperties": false,
+    "Omit_ReceiveOutOfBandInvitationConfig.routing_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_ReceiveOutOfBandInvitationConfig.Exclude_keyofReceiveOutOfBandInvitationConfig.routing__","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ReceiveInvitationProps": {
@@ -368,11 +228,10 @@ const models: TsoaRoute.Models = {
             "label": {"dataType":"string"},
             "alias": {"dataType":"string"},
             "imageUrl": {"dataType":"string"},
-            "autoAcceptInvitation": {"dataType":"boolean"},
             "autoAcceptConnection": {"dataType":"boolean"},
+            "autoAcceptInvitation": {"dataType":"boolean"},
             "reuseConnection": {"dataType":"boolean"},
-            "routing": {"ref":"Routing"},
-            "invitation": {"ref":"OutOfBandInvitationSchema","required":true},
+            "invitation": {"ref":"Omit_OutOfBandInvitationSchema.appendedAttachments_","required":true},
         },
         "additionalProperties": false,
     },
@@ -383,10 +242,9 @@ const models: TsoaRoute.Models = {
             "label": {"dataType":"string"},
             "alias": {"dataType":"string"},
             "imageUrl": {"dataType":"string"},
-            "autoAcceptInvitation": {"dataType":"boolean"},
             "autoAcceptConnection": {"dataType":"boolean"},
+            "autoAcceptInvitation": {"dataType":"boolean"},
             "reuseConnection": {"dataType":"boolean"},
-            "routing": {"ref":"Routing"},
             "invitationUrl": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -401,7 +259,6 @@ const models: TsoaRoute.Models = {
             "alias": {"dataType":"string"},
             "imageUrl": {"dataType":"string"},
             "mediatorId": {"dataType":"string"},
-            "routing": {"ref":"Routing"},
         },
         "additionalProperties": false,
     },
@@ -454,15 +311,6 @@ const models: TsoaRoute.Models = {
     "ProofRecord": {
         "dataType": "refAlias",
         "type": {"ref":"Record_string.unknown_","validators":{}},
-    },
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "ProofRequestMessageResponse": {
-        "dataType": "refObject",
-        "properties": {
-            "message": {"dataType":"string","required":true},
-            "proofRecord": {"ref":"ProofRecord","required":true},
-        },
-        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "IndyRevocationInterval": {
@@ -1293,7 +1141,7 @@ export function RegisterRoutes(app: express.Router) {
             async function OutOfBandController_createInvitation(request: any, response: any, next: any) {
             const args = {
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}}},
-                    config: {"in":"body","name":"config","ref":"Omit_CreateOutOfBandInvitationConfig.routing_"},
+                    config: {"in":"body","name":"config","ref":"Omit_CreateOutOfBandInvitationConfig.routing-or-appendedAttachments_"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

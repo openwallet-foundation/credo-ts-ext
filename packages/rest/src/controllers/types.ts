@@ -39,21 +39,53 @@ type CredentialServices = [V1CredentialService, V2CredentialService]
 
 export interface ProposeCredentialOptions {
   protocolVersion: ProtocolVersionType<CredentialServices>
-  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createProposal'>
+  credentialFormats: {
+    indy: {
+      schemaIssuerDid: string
+      schemaId: string
+      schemaName: string
+      schemaVersion: string
+      credentialDefinitionId: string
+      issuerDid: string
+      attributes: {
+        name: string
+        mimeType: string
+        value: string
+      }[]
+    }
+  }
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
   connectionId: string
 }
 
 export interface AcceptCredentialProposalOptions {
-  credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptProposal'>
+  credentialFormats?: {
+    indy: {
+      credentialDefinitionId: string
+      attributes: {
+        name: string
+        mimeType: string
+        value: string
+      }[]
+    }
+  }
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
 }
 
 export interface OfferCredentialOptions {
   protocolVersion: ProtocolVersionType<CredentialServices>
-  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createOffer'>
+  credentialFormats: {
+    indy: {
+      credentialDefinitionId: string
+      attributes: {
+        name: string
+        mimeType: string
+        value: string
+      }[]
+    }
+  }
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
   connectionId: string
@@ -71,11 +103,13 @@ export interface AcceptCredentialRequestOptions {
   comment?: string
 }
 
-export interface ReceiveInvitationProps extends ReceiveOutOfBandInvitationConfig {
-  invitation: OutOfBandInvitationSchema
+type ReceiveOutOfBandInvitationProps = Omit<ReceiveOutOfBandInvitationConfig, 'routing'>
+
+export interface ReceiveInvitationProps extends ReceiveOutOfBandInvitationProps {
+  invitation: Omit<OutOfBandInvitationSchema, 'appendedAttachments'>
 }
 
-export interface ReceiveInvitationByUrlProps extends ReceiveOutOfBandInvitationConfig {
+export interface ReceiveInvitationByUrlProps extends ReceiveOutOfBandInvitationProps {
   invitationUrl: string
 }
 
@@ -86,7 +120,6 @@ export interface AcceptInvitationConfig {
   alias?: string
   imageUrl?: string
   mediatorId?: string
-  routing?: Routing
 }
 
 export interface OutOfBandInvitationSchema {
@@ -99,7 +132,6 @@ export interface OutOfBandInvitationSchema {
   handshake_protocols?: HandshakeProtocol[]
   services: Array<OutOfBandDidCommService | string>
   imageUrl?: string
-  appendedAttachments?: Attachment[]
 }
 
 export interface ConnectionInvitationSchema {
@@ -111,7 +143,6 @@ export interface ConnectionInvitationSchema {
   serviceEndpoint?: string
   routingKeys?: string[]
   imageUrl?: string
-  appendedAttachments?: Attachment[]
 }
 
 export interface RequestProofOptions extends ProofRequestConfig {
