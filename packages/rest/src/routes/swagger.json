@@ -98,16 +98,12 @@
 												"value": {
 													"type": "string"
 												},
-												"mimeType": {
-													"type": "string"
-												},
 												"name": {
 													"type": "string"
 												}
 											},
 											"required": [
 												"value",
-												"mimeType",
 												"name"
 											],
 											"type": "object"
@@ -180,29 +176,45 @@
 												"value": {
 													"type": "string"
 												},
-												"mimeType": {
-													"type": "string"
-												},
 												"name": {
 													"type": "string"
 												}
 											},
 											"required": [
 												"value",
-												"mimeType",
 												"name"
 											],
 											"type": "object"
 										},
 										"type": "array"
 									},
+									"issuerDid": {
+										"type": "string"
+									},
 									"credentialDefinitionId": {
+										"type": "string"
+									},
+									"schemaVersion": {
+										"type": "string"
+									},
+									"schemaName": {
+										"type": "string"
+									},
+									"schemaId": {
+										"type": "string"
+									},
+									"schemaIssuerDid": {
 										"type": "string"
 									}
 								},
 								"required": [
 									"attributes",
-									"credentialDefinitionId"
+									"issuerDid",
+									"credentialDefinitionId",
+									"schemaVersion",
+									"schemaName",
+									"schemaId",
+									"schemaIssuerDid"
 								],
 								"type": "object"
 							}
@@ -237,16 +249,12 @@
 												"value": {
 													"type": "string"
 												},
-												"mimeType": {
-													"type": "string"
-												},
 												"name": {
 													"type": "string"
 												}
 											},
 											"required": [
 												"value",
-												"mimeType",
 												"name"
 											],
 											"type": "object"

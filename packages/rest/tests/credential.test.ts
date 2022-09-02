@@ -117,6 +117,17 @@ describe('CredentialController', () => {
         credentialFormats: {
           indy: {
             credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
+            schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaName: 'test',
+            schemaVersion: '1.0',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
           },
         },
         autoAcceptCredential: 'always',

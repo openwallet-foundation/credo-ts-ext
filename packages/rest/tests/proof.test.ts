@@ -164,12 +164,11 @@ describe('ProofController', () => {
                 name: 'string',
               },
             },
-            requestedPredicates: {},
           },
         })
 
       expect(response.statusCode).toBe(200)
-      expect(response.body.message).toBeDefined()
+      expect(response.body.proofUrl).toBeDefined()
       expect(response.body.proofRecord).toBeDefined()
     })
   })

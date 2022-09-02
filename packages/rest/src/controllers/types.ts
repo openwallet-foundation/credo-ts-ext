@@ -53,7 +53,6 @@ export interface ProposeCredentialOptions {
       issuerDid: string
       attributes: {
         name: string
-        mimeType: string
         value: string
       }[]
     }
@@ -66,10 +65,14 @@ export interface ProposeCredentialOptions {
 export interface AcceptCredentialProposalOptions {
   credentialFormats?: {
     indy: {
+      schemaIssuerDid: string
+      schemaId: string
+      schemaName: string
+      schemaVersion: string
       credentialDefinitionId: string
+      issuerDid: string
       attributes: {
         name: string
-        mimeType: string
         value: string
       }[]
     }
@@ -85,7 +88,6 @@ export interface OfferCredentialOptions {
       credentialDefinitionId: string
       attributes: {
         name: string
-        mimeType: string
         value: string
       }[]
     }
