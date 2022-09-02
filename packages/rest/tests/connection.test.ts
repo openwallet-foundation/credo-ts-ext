@@ -1,24 +1,23 @@
 import type { Agent, ConnectionRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
-import { JsonTransformer, ConnectionInvitationMessage } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { getTestAgent, objectToJson } from './utils/helpers'
+import { getTestConnection, getTestAgent, objectToJson } from './utils/helpers'
 
 describe('ConnectionController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
+  let connection: ConnectionRecord
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Rest Connection Test Alice', 3002)
-    bobAgent = await getTestAgent('Rest Connection Test Bob', 3003)
+    aliceAgent = await getTestAgent('Connection REST Agent Test Alice', 3012)
+    bobAgent = await getTestAgent('Connection REST Agent Test Bob', 3013)
     app = await setupServer(bobAgent, { port: 3000 })
-
-    await bobAgent.connections.createConnection()
+    connection = getTestConnection()
   })
 
   afterEach(() => {
@@ -40,14 +39,13 @@ describe('ConnectionController', () => {
 
   describe('Get connection by id', () => {
     test('should return connection record', async () => {
-      const spy = jest.spyOn(bobAgent.connections, 'findById')
+      const spy = jest.spyOn(bobAgent.connections, 'findById').mockResolvedValueOnce(connection)
       const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
 
-      const { connectionRecord } = await bobAgent.connections.createConnection()
-
-      const response = await request(app).get(`/connections/${connectionRecord.id}`)
+      const response = await request(app).get(`/connections/${connection.id}`)
 
       expect(response.statusCode).toBe(200)
+      expect(spy).toHaveBeenCalledWith(connection.id)
       expect(response.body).toEqual(objectToJson(await getResult()))
     })
 
@@ -58,176 +56,19 @@ describe('ConnectionController', () => {
     })
   })
 
-  describe('create invitation', () => {
-    test('should return invitation', async () => {
-      const spy = jest.spyOn(bobAgent.connections, 'createConnection')
-      const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
-
-      const response = await request(app).post('/connections/create-invitation')
-
-      const result = await getResult()
-      const instance = JsonTransformer.fromJSON(result.invitation, ConnectionInvitationMessage) // i do this because i need to add useLegacyDidSov
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body.invitationUrl).toBeDefined()
-      expect(response.body.invitation).toEqual(instance.toJSON({ useLegacyDidSovPrefix: true }))
-    })
-
-    test('should accept optional parameters', async () => {
-      const spy = jest.spyOn(bobAgent.connections, 'createConnection')
-
-      const params = {
-        autoAcceptConnection: false,
-        alias: 'test',
-      }
-
-      const response = await request(app).post('/connections/create-invitation').send(params)
-
-      expect(response.statusCode).toBe(200)
-      expect(spy).toBeCalledWith(params)
-      expect(response.body.connection.alias).toEqual('test')
-      expect(response.body.connection.autoAcceptConnection).toEqual(false)
-      expect(response.body.connection.multiUseInvitation).toEqual(false)
-    })
-
-    test('should accept custom label and imageUrl', async () => {
-      const spy = jest.spyOn(bobAgent.connections, 'createConnection')
-
-      const params = {
-        myLabel: 'custom-label',
-        myImageUrl: 'https://example.com/image.png',
-      }
-
-      const response = await request(app).post('/connections/create-invitation').send(params)
-
-      expect(response.statusCode).toBe(200)
-      expect(spy).toBeCalledWith(params)
-      expect(response.body.invitation.label).toEqual('custom-label')
-      expect(response.body.invitation.imageUrl).toEqual('https://example.com/image.png')
-    })
-
-    test('should accept multiUseInvitation parameter', async () => {
-      const spy = jest.spyOn(bobAgent.connections, 'createConnection')
-
-      const params = {
-        multiUseInvitation: true,
-      }
-
-      const response = await request(app).post('/connections/create-invitation').send(params)
-
-      expect(response.statusCode).toBe(200)
-      expect(spy).toBeCalledWith(params)
-      expect(response.body.connection.multiUseInvitation).toBeTruthy()
-    })
-  })
-
-  describe('receive invitation', () => {
-    test('should return connection record from received invitation', async () => {
-      const { invitation } = await bobAgent.connections.createConnection()
-
-      const spy = jest.spyOn(bobAgent.connections, 'receiveInvitation')
-      const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
-
-      const req = {
-        invitation: invitation.toJSON({ useLegacyDidSovPrefix: true }),
-      }
-      const response = await request(app).post('/connections/receive-invitation').send(req)
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(objectToJson(await getResult()))
-    })
-
-    test('should overwrite agent options with request options', async () => {
-      const { invitation } = await bobAgent.connections.createConnection()
-
-      const req = {
-        invitation: invitation.toJSON({ useLegacyDidSovPrefix: true }),
-        autoAcceptConnection: false,
-      }
-      const response = await request(app).post('/connections/receive-invitation').send(req)
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body.autoAcceptConnection).toBeFalsy()
-    })
-  })
-
-  describe('receive invitation by url', () => {
-    test('should return connection record from received invitation', async () => {
-      const { invitation } = await aliceAgent.connections.createConnection()
-      const req = {
-        invitationUrl: invitation.toUrl({
-          domain: aliceAgent.config.endpoints[0],
-          useLegacyDidSovPrefix: aliceAgent.config.useLegacyDidSovPrefix,
-        }),
-      }
-
-      const spy = jest.spyOn(bobAgent.connections, 'receiveInvitation')
-      const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
-
-      const response = await request(app).post('/connections/receive-invitation-url').send(req)
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(objectToJson(await getResult()))
-    })
-
-    test('should overwrite agent options with request options', async () => {
-      const { invitation } = await aliceAgent.connections.createConnection()
-
-      const req = {
-        invitationUrl: invitation.toUrl({
-          domain: aliceAgent.config.endpoints[0],
-          useLegacyDidSovPrefix: aliceAgent.config.useLegacyDidSovPrefix,
-        }),
-        autoAcceptConnection: false,
-      }
-      const response = await request(app).post('/connections/receive-invitation-url').send(req)
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body.autoAcceptConnection).toBeFalsy()
-    })
-  })
-
-  describe('Accept invitation', () => {
-    test('should return connection record from accepted invitation', async () => {
-      const { invitation } = await aliceAgent.connections.createConnection({
-        autoAcceptConnection: false,
-      })
-      const connection = await bobAgent.connections.receiveInvitation(invitation, { autoAcceptConnection: false })
-
-      const spy = jest.spyOn(bobAgent.connections, 'acceptInvitation')
-      const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
-
-      const response = await request(app).post(`/connections/${connection.id}/accept-invitation`)
-
-      expect(response.statusCode)
-      expect(response.body).toEqual(objectToJson(await getResult()))
-    })
-
-    test('should throw error when connectionId is not found', async () => {
-      const response = await request(app).post(`/connections/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-invitation`)
-
-      expect(response.statusCode).toBe(404)
-    })
-  })
-
   describe('Accept request', () => {
     test('should return accepted connection record', async () => {
-      const { connectionRecord, invitation } = await bobAgent.connections.createConnection({
-        autoAcceptConnection: false,
-      })
-      const connection = await aliceAgent.connections.receiveInvitation(invitation, { autoAcceptConnection: false })
-      await aliceAgent.connections.acceptInvitation(connection.id)
-
-      const spy = jest.spyOn(bobAgent.connections, 'acceptRequest')
+      const spy = jest.spyOn(bobAgent.connections, 'acceptRequest').mockResolvedValueOnce(connection)
       const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
 
-      const response = await request(app).post(`/connections/${connectionRecord.id}/accept-request`)
+      const response = await request(app).post(`/connections/${connection.id}/accept-request`)
 
       expect(response.statusCode)
+      expect(spy).toHaveBeenCalledWith(connection.id)
       expect(response.body).toEqual(objectToJson(await getResult()))
     })
 
-    test('should throw error when connectionId is not found', async () => {
+    test('should throw error when connection id is not found', async () => {
       const response = await request(app).post(`/connections/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-request`)
 
       expect(response.statusCode).toBe(404)
@@ -236,19 +77,13 @@ describe('ConnectionController', () => {
 
   describe('Accept response', () => {
     test('should return accepted connection record', async () => {
-      const { connectionRecord, invitation } = await aliceAgent.connections.createConnection({
-        autoAcceptConnection: false,
-      })
-      const connection = await bobAgent.connections.receiveInvitation(invitation, { autoAcceptConnection: false })
-      await bobAgent.connections.acceptInvitation(connection.id)
-      await aliceAgent.connections.acceptRequest(connectionRecord.id)
-
-      const spy = jest.spyOn(bobAgent.connections, 'acceptResponse')
+      const spy = jest.spyOn(bobAgent.connections, 'acceptResponse').mockResolvedValueOnce(connection)
       const getResult = (): Promise<ConnectionRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/connections/${connection.id}/accept-response`)
 
       expect(response.statusCode)
+      expect(spy).toHaveBeenCalledWith(connection.id)
       expect(response.body).toEqual(objectToJson(await getResult()))
     })
 

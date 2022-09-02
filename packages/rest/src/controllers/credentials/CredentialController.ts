@@ -1,53 +1,35 @@
-import { IndySdkError, Agent, RecordNotFoundError } from '@aries-framework/core'
-import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
-import { isIndyError } from '@aries-framework/core/build/utils/indyError'
-import {
-  Get,
-  Post,
-  JsonController,
-  Body,
-  InternalServerError,
-  Param,
-  NotFoundError,
-  Delete,
-  OnUndefined,
-} from 'routing-controllers'
+import type { CredentialExchangeRecordProps } from '@aries-framework/core'
+
+import { Agent, RecordNotFoundError } from '@aries-framework/core'
+import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { AcceptCredentialProposalRequest } from '../../schemas/AcceptCredentialProposalRequest'
-import { CredentialOfferRequest } from '../../schemas/CredentialOfferRequest'
-import { CredentialOfferTemp } from '../../schemas/CredentialOfferTemplate'
-import { CredentialProposalRequest } from '../../schemas/CredentialProposalRequest'
+import { CredentialExchangeRecordExample, RecordId } from '../examples'
+import {
+  AcceptCredentialRequestOptions,
+  OfferCredentialOptions,
+  ProposeCredentialOptions,
+  AcceptCredentialProposalOptions,
+  AcceptCredentialOfferOptions,
+} from '../types'
 
-@JsonController('/credentials')
+@Tags('Credentials')
+@Route('/credentials')
 @injectable()
-export class CredentialController {
+export class CredentialController extends Controller {
   private agent: Agent
 
   public constructor(agent: Agent) {
+    super()
     this.agent = agent
   }
 
   /**
-   * Retrieve credential record by credentialId
+   * Retrieve all credential exchange records
+   *
+   * @returns CredentialExchangeRecord[]
    */
-  @Get('/:credentialId')
-  public async getCredentialById(@Param('credentialId') credentialId: string) {
-    try {
-      const credential = await this.agent.credentials.getById(credentialId)
-
-      return credential.toJSON()
-    } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`credential with credentialId "${credentialId}" not found.`)
-      }
-      throw new InternalServerError(`something went wrong: ${error}`)
-    }
-  }
-
-  /**
-   * Retrieve all credential records
-   */
+  @Example<CredentialExchangeRecordProps[]>([CredentialExchangeRecordExample])
   @Get('/')
   public async getAllCredentials() {
     const credentials = await this.agent.credentials.getAll()
@@ -55,163 +37,230 @@ export class CredentialController {
   }
 
   /**
-   * Initiate a new credential exchange as holder by sending a credential proposal message
-   * to the connection with the specified connection id.
+   * Retrieve credential exchange record by credential record id
+   *
+   * @param credentialRecordId
+   * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
+  @Get('/:credentialRecordId')
+  public async getCredentialById(
+    @Path('credentialRecordId') credentialRecordId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
+  ) {
+    try {
+      const credential = await this.agent.credentials.getById(credentialRecordId)
+      return credential.toJSON()
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        return notFoundError(404, {
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
+        })
+      }
+      return internalServerError(500, { message: `something went wrong: ${error}` })
+    }
+  }
+
+  /**
+   * Deletes a credential exchange record in the credential repository.
+   *
+   * @param credentialRecordId
+   */
+  @Delete('/:credentialRecordId')
+  public async deleteCredential(
+    @Path('credentialRecordId') credentialRecordId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
+  ) {
+    try {
+      this.setStatus(204)
+      await this.agent.credentials.deleteById(credentialRecordId)
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        return notFoundError(404, {
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
+        })
+      }
+      return internalServerError(500, { message: `something went wrong: ${error}` })
+    }
+  }
+
+  /**
+   * Initiate a new credential exchange as holder by sending a propose credential message
+   * to the connection with a specified connection id.
+   *
+   * @param options
+   * @returns CredentialExchangeRecord
+   */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/propose-credential')
   public async proposeCredential(
-    @Body()
-    proposal: CredentialProposalRequest
+    @Body() options: ProposeCredentialOptions,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
-    const { connectionId, ...proposalRequest } = proposal
     try {
-      const credential = await this.agent.credentials.proposeCredential(connectionId, proposalRequest)
-
+      const credential = await this.agent.credentials.proposeCredential(options)
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Connection with connection id "${connectionId}" not found.`)
+        return notFoundError(404, {
+          reason: `connection with connection record id "${options.connectionId}" not found.`,
+        })
       }
-      throw new InternalServerError(`Something went wrong: ${error}`)
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
   /**
-   * Accept a credential proposal as issuer (by sending a credential offer message) to the connection
-   * associated with the credential record.
+   * Accept a credential proposal as issuer by sending an accept proposal message
+   * to the connection associated with the credential exchange record.
+   *
+   * @param credentialRecordId credential identifier
+   * @param options
+   * @returns CredentialExchangeRecord
    */
-  @Post('/:credentialId/accept-proposal')
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
+  @Post('/:credentialRecordId/accept-proposal')
   public async acceptProposal(
-    @Param('credentialId') credentialId: string,
-    @Body()
-    proposal: AcceptCredentialProposalRequest
+    @Path('credentialRecordId') credentialRecordId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() options?: AcceptCredentialProposalOptions
   ) {
     try {
-      const credential = await this.agent.credentials.acceptProposal(credentialId, proposal)
+      const credential = await this.agent.credentials.acceptProposal({
+        ...options,
+        credentialRecordId: credentialRecordId,
+      })
 
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Credential with credential id "${credentialId}" not found.`)
+        return notFoundError(404, {
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
+        })
       }
-      throw new InternalServerError(`Something went wrong: ${error}`)
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
   /**
-   * Creates a credential offer not bound to any existing connection
-   */
-  @Post('/offer-outofband-credential')
-  public async offerCredentialOutOfBand(
-    @Body()
-    offer: CredentialOfferTemp
-  ) {
-    const credential = await this.agent.credentials.createOutOfBandOffer(offer)
-
-    return {
-      message: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
-        credential.offerMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
-      )}`,
-      credentialRecord: credential.credentialRecord,
-    }
-  }
-
-  /**
-   * Initiate a new credential exchange as issuer by sending a credential offer message
+   * Initiate a new credential exchange as issuer by sending a offer credential message
    * to the connection with the specified connection id.
+   *
+   * @param options
+   * @returns CredentialExchangeRecord
    */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
   @Post('/offer-credential')
   public async offerCredential(
-    @Body()
-    offer: CredentialOfferRequest
+    @Body() options: OfferCredentialOptions,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
-    const { connectionId, ...offerRequest } = offer
     try {
-      const credential = await this.agent.credentials.offerCredential(connectionId, offerRequest)
-
+      const credential = await this.agent.credentials.offerCredential(options)
       return credential.toJSON()
     } catch (error) {
-      if (error instanceof IndySdkError) {
-        if (isIndyError(error.cause, 'WalletItemNotFound')) {
-          throw new NotFoundError(
-            `credential definition with credentialDefinitionId "${offer.credentialDefinitionId}" not found.`
-          )
-        }
-      }
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Connection with connection id "${connectionId}" not found.`)
+        return notFoundError(404, {
+          reason: `connection with connection record id "${options.connectionId}" not found.`,
+        })
       }
-      throw new InternalServerError(`Something went wrong: ${error}`)
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
   /**
-   * Accept a credential offer as holder (by sending a credential request message) to the connection
-   * associated with the credential record.
+   * Accept a credential offer as holder by sending an accept offer message
+   * to the connection associated with the credential exchange record.
+   *
+   * @param credentialRecordId credential identifier
+   * @param options
+   * @returns CredentialExchangeRecord
    */
-  @Post('/:credentialId/accept-offer')
-  public async acceptOffer(@Param('credentialId') credentialId: string) {
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
+  @Post('/:credentialRecordId/accept-offer')
+  public async acceptOffer(
+    @Path('credentialRecordId') credentialRecordId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() options?: AcceptCredentialOfferOptions
+  ) {
     try {
-      const credential = await this.agent.credentials.acceptOffer(credentialId)
-
+      const credential = await this.agent.credentials.acceptOffer({
+        ...options,
+        credentialRecordId: credentialRecordId,
+      })
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Credential with credential id "${credentialId}" not found.`)
+        return notFoundError(404, {
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
+        })
       }
-      throw new InternalServerError(`Something went wrong: ${error}`)
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
   /**
-   * Accept a credential request as issuer (by sending a credential message) to the connection
-   * associated with the credential record.
+   * Accept a credential request as issuer by sending an accept request message
+   * to the connection associated with the credential exchange record.
+   *
+   * @param credentialRecordId credential identifier
+   * @param options
+   * @returns CredentialExchangeRecord
    */
-  @Post('/:credentialId/accept-request')
-  public async acceptRequest(@Param('credentialId') credentialId: string) {
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
+  @Post('/:credentialRecordId/accept-request')
+  public async acceptRequest(
+    @Path('credentialRecordId') credentialRecordId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() options?: AcceptCredentialRequestOptions
+  ) {
     try {
-      const credential = await this.agent.credentials.acceptRequest(credentialId)
-
+      const credential = await this.agent.credentials.acceptRequest({
+        ...options,
+        credentialRecordId: credentialRecordId,
+      })
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Credential with credential id "${credentialId}" not found.`)
+        return notFoundError(404, {
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
+        })
       }
-      throw new InternalServerError(`Something went wrong: ${error}`)
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 
   /**
-   * Accept a credential as holder (by sending a credential acknowledgement message) to the connection
-   * associated with the credential record.
+   * Accept a credential as holder by sending an accept credential message
+   * to the connection associated with the credential exchange record.
+   *
+   * @param options
+   * @returns CredentialExchangeRecord
    */
-  @Post('/:credentialId/accept-credential')
-  public async acceptCredential(@Param('credentialId') credentialId: string) {
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
+  @Post('/:credentialRecordId/accept-credential')
+  public async acceptCredential(
+    @Path('credentialRecordId') credentialRecordId: RecordId,
+    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
+  ) {
     try {
-      const credential = await this.agent.credentials.acceptCredential(credentialId)
-
+      const credential = await this.agent.credentials.acceptCredential({ credentialRecordId: credentialRecordId })
       return credential.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Credential with credential id "${credentialId}" not found.`)
+        return notFoundError(404, {
+          reason: `credential with credential record id "${credentialRecordId}" not found.`,
+        })
       }
-      throw new InternalServerError(`Something went wrong: ${error}`)
-    }
-  }
-
-  /**
-   * Deletes a credentialRecord in the credential repository.
-   */
-  @Delete('/:credentialId')
-  @OnUndefined(204)
-  public async deleteCredential(@Param('credentialId') credentialId: string): Promise<void> {
-    try {
-      await this.agent.credentials.deleteById(credentialId)
-    } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        throw new NotFoundError(`Credential with credential id "${credentialId}" not found.`)
-      }
-      throw new InternalServerError(`Something went wrong: ${error}`)
+      return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
 }

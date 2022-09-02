@@ -9,7 +9,8 @@ import {
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 import path from 'path'
 
-import { TsLogger } from '../../src/utils/logger'
+import { TsLogger } from './logger'
+import { BCOVRIN_TEST_GENESIS } from './util'
 
 export const genesisPath = process.env.GENESIS_TXN_PATH
   ? path.resolve(process.env.GENESIS_TXN_PATH)
@@ -41,8 +42,8 @@ export const setupAgent = async ({
       logger: logger,
       indyLedgers: [
         {
-          id: 'LocalLedger',
-          genesisPath,
+          id: 'TestLedger',
+          genesisTransactions: BCOVRIN_TEST_GENESIS,
           isProduction: false,
         },
       ],
@@ -67,14 +68,9 @@ export const setupAgent = async ({
       const invitation = await ConnectionInvitationMessage.fromUrl(req.url)
       res.send(invitation.toJSON())
     } else {
-      const { invitation } = await agent.connections.createConnection()
+      const { outOfBandInvitation } = await agent.oob.createInvitation()
 
-      res.send(
-        invitation.toUrl({
-          domain: endpoints + '/invitation',
-          useLegacyDidSovPrefix: agent.config.useLegacyDidSovPrefix,
-        })
-      )
+      res.send(outOfBandInvitation.toUrl({ domain: endpoints + '/invitation' }))
     }
   })
 

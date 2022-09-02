@@ -14,7 +14,7 @@ describe('CredentialDefinitionController', () => {
   let testCredDef: CredDef
 
   beforeAll(async () => {
-    agent = await getTestAgent('Rest CredentialDefinition Test', 3007)
+    agent = await getTestAgent('CredentialDefinition REST Agent Test', 3011)
     app = await setupServer(agent, { port: 3000 })
     testCredDef = getTestCredDef()
   })
@@ -86,7 +86,7 @@ describe('CredentialDefinitionController', () => {
         tag: 'latest',
         supportRevocation: false,
       })
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(422)
     })
   })
 
