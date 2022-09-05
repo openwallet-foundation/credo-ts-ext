@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.9.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.0...rest-v0.9.1) (2022-09-05)
+
+
+### Bug Fixes
+
+* **rest:** moved route generation to compile ([#160](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/160)) ([8c70864](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/8c70864cacaada486b0ca7a7f9ba0ca2395f9efd))
+
 ## [0.9.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.8.1...rest-v0.9.0) (2022-09-02)
 
 
