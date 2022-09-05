@@ -25,10 +25,9 @@
     "dev": "tsoa spec-and-routes && tsnd --respawn samples/sampleWithApp.ts",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./build",
-    "compile": "tsc -p tsconfig.build.json",
+    "compile": "tsoa spec-and-routes && tsc -p tsconfig.build.json",
     "prepublishOnly": "yarn run build",
-    "test": "jest",
-    "postinstall": "tsoa spec-and-routes"
+    "test": "jest"
   },
   "dependencies": {
     "@aries-framework/core": "^0.2.3",
