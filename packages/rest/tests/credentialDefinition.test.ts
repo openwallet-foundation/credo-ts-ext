@@ -45,8 +45,6 @@ describe('CredentialDefinitionController', () => {
     })
 
     test('should return 404 NotFound when credential definition not found', async () => {
-      jest.spyOn(agent.ledger, 'getCredentialDefinition').mockResolvedValueOnce(testCredDef)
-
       const response = await request(app).get(`/credential-definitions/WgWxqztrNooG92RXvxSTWv:3:CL:20:tag`)
       expect(response.statusCode).toBe(404)
     })
