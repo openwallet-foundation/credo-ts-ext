@@ -22,7 +22,7 @@ describe('AgentController', () => {
 
   describe('get schema by id', () => {
     test('should return schema ', async () => {
-      const spy = jest.spyOn(agent.ledger, 'getSchema').mockResolvedValueOnce({
+      const spy = jest.spyOn(agent.ledger, 'getSchema').mockResolvedValue({
         id: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
         name: 'test',
         version: '1.0',
