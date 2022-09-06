@@ -218,17 +218,19 @@ export class ProofController extends Controller {
     @Path('proofRecordId') proofRecordId: string,
     @Body()
     request: {
-      filterByPresentationPreview: boolean
-      comment: string
+      filterByPresentationPreview?: boolean
+      filterByNonRevocationRequirements?: boolean
+      comment?: string
     },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
-      const { filterByPresentationPreview, comment } = request
+      const { filterByPresentationPreview, filterByNonRevocationRequirements, comment } = request
 
       const retrievedCredentials = await this.agent.proofs.getRequestedCredentialsForProofRequest(proofRecordId, {
         filterByPresentationPreview: filterByPresentationPreview,
+        filterByNonRevocationRequirements: filterByNonRevocationRequirements,
       })
 
       const requestedCredentials = this.agent.proofs.autoSelectCredentialsForProofRequest(retrievedCredentials)

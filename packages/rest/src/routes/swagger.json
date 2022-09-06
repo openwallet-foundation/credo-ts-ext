@@ -4297,14 +4297,13 @@
 									"comment": {
 										"type": "string"
 									},
+									"filterByNonRevocationRequirements": {
+										"type": "boolean"
+									},
 									"filterByPresentationPreview": {
 										"type": "boolean"
 									}
 								},
-								"required": [
-									"comment",
-									"filterByPresentationPreview"
-								],
 								"type": "object"
 							}
 						}

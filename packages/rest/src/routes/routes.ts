@@ -1587,7 +1587,7 @@ export function RegisterRoutes(app: express.Router) {
             async function ProofController_acceptRequest(request: any, response: any, next: any) {
             const args = {
                     proofRecordId: {"in":"path","name":"proofRecordId","required":true,"dataType":"string"},
-                    request: {"in":"body","name":"request","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comment":{"dataType":"string","required":true},"filterByPresentationPreview":{"dataType":"boolean","required":true}}},
+                    request: {"in":"body","name":"request","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"comment":{"dataType":"string"},"filterByNonRevocationRequirements":{"dataType":"boolean"},"filterByPresentationPreview":{"dataType":"boolean"}}},
                     notFoundError: {"in":"res","name":"404","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"reason":{"dataType":"string","required":true}}},
                     internalServerError: {"in":"res","name":"500","required":true,"dataType":"nestedObjectLiteral","nestedProperties":{"message":{"dataType":"string","required":true}}},
             };
