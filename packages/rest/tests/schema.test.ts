@@ -22,7 +22,7 @@ describe('AgentController', () => {
 
   describe('get schema by id', () => {
     test('should return schema ', async () => {
-      const spy = jest.spyOn(agent.ledger, 'getSchema').mockResolvedValue({
+      const spy = jest.spyOn(agent.ledger, 'getSchema').mockResolvedValueOnce({
         id: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
         name: 'test',
         version: '1.0',
@@ -46,6 +46,14 @@ describe('AgentController', () => {
     })
 
     test('should return 404 NotFound when schema not found', async () => {
+      jest.spyOn(agent.ledger, 'getSchema').mockResolvedValueOnce({
+        id: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
+        name: 'test',
+        version: '1.0',
+        ver: '1.0',
+        seqNo: 9999,
+        attrNames: ['prop1', 'prop2'],
+      })
       const response = await request(app).get(`/schemas/WgWxqztrNooG92RXvxSTWv:2:test:1.0`)
 
       expect(response.statusCode).toBe(404)
