@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.9.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.1...rest-v0.9.2) (2022-09-07)
+
+
+### Bug Fixes
+
+* **rest:** accept proof properties now optional ([#162](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/162)) ([f927fdc](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/f927fdcd4a6142a6bc086d82d3b6e6ed1317108d))
+
 ### [0.9.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.0...rest-v0.9.1) (2022-09-05)
 
 
