@@ -117,18 +117,7 @@ AFJ_REST_WALLET_KEY="my-secret-key" npx -p @aries-framework/rest afj-rest start 
 
 Starting your own server is more involved than using the CLI, but allows more fine-grained control over the settings and allows you to extend the rest api with custom endpoints.
 
-
-```sh
-npm info "@aries-framework/rest"
-```
-
-Then add the rest package to your project.
-
-```sh
-yarn add @aries-framework/rest
-```
-
-Finally you can create an agent instance and import the `startServer` method from the rest package. That's all you have to do.
+You can create an agent instance and import the `startServer` method from the rest package. That's all you have to do.
 
 ```ts
 import { startServer } from '@aries-framework/rest'
