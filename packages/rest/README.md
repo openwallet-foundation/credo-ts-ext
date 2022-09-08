@@ -117,7 +117,6 @@ AFJ_REST_WALLET_KEY="my-secret-key" npx -p @aries-framework/rest afj-rest start 
 
 Starting your own server is more involved than using the CLI, but allows more fine-grained control over the settings and allows you to extend the rest api with custom endpoints.
 
-To get started, make sure you have set up the correct version of Aries Framework JavaScript according to the AFJ repository. To find out which version of AFJ you need to have installed you can run the following command. This will list the required peer dependency for `@aries-framework/core`.
 
 ```sh
 npm info "@aries-framework/rest"
