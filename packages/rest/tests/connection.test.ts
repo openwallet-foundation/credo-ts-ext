@@ -1,6 +1,7 @@
 import type { Agent, ConnectionRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
+import { ConnectionRepository } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
@@ -34,6 +35,102 @@ describe('ConnectionController', () => {
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(result.map(objectToJson))
+    })
+  })
+
+  describe('Get all connections by state', () => {
+    test('should return all credentials by specified state', async () => {
+      const connectionRepository = bobAgent.dependencyManager.resolve(ConnectionRepository)
+      const findByQuerySpy = jest.spyOn(connectionRepository, 'findByQuery').mockResolvedValueOnce([connection])
+
+      const response = await request(app).get('/connections').query({ state: connection.state })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        state: connection.state,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([connection].map(objectToJson))
+    })
+  })
+
+  describe('Get all connections by outOfBandId', () => {
+    test('should return all credentials by specified outOfBandId', async () => {
+      const connectionRepository = bobAgent.dependencyManager.resolve(ConnectionRepository)
+      const findByQuerySpy = jest.spyOn(connectionRepository, 'findByQuery').mockResolvedValueOnce([connection])
+
+      const response = await request(app).get('/connections').query({ outOfBandId: connection.outOfBandId })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        outOfBandId: connection.outOfBandId,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([connection].map(objectToJson))
+    })
+  })
+
+  describe('Get all connections by alias', () => {
+    test('should return all credentials by specified alias', async () => {
+      const connectionRepository = bobAgent.dependencyManager.resolve(ConnectionRepository)
+      const findByQuerySpy = jest.spyOn(connectionRepository, 'findByQuery').mockResolvedValueOnce([connection])
+
+      const response = await request(app).get('/connections').query({ alias: connection.alias })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        alias: connection.alias,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([connection].map(objectToJson))
+    })
+  })
+
+  describe('Get all connections by myDid', () => {
+    test('should return all credentials by specified peer did', async () => {
+      const connectionRepository = bobAgent.dependencyManager.resolve(ConnectionRepository)
+      const findByQuerySpy = jest.spyOn(connectionRepository, 'findByQuery').mockResolvedValueOnce([connection])
+
+      const response = await request(app).get('/connections').query({ myDid: connection.did })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        myDid: connection.did,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([connection].map(objectToJson))
+    })
+  })
+
+  describe('Get all connections by theirDid', () => {
+    test('should return all credentials by specified peer did', async () => {
+      const connectionRepository = bobAgent.dependencyManager.resolve(ConnectionRepository)
+      const findByQuerySpy = jest.spyOn(connectionRepository, 'findByQuery').mockResolvedValueOnce([connection])
+
+      const response = await request(app).get('/connections').query({ theirDid: connection.theirDid })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        theirDid: connection.theirDid,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([connection].map(objectToJson))
+    })
+  })
+
+  describe('Get all connections by theirLabel', () => {
+    test('should return all credentials by specified peer label', async () => {
+      const connectionRepository = bobAgent.dependencyManager.resolve(ConnectionRepository)
+      const findByQuerySpy = jest.spyOn(connectionRepository, 'findByQuery').mockResolvedValueOnce([connection])
+
+      const response = await request(app).get('/connections').query({ theirLabel: connection.theirLabel })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        theirLabel: connection.theirLabel,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([connection].map(objectToJson))
     })
   })
 
