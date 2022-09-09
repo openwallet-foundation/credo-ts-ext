@@ -28,15 +28,13 @@ describe('CredentialController', () => {
 
   describe('Get all credentials', () => {
     test('should return all credentials', async () => {
-      const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])
-
-      const getResult = (): Promise<CredentialExchangeRecord[]> => spy.mock.results[0].value
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
 
       const response = await request(app).get('/credentials')
-      const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(result.map(objectToJson))
+      expect(response.body).toEqual([testCredential].map(objectToJson))
     })
   })
 

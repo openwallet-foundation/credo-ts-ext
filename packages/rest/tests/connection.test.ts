@@ -27,14 +27,13 @@ describe('ConnectionController', () => {
 
   describe('Get all connections', () => {
     test('should return all connections', async () => {
-      const spy = jest.spyOn(bobAgent.connections, 'getAll')
-      const getResult = (): Promise<ConnectionRecord[]> => spy.mock.results[0].value
+      const connectionRepository = bobAgent.dependencyManager.resolve(ConnectionRepository)
+      jest.spyOn(connectionRepository, 'findByQuery').mockResolvedValueOnce([connection])
 
       const response = await request(app).get('/connections')
-      const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(result.map(objectToJson))
+      expect(response.body).toEqual([connection].map(objectToJson))
     })
   })
 
