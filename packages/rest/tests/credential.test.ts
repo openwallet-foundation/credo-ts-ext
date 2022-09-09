@@ -39,6 +39,48 @@ describe('CredentialController', () => {
     })
   })
 
+  describe('Get all credentials by state', () => {
+    test('should return all credentials', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])
+
+      const getResult = (): Promise<CredentialExchangeRecord[]> => spy.mock.results[0].value
+
+      const response = await request(app).get('/credentials').query({ state: testCredential.state })
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(result.map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by threadId', () => {
+    test('should return all credentials', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])
+
+      const getResult = (): Promise<CredentialExchangeRecord[]> => spy.mock.results[0].value
+
+      const response = await request(app).get('/credentials').query({ threadId: testCredential.threadId })
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(result.map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by connectionId', () => {
+    test('should return all credentials', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])
+
+      const getResult = (): Promise<CredentialExchangeRecord[]> => spy.mock.results[0].value
+
+      const response = await request(app).get('/credentials').query({ connectionId: testCredential.connectionId })
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(result.map(objectToJson))
+    })
+  })
+
   describe('Get credential by id', () => {
     test('should return credential', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'getById').mockResolvedValueOnce(testCredential)
