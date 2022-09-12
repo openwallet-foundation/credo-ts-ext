@@ -1,7 +1,7 @@
 import type { CredentialExchangeRecordProps } from '@aries-framework/core'
 
-import { Agent, RecordNotFoundError } from '@aries-framework/core'
-import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example } from 'tsoa'
+import { CredentialRepository, CredentialState, Agent, RecordNotFoundError } from '@aries-framework/core'
+import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example, Query } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { CredentialExchangeRecordExample, RecordId } from '../examples'
@@ -31,8 +31,19 @@ export class CredentialController extends Controller {
    */
   @Example<CredentialExchangeRecordProps[]>([CredentialExchangeRecordExample])
   @Get('/')
-  public async getAllCredentials() {
-    const credentials = await this.agent.credentials.getAll()
+  public async getAllCredentials(
+    @Query('threadId') threadId?: string,
+    @Query('connectionId') connectionId?: string,
+    @Query('state') state?: CredentialState
+  ) {
+    const credentialRepository = this.agent.dependencyManager.resolve(CredentialRepository)
+
+    const credentials = await credentialRepository.findByQuery({
+      connectionId,
+      threadId,
+      state,
+    })
+
     return credentials.map((c) => c.toJSON())
   }
 

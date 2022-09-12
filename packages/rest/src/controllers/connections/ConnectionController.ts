@@ -1,6 +1,12 @@
 import type { ConnectionRecordProps } from '@aries-framework/core'
 
-import { Agent, AriesFrameworkError, RecordNotFoundError } from '@aries-framework/core'
+import {
+  ConnectionRepository,
+  DidExchangeState,
+  Agent,
+  AriesFrameworkError,
+  RecordNotFoundError,
+} from '@aries-framework/core'
 import { Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -31,7 +37,7 @@ export class ConnectionController extends Controller {
   public async getAllConnections(
     @Query('outOfBandId') outOfBandId?: string,
     @Query('alias') alias?: string,
-    @Query('state') state?: string,
+    @Query('state') state?: DidExchangeState,
     @Query('myDid') myDid?: string,
     @Query('theirDid') theirDid?: string,
     @Query('theirLabel') theirLabel?: string
@@ -41,14 +47,24 @@ export class ConnectionController extends Controller {
     if (outOfBandId) {
       connections = await this.agent.connections.findAllByOutOfBandId(outOfBandId)
     } else {
-      connections = await this.agent.connections.getAll()
+      const connectionRepository = this.agent.dependencyManager.resolve(ConnectionRepository)
+
+      const connections = await connectionRepository.findByQuery({
+        alias,
+        myDid,
+        theirDid,
+        theirLabel,
+        state,
+      })
+
+      return connections.map((c) => c.toJSON())
     }
 
-    if (alias) connections = connections.filter((c) => c.alias === alias)
-    if (state) connections = connections.filter((c) => c.state === state)
-    if (myDid) connections = connections.filter((c) => c.did === myDid)
-    if (theirDid) connections = connections.filter((c) => c.theirDid === theirDid)
-    if (theirLabel) connections = connections.filter((c) => c.theirLabel === theirLabel)
+    // if (alias) connections = connections.filter((c) => c.alias === alias)
+    // if (state) connections = connections.filter((c) => c.state === state)
+    // if (myDid) connections = connections.filter((c) => c.did === myDid)
+    // if (theirDid) connections = connections.filter((c) => c.theirDid === theirDid)
+    // if (theirLabel) connections = connections.filter((c) => c.theirLabel === theirLabel)
 
     return connections.map((c) => c.toJSON())
   }

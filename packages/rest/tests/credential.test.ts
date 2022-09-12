@@ -1,6 +1,7 @@
 import type { Agent, CredentialExchangeRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
+import { CredentialRepository } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
@@ -27,20 +28,66 @@ describe('CredentialController', () => {
 
   describe('Get all credentials', () => {
     test('should return all credentials', async () => {
-      const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])
-
-      const getResult = (): Promise<CredentialExchangeRecord[]> => spy.mock.results[0].value
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
 
       const response = await request(app).get('/credentials')
-      const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(result.map(objectToJson))
+      expect(response.body).toEqual([testCredential].map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by state', () => {
+    test('should return all credentials by specified state', async () => {
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
+
+      const response = await request(app).get('/credentials').query({ state: testCredential.state })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        state: testCredential.state,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([testCredential].map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by threadId', () => {
+    test('should return all credentials by specified threadId', async () => {
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
+
+      const response = await request(app).get('/credentials').query({ threadId: testCredential.threadId })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        threadId: testCredential.threadId,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([testCredential].map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by connectionId', () => {
+    test('should return all credentials by connectionId', async () => {
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
+
+      const response = await request(app).get('/credentials').query({ connectionId: testCredential.connectionId })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        connectionId: testCredential.connectionId,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([testCredential].map(objectToJson))
     })
   })
 
   describe('Get credential by id', () => {
-    test('should return credential', async () => {
+    test('should return single credential', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'getById').mockResolvedValueOnce(testCredential)
 
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
@@ -53,7 +100,7 @@ describe('CredentialController', () => {
       expect(response.body).toEqual(objectToJson(result))
     })
 
-    test('should give 404 not found when connection is not found', async () => {
+    test('should give 404 not found when credential is not found', async () => {
       const response = await request(app).get(`/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
 
       expect(response.statusCode).toBe(404)
@@ -101,7 +148,7 @@ describe('CredentialController', () => {
       expect(response.body).toEqual(objectToJson(result))
     })
 
-    test('should give 404 not found when connection is not found', async () => {
+    test('should give 404 not found when credential is not found', async () => {
       const response = await request(app).post('/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-offer')
 
       expect(response.statusCode).toBe(404)
@@ -192,7 +239,7 @@ describe('CredentialController', () => {
       expect(response.body).toEqual(objectToJson(result))
     })
 
-    test('should give 404 not found when connection is not found', async () => {
+    test('should give 404 not found when credential is not found', async () => {
       const response = await request(app)
         .post('/credentials/accept-offer')
         .send({ credentialRecordId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' })
