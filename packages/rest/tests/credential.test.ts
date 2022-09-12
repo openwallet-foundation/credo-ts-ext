@@ -59,7 +59,7 @@ describe('CredentialController', () => {
       const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
       const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
 
-      const response = await request(app).get('/credentials').query({ state: testCredential.state })
+      const response = await request(app).get('/credentials').query({ threadId: testCredential.threadId })
 
       expect(findByQuerySpy).toBeCalledWith({
         threadId: testCredential.threadId,
@@ -75,7 +75,7 @@ describe('CredentialController', () => {
       const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
       const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
 
-      const response = await request(app).get('/credentials').query({ state: testCredential.state })
+      const response = await request(app).get('/credentials').query({ connectionId: testCredential.connectionId })
 
       expect(findByQuerySpy).toBeCalledWith({
         connectionId: testCredential.connectionId,

@@ -88,13 +88,13 @@ export function getTestCredential() {
   const json = {
     _tags: {
       connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
-      state: 'string',
+      state: 'proposal-sent',
       threadId: '111111aa-aa11-11a1-aa11-111a1aa11111',
     },
     type: 'CredentialRecord',
     id: '222222aa-aa22-22a2-aa22-222a2aa22222',
     createdAt: '2021-01-01T00:00:00.000Z',
-    state: 'string',
+    state: 'proposal-sent',
     connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
     metadata: {
       credentialDefinitionId: 'AAAAAAAAAAAAAAAAAAAAA:3:CL:3210:test',
