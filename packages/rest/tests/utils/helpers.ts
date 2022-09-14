@@ -84,6 +84,62 @@ export function getTestOutOfBandRecord() {
   return JsonTransformer.fromJSON(json, OutOfBandRecord)
 }
 
+export function getTestOffer() {
+  const json = {
+    message: `A newly created credential offer`,
+    credentialRecord: {
+      _tags: {
+        connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
+        state: 'proposal-sent',
+        threadId: '111111aa-aa11-11a1-aa11-111a1aa11111',
+      },
+      type: 'CredentialRecord',
+      id: '222222aa-aa22-22a2-aa22-222a2aa22222',
+      createdAt: '2021-01-01T00:00:00.000Z',
+      state: 'proposal-sent',
+      connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
+      metadata: {
+        credentialDefinitionId: 'AAAAAAAAAAAAAAAAAAAAA:3:CL:3210:test',
+        schemaId: 'AAAAAAAAAAAAAAAAAAAAA:2:string:1.0',
+      },
+      threadId: '111111aa-aa11-11a1-aa11-111a1aa11111',
+      offerMessage: {
+        type: 'https://didcomm.org/issue-credential/1.0/offer-credential',
+        id: '333333aa-aa33-33a3-aa33-333a3aa33333',
+        comment: 'string',
+        credentialPreview: {
+          type: 'https://didcomm.org/issue-credential/1.0/credential-preview',
+          attributes: [
+            {
+              mimeType: 'text/plain',
+              name: 'name',
+              value: 'test',
+            },
+          ],
+        },
+        offerAttachments: [
+          {
+            id: 'libindy-cred-offer-0',
+            mimeType: 'application/json',
+            data: {
+              base64: 'string',
+            },
+          },
+        ],
+      },
+      credentialAttributes: [
+        {
+          mimeType: 'text/plain',
+          name: 'name',
+          value: 'test',
+        },
+      ],
+    },
+  }
+
+  return JsonTransformer.fromJSON(json, CredentialExchangeRecord)
+}
+
 export function getTestCredential() {
   const json = {
     _tags: {

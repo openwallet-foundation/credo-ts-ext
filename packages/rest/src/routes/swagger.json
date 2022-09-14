@@ -265,6 +265,63 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"CreateOfferOptions": {
+				"properties": {
+					"protocolVersion": {
+						"$ref": "#/components/schemas/ProtocolVersionType_CredentialServices_"
+					},
+					"credentialFormats": {
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"credentialDefinitionId"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
+					},
+					"autoAcceptCredential": {
+						"$ref": "#/components/schemas/AutoAcceptCredential"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"protocolVersion",
+					"credentialFormats"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"OfferCredentialOptions": {
 				"properties": {
 					"protocolVersion": {
@@ -1625,6 +1682,7 @@
 				"security": [],
 				"parameters": [
 					{
+						"description": "Thread Identifier",
 						"in": "query",
 						"name": "threadId",
 						"required": false,
@@ -1633,6 +1691,7 @@
 						}
 					},
 					{
+						"description": "Connection Identifier",
 						"in": "query",
 						"name": "connectionId",
 						"required": false,
@@ -1641,6 +1700,7 @@
 						}
 					},
 					{
+						"description": "Credential state",
 						"in": "query",
 						"name": "state",
 						"required": false,
@@ -1991,6 +2051,79 @@
 						"application/json": {
 							"schema": {
 								"$ref": "#/components/schemas/AcceptCredentialProposalOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/create-offer": {
+			"post": {
+				"operationId": "CreateOffer",
+				"responses": {
+					"200": {
+						"description": "AgentMessage, CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Initiate a new credential exchange as issuer by creating a credential offer\nwithout specifying a connection id",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOfferOptions"
 							}
 						}
 					}
