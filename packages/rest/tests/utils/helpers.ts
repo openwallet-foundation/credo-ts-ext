@@ -1,6 +1,7 @@
 import type { ConnectionRecordProps } from '@aries-framework/core'
 
 import {
+  AgentMessage,
   OutOfBandInvitation,
   OutOfBandRecord,
   ConnectionRecord,
@@ -140,15 +141,28 @@ export function getTestCredential() {
 export function getTestOffer() {
   const json = {
     message: {
-      schema_id: 'TL1EaPFCZ8Si5aUrqScBDt:2:test-schema-1599055118161:1.0',
-      cred_def_id: 'TL1EaPFCZ8Si5aUrqScBDt:3:CL:49:TAG',
-      key_correctness_proof: {
-        c: '50047550092211803100898435599448498249230644214602846259465380105187911562981',
-        xz_cap:
-          '903377919969858361861015636539761203188657065139923565169527138921408162179186528356880386741834936511828233627399006489728775544195659624738894378139967421189010372215352983118513580084886680005590351907106638703178655817619548698392274394080197104513101326422946899502782963819178061725651195158952405559244837834363357514238035344644245428381747318500206935512140018411279271654056625228252895211750431161165113594675112781707690650346028518711572046490157895995321932792559036799731075010805676081761818738662133557673397343395090042309895292970880031625026873886199268438633391631171327618951514526941153292890331525143330509967786605076984412387036942171388655140446222693051734534012842',
-        xr_cap: [[], [], []],
+      type: 'https://didcomm.org/issue-credential/1.0/offer-credential',
+      id: '333333aa-aa33-33a3-aa33-333a3aa33333',
+      comment: 'string',
+      credentialPreview: {
+        type: 'https://didcomm.org/issue-credential/1.0/credential-preview',
+        attributes: [
+          {
+            mimeType: 'text/plain',
+            name: 'name',
+            value: 'test',
+          },
+        ],
       },
-      nonce: '947121108704767252195123',
+      offerAttachments: [
+        {
+          id: 'libindy-cred-offer-0',
+          mimeType: 'application/json',
+          data: {
+            base64: 'string',
+          },
+        },
+      ],
     },
     credentialRecord: {
       _tags: {
@@ -200,7 +214,10 @@ export function getTestOffer() {
     },
   }
 
-  return JsonTransformer.fromJSON(json, CredentialExchangeRecord)
+  return {
+    message: JsonTransformer.fromJSON(json.message, AgentMessage),
+    credentialRecord: JsonTransformer.fromJSON(json.credentialRecord, CredentialExchangeRecord),
+  }
 }
 
 export function getTestCredDef() {

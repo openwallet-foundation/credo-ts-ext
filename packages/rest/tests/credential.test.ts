@@ -24,10 +24,7 @@ describe('CredentialController', () => {
     app = await setupServer(bobAgent, { port: 3000 })
 
     testCredential = getTestCredential() as CredentialExchangeRecord
-    testOffer = getTestOffer() as unknown as {
-      message: AgentMessage
-      credentialRecord: CredentialExchangeRecord
-    }
+    testOffer = getTestOffer()
   })
 
   afterEach(() => {
