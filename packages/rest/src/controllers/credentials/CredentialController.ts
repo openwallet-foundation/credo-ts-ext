@@ -176,7 +176,7 @@ export class CredentialController extends Controller {
   ) {
     try {
       const offer = await this.agent.credentials.createOffer(options)
-      await this.agent.oob.createInvitation({ messages: [offer.message] })
+      await this.agent.oob.createInvitation()
       return objectToJson(offer)
     } catch (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })

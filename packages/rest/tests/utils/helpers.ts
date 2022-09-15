@@ -1,4 +1,4 @@
-import type { ConnectionRecordProps, AgentMessage } from '@aries-framework/core'
+import type { ConnectionRecordProps } from '@aries-framework/core'
 
 import {
   OutOfBandInvitation,
@@ -21,16 +21,6 @@ export async function getTestAgent(name: string, port: number) {
     endpoints: [`http://localhost:${port}`],
     name: name,
   })
-}
-
-export class CreateCredentialOfferRecord {
-  public constructor(message: AgentMessage, credentialRecord: CredentialExchangeRecord) {
-    this.message = message
-    this.credentialRecord = credentialRecord
-  }
-
-  public message: AgentMessage
-  public credentialRecord: CredentialExchangeRecord
 }
 
 export function objectToJson<T>(result: T) {
@@ -147,7 +137,7 @@ export function getTestOffer() {
     },
   }
 
-  return JsonTransformer.fromJSON(json, CreateCredentialOfferRecord)
+  return JsonTransformer.fromJSON(json, CredentialExchangeRecord)
 }
 
 export function getTestCredential() {
