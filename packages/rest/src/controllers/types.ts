@@ -81,6 +81,21 @@ export interface AcceptCredentialProposalOptions {
   comment?: string
 }
 
+export interface CreateOfferOptions {
+  protocolVersion: ProtocolVersionType<CredentialServices>
+  credentialFormats: {
+    indy: {
+      credentialDefinitionId: string
+      attributes: {
+        name: string
+        value: string
+      }[]
+    }
+  }
+  autoAcceptCredential?: AutoAcceptCredential
+  comment?: string
+}
+
 export interface OfferCredentialOptions {
   protocolVersion: ProtocolVersionType<CredentialServices>
   credentialFormats: {

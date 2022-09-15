@@ -4,6 +4,7 @@ import { CredentialRepository, CredentialState, Agent, RecordNotFoundError } fro
 import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example, Query } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { objectToJson } from '../../utils/helpers'
 import { CredentialExchangeRecordExample, RecordId } from '../examples'
 import {
   AcceptCredentialRequestOptions,
@@ -11,6 +12,7 @@ import {
   ProposeCredentialOptions,
   AcceptCredentialProposalOptions,
   AcceptCredentialOfferOptions,
+  CreateOfferOptions,
 } from '../types'
 
 @Tags('Credentials')
@@ -153,6 +155,28 @@ export class CredentialController extends Controller {
           reason: `credential with credential record id "${credentialRecordId}" not found.`,
         })
       }
+      return internalServerError(500, { message: `something went wrong: ${error}` })
+    }
+  }
+
+  /**
+   * Initiate a new credential exchange as issuer by creating a credential offer
+   * without specifying a connection id
+   *
+   * @param options
+   * @returns AgentMessage, CredentialExchangeRecord
+   */
+  @Example<CredentialExchangeRecordProps>(CredentialExchangeRecordExample)
+  @Post('/create-offer')
+  public async createOffer(
+    @Body() options: CreateOfferOptions,
+    @Res() internalServerError: TsoaResponse<500, { message: string }>
+  ) {
+    try {
+      const offer = await this.agent.credentials.createOffer(options)
+      await this.agent.oob.createInvitation()
+      return objectToJson(offer)
+    } catch (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }

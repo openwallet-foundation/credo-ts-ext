@@ -1,4 +1,4 @@
-import type { Agent, CredentialExchangeRecord } from '@aries-framework/core'
+import type { Agent, AgentMessage, CredentialExchangeRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
 import { CredentialRepository } from '@aries-framework/core'
@@ -6,13 +6,17 @@ import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { objectToJson, getTestCredential, getTestAgent } from './utils/helpers'
+import { objectToJson, getTestCredential, getTestAgent, getTestOffer } from './utils/helpers'
 
 describe('CredentialController', () => {
   let app: Express
   let aliceAgent: Agent
   let bobAgent: Agent
   let testCredential: CredentialExchangeRecord
+  let testOffer: {
+    message: AgentMessage
+    credentialRecord: CredentialExchangeRecord
+  }
 
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Credential REST Agent Test Alice', 3022)
@@ -20,6 +24,10 @@ describe('CredentialController', () => {
     app = await setupServer(bobAgent, { port: 3000 })
 
     testCredential = getTestCredential() as CredentialExchangeRecord
+    testOffer = getTestOffer() as unknown as {
+      message: AgentMessage
+      credentialRecord: CredentialExchangeRecord
+    }
   })
 
   afterEach(() => {
@@ -208,6 +216,35 @@ describe('CredentialController', () => {
       const response = await request(app).post(`/credentials/000000aa-aa00-00a0-aa00-000a0aa00000/accept-proposal`)
 
       expect(response.statusCode).toBe(404)
+    })
+  })
+
+  describe('Create a credential offer', () => {
+    test('should return single credential record with attached offer message', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'createOffer').mockResolvedValueOnce(testOffer)
+      const getResult = (): Promise<{ message: AgentMessage; credentialRecord: CredentialExchangeRecord }> =>
+        spy.mock.results[0].value
+
+      const createOfferRequest = {
+        protocolVersion: 'v1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
+        },
+      }
+
+      const response = await request(app).post(`/credentials/create-offer`).send(createOfferRequest)
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(objectToJson(result))
     })
   })
 
