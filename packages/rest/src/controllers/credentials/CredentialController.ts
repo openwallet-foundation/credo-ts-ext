@@ -4,7 +4,6 @@ import { CredentialRepository, CredentialState, Agent, RecordNotFoundError } fro
 import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example, Query } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { objectToJson } from '../../utils/helpers'
 import { CredentialExchangeRecordExample, RecordId } from '../examples'
 import {
   AcceptCredentialRequestOptions,
@@ -174,8 +173,11 @@ export class CredentialController extends Controller {
   ) {
     try {
       const offer = await this.agent.credentials.createOffer(options)
-      await this.agent.oob.createInvitation({ messages: [offer.message] })
-      return objectToJson(offer)
+      await this.agent.oob.createInvitation({ messages: [offer?.message] })
+      return {
+        message: offer.message.toJSON(),
+        credentialRecord: offer.credentialRecord.toJSON(),
+      }
     } catch (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })
     }

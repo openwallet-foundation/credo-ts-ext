@@ -245,6 +245,38 @@ describe('CredentialController', () => {
     })
   })
 
+  describe('Create a credential offer and a corresponding invitation', () => {
+    test('should return single credential record with attached offer message', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'createOffer').mockResolvedValueOnce(testOffer)
+      const getResult = (): Promise<{ message: AgentMessage; credentialRecord: CredentialExchangeRecord }> =>
+        spy.mock.results[0].value
+
+      const createOfferRequest = {
+        protocolVersion: 'v1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
+        },
+      }
+
+      const response = await request(app).post(`/credentials/create-offer`).send(createOfferRequest)
+      await request(app)
+        .post(`/oob/create-invitation`)
+        .send({ messages: [response.body.message] })
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(objectToJson(result))
+    })
+  })
+
   describe('Offer a credential', () => {
     const offerRequest = {
       connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
