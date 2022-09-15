@@ -179,7 +179,6 @@ export class CredentialController extends Controller {
       await this.agent.oob.createInvitation({ messages: [offer.message] })
       return objectToJson(offer)
     } catch (error) {
-      console.log(error)
       return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }
