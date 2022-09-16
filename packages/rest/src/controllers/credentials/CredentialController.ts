@@ -173,7 +173,6 @@ export class CredentialController extends Controller {
   ) {
     try {
       const offer = await this.agent.credentials.createOffer(options)
-      await this.agent.oob.createInvitation({ messages: [offer.message] })
       return {
         message: offer.message.toJSON(),
         credentialRecord: offer.credentialRecord.toJSON(),

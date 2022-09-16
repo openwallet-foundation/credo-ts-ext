@@ -1,12 +1,12 @@
-import type { Agent, AgentMessage, CredentialExchangeRecord } from '@aries-framework/core'
+import type { Agent, CredentialExchangeRecord, OutOfBandRecord } from '@aries-framework/core'
 import type { Express } from 'express'
 
-import { CredentialRepository } from '@aries-framework/core'
+import { AgentMessage, JsonTransformer, CredentialRepository } from '@aries-framework/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
 
-import { objectToJson, getTestCredential, getTestAgent, getTestOffer } from './utils/helpers'
+import { objectToJson, getTestCredential, getTestAgent, getTestOffer, getTestOutOfBandRecord } from './utils/helpers'
 
 describe('CredentialController', () => {
   let app: Express
@@ -17,6 +17,7 @@ describe('CredentialController', () => {
     message: AgentMessage
     credentialRecord: CredentialExchangeRecord
   }
+  let outOfBandRecord: OutOfBandRecord
 
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Credential REST Agent Test Alice', 3022)
@@ -25,6 +26,7 @@ describe('CredentialController', () => {
 
     testCredential = getTestCredential() as CredentialExchangeRecord
     testOffer = getTestOffer()
+    outOfBandRecord = getTestOutOfBandRecord()
   })
 
   afterEach(() => {
@@ -245,7 +247,7 @@ describe('CredentialController', () => {
     })
   })
 
-  describe('Create a credential offer and a corresponding invitation', () => {
+  describe('Create a credential offer and a corresponding invitation using create-invitation', () => {
     test('should return single credential record with attached offer message', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'createOffer').mockResolvedValueOnce(testOffer)
       const getResult = (): Promise<{ message: AgentMessage; credentialRecord: CredentialExchangeRecord }> =>
@@ -267,13 +269,92 @@ describe('CredentialController', () => {
       }
 
       const response = await request(app).post(`/credentials/create-offer`).send(createOfferRequest)
-      await request(app)
-        .post(`/oob/create-invitation`)
-        .send({ messages: [response.body.message] })
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(objectToJson(result))
+    })
+
+    test('should return single out of bound record', async () => {
+      const spy = jest.spyOn(bobAgent.oob, 'createInvitation').mockResolvedValueOnce(outOfBandRecord)
+
+      const params = {
+        label: 'string',
+        alias: 'string',
+        imageUrl: 'string',
+        goalCode: 'string',
+        goal: 'string',
+        handshake: true,
+        handshakeProtocols: ['https://didcomm.org/connections/1.0'],
+        multiUseInvitation: true,
+        autoAcceptConnection: true,
+      }
+
+      const response = await request(app).post('/oob/create-invitation').send(params)
+      expect(response.statusCode).toBe(200)
+      expect(spy).toHaveBeenCalledWith(params)
+    })
+  })
+
+  describe('Create a credential offer and a corresponding invitation using create-legacy-connectionless-invitation', () => {
+    test('should return single credential record with attached offer message', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'createOffer').mockResolvedValueOnce(testOffer)
+      const getResult = (): Promise<{ message: AgentMessage; credentialRecord: CredentialExchangeRecord }> =>
+        spy.mock.results[0].value
+
+      const createOfferRequest = {
+        protocolVersion: 'v1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
+        },
+      }
+
+      const response = await request(app).post(`/credentials/create-offer`).send(createOfferRequest)
+
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(objectToJson(result))
+    })
+
+    test('should return single out of bound invitation', async () => {
+      const msg = JsonTransformer.fromJSON(
+        {
+          '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
+          '@type': 'https://didcomm.org/connections/1.0/invitation',
+        },
+        AgentMessage
+      )
+
+      const inputParams = {
+        domain: 'string',
+        message: {
+          '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
+          '@type': 'https://didcomm.org/connections/1.0/invitation',
+        },
+        recordId: 'string',
+      }
+
+      const spy = jest.spyOn(bobAgent.oob, 'createLegacyConnectionlessInvitation').mockResolvedValueOnce({
+        message: msg,
+        invitationUrl: 'https://example.com/invitation',
+      })
+
+      const response = await request(app).post('/oob/create-legacy-connectionless-invitation').send(inputParams)
+
+      expect(response.statusCode).toBe(200)
+      expect(spy).toHaveBeenCalledWith({
+        ...inputParams,
+        message: msg,
+      })
     })
   })
 
