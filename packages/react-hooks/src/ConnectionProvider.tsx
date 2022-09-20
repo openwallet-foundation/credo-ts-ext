@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, DidExchangeState } from '@aries-framework/core'
+import type { Agent, DidExchangeState, ConnectionType, ConnectionState } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { ConnectionRecord, ConnectionType, ConnectionState } from '@aries-framework/core'
+import { ConnectionRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -34,7 +34,7 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
     throw new Error('useConnections must be used within a ConnectionContextProvider')
   }
   if (options.excludedTypes) {
-    let filteredConnections = connectionContext.records.filter((record: ConnectionRecord) => {
+    const filteredConnections = connectionContext.records.filter((record: ConnectionRecord) => {
       const recordTypes = record.getTag('connectionType') as [string]
       for (const type in options.excludedTypes) {
         if (recordTypes?.includes(type)) return false
@@ -51,7 +51,7 @@ export const useConnectionsByType = (type: [ConnectionType | string]) => {
   if (!connectionContext) {
     throw new Error('useConnectionsByType must be used within a ConnectionContextProvider')
   }
-  let filteredConnections = connectionContext.records.filter((record: ConnectionRecord) => {
+  const filteredConnections = connectionContext.records.filter((record: ConnectionRecord) => {
     const recordTypes = record.getTag('connectionType') as [string]
     for (const t in type) {
       if (recordTypes?.includes(t)) return true
