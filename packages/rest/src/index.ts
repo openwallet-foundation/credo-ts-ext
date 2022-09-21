@@ -6,7 +6,6 @@ import type { Socket } from 'net'
 
 import { Server } from 'ws'
 
-// import { emitEventToClient } from './events/WebSocketEvents'
 import { setupServer } from './server'
 
 export const startServer = async (agent: Agent, config: ServerConfig) => {
