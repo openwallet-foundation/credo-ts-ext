@@ -23,9 +23,6 @@ const sendWebSocketEvent = async (server: WebSocket.Server, data: unknown) => {
 }
 
 export const emitEventToClient = async (server: WebSocket.Server, stream: WebSocket, agent: Agent) => {
-  stream.on('message', async (data) => {
-    await sendWebSocketEvent(server, data)
-  })
 
   agent.events.on(
     BasicMessageEventTypes.BasicMessageStateChanged,
