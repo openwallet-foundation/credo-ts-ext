@@ -1,5 +1,14 @@
 # Changelog
 
+### [0.9.3](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.2...rest-v0.9.3) (2022-09-21)
+
+
+### Features
+
+* **rest:** added create-offer endpoint and tests ([#169](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/169)) ([5458e9e](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/5458e9ee06c8a8d61fb6a812ea04f4d1a59b21dc))
+* **rest:** added filters to getAllCredentials ([#166](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/166)) ([af7ec19](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/af7ec197b317b16cb5d2083d880006f29d0272c6))
+* **rest:** added WebSocket event server ([#170](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/170)) ([e190821](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/e190821b3f71c97e03cc92222fedceeadb514aab))
+
 ### [0.9.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.1...rest-v0.9.2) (2022-09-07)
 
 
