@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { WebhookData } from '../src/utils/webhook'
 import type { Agent, CredentialStateChangedEvent, ProofStateChangedEvent } from '@aries-framework/core'
-import type { Server } from 'http'
+import type { Server } from 'net'
 
 import {
   CredentialExchangeRecord,
@@ -18,7 +18,7 @@ import { sleep, webhookListener } from '../src/utils/webhook'
 
 import { getTestAgent } from './utils/helpers'
 
-describe('WebhookTest', () => {
+describe('WebhookTests', () => {
   let aliceAgent: Agent
   let bobAgent: Agent
   let server: Server

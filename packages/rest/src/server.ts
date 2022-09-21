@@ -20,11 +20,10 @@ import { RegisterRoutes } from './routes/routes'
 export const setupServer = async (agent: Agent, config: ServerConfig) => {
   container.registerInstance(Agent, agent)
 
-  let server = express()
-  if (config.app) server = config.app
-  if (config.cors) server.use(cors())
+  const app = config.app ?? express()
+  if (config.cors) app.use(cors())
 
-  if (config.webhookUrl) {
+  if (config.socketServer || config.webhookUrl) {
     basicMessageEvents(agent, config)
     connectionEvents(agent, config)
     credentialEvents(agent, config)
@@ -32,19 +31,19 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
   }
 
   // Use body parser to read sent json payloads
-  server.use(
+  app.use(
     bodyParser.urlencoded({
       extended: true,
     })
   )
-  server.use(bodyParser.json())
-  server.use('/docs', serve, async (_req: ExRequest, res: ExResponse) => {
+  app.use(bodyParser.json())
+  app.use('/docs', serve, async (_req: ExRequest, res: ExResponse) => {
     return res.send(generateHTML(await import('./routes/swagger.json')))
   })
 
-  RegisterRoutes(server)
+  RegisterRoutes(app)
 
-  server.use((req, res, next) => {
+  app.use((req, res, next) => {
     if (req.url == '/') {
       res.redirect('/docs')
       return
@@ -52,12 +51,7 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
     next()
   })
 
-  server.use(function errorHandler(
-    err: unknown,
-    req: ExRequest,
-    res: ExResponse,
-    next: NextFunction
-  ): ExResponse | void {
+  app.use(function errorHandler(err: unknown, req: ExRequest, res: ExResponse, next: NextFunction): ExResponse | void {
     if (err instanceof ValidateError) {
       agent.config.logger.warn(`Caught Validation Error for ${req.path}:`, err.fields)
       return res.status(422).json({
@@ -83,11 +77,11 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
     next()
   })
 
-  server.use(function notFoundHandler(_req, res: ExResponse) {
+  app.use(function notFoundHandler(_req, res: ExResponse) {
     res.status(404).send({
       message: 'Not Found',
     })
   })
 
-  return server
+  return app
 }
