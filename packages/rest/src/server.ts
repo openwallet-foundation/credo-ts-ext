@@ -23,7 +23,7 @@ export const setupServer = async (agent: Agent, config: ServerConfig) => {
   const app = config.app ?? express()
   if (config.cors) app.use(cors())
 
-  if (config.webhookUrl) {
+  if (config.socketServer || config.webhookUrl) {
     basicMessageEvents(agent, config)
     connectionEvents(agent, config)
     credentialEvents(agent, config)

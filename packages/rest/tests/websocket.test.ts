@@ -1,56 +1,52 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { ServerConfig } from '../src/utils/ServerConfig'
 import type { Agent } from '@aries-framework/core'
+import type { Server } from 'net'
 
+import { BasicMessageEventTypes, ConnectionEventTypes } from '@aries-framework/core'
 import WebSocket from 'ws'
 
 import { startServer } from '../src/index'
-import { sleep } from '../src/utils/webhook'
 
 import { getTestAgent } from './utils/helpers'
 
-describe('WebhookTest', () => {
+describe('WebSocketTests', () => {
   let aliceAgent: Agent
   let bobAgent: Agent
-  let socketServer: WebSocket.Server
+  let server: Server
 
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Webhook REST Agent Alice', 3045)
     bobAgent = await getTestAgent('Webhook REST Agent Bob', 3046)
-    socketServer = await startServer(aliceAgent, { port: 3000 } as ServerConfig)
+    server = await startServer(aliceAgent, { port: 3000 })
   })
 
-  test('should return message sent from websocket client back to websocket client', async () => {
-    const client = new WebSocket('ws://localhost:3000')
-    client.on('open', function () {
-      client.send('My name is Alice')
-    })
-
-    client.on('message', (event) => {
-      expect(event).toEqual('My name is Alice')
-      client.terminate()
-    })
-  })
-
-  test('should return broadcast message sent from test agent to websocket client', async () => {
-    const { outOfBandInvitation } = await aliceAgent.oob.createInvitation()
-    const { connectionRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
-    const connection = await bobAgent.connections.returnWhenIsConnected(connectionRecord!.id)
+  test('should return broadcast message event sent from test agent to websocket client', async () => {
+    expect.assertions(1)
 
     const client = new WebSocket('ws://localhost:3000')
 
-    client.on('message', (data) => {
-      expect(data).toContain(connectionRecord?.threadId)
-      client.terminate()
+    const aliceOutOfBandRecord = await aliceAgent.oob.createInvitation()
+    let { connectionRecord: bobConnectionRecord } = await bobAgent.oob.receiveInvitation(
+      aliceOutOfBandRecord.outOfBandInvitation
+    )
+    bobConnectionRecord = await bobAgent.connections.returnWhenIsConnected(bobConnectionRecord!.id)
+
+    const [aliceConnectionRecord] = await aliceAgent.connections.findAllByOutOfBandId(aliceOutOfBandRecord.id)
+
+    const waitForMessagePromise = new Promise((resolve) => {
+      client.on('message', (data) => {
+        const event = JSON.parse(data as string)
+
+        if (event.type === BasicMessageEventTypes.BasicMessageStateChanged) {
+          expect(event.payload.basicMessageRecord.connectionId).toBe(aliceConnectionRecord.id)
+          client.terminate()
+          resolve(undefined)
+        }
+      })
     })
 
-    /*
-     * A sleep is placed here to wait for the listener to have attached
-     * to the client first before sending the broadcast
-     */
-    await sleep(100)
-
-    await bobAgent.basicMessages.sendMessage(connection.id, 'Hello')
+    await bobAgent.basicMessages.sendMessage(bobConnectionRecord.id, 'Hello')
+    await waitForMessagePromise
   })
 
   afterAll(async () => {
@@ -58,6 +54,6 @@ describe('WebhookTest', () => {
     await aliceAgent.wallet.delete()
     await bobAgent.shutdown()
     await bobAgent.wallet.delete()
-    socketServer.close()
+    server.close()
   })
 })

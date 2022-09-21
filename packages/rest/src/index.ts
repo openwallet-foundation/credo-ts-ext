@@ -6,23 +6,22 @@ import type { Socket } from 'net'
 
 import { Server } from 'ws'
 
-import { emitEventToClient } from './events/WebSocketEvents'
+// import { emitEventToClient } from './events/WebSocketEvents'
 import { setupServer } from './server'
 
 export const startServer = async (agent: Agent, config: ServerConfig) => {
-  const socketServer = new Server({ noServer: true })
-  const app = await setupServer(agent, config)
+  const socketServer = config.socketServer ?? new Server({ noServer: true })
+  const app = await setupServer(agent, { ...config, socketServer })
   const server = app.listen(config.port)
 
-  socketServer.on('connection', (stream) => {
-    emitEventToClient(socketServer, stream, agent)
-  })
-
-  server.on('upgrade', (request, socket, head) => {
-    socketServer.handleUpgrade(request, socket as Socket, head, (socket) => {
-      socketServer.emit('connection', socket, request)
+  // If no socket server is provided, we will use the existing http server
+  // to also host the websocket server
+  if (!config.socketServer) {
+    server.on('upgrade', (request, socket, head) => {
+      // eslint-disable-next-line @typescript-eslint/no-empty-function
+      socketServer.handleUpgrade(request, socket as Socket, head, () => {})
     })
-  })
+  }
 
-  return socketServer
+  return server
 }
