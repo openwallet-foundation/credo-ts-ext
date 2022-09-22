@@ -262,8 +262,7 @@ describe('ProofController', () => {
         })
       )
 
-      const eventEmitter = bobAgent.injectionContainer.resolve(EventEmitter)
-      eventEmitter.emit<ProofStateChangedEvent>({
+      bobAgent.events.emit<ProofStateChangedEvent>({
         type: ProofEventTypes.ProofStateChanged,
         payload: {
           previousState: null,
