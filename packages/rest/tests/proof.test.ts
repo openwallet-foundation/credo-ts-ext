@@ -1,7 +1,7 @@
 import type { Agent, ProofStateChangedEvent } from '@aries-framework/core'
 import type { Server } from 'net'
 
-import { EventEmitter, ProofEventTypes, ProofRecord, ProofState } from '@aries-framework/core'
+import { ProofEventTypes, ProofRecord, ProofState } from '@aries-framework/core'
 import request from 'supertest'
 import WebSocket from 'ws'
 
