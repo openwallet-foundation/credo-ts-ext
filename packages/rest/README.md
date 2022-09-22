@@ -164,7 +164,7 @@ const run = async (agent: Agent) => {
   const config = {
     port: 3000,
     webhookUrl: 'http://test.com',
-    socketServer: new Server({ port: 8080 })
+    socketServer: new Server({ port: 8080 }),
   }
   await startServer(agent, config)
 }
