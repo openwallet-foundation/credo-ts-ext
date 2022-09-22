@@ -1,11 +1,21 @@
-import type { Agent, CredentialExchangeRecord, OutOfBandRecord } from '@aries-framework/core'
+import type { Agent, CredentialStateChangedEvent, OutOfBandRecord } from '@aries-framework/core'
 import type { Server } from 'net'
 
-import { CredentialEventTypes, AgentMessage, JsonTransformer, CredentialRepository } from '@aries-framework/core'
+import {
+  AutoAcceptCredential,
+  CredentialExchangeRecord,
+  CredentialPreviewAttribute,
+  CredentialState,
+  CredentialEventTypes,
+  AgentMessage,
+  JsonTransformer,
+  CredentialRepository,
+} from '@aries-framework/core'
 import request from 'supertest'
 import WebSocket from 'ws'
 
 import { startServer } from '../src'
+import { sleep } from '../src/utils/webhook'
 
 import { objectToJson, getTestCredential, getTestAgent, getTestOffer, getTestOutOfBandRecord } from './utils/helpers'
 
@@ -219,43 +229,96 @@ describe('CredentialController', () => {
     })
   })
 
-  describe('Propose credential and accept proposal', () => {
-    // test('should return credential event sent from test agent to websocket client', async () => {
-    //   expect.assertions(1)
-    //   const client = new WebSocket('ws://localhost:3000')
-    //   const proposalRequest = {
-    //     connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
-    //     protocolVersion: 'v1',
-    //     credentialFormats: {
-    //       indy: {
-    //         credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-    //         issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-    //         schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
-    //         schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-    //         schemaName: 'test',
-    //         schemaVersion: '1.0',
-    //         attributes: [
-    //           {
-    //             name: 'name',
-    //             value: 'test',
-    //           },
-    //         ],
-    //       },
-    //     },
-    //   }
-    //   const waitForMessagePromise = new Promise((resolve, reject) => {
-    //     client.on('message', (data) => {
-    //       const event = JSON.parse(data as string)
-    //       expect(event.type).toBe(CredentialEventTypes.CredentialStateChanged)
-    //       client.terminate()
-    //       resolve(undefined)
-    //     })
-    //     reject(undefined)
-    //   })
-    //   await request(app).post(`/credentials/propose-credential`).send(proposalRequest)
-    //   await request(app).post(`/credentials/${testCredential.id}/accept-proposal`)
-    //   await waitForMessagePromise
-    // })
+  describe('Credential WebSocket event', () => {
+    test('should return credential event sent from test agent to websocket client', async () => {
+      expect.assertions(1)
+
+      const now = new Date()
+
+      // Start client and wait for it to be opened
+      const client = new WebSocket('ws://localhost:3000')
+      await new Promise((resolve) => client.once('open', resolve))
+
+      // Start promise to listen for message
+      const waitForEvent = new Promise((resolve) =>
+        client.on('message', (data) => {
+          client.terminate()
+          resolve(JSON.parse(data as string))
+        })
+      )
+
+      // Emit event
+      bobAgent.events.emit<CredentialStateChangedEvent>({
+        type: CredentialEventTypes.CredentialStateChanged,
+        payload: {
+          credentialRecord: new CredentialExchangeRecord({
+            protocolVersion: 'v1',
+            state: CredentialState.OfferSent,
+            threadId: 'thread-id',
+            autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+            connectionId: 'connection-id',
+            createdAt: now,
+            credentialAttributes: [
+              new CredentialPreviewAttribute({
+                name: 'name',
+                value: 'test',
+              }),
+            ],
+            credentials: [
+              {
+                credentialRecordId: 'credential-id',
+                credentialRecordType: 'indy',
+              },
+            ],
+            errorMessage: 'error',
+            id: 'credential-exchange-id',
+            revocationNotification: {
+              revocationDate: now,
+              comment: 'test',
+            },
+          }),
+          previousState: CredentialState.CredentialIssued,
+        },
+      })
+
+      // Wait for event on WebSocket
+      const event = await waitForEvent
+
+      expect(event).toEqual({
+        type: CredentialEventTypes.CredentialStateChanged,
+        payload: {
+          credentialRecord: {
+            protocolVersion: 'v1',
+            state: CredentialState.OfferSent,
+            threadId: 'thread-id',
+            autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+            connectionId: 'connection-id',
+            createdAt: now.toISOString(),
+            metadata: {},
+            _tags: {},
+            credentialAttributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+            credentials: [
+              {
+                credentialRecordId: 'credential-id',
+                credentialRecordType: 'indy',
+              },
+            ],
+            errorMessage: 'error',
+            id: 'credential-exchange-id',
+            revocationNotification: {
+              revocationDate: now.toISOString(),
+              comment: 'test',
+            },
+          },
+          previousState: CredentialState.CredentialIssued,
+        },
+      })
+    })
   })
 
   describe('Create a credential offer', () => {
