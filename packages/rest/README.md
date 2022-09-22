@@ -140,26 +140,31 @@ const run = async () => {
 run()
 ```
 
-### Webhooks
+### WebSocket & Webhooks
 
-We use webhooks as a method for the rest api to have the option to call the controller in case of an event.
+The REST API provides the option to connect as a client and receive events emitted from your agent using WebSocket and Webhooks
 
-Current supported events are:
+You can hook into the events listener using webhooks, or connect a Websocket client directly to the default server.
+
+The currently supported events are:
 
 - `Basic messages`
 - `Connections`
 - `Credentials`
 - `Proofs`
 
-When using the CLI a webhook url can be specified using the `--webhook-url` config option. When using the rest server as an library the webhook url can be configured in the `startServer` method.
+When using the CLI, a webhook url can be specified using the `--webhook-url` config option.
+
+When using the REST server as an library, the WebSocket server and webhook url can be configured in the `startServer` method.
 
 ```ts
-// You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl
+// You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl and/or a WebSocket server
 
 const run = async (agent: Agent) => {
   const config = {
     port: 3000,
     webhookUrl: 'http://test.com',
+    socketServer: new Server({ port: 8080 })
   }
   await startServer(agent, config)
 }
