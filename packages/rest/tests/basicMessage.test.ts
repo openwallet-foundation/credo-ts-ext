@@ -48,7 +48,9 @@ describe('BasicMessageController', () => {
 
       expect(response.statusCode).toBe(404)
     })
+  })
 
+  describe('Basic Message WebSocket event', () => {
     test('should return basic message event sent from test agent to clients', async () => {
       const client = new WebSocket('ws://localhost:3000')
 

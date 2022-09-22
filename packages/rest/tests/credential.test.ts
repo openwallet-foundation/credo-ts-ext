@@ -15,7 +15,6 @@ import request from 'supertest'
 import WebSocket from 'ws'
 
 import { startServer } from '../src'
-import { sleep } from '../src/utils/webhook'
 
 import { objectToJson, getTestCredential, getTestAgent, getTestOffer, getTestOutOfBandRecord } from './utils/helpers'
 

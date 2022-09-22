@@ -191,7 +191,7 @@ describe('ConnectionController', () => {
     })
   })
 
-  describe('Send invitation and accept invitation', () => {
+  describe('Connection WebSocket Event', () => {
     test('should return connection event sent from test agent to websocket client', async () => {
       expect.assertions(1)
 
