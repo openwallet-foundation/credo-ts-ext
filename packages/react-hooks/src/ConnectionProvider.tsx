@@ -64,7 +64,7 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
     connections = filteredByType
   }
 
-  return { ...ConnectionContext, records: connections }
+  return { ...connectionContext, records: connections }
 }
 
 export const useConnectionsByType = (type: [ConnectionType | string]) => {
