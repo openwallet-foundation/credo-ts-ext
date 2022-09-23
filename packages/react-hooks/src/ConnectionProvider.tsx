@@ -34,33 +34,37 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
     throw new Error('useConnections must be used within a ConnectionContextProvider')
   }
 
-  let returnedArray = connectionContext.records
+  let connections = connectionContext.records
 
-  if (options.connectionState) {
-    const connections = returnedArray
+  // Only run this code if we don't have options.excludedTypes to limit ammount of loops
+  if (options.connectionState && !options.excludedTypes) {
     const filteredByState = useMemo(
       () => connections.filter((c: ConnectionRecord) => c.state === options.connectionState),
       [connections, options.connectionState]
     )
-    returnedArray = filteredByState
+    connections = filteredByState
   }
 
   if (options.excludedTypes) {
     const filteredByType = useMemo(
       () =>
-        returnedArray.filter((record: ConnectionRecord) => {
-          const recordTypes = record.getTag('connectionType') as [string]
-          for (const type in options.excludedTypes) {
-            if (recordTypes?.includes(type)) return false
+        connections.filter((record: ConnectionRecord) => {
+          const recordTypes = (record.getTag('connectionType') as [string] | null) || []
+          // Filter out by state if needed
+          if (options.connectionState && options.connectionState !== record.state) {
+            return false
+          }
+          for (const type in recordTypes) {
+            if (options.excludedTypes?.includes(type)) return false
           }
           return true
         }),
-      [returnedArray, options.excludedTypes]
+      [connections, options.excludedTypes]
     )
-    returnedArray = filteredByType
+    connections = filteredByType
   }
 
-  return { loading: connectionContext.loading, records: returnedArray }
+  return { ...ConnectionContext, records: connections }
 }
 
 export const useConnectionsByType = (type: [ConnectionType | string]) => {
