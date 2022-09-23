@@ -1,15 +1,25 @@
-import type { Agent, CredentialExchangeRecord, OutOfBandRecord } from '@aries-framework/core'
-import type { Express } from 'express'
+import type { Agent, CredentialStateChangedEvent, OutOfBandRecord } from '@aries-framework/core'
+import type { Server } from 'net'
 
-import { AgentMessage, JsonTransformer, CredentialRepository } from '@aries-framework/core'
+import {
+  AutoAcceptCredential,
+  CredentialExchangeRecord,
+  CredentialPreviewAttribute,
+  CredentialState,
+  CredentialEventTypes,
+  AgentMessage,
+  JsonTransformer,
+  CredentialRepository,
+} from '@aries-framework/core'
 import request from 'supertest'
+import WebSocket from 'ws'
 
-import { setupServer } from '../src/server'
+import { startServer } from '../src'
 
 import { objectToJson, getTestCredential, getTestAgent, getTestOffer, getTestOutOfBandRecord } from './utils/helpers'
 
 describe('CredentialController', () => {
-  let app: Express
+  let app: Server
   let aliceAgent: Agent
   let bobAgent: Agent
   let testCredential: CredentialExchangeRecord
@@ -22,7 +32,7 @@ describe('CredentialController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Credential REST Agent Test Alice', 3022)
     bobAgent = await getTestAgent('Credential REST Agent Test Bob', 3023)
-    app = await setupServer(bobAgent, { port: 3000 })
+    app = await startServer(bobAgent, { port: 3000 })
 
     testCredential = getTestCredential() as CredentialExchangeRecord
     testOffer = getTestOffer()
@@ -215,6 +225,98 @@ describe('CredentialController', () => {
       const response = await request(app).post(`/credentials/000000aa-aa00-00a0-aa00-000a0aa00000/accept-proposal`)
 
       expect(response.statusCode).toBe(404)
+    })
+  })
+
+  describe('Credential WebSocket event', () => {
+    test('should return credential event sent from test agent to websocket client', async () => {
+      expect.assertions(1)
+
+      const now = new Date()
+
+      // Start client and wait for it to be opened
+      const client = new WebSocket('ws://localhost:3000')
+      await new Promise((resolve) => client.once('open', resolve))
+
+      // Start promise to listen for message
+      const waitForEvent = new Promise((resolve) =>
+        client.on('message', (data) => {
+          client.terminate()
+          resolve(JSON.parse(data as string))
+        })
+      )
+
+      // Emit event
+      bobAgent.events.emit<CredentialStateChangedEvent>({
+        type: CredentialEventTypes.CredentialStateChanged,
+        payload: {
+          credentialRecord: new CredentialExchangeRecord({
+            protocolVersion: 'v1',
+            state: CredentialState.OfferSent,
+            threadId: 'thread-id',
+            autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+            connectionId: 'connection-id',
+            createdAt: now,
+            credentialAttributes: [
+              new CredentialPreviewAttribute({
+                name: 'name',
+                value: 'test',
+              }),
+            ],
+            credentials: [
+              {
+                credentialRecordId: 'credential-id',
+                credentialRecordType: 'indy',
+              },
+            ],
+            errorMessage: 'error',
+            id: 'credential-exchange-id',
+            revocationNotification: {
+              revocationDate: now,
+              comment: 'test',
+            },
+          }),
+          previousState: CredentialState.CredentialIssued,
+        },
+      })
+
+      // Wait for event on WebSocket
+      const event = await waitForEvent
+
+      expect(event).toEqual({
+        type: CredentialEventTypes.CredentialStateChanged,
+        payload: {
+          credentialRecord: {
+            protocolVersion: 'v1',
+            state: CredentialState.OfferSent,
+            threadId: 'thread-id',
+            autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+            connectionId: 'connection-id',
+            createdAt: now.toISOString(),
+            metadata: {},
+            _tags: {},
+            credentialAttributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+            credentials: [
+              {
+                credentialRecordId: 'credential-id',
+                credentialRecordType: 'indy',
+              },
+            ],
+            errorMessage: 'error',
+            id: 'credential-exchange-id',
+            revocationNotification: {
+              revocationDate: now.toISOString(),
+              comment: 'test',
+            },
+          },
+          previousState: CredentialState.CredentialIssued,
+        },
+      })
     })
   })
 
@@ -460,5 +562,6 @@ describe('CredentialController', () => {
     await aliceAgent.wallet.delete()
     await bobAgent.shutdown()
     await bobAgent.wallet.delete()
+    app.close()
   })
 })

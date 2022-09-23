@@ -1,15 +1,16 @@
 import type { Agent, ConnectionRecord } from '@aries-framework/core'
-import type { Express } from 'express'
+import type { Server } from 'net'
 
-import { ConnectionRepository } from '@aries-framework/core'
+import { ConnectionEventTypes, ConnectionRepository } from '@aries-framework/core'
 import request from 'supertest'
+import WebSocket from 'ws'
 
-import { setupServer } from '../src/server'
+import { startServer } from '../src'
 
 import { getTestConnection, getTestAgent, objectToJson } from './utils/helpers'
 
 describe('ConnectionController', () => {
-  let app: Express
+  let app: Server
   let aliceAgent: Agent
   let bobAgent: Agent
   let connection: ConnectionRecord
@@ -17,7 +18,7 @@ describe('ConnectionController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Connection REST Agent Test Alice', 3012)
     bobAgent = await getTestAgent('Connection REST Agent Test Bob', 3013)
-    app = await setupServer(bobAgent, { port: 3000 })
+    app = await startServer(bobAgent, { port: 3000 })
     connection = getTestConnection()
   })
 
@@ -190,10 +191,34 @@ describe('ConnectionController', () => {
     })
   })
 
+  describe('Connection WebSocket Event', () => {
+    test('should return connection event sent from test agent to websocket client', async () => {
+      expect.assertions(1)
+
+      const client = new WebSocket('ws://localhost:3000')
+
+      const aliceOutOfBandRecord = await aliceAgent.oob.createInvitation()
+
+      const waitForMessagePromise = new Promise((resolve) => {
+        client.on('message', (data) => {
+          const event = JSON.parse(data as string)
+
+          expect(event.type).toBe(ConnectionEventTypes.ConnectionStateChanged)
+          client.terminate()
+          resolve(undefined)
+        })
+      })
+
+      await bobAgent.oob.receiveInvitation(aliceOutOfBandRecord.outOfBandInvitation)
+      await waitForMessagePromise
+    })
+  })
+
   afterAll(async () => {
     await aliceAgent.shutdown()
     await aliceAgent.wallet.delete()
     await bobAgent.shutdown()
     await bobAgent.wallet.delete()
+    app.close()
   })
 })

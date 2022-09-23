@@ -1,14 +1,16 @@
-import type { Agent, ProofRecord } from '@aries-framework/core'
-import type { Express } from 'express'
+import type { Agent, ProofStateChangedEvent } from '@aries-framework/core'
+import type { Server } from 'net'
 
+import { ProofEventTypes, ProofRecord, ProofState } from '@aries-framework/core'
 import request from 'supertest'
+import WebSocket from 'ws'
 
-import { setupServer } from '../src/server'
+import { startServer } from '../src'
 
 import { getTestAgent, getTestProof, objectToJson } from './utils/helpers'
 
 describe('ProofController', () => {
-  let app: Express
+  let app: Server
   let aliceAgent: Agent
   let bobAgent: Agent
   let testProof: ProofRecord
@@ -16,7 +18,7 @@ describe('ProofController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Proof REST Agent Test Alice', 3032)
     bobAgent = await getTestAgent('Proof REST Agent Test Bob', 3912)
-    app = await setupServer(bobAgent, { port: 3000 })
+    app = await startServer(bobAgent, { port: 3000 })
 
     testProof = getTestProof()
   })
@@ -238,10 +240,63 @@ describe('ProofController', () => {
     })
   })
 
+  describe('Proof WebSocket event', () => {
+    test('should return proof event sent from test agent to websocket client', async () => {
+      expect.assertions(1)
+
+      const now = new Date()
+
+      const proofRecord = new ProofRecord({
+        id: 'testest',
+        state: ProofState.ProposalSent,
+        threadId: 'random',
+        createdAt: now,
+      })
+
+      // Start client and wait for it to be opened
+      const client = new WebSocket('ws://localhost:3000')
+      await new Promise((resolve) => client.once('open', resolve))
+
+      // Start promise to listen for message
+      const waitForEvent = new Promise((resolve) =>
+        client.on('message', (data) => {
+          client.terminate()
+          resolve(JSON.parse(data as string))
+        })
+      )
+
+      bobAgent.events.emit<ProofStateChangedEvent>({
+        type: ProofEventTypes.ProofStateChanged,
+        payload: {
+          previousState: null,
+          proofRecord,
+        },
+      })
+
+      // Wait for event on WebSocket
+      const event = await waitForEvent
+      expect(event).toEqual({
+        type: 'ProofStateChanged',
+        payload: {
+          previousState: null,
+          proofRecord: {
+            _tags: {},
+            metadata: {},
+            id: 'testest',
+            createdAt: now.toISOString(),
+            state: 'proposal-sent',
+            threadId: 'random',
+          },
+        },
+      })
+    })
+  })
+
   afterAll(async () => {
     await aliceAgent.shutdown()
     await aliceAgent.wallet.delete()
     await bobAgent.shutdown()
     await bobAgent.wallet.delete()
+    app.close()
   })
 })

@@ -1069,7 +1069,7 @@
 	},
 	"info": {
 		"title": "@aries-framework/rest",
-		"version": "0.9.2",
+		"version": "0.9.3",
 		"description": "Rest endpoint wrapper for using your agent over HTTP",
 		"license": {
 			"name": "Apache-2.0"
