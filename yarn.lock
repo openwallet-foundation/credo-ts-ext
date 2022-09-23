@@ -68,9 +68,9 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@file:packages/react-hooks/aries-framework-core-v0.2.4-connectionType.0.tgz":
-  version "0.2.4-connectionType.0"
-  resolved "file:packages/react-hooks/aries-framework-core-v0.2.4-connectionType.0.tgz#9e55ef2402533a32613cf606f825b685438737ca"
+"@aries-framework/core@file:packages/react-hooks/aries-framework-core-v0.2.4-connectionType.1.tgz":
+  version "0.2.4-connectionType.1"
+  resolved "file:packages/react-hooks/aries-framework-core-v0.2.4-connectionType.1.tgz#b200adff98a5396fd98958f0c5db0142e2ba1ee7"
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -5090,6 +5090,13 @@ react@^17.0.2:
   dependencies:
     loose-envify "^1.1.0"
     object-assign "^4.1.1"
+
+react@^18.1.0:
+  version "18.2.0"
+  resolved "https://registry.yarnpkg.com/react/-/react-18.2.0.tgz#555bd98592883255fa00de14f1151a917b5d77d5"
+  integrity sha512-/3IjMdb2L9QbBdWiW5e3P2/npwMBaU9mHCSCUzNln0ZCYbcfTsGbTJrU/kGemdH2IWmB2ioZ+zkxtmq6g09fGQ==
+  dependencies:
+    loose-envify "^1.1.0"
 
 readable-stream@1.1.x:
   version "1.1.14"
