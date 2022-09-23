@@ -54,7 +54,7 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
           if (options.connectionState && options.connectionState !== record.state) {
             return false
           }
-          for (const type in recordTypes) {
+          for (const type of recordTypes) {
             if (options.excludedTypes?.includes(type)) return false
           }
           return true
@@ -73,7 +73,7 @@ export const useConnectionsByType = (type: [ConnectionType | string]) => {
     () =>
       connections.filter((record: ConnectionRecord) => {
         const recordTypes = record.getTag('connectionType') as [string]
-        for (const t in type) {
+        for (const t of type) {
           if (recordTypes?.includes(t)) return true
         }
       }),
