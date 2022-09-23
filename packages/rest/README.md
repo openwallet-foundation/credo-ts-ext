@@ -155,7 +155,7 @@ The currently supported events are:
 
 When using the CLI, a webhook url can be specified using the `--webhook-url` config option.
 
-When using the REST server as an library, the WebSocket server and webhook url can be configured in the `startServer` method.
+When using the REST server as an library, the WebSocket server and webhook url can be configured in the `startServer` and `setupServer` methods.
 
 ```ts
 // You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl and/or a WebSocket server
@@ -171,8 +171,14 @@ const run = async (agent: Agent) => {
 run()
 ```
 
+The `startServer` method will create and start a WebSocket server on the default http port if no socketServer is provided, and will use the provided socketServer if available.
+
+However, the `setupServer` method does not automatically create a socketServer, if one is not provided in the config options.
+
 In case of an event, we will send the event to the webhookUrl with the topic of the event added to the url (http://test.com/{topic}).
 
 So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
 
 The payload of the webhook contains the serialized record related to the topic of the event. For the `connections` topic this will be a `ConnectionRecord`, for the `credentials` topic it will be a `CredentialRecord`, and so on.
+
+For the Websocket clients, the events are sent as JSON stringified objects

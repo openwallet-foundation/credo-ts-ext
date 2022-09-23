@@ -244,10 +244,13 @@ describe('ProofController', () => {
     test('should return proof event sent from test agent to websocket client', async () => {
       expect.assertions(1)
 
+      const now = new Date()
+
       const proofRecord = new ProofRecord({
         id: 'testest',
         state: ProofState.ProposalSent,
         threadId: 'random',
+        createdAt: now,
       })
 
       // Start client and wait for it to be opened
@@ -272,7 +275,20 @@ describe('ProofController', () => {
 
       // Wait for event on WebSocket
       const event = await waitForEvent
-      expect(event).toHaveProperty('type', 'ProofStateChanged')
+      expect(event).toEqual({
+        type: 'ProofStateChanged',
+        payload: {
+          previousState: null,
+          proofRecord: {
+            _tags: {},
+            metadata: {},
+            id: 'testest',
+            createdAt: now.toISOString(),
+            state: 'proposal-sent',
+            threadId: 'random',
+          },
+        },
+      })
     })
   })
 
