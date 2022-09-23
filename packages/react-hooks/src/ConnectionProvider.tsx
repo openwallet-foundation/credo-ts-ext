@@ -1,5 +1,5 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, DidExchangeState, ConnectionType, ConnectionState } from '@aries-framework/core'
+import type { Agent, DidExchangeState, ConnectionType } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
 import { ConnectionRecord } from '@aries-framework/core'
@@ -34,9 +34,9 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
     throw new Error('useConnections must be used within a ConnectionContextProvider')
   }
 
-  let returnedArray = connectionContext.records;
+  let returnedArray = connectionContext.records
 
-  if(options.connectionState){
+  if (options.connectionState) {
     const connections = returnedArray
     const filteredByState = useMemo(
       () => connections.filter((c: ConnectionRecord) => c.state === options.connectionState),
@@ -47,13 +47,14 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
 
   if (options.excludedTypes) {
     const filteredByType = useMemo(
-      () => returnedArray.filter((record: ConnectionRecord) => {
-        const recordTypes = record.getTag('connectionType') as [string]
-        for (const type in options.excludedTypes) {
-          if (recordTypes?.includes(type)) return false
-        }
-        return true
-      }),
+      () =>
+        returnedArray.filter((record: ConnectionRecord) => {
+          const recordTypes = record.getTag('connectionType') as [string]
+          for (const type in options.excludedTypes) {
+            if (recordTypes?.includes(type)) return false
+          }
+          return true
+        }),
       [returnedArray, options.excludedTypes]
     )
     returnedArray = filteredByType
@@ -63,14 +64,15 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
 }
 
 export const useConnectionsByType = (type: [ConnectionType | string]) => {
-  const {records: connections} = useConnections()
-  const filteredConnections = useMemo (
-    () => connections.filter((record: ConnectionRecord) => {
-      const recordTypes = record.getTag('connectionType') as [string]
-      for (const t in type) {
-        if (recordTypes?.includes(t)) return true
-      }
-    }),
+  const { records: connections } = useConnections()
+  const filteredConnections = useMemo(
+    () =>
+      connections.filter((record: ConnectionRecord) => {
+        const recordTypes = record.getTag('connectionType') as [string]
+        for (const t in type) {
+          if (recordTypes?.includes(t)) return true
+        }
+      }),
     [connections, type]
   )
   return filteredConnections
