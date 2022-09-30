@@ -4,7 +4,6 @@ import { Agent } from '@aries-framework/core'
 import { Controller, Example, Get, Path, Route, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { objectToJson } from '../../utils/helpers'
 import { Did, DidRecordExample } from '../examples'
 
 @Tags('Dids')
@@ -19,13 +18,13 @@ export class DidController extends Controller {
   }
 
   /**
-   * Retrieve connection record by connection id
-   * @param did Connection identifier
-   * @returns DidResolutionMetadata
+   * Retrieve did record by did
+   * @param did Decentralized Identifier
+   * @returns DidResolutionResultProps
    */
   @Example<DidResolutionResultProps>(DidRecordExample)
   @Get('/:did')
-  public async getConnectionById(@Path('did') did: Did) {
+  public async getDidRecordByDId(@Path('did') did: Did) {
     const didRecord = await this.agent.dids.resolve(did)
 
     if (!didRecord.didDocument) {
@@ -33,6 +32,6 @@ export class DidController extends Controller {
       return { didRecord }
     }
 
-    return { ...didRecord, didDocument: objectToJson(didRecord.didDocument) }
+    return { ...didRecord, didDocument: didRecord.didDocument.toJSON() }
   }
 }

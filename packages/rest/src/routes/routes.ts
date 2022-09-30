@@ -1186,9 +1186,9 @@ export function RegisterRoutes(app: express.Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/dids/:did',
             ...(fetchMiddlewares<RequestHandler>(DidController)),
-            ...(fetchMiddlewares<RequestHandler>(DidController.prototype.getConnectionById)),
+            ...(fetchMiddlewares<RequestHandler>(DidController.prototype.getDidRecordByDId)),
 
-            async function DidController_getConnectionById(request: any, response: any, next: any) {
+            async function DidController_getDidRecordByDId(request: any, response: any, next: any) {
             const args = {
                     did: {"in":"path","name":"did","required":true,"ref":"Did"},
             };
@@ -1207,7 +1207,7 @@ export function RegisterRoutes(app: express.Router) {
                 }
 
 
-              const promise = controller.getConnectionById.apply(controller, validatedArgs as any);
+              const promise = controller.getDidRecordByDId.apply(controller, validatedArgs as any);
               promiseHandler(controller, promise, response, undefined, next);
             } catch (err) {
                 return next(err);

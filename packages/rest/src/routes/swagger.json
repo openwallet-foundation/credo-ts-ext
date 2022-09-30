@@ -3060,10 +3060,10 @@
 		},
 		"/dids/{did}": {
 			"get": {
-				"operationId": "GetConnectionById",
+				"operationId": "GetDidRecordByDId",
 				"responses": {
 					"200": {
-						"description": "DidResolutionMetadata",
+						"description": "DidResolutionResultProps",
 						"content": {
 							"application/json": {
 								"schema": {
@@ -3151,14 +3151,14 @@
 						}
 					}
 				},
-				"description": "Retrieve connection record by connection id",
+				"description": "Retrieve did record by did",
 				"tags": [
 					"Dids"
 				],
 				"security": [],
 				"parameters": [
 					{
-						"description": "Connection identifier",
+						"description": "Decentralized Identifier",
 						"in": "path",
 						"name": "did",
 						"required": true,
