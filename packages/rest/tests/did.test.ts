@@ -22,9 +22,11 @@ describe('DidController', () => {
 
   describe('Get did resolution result by did', () => {
     test('should give 200 when did resolution record is found', async () => {
-      const response = await request(app).get(`/dids/did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL`)
+      const did = 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL'
+      const response = await request(app).get(`/dids/${did}`)
 
       expect(response.statusCode).toBe(200)
+      expect(response.body.didDocument.id).toBe(did)
     })
 
     test('should give 500 when did resolution record is not found', async () => {
