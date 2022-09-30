@@ -117,19 +117,7 @@ AFJ_REST_WALLET_KEY="my-secret-key" npx -p @aries-framework/rest afj-rest start 
 
 Starting your own server is more involved than using the CLI, but allows more fine-grained control over the settings and allows you to extend the rest api with custom endpoints.
 
-To get started, make sure you have set up the correct version of Aries Framework JavaScript according to the AFJ repository. To find out which version of AFJ you need to have installed you can run the following command. This will list the required peer dependency for `@aries-framework/core`.
-
-```sh
-npm info "@aries-framework/rest" peerDependencies
-```
-
-Then add the rest package to your project.
-
-```sh
-yarn add @aries-framework/rest
-```
-
-Finally you can create an agent instance and import the `startServer` method from the rest package. That's all you have to do.
+You can create an agent instance and import the `startServer` method from the rest package. That's all you have to do.
 
 ```ts
 import { startServer } from '@aries-framework/rest'
@@ -152,34 +140,45 @@ const run = async () => {
 run()
 ```
 
-### Webhooks
+### WebSocket & Webhooks
 
-We use webhooks as a method for the rest api to have the option to call the controller in case of an event.
+The REST API provides the option to connect as a client and receive events emitted from your agent using WebSocket and Webhooks
 
-Current supported events are:
+You can hook into the events listener using webhooks, or connect a Websocket client directly to the default server.
+
+The currently supported events are:
 
 - `Basic messages`
 - `Connections`
 - `Credentials`
 - `Proofs`
 
-When using the CLI a webhook url can be specified using the `--webhook-url` config option. When using the rest server as an library the webhook url can be configured in the `startServer` method.
+When using the CLI, a webhook url can be specified using the `--webhook-url` config option.
+
+When using the REST server as an library, the WebSocket server and webhook url can be configured in the `startServer` and `setupServer` methods.
 
 ```ts
-// You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl
+// You can either call startServer() or setupServer() and pass the ServerConfig interface with a webhookUrl and/or a WebSocket server
 
 const run = async (agent: Agent) => {
   const config = {
     port: 3000,
     webhookUrl: 'http://test.com',
+    socketServer: new Server({ port: 8080 }),
   }
   await startServer(agent, config)
 }
 run()
 ```
 
+The `startServer` method will create and start a WebSocket server on the default http port if no socketServer is provided, and will use the provided socketServer if available.
+
+However, the `setupServer` method does not automatically create a socketServer, if one is not provided in the config options.
+
 In case of an event, we will send the event to the webhookUrl with the topic of the event added to the url (http://test.com/{topic}).
 
 So in this case when a connection event is triggered, it will be sent to: http://test.com/connections
 
 The payload of the webhook contains the serialized record related to the topic of the event. For the `connections` topic this will be a `ConnectionRecord`, for the `credentials` topic it will be a `CredentialRecord`, and so on.
+
+For the Websocket clients, the events are sent as JSON stringified objects

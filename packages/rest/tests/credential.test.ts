@@ -1,26 +1,42 @@
-import type { Agent, CredentialRecord, OfferCredentialMessage } from '@aries-framework/core'
-import type { Express } from 'express'
+import type { Agent, CredentialStateChangedEvent, OutOfBandRecord } from '@aries-framework/core'
+import type { Server } from 'net'
 
+import {
+  AutoAcceptCredential,
+  CredentialExchangeRecord,
+  CredentialPreviewAttribute,
+  CredentialState,
+  CredentialEventTypes,
+  AgentMessage,
+  JsonTransformer,
+  CredentialRepository,
+} from '@aries-framework/core'
 import request from 'supertest'
+import WebSocket from 'ws'
 
-import { setupServer } from '../src/server'
+import { startServer } from '../src'
 
-import { objectToJson, getTestCredential, getTestAgent, getTestCredentialOfferMsg } from './utils/helpers'
+import { objectToJson, getTestCredential, getTestAgent, getTestOffer, getTestOutOfBandRecord } from './utils/helpers'
 
 describe('CredentialController', () => {
-  let app: Express
+  let app: Server
   let aliceAgent: Agent
   let bobAgent: Agent
-  let testCredential: CredentialRecord
-  let testCredentialOfferMsg: OfferCredentialMessage
+  let testCredential: CredentialExchangeRecord
+  let testOffer: {
+    message: AgentMessage
+    credentialRecord: CredentialExchangeRecord
+  }
+  let outOfBandRecord: OutOfBandRecord
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Rest Credential Test Alice', 3005)
-    bobAgent = await getTestAgent('Rest Credential Test Bob', 3006)
-    app = await setupServer(bobAgent, { port: 3000 })
+    aliceAgent = await getTestAgent('Credential REST Agent Test Alice', 3022)
+    bobAgent = await getTestAgent('Credential REST Agent Test Bob', 3023)
+    app = await startServer(bobAgent, { port: 3000 })
 
-    testCredential = getTestCredential()
-    testCredentialOfferMsg = getTestCredentialOfferMsg()
+    testCredential = getTestCredential() as CredentialExchangeRecord
+    testOffer = getTestOffer()
+    outOfBandRecord = getTestOutOfBandRecord()
   })
 
   afterEach(() => {
@@ -29,23 +45,69 @@ describe('CredentialController', () => {
 
   describe('Get all credentials', () => {
     test('should return all credentials', async () => {
-      const spy = jest.spyOn(bobAgent.credentials, 'getAll').mockResolvedValueOnce([testCredential])
-
-      const getResult = (): Promise<CredentialRecord[]> => spy.mock.results[0].value
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
 
       const response = await request(app).get('/credentials')
-      const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(response.body).toEqual(result.map(objectToJson))
+      expect(response.body).toEqual([testCredential].map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by state', () => {
+    test('should return all credentials by specified state', async () => {
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
+
+      const response = await request(app).get('/credentials').query({ state: testCredential.state })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        state: testCredential.state,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([testCredential].map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by threadId', () => {
+    test('should return all credentials by specified threadId', async () => {
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
+
+      const response = await request(app).get('/credentials').query({ threadId: testCredential.threadId })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        threadId: testCredential.threadId,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([testCredential].map(objectToJson))
+    })
+  })
+
+  describe('Get all credentials by connectionId', () => {
+    test('should return all credentials by connectionId', async () => {
+      const credentialRepository = bobAgent.dependencyManager.resolve(CredentialRepository)
+      const findByQuerySpy = jest.spyOn(credentialRepository, 'findByQuery').mockResolvedValueOnce([testCredential])
+
+      const response = await request(app).get('/credentials').query({ connectionId: testCredential.connectionId })
+
+      expect(findByQuerySpy).toBeCalledWith({
+        connectionId: testCredential.connectionId,
+      })
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual([testCredential].map(objectToJson))
     })
   })
 
   describe('Get credential by id', () => {
-    test('should return credential', async () => {
+    test('should return single credential', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'getById').mockResolvedValueOnce(testCredential)
 
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).get(`/credentials/${testCredential.id}`)
       const result = await getResult()
@@ -54,7 +116,8 @@ describe('CredentialController', () => {
       expect(spy).toHaveBeenCalledWith(testCredential.id)
       expect(response.body).toEqual(objectToJson(result))
     })
-    test('should give 404 not found when connection is not found', async () => {
+
+    test('should give 404 not found when credential is not found', async () => {
       const response = await request(app).get(`/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
 
       expect(response.statusCode).toBe(404)
@@ -72,36 +135,37 @@ describe('CredentialController', () => {
   describe('Propose a credential', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'proposeCredential').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const proposalReq = {
+      const proposalRequest = {
         connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
-        credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-        issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-        schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
-        schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-        schemaName: 'test',
-        schemaVersion: '1.0',
-        credentialProposal: {
-          '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-          attributes: [
-            {
-              'mime-type': 'text/plain',
-              name: 'name',
-              value: 'test',
-            },
-          ],
+        protocolVersion: 'v1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
+            schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaName: 'test',
+            schemaVersion: '1.0',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
         },
       }
 
-      const response = await request(app).post(`/credentials/propose-credential`).send(proposalReq)
+      const response = await request(app).post(`/credentials/propose-credential`).send(proposalRequest)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      // TODO: Fix -> expect(spy).toHaveBeenCalledWith(conId, proposalReq)
       expect(response.body).toEqual(objectToJson(result))
     })
-    test('should give 404 not found when connection is not found', async () => {
+
+    test('should give 404 not found when credential is not found', async () => {
       const response = await request(app).post('/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-offer')
 
       expect(response.statusCode).toBe(404)
@@ -111,113 +175,341 @@ describe('CredentialController', () => {
   describe('Accept a credential proposal', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptProposal').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const proposalReq = {
-        credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+      const proposalRequest = {
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
+            schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
+            schemaName: 'test',
+            schemaVersion: '1.0',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
+        },
         autoAcceptCredential: 'always',
         comment: 'test',
       }
-      const response = await request(app).post(`/credentials/${testCredential.id}/accept-proposal`).send(proposalReq)
+
+      const response = await request(app)
+        .post(`/credentials/${testCredential.id}/accept-proposal`)
+        .send(proposalRequest)
+
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(testCredential.id, proposalReq)
+      expect(spy).toHaveBeenCalledWith({ ...proposalRequest, credentialRecordId: testCredential.id })
       expect(response.body).toEqual(objectToJson(result))
     })
+
     test('should work without optional parameters', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptProposal').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-proposal`)
+
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(objectToJson(result))
     })
+
     test('should give 404 not found when credential is not found', async () => {
-      const response = await request(app).post(`/credentials/${testCredential.id}/accept-proposal`)
+      const response = await request(app).post(`/credentials/000000aa-aa00-00a0-aa00-000a0aa00000/accept-proposal`)
 
       expect(response.statusCode).toBe(404)
+    })
+  })
+
+  describe('Credential WebSocket event', () => {
+    test('should return credential event sent from test agent to websocket client', async () => {
+      expect.assertions(1)
+
+      const now = new Date()
+
+      // Start client and wait for it to be opened
+      const client = new WebSocket('ws://localhost:3000')
+      await new Promise((resolve) => client.once('open', resolve))
+
+      // Start promise to listen for message
+      const waitForEvent = new Promise((resolve) =>
+        client.on('message', (data) => {
+          client.terminate()
+          resolve(JSON.parse(data as string))
+        })
+      )
+
+      // Emit event
+      bobAgent.events.emit<CredentialStateChangedEvent>({
+        type: CredentialEventTypes.CredentialStateChanged,
+        payload: {
+          credentialRecord: new CredentialExchangeRecord({
+            protocolVersion: 'v1',
+            state: CredentialState.OfferSent,
+            threadId: 'thread-id',
+            autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+            connectionId: 'connection-id',
+            createdAt: now,
+            credentialAttributes: [
+              new CredentialPreviewAttribute({
+                name: 'name',
+                value: 'test',
+              }),
+            ],
+            credentials: [
+              {
+                credentialRecordId: 'credential-id',
+                credentialRecordType: 'indy',
+              },
+            ],
+            errorMessage: 'error',
+            id: 'credential-exchange-id',
+            revocationNotification: {
+              revocationDate: now,
+              comment: 'test',
+            },
+          }),
+          previousState: CredentialState.CredentialIssued,
+        },
+      })
+
+      // Wait for event on WebSocket
+      const event = await waitForEvent
+
+      expect(event).toEqual({
+        type: CredentialEventTypes.CredentialStateChanged,
+        payload: {
+          credentialRecord: {
+            protocolVersion: 'v1',
+            state: CredentialState.OfferSent,
+            threadId: 'thread-id',
+            autoAcceptCredential: AutoAcceptCredential.ContentApproved,
+            connectionId: 'connection-id',
+            createdAt: now.toISOString(),
+            metadata: {},
+            _tags: {},
+            credentialAttributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+            credentials: [
+              {
+                credentialRecordId: 'credential-id',
+                credentialRecordType: 'indy',
+              },
+            ],
+            errorMessage: 'error',
+            id: 'credential-exchange-id',
+            revocationNotification: {
+              revocationDate: now.toISOString(),
+              comment: 'test',
+            },
+          },
+          previousState: CredentialState.CredentialIssued,
+        },
+      })
+    })
+  })
+
+  describe('Create a credential offer', () => {
+    test('should return single credential record with attached offer message', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'createOffer').mockResolvedValueOnce(testOffer)
+      const getResult = (): Promise<{ message: AgentMessage; credentialRecord: CredentialExchangeRecord }> =>
+        spy.mock.results[0].value
+
+      const createOfferRequest = {
+        protocolVersion: 'v1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
+        },
+      }
+
+      const response = await request(app).post(`/credentials/create-offer`).send(createOfferRequest)
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(objectToJson(result))
+    })
+  })
+
+  describe('Create a credential offer and a corresponding invitation using create-invitation', () => {
+    test('should return single credential record with attached offer message', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'createOffer').mockResolvedValueOnce(testOffer)
+      const getResult = (): Promise<{ message: AgentMessage; credentialRecord: CredentialExchangeRecord }> =>
+        spy.mock.results[0].value
+
+      const createOfferRequest = {
+        protocolVersion: 'v1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
+        },
+      }
+
+      const response = await request(app).post(`/credentials/create-offer`).send(createOfferRequest)
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(objectToJson(result))
+    })
+
+    test('should return single out of bound record', async () => {
+      const spy = jest.spyOn(bobAgent.oob, 'createInvitation').mockResolvedValueOnce(outOfBandRecord)
+
+      const params = {
+        label: 'string',
+        alias: 'string',
+        imageUrl: 'string',
+        goalCode: 'string',
+        goal: 'string',
+        handshake: true,
+        handshakeProtocols: ['https://didcomm.org/connections/1.0'],
+        multiUseInvitation: true,
+        autoAcceptConnection: true,
+      }
+
+      const response = await request(app).post('/oob/create-invitation').send(params)
+      expect(response.statusCode).toBe(200)
+      expect(spy).toHaveBeenCalledWith(params)
+    })
+  })
+
+  describe('Create a credential offer and a corresponding invitation using create-legacy-connectionless-invitation', () => {
+    test('should return single credential record with attached offer message', async () => {
+      const spy = jest.spyOn(bobAgent.credentials, 'createOffer').mockResolvedValueOnce(testOffer)
+      const getResult = (): Promise<{ message: AgentMessage; credentialRecord: CredentialExchangeRecord }> =>
+        spy.mock.results[0].value
+
+      const createOfferRequest = {
+        protocolVersion: 'v1',
+        credentialFormats: {
+          indy: {
+            credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+            attributes: [
+              {
+                name: 'name',
+                value: 'test',
+              },
+            ],
+          },
+        },
+      }
+
+      const response = await request(app).post(`/credentials/create-offer`).send(createOfferRequest)
+
+      const result = await getResult()
+
+      expect(response.statusCode).toBe(200)
+      expect(response.body).toEqual(objectToJson(result))
+    })
+
+    test('should return single out of bound invitation', async () => {
+      const msg = JsonTransformer.fromJSON(
+        {
+          '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
+          '@type': 'https://didcomm.org/connections/1.0/invitation',
+        },
+        AgentMessage
+      )
+
+      const inputParams = {
+        domain: 'string',
+        message: {
+          '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
+          '@type': 'https://didcomm.org/connections/1.0/invitation',
+        },
+        recordId: 'string',
+      }
+
+      const spy = jest.spyOn(bobAgent.oob, 'createLegacyConnectionlessInvitation').mockResolvedValueOnce({
+        message: msg,
+        invitationUrl: 'https://example.com/invitation',
+      })
+
+      const response = await request(app).post('/oob/create-legacy-connectionless-invitation').send(inputParams)
+
+      expect(response.statusCode).toBe(200)
+      expect(spy).toHaveBeenCalledWith({
+        ...inputParams,
+        message: msg,
+      })
     })
   })
 
   describe('Offer a credential', () => {
-    const proposalReq = {
+    const offerRequest = {
       connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
-      credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-      preview: {
-        '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-        attributes: [
-          {
-            'mime-type': 'text/plain',
-            name: 'name',
-            value: 'test',
-          },
-        ],
+      protocolVersion: 'v1',
+      credentialFormats: {
+        indy: {
+          credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
+          attributes: [
+            {
+              name: 'name',
+              value: 'test',
+            },
+          ],
+        },
       },
     }
+
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'offerCredential').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const response = await request(app).post(`/credentials/offer-credential`).send(proposalReq)
+      const response = await request(app).post(`/credentials/offer-credential`).send(offerRequest)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(objectToJson(result))
     })
-    test('should give 404 not found when connection is not found', async () => {
+
+    test('should give 404 not found when credential is not found', async () => {
       const response = await request(app)
-        .post('/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-offer')
-        .send(proposalReq)
+        .post('/credentials/accept-offer')
+        .send({ credentialRecordId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa' })
 
       expect(response.statusCode).toBe(404)
-    })
-  })
-
-  describe('Offer out of band credential', () => {
-    const offerReq = {
-      credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-      preview: {
-        '@type': 'https://didcomm.org/issue-credential/1.0/credential-preview',
-        attributes: [
-          {
-            'mime-type': 'text/plain',
-            name: 'name',
-            value: 'test',
-          },
-        ],
-      },
-    }
-
-    test('should return credential record', async () => {
-      const spy = jest
-        .spyOn(bobAgent.credentials, 'createOutOfBandOffer')
-        .mockResolvedValueOnce({ offerMessage: testCredentialOfferMsg, credentialRecord: testCredential })
-      const getResult = () => spy.mock.results[0].value
-
-      const response = await request(app).post(`/credentials/offer-outofband-credential`).send(offerReq)
-      const result = await getResult()
-
-      expect(response.statusCode).toBe(200)
-      expect(response.body.message).toBeDefined()
-      expect(response.body.credentialRecord).toEqual(objectToJson(result.credentialRecord))
     })
   })
 
   describe('Accept a credential offer', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptOffer').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-offer`)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(testCredential.id)
+      expect(spy).toHaveBeenCalledWith({ credentialRecordId: testCredential.id })
       expect(response.body).toEqual(objectToJson(result))
     })
+
     test('should give 404 not found when credential is not found', async () => {
       const response = await request(app).post('/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-offer')
 
@@ -228,15 +520,16 @@ describe('CredentialController', () => {
   describe('Accept a credential request', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptRequest').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-request`)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(testCredential.id)
+      expect(spy).toHaveBeenCalledWith({ credentialRecordId: testCredential.id })
       expect(response.body).toEqual(objectToJson(result))
     })
+
     test('should give 404 not found when credential is not found', async () => {
       const response = await request(app).post('/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-request')
 
@@ -247,15 +540,16 @@ describe('CredentialController', () => {
   describe('Accept a credential', () => {
     test('should return credential record', async () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptCredential').mockResolvedValueOnce(testCredential)
-      const getResult = (): Promise<CredentialRecord> => spy.mock.results[0].value
+      const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
       const response = await request(app).post(`/credentials/${testCredential.id}/accept-credential`)
       const result = await getResult()
 
       expect(response.statusCode).toBe(200)
-      expect(spy).toHaveBeenCalledWith(testCredential.id)
+      expect(spy).toHaveBeenCalledWith({ credentialRecordId: testCredential.id })
       expect(response.body).toEqual(objectToJson(result))
     })
+
     test('should give 404 not found when credential is not found', async () => {
       const response = await request(app).post('/credentials/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa/accept-credential')
 
@@ -268,5 +562,6 @@ describe('CredentialController', () => {
     await aliceAgent.wallet.delete()
     await bobAgent.shutdown()
     await bobAgent.wallet.delete()
+    app.close()
   })
 })

@@ -30,9 +30,35 @@ export const useProofById = (id: string): ProofRecord | undefined => {
   return proofs.find((p: ProofRecord) => p.id === id)
 }
 
-export const useProofByState = (state: ProofState): ProofRecord[] => {
+export const useProofByState = (state: ProofState | ProofState[]): ProofRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
   const { records: proofs } = useProofs()
-  const filteredProofs = useMemo(() => proofs.filter((p: ProofRecord) => p.state === state), [proofs, state])
+
+  const filteredProofs = useMemo(
+    () =>
+      proofs.filter((r: ProofRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [proofs]
+  )
+
+  return filteredProofs
+}
+
+export const useProofNotInState = (state: ProofState | ProofState[]): ProofRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: proofs } = useProofs()
+
+  const filteredProofs = useMemo(
+    () =>
+      proofs.filter((r: ProofRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [proofs]
+  )
+
   return filteredProofs
 }
 

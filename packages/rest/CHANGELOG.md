@@ -1,5 +1,39 @@
 # Changelog
 
+### [0.9.3](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.2...rest-v0.9.3) (2022-09-21)
+
+
+### Features
+
+* **rest:** added create-offer endpoint and tests ([#169](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/169)) ([5458e9e](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/5458e9ee06c8a8d61fb6a812ea04f4d1a59b21dc))
+* **rest:** added filters to getAllCredentials ([#166](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/166)) ([af7ec19](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/af7ec197b317b16cb5d2083d880006f29d0272c6))
+* **rest:** added WebSocket event server ([#170](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/170)) ([e190821](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/e190821b3f71c97e03cc92222fedceeadb514aab))
+
+### [0.9.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.1...rest-v0.9.2) (2022-09-07)
+
+
+### Bug Fixes
+
+* **rest:** accept proof properties now optional ([#162](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/162)) ([f927fdc](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/f927fdcd4a6142a6bc086d82d3b6e6ed1317108d))
+
+### [0.9.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.0...rest-v0.9.1) (2022-09-05)
+
+
+### Bug Fixes
+
+* **rest:** moved route generation to compile ([#160](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/160)) ([8c70864](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/8c70864cacaada486b0ca7a7f9ba0ca2395f9efd))
+
+## [0.9.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.8.1...rest-v0.9.0) (2022-09-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rest:** update to AFJ 0.2.0 (#148)
+
+### Features
+
+* **rest:** update to AFJ 0.2.0 ([#148](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/148)) ([8ec4dc4](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/8ec4dc4548305d5cc8180b657f5865002eb3ee4a))
+
 ### [0.8.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.8.0...rest-v0.8.1) (2022-06-28)
 
 
