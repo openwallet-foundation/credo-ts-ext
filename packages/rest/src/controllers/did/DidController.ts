@@ -27,11 +27,11 @@ export class DidController extends Controller {
   public async getDidRecordByDId(@Path('did') did: Did) {
     const resolveResult = await this.agent.dids.resolve(did)
 
-    if (!didRecord.didDocument) {
+    if (!resolveResult.didDocument) {
       this.setStatus(500)
-      return { didRecord }
+      return { resolveResult }
     }
 
-    return { ...didRecord, didDocument: didRecord.didDocument.toJSON() }
+    return { ...resolveResult, didDocument: resolveResult.didDocument.toJSON() }
   }
 }
