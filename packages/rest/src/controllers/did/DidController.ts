@@ -25,7 +25,7 @@ export class DidController extends Controller {
   @Example<DidResolutionResultProps>(DidRecordExample)
   @Get('/:did')
   public async getDidRecordByDId(@Path('did') did: Did) {
-    const didRecord = await this.agent.dids.resolve(did)
+    const resolveResult = await this.agent.dids.resolve(did)
 
     if (!didRecord.didDocument) {
       this.setStatus(500)
