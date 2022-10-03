@@ -20,7 +20,7 @@ export class DidController extends Controller {
   /**
    * Resolves did and returns did resolution result
    * @param did Decentralized Identifier
-   * @returns DidResolutionResultProps
+   * @returns DidResolutionResult
    */
   @Example<DidResolutionResultProps>(DidRecordExample)
   @Get('/:did')

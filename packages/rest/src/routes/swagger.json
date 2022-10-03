@@ -3063,7 +3063,7 @@
 				"operationId": "GetDidRecordByDid",
 				"responses": {
 					"200": {
-						"description": "DidResolutionResultProps",
+						"description": "DidResolutionResult",
 						"content": {
 							"application/json": {
 								"schema": {
