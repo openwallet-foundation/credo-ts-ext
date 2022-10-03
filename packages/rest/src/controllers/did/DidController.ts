@@ -18,13 +18,13 @@ export class DidController extends Controller {
   }
 
   /**
-   * Retrieve did record by did
+   * Resolves did and returns did resolution result
    * @param did Decentralized Identifier
    * @returns DidResolutionResultProps
    */
   @Example<DidResolutionResultProps>(DidRecordExample)
   @Get('/:did')
-  public async getDidRecordByDId(@Path('did') did: Did) {
+  public async getDidRecordByDid(@Path('did') did: Did) {
     const resolveResult = await this.agent.dids.resolve(did)
 
     if (!resolveResult.didDocument) {

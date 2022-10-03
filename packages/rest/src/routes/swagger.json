@@ -3060,7 +3060,7 @@
 		},
 		"/dids/{did}": {
 			"get": {
-				"operationId": "GetDidRecordByDId",
+				"operationId": "GetDidRecordByDid",
 				"responses": {
 					"200": {
 						"description": "DidResolutionResultProps",
@@ -3151,7 +3151,7 @@
 						}
 					}
 				},
-				"description": "Retrieve did record by did",
+				"description": "Resolves did and returns did resolution result",
 				"tags": [
 					"Dids"
 				],

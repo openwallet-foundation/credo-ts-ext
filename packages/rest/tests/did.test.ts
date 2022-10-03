@@ -64,7 +64,7 @@ describe('DidController', () => {
       })
     })
 
-    test('should give 500 when did resolution record is not found', async () => {
+    test('should give 500 when did document record is not found', async () => {
       const response = await request(app).get(`/dids/aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa`)
 
       expect(response.statusCode).toBe(500)
