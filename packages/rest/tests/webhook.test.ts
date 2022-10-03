@@ -28,7 +28,7 @@ describe('WebhookTests', () => {
     aliceAgent = await getTestAgent('Webhook REST Agent Test Alice', 3042)
     bobAgent = await getTestAgent('Webhook REST Agent Bob', 3043)
     server = await webhookListener(3044, webhooks)
-    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3044', port: 3000 })
+    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3044', port: 6045 })
   })
 
   test('should return a webhook event when basic message state changed', async () => {
