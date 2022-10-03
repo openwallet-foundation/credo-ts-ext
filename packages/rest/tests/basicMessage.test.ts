@@ -18,8 +18,8 @@ describe('BasicMessageController', () => {
 
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Basic Message REST Agent Test Alice', 3002)
-    bobAgent = await getTestAgent('Basic Message REST Agent Test Bob', 3003)
-    server = await startServer(bobAgent, { port: 3000 })
+    bobAgent = await getTestAgent('Basic Message REST Agent Test Bob', 5034)
+    server = await startServer(bobAgent, { port: 5033 })
 
     const { outOfBandInvitation } = await aliceAgent.oob.createInvitation()
     const { outOfBandRecord: bobOOBRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
@@ -52,7 +52,7 @@ describe('BasicMessageController', () => {
 
   describe('Basic Message WebSocket event', () => {
     test('should return basic message event sent from test agent to clients', async () => {
-      const client = new WebSocket('ws://localhost:3000')
+      const client = new WebSocket('ws://localhost:5033')
 
       const waitForMessagePromise = new Promise((resolve) => {
         client.on('message', (data) => {
