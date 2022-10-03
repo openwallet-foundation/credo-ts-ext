@@ -3070,18 +3070,18 @@
 									"anyOf": [
 										{
 											"properties": {
-												"didRecord": {
+												"resolveResult": {
 													"$ref": "#/components/schemas/DidResolutionResult"
 												}
 											},
 											"required": [
-												"didRecord"
+												"resolveResult"
 											],
 											"type": "object"
 										},
 										{
 											"properties": {
-												"didRecord": {},
+												"resolveResult": {},
 												"didDocumentMetadata": {
 													"$ref": "#/components/schemas/DIDDocumentMetadata"
 												},
