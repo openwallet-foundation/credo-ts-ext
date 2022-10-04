@@ -32,7 +32,7 @@ describe('CredentialController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Credential REST Agent Test Alice', 3022)
     bobAgent = await getTestAgent('Credential REST Agent Test Bob', 3023)
-    app = await startServer(bobAgent, { port: 3000 })
+    app = await startServer(bobAgent, { port: 3024 })
 
     testCredential = getTestCredential() as CredentialExchangeRecord
     testOffer = getTestOffer()
@@ -235,7 +235,7 @@ describe('CredentialController', () => {
       const now = new Date()
 
       // Start client and wait for it to be opened
-      const client = new WebSocket('ws://localhost:3000')
+      const client = new WebSocket('ws://localhost:3024')
       await new Promise((resolve) => client.once('open', resolve))
 
       // Start promise to listen for message

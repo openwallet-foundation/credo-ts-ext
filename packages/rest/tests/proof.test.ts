@@ -18,7 +18,7 @@ describe('ProofController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Proof REST Agent Test Alice', 3032)
     bobAgent = await getTestAgent('Proof REST Agent Test Bob', 3912)
-    app = await startServer(bobAgent, { port: 3000 })
+    app = await startServer(bobAgent, { port: 3033 })
 
     testProof = getTestProof()
   })
@@ -254,7 +254,7 @@ describe('ProofController', () => {
       })
 
       // Start client and wait for it to be opened
-      const client = new WebSocket('ws://localhost:3000')
+      const client = new WebSocket('ws://localhost:3033')
       await new Promise((resolve) => client.once('open', resolve))
 
       // Start promise to listen for message

@@ -18,7 +18,7 @@ describe('ConnectionController', () => {
   beforeAll(async () => {
     aliceAgent = await getTestAgent('Connection REST Agent Test Alice', 3012)
     bobAgent = await getTestAgent('Connection REST Agent Test Bob', 3013)
-    app = await startServer(bobAgent, { port: 3000 })
+    app = await startServer(bobAgent, { port: 3009 })
     connection = getTestConnection()
   })
 
@@ -195,7 +195,7 @@ describe('ConnectionController', () => {
     test('should return connection event sent from test agent to websocket client', async () => {
       expect.assertions(1)
 
-      const client = new WebSocket('ws://localhost:3000')
+      const client = new WebSocket('ws://localhost:3009')
 
       const aliceOutOfBandRecord = await aliceAgent.oob.createInvitation()
 
