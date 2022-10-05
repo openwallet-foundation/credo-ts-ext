@@ -72,7 +72,7 @@ export const useConnectionsByType = (type: [ConnectionType | string]) => {
   const filteredConnections = useMemo(
     () =>
       connections.filter((record: ConnectionRecord) => {
-        const recordTypes = record.getTag('connectionType') as [string]
+        const recordTypes = record.getTag('connectionType') as string[]
         for (const t of type) {
           if (recordTypes?.includes(t)) return true
         }
