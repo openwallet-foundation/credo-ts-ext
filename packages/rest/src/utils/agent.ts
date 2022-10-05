@@ -5,6 +5,7 @@ import {
   ConnectionInvitationMessage,
   HttpOutboundTransport,
   LogLevel,
+  utils,
 } from '@aries-framework/core'
 import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
 import path from 'path'
@@ -42,7 +43,7 @@ export const setupAgent = async ({
       logger: logger,
       indyLedgers: [
         {
-          id: 'TestLedger',
+          id: `TestLedger-${utils.uuid()}`,
           genesisTransactions: BCOVRIN_TEST_GENESIS,
           isProduction: false,
         },
