@@ -3,6 +3,7 @@ import { useBasicMessages, useBasicMessagesByConnectionId } from './BasicMessage
 import { useConnections, useConnectionById, useConnectionByState, useConnectionNotInState } from './ConnectionProvider'
 import { useCredentials, useCredentialById, useCredentialByState, useCredentialNotInState } from './CredentialProvider'
 import { useProofs, useProofById, useProofByState, useProofNotInState } from './ProofProvider'
+import { useQuestionAnswer, useQuestionAnswerByConnectionId, useQuestionAnswerById } from './QuestionAnswerProvider'
 
 export {
   useAgent,
@@ -20,6 +21,9 @@ export {
   useProofById,
   useProofByState,
   useProofNotInState,
+  useQuestionAnswer,
+  useQuestionAnswerByConnectionId,
+  useQuestionAnswerById,
 }
 
 export default AgentProvider
