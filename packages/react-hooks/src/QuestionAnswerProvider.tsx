@@ -1,4 +1,5 @@
 import type { Agent, QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
 import { QuestionAnswerEventTypes } from '@aries-framework/core'
 import * as React from 'react'
@@ -37,7 +38,7 @@ interface Props {
   agent: Agent | undefined
 }
 
-const QuestionAnswerProvider: React.FC<Props> = ({ agent, children }) => {
+const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
   const [questionAnswerState, setQuestionAnswerState] = useState<QuestionAnswerContextInterface>({
     questionAnswerMessages: [],
     loading: true,
