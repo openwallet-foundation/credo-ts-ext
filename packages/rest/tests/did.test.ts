@@ -65,7 +65,6 @@ describe('DidController', () => {
     })
 
     test('should give 500 when did document record is not found', async () => {
-      // const response = await request(app).get(`/dids/did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL`)
       const response = await request(app).get(`/dids/did:key:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa`)
       expect(response.statusCode).toBe(500)
     })
