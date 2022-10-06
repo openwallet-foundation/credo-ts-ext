@@ -1,7 +1,7 @@
 import type { Config } from '@jest/types'
 
 const config: Config.InitialOptions = {
-  testTimeout: 12000,
+  testTimeout: 120000,
   preset: 'ts-jest',
   testEnvironment: 'node',
   coveragePathIgnorePatterns: ['/build/', '/node_modules/', '/__tests__/', 'tests'],
