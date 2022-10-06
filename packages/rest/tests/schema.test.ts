@@ -12,8 +12,12 @@ describe('AgentController', () => {
   let agent: Agent
 
   beforeAll(async () => {
-    agent = await getTestAgent('Rest Schema Test', 3010)
+    agent = await getTestAgent('Schema REST Agent Test', 3021)
     app = await setupServer(agent, { port: 3000 })
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   describe('get schema by id', () => {
@@ -78,11 +82,12 @@ describe('AgentController', () => {
         version: '1.0',
       })
 
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(422)
     })
   })
 
   afterAll(async () => {
-    await agent.shutdown({ deleteWallet: true })
+    await agent.shutdown()
+    await agent.wallet.delete()
   })
 })

@@ -14,9 +14,13 @@ describe('CredentialDefinitionController', () => {
   let testCredDef: CredDef
 
   beforeAll(async () => {
-    agent = await getTestAgent('Rest CredentialDefinition Test', 3007)
+    agent = await getTestAgent('CredentialDefinition REST Agent Test', 3011)
     app = await setupServer(agent, { port: 3000 })
     testCredDef = getTestCredDef()
+  })
+
+  afterEach(() => {
+    jest.clearAllMocks()
   })
 
   describe('get credential definition by id', () => {
@@ -40,7 +44,7 @@ describe('CredentialDefinitionController', () => {
       expect(response.statusCode).toBe(400)
     })
 
-    test('should return 404 NotFound when schema not found', async () => {
+    test('should return 404 NotFound when credential definition not found', async () => {
       const response = await request(app).get(`/credential-definitions/WgWxqztrNooG92RXvxSTWv:3:CL:20:tag`)
       expect(response.statusCode).toBe(404)
     })
@@ -82,11 +86,12 @@ describe('CredentialDefinitionController', () => {
         tag: 'latest',
         supportRevocation: false,
       })
-      expect(response.statusCode).toBe(400)
+      expect(response.statusCode).toBe(422)
     })
   })
 
   afterAll(async () => {
-    await agent.shutdown({ deleteWallet: true })
+    await agent.shutdown()
+    await agent.wallet.delete()
   })
 })

@@ -1,15 +1,21 @@
-import type { Agent, CredentialState, CredentialStateChangedEvent, CredentialRecord } from '@aries-framework/core'
+import type { RecordsState } from './recordUtils'
+import type { Agent, CredentialState } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
-import { CredentialEventTypes } from '@aries-framework/core'
+import { CredentialExchangeRecord } from '@aries-framework/core'
+import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
-interface CredentialContextInterface {
-  loading: boolean
-  credentials: CredentialRecord[]
-}
+import {
+  recordsRemovedByType,
+  recordsUpdatedByType,
+  recordsAddedByType,
+  removeRecord,
+  updateRecord,
+  addRecord,
+} from './recordUtils'
 
-const CredentialContext = createContext<CredentialContextInterface | undefined>(undefined)
+const CredentialContext = createContext<RecordsState<CredentialExchangeRecord> | undefined>(undefined)
 
 export const useCredentials = () => {
   const credentialContext = useContext(CredentialContext)
@@ -19,16 +25,37 @@ export const useCredentials = () => {
   return credentialContext
 }
 
-export const useCredentialById = (id: string): CredentialRecord | undefined => {
-  const { credentials } = useCredentials()
-  return credentials.find((c: CredentialRecord) => c.id === id)
+export const useCredentialById = (id: string): CredentialExchangeRecord | undefined => {
+  const { records: credentials } = useCredentials()
+  return credentials.find((c: CredentialExchangeRecord) => c.id === id)
 }
 
-export const useCredentialByState = (state: CredentialState): CredentialRecord[] => {
-  const { credentials } = useCredentials()
+export const useCredentialByState = (state: CredentialState | CredentialState[]): CredentialExchangeRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: credentials } = useCredentials()
+
   const filteredCredentials = useMemo(
-    () => credentials.filter((c: CredentialRecord) => c.state === state),
-    [credentials, state]
+    () =>
+      credentials.filter((r: CredentialExchangeRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [credentials]
+  )
+  return filteredCredentials
+}
+
+export const useCredentialNotInState = (state: CredentialState | CredentialState[]) => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: credentials } = useCredentials()
+
+  const filteredCredentials = useMemo(
+    () =>
+      credentials.filter((r: CredentialExchangeRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [credentials]
   )
   return filteredCredentials
 }
@@ -37,16 +64,16 @@ interface Props {
   agent: Agent | undefined
 }
 
-const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
-  const [credentialState, setCredentialState] = useState<CredentialContextInterface>({
-    credentials: [],
+const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
+  const [state, setState] = useState<RecordsState<CredentialExchangeRecord>>({
+    records: [],
     loading: true,
   })
 
   const setInitialState = async () => {
     if (agent) {
-      const credentials = await agent.credentials.getAll()
-      setCredentialState({ credentials, loading: false })
+      const records = await agent.credentials.getAll()
+      setState({ records, loading: false })
     }
   }
 
@@ -55,31 +82,28 @@ const CredentialProvider: React.FC<Props> = ({ agent, children }) => {
   }, [agent])
 
   useEffect(() => {
-    if (!credentialState.loading) {
-      const listener = async (event: CredentialStateChangedEvent) => {
-        const newCredentialsState = [...credentialState.credentials]
-        const index = newCredentialsState.findIndex((credential) => credential.id === event.payload.credentialRecord.id)
-        if (index > -1) {
-          newCredentialsState[index] = event.payload.credentialRecord
-        } else {
-          newCredentialsState.unshift(event.payload.credentialRecord)
-        }
+    if (!state.loading) {
+      const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+        setState(addRecord(record, state))
+      )
 
-        setCredentialState({
-          loading: credentialState.loading,
-          credentials: newCredentialsState,
-        })
-      }
+      const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+        setState(updateRecord(record, state))
+      )
 
-      agent?.events.on(CredentialEventTypes.CredentialStateChanged, listener)
+      const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+        setState(removeRecord(record, state))
+      )
 
       return () => {
-        agent?.events.off(CredentialEventTypes.CredentialStateChanged, listener)
+        credentialAdded$?.unsubscribe()
+        credentialUpdated$?.unsubscribe()
+        credentialRemoved$?.unsubscribe()
       }
     }
-  }, [credentialState, agent])
+  }, [state, agent])
 
-  return <CredentialContext.Provider value={credentialState}>{children}</CredentialContext.Provider>
+  return <CredentialContext.Provider value={state}>{children}</CredentialContext.Provider>
 }
 
 export default CredentialProvider

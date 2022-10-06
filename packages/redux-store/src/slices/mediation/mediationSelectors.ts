@@ -23,23 +23,21 @@ const MediationSelectors = {
    * Selector that retrieves all MediationRecord from the state.
    */
   mediationRecordsSelector: createSelector(mediationStateSelector, (mediationState) =>
-    mediationState.records.map((m) => JsonTransformer.fromJSON(m, MediationRecord))
+    mediationState.records.map((r) => JsonTransformer.fromJSON(r, MediationRecord))
   ),
 
   /**
    * Selector that retrieves all MediationRecord from the store by specified state.
    */
   mediationRecordsByStateSelector: (state: MediationRecordState) =>
-    createSelector(mediationStateSelector, (mediationState) =>
-      mediationState.records.filter((record) => record.state === state)
-    ),
+    createSelector(mediationStateSelector, (mediationState) => mediationState.records.filter((r) => r.state === state)),
 
   /**
    * Selector that fetches a MediationRecord by id from the state.
    */
   mediationRecordByIdSelector: (mediationRecordId: string) =>
     createSelector(mediationStateSelector, (mediationState) => {
-      const record = mediationState.records.find((x) => x.id === mediationRecordId)
+      const record = mediationState.records.find((r) => r.id === mediationRecordId)
 
       return record ? JsonTransformer.fromJSON(record, MediationRecord) : null
     }),

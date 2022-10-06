@@ -2,10 +2,10 @@ name: Continuous Integration
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, 'afj-**']
     types: [opened, synchronize, reopened, labeled]
   push:
-    branches: [main]
+    branches: [main, 'afj-**']
 
 env:
   TEST_AGENT_PUBLIC_DID_SEED: 000000000000000000000000Trustee9
@@ -98,8 +98,17 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Run tests
-        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test --coverage
+      - name: Run tests for Push notifications
+        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test push-notifications --coverage
+
+      - name: Run tests for React hooks
+        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test react-hooks --coverage
+
+      - name: Run tests for Redux store
+        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test redux-store --coverage
+
+      - name: Run tests for Rest
+        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test rest --coverage
 
       - uses: codecov/codecov-action@v1
         if: always()
@@ -146,6 +155,7 @@ jobs:
           release-type: node
           package-name: ${{ matrix.package }}
           bump-minor-pre-major: true
+          bump-patch-for-minor-pre-major: true
           monorepo-tags: true
           signoff: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
 

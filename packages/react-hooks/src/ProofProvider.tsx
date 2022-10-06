@@ -1,17 +1,23 @@
-import type { Agent, ProofState, ProofStateChangedEvent, ProofRecord } from '@aries-framework/core'
+import type { RecordsState } from './recordUtils'
+import type { Agent, ProofState } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
-import { ProofEventTypes } from '@aries-framework/core'
+import { ProofRecord } from '@aries-framework/core'
+import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
-interface ProofContextInterface {
-  loading: boolean
-  proofs: ProofRecord[]
-}
+import {
+  recordsRemovedByType,
+  recordsUpdatedByType,
+  recordsAddedByType,
+  removeRecord,
+  updateRecord,
+  addRecord,
+} from './recordUtils'
 
-const ProofContext = createContext<ProofContextInterface | undefined>(undefined)
+const ProofContext = createContext<RecordsState<ProofRecord> | undefined>(undefined)
 
-export const useProofs = (): { proofs: ProofRecord[]; loading: boolean } => {
+export const useProofs = () => {
   const proofContext = useContext(ProofContext)
   if (!proofContext) {
     throw new Error('useProofs must be used within a ProofContextProvider')
@@ -20,13 +26,39 @@ export const useProofs = (): { proofs: ProofRecord[]; loading: boolean } => {
 }
 
 export const useProofById = (id: string): ProofRecord | undefined => {
-  const { proofs } = useProofs()
+  const { records: proofs } = useProofs()
   return proofs.find((p: ProofRecord) => p.id === id)
 }
 
-export const useProofByState = (state: ProofState): ProofRecord[] => {
-  const { proofs } = useProofs()
-  const filteredProofs = useMemo(() => proofs.filter((p: ProofRecord) => p.state === state), [proofs, state])
+export const useProofByState = (state: ProofState | ProofState[]): ProofRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: proofs } = useProofs()
+
+  const filteredProofs = useMemo(
+    () =>
+      proofs.filter((r: ProofRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [proofs]
+  )
+
+  return filteredProofs
+}
+
+export const useProofNotInState = (state: ProofState | ProofState[]): ProofRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: proofs } = useProofs()
+
+  const filteredProofs = useMemo(
+    () =>
+      proofs.filter((r: ProofRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [proofs]
+  )
+
   return filteredProofs
 }
 
@@ -34,16 +66,16 @@ interface Props {
   agent: Agent | undefined
 }
 
-const ProofProvider: React.FC<Props> = ({ agent, children }) => {
-  const [proofState, setProofState] = useState<ProofContextInterface>({
-    proofs: [],
+const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
+  const [state, setState] = useState<RecordsState<ProofRecord>>({
+    records: [],
     loading: true,
   })
 
   const setInitialState = async () => {
     if (agent) {
-      const proofs = await agent.proofs.getAll()
-      setProofState({ proofs, loading: false })
+      const records = await agent.proofs.getAll()
+      setState({ records, loading: false })
     }
   }
 
@@ -52,31 +84,28 @@ const ProofProvider: React.FC<Props> = ({ agent, children }) => {
   }, [agent])
 
   useEffect(() => {
-    if (!proofState.loading) {
-      const listener = (event: ProofStateChangedEvent) => {
-        const newProofsState = [...proofState.proofs]
-        const index = newProofsState.findIndex((proof) => proof.id === event.payload.proofRecord.id)
-        if (index > -1) {
-          newProofsState[index] = event.payload.proofRecord
-        } else {
-          newProofsState.unshift(event.payload.proofRecord)
-        }
+    if (!state.loading) {
+      const proofAdded$ = recordsAddedByType(agent, ProofRecord).subscribe((record) =>
+        setState(addRecord(record, state))
+      )
 
-        setProofState({
-          loading: proofState.loading,
-          proofs: newProofsState,
-        })
-      }
+      const proofUpdated$ = recordsUpdatedByType(agent, ProofRecord).subscribe((record) =>
+        setState(updateRecord(record, state))
+      )
 
-      agent?.events.on(ProofEventTypes.ProofStateChanged, listener)
+      const proofRemoved$ = recordsRemovedByType(agent, ProofRecord).subscribe((record) =>
+        setState(removeRecord(record, state))
+      )
 
       return () => {
-        agent?.events.off(ProofEventTypes.ProofStateChanged, listener)
+        proofAdded$?.unsubscribe()
+        proofUpdated$?.unsubscribe()
+        proofRemoved$?.unsubscribe()
       }
     }
-  }, [proofState, agent])
+  }, [state, agent])
 
-  return <ProofContext.Provider value={proofState}>{children}</ProofContext.Provider>
+  return <ProofContext.Provider value={state}>{children}</ProofContext.Provider>
 }
 
 export default ProofProvider

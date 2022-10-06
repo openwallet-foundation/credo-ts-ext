@@ -1,18 +1,14 @@
 import type { ServerConfig } from '../src/utils/ServerConfig'
-import type { Express } from 'express'
 
-import { AutoAcceptCredential, LogLevel } from '@aries-framework/core'
+import { AgentConfig } from '@aries-framework/core'
+import bodyParser from 'body-parser'
+import express from 'express'
 import { connect } from 'ngrok'
-import { createExpressServer } from 'routing-controllers'
 
 import { startServer } from '../src/index'
-import { setupAgent } from '../tests/utils/agent'
-import { TestLogger } from '../tests/utils/logger'
-
-import { GreetingController } from './utils/GreetingController'
+import { setupAgent } from '../src/utils/agent'
 
 const run = async () => {
-  const logger = new TestLogger(LogLevel.debug)
   const endpoint = await connect(3001)
 
   const agent = await setupAgent({
@@ -20,18 +16,20 @@ const run = async () => {
     publicDidSeed: 'testtesttesttesttesttesttesttest',
     endpoints: [endpoint],
     name: 'Aries Test Agent',
-    logger: logger,
-    autoAcceptConnection: true,
-    autoAcceptCredential: AutoAcceptCredential.ContentApproved,
-    useLegacyDidSovPrefix: true,
   })
 
-  const app: Express = createExpressServer({
-    controllers: [GreetingController],
+  const app = express()
+  const jsonParser = bodyParser.json()
+
+  app.post('/greeting', jsonParser, (req, res) => {
+    const config = agent.injectionContainer.resolve(AgentConfig)
+
+    res.send(`Hello, ${config.label}!`)
   })
 
   const conf: ServerConfig = {
     port: 3000,
+    webhookUrl: 'http://localhost:5000/agent-events',
     app: app,
   }
 

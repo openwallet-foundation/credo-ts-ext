@@ -1,15 +1,21 @@
-import type { Agent, ConnectionState, ConnectionStateChangedEvent, ConnectionRecord } from '@aries-framework/core'
+import type { RecordsState } from './recordUtils'
+import type { Agent, DidExchangeState } from '@aries-framework/core'
+import type { PropsWithChildren } from 'react'
 
-import { ConnectionEventTypes } from '@aries-framework/core'
+import { ConnectionRecord } from '@aries-framework/core'
+import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
-interface ConnectionContextInterface {
-  loading: boolean
-  connections: ConnectionRecord[]
-}
+import {
+  recordsAddedByType,
+  recordsRemovedByType,
+  recordsUpdatedByType,
+  removeRecord,
+  updateRecord,
+  addRecord,
+} from './recordUtils'
 
-const ConnectionContext = createContext<ConnectionContextInterface | undefined>(undefined)
+const ConnectionContext = createContext<RecordsState<ConnectionRecord> | undefined>(undefined)
 
 export const useConnections = () => {
   const connectionContext = useContext(ConnectionContext)
@@ -20,15 +26,36 @@ export const useConnections = () => {
 }
 
 export const useConnectionById = (id: string): ConnectionRecord | undefined => {
-  const { connections } = useConnections()
+  const { records: connections } = useConnections()
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-export const useConnectionByState = (state: ConnectionState): ConnectionRecord[] => {
-  const { connections } = useConnections()
+export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: connections } = useConnections()
+
   const filteredConnections = useMemo(
-    () => connections.filter((c: ConnectionRecord) => c.state === state),
-    [connections, state]
+    () =>
+      connections.filter((r: ConnectionRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [connections]
+  )
+  return filteredConnections
+}
+
+export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: connections } = useConnections()
+
+  const filteredConnections = useMemo(
+    () =>
+      connections.filter((r: ConnectionRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [connections]
   )
   return filteredConnections
 }
@@ -37,16 +64,16 @@ interface Props {
   agent: Agent | undefined
 }
 
-const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
-  const [connectionState, setConnectionState] = useState<ConnectionContextInterface>({
-    connections: [],
+const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
+  const [state, setState] = useState<RecordsState<ConnectionRecord>>({
+    records: [],
     loading: true,
   })
 
   const setInitialState = async () => {
     if (agent) {
-      const connections = await agent.connections.getAll()
-      setConnectionState({ connections, loading: false })
+      const records = await agent.connections.getAll()
+      setState({ records, loading: false })
     }
   }
 
@@ -55,31 +82,28 @@ const ConnectionProvider: React.FC<Props> = ({ agent, children }) => {
   }, [agent])
 
   useEffect(() => {
-    if (!connectionState.loading) {
-      const listener = (event: ConnectionStateChangedEvent) => {
-        const newConnectionsState = [...connectionState.connections]
+    if (!state.loading) {
+      const connectionAdded$ = recordsAddedByType(agent, ConnectionRecord).subscribe((record) =>
+        setState(addRecord(record, state))
+      )
 
-        const index = newConnectionsState.findIndex((connection) => connection.id === event.payload.connectionRecord.id)
-        if (index > -1) {
-          newConnectionsState[index] = event.payload.connectionRecord
-        } else {
-          newConnectionsState.unshift(event.payload.connectionRecord)
-        }
+      const connectionUpdated$ = recordsUpdatedByType(agent, ConnectionRecord).subscribe((record) =>
+        setState(updateRecord(record, state))
+      )
 
-        setConnectionState({
-          loading: connectionState.loading,
-          connections: newConnectionsState,
-        })
-      }
-      agent?.events.on(ConnectionEventTypes.ConnectionStateChanged, listener)
+      const connectionRemoved$ = recordsRemovedByType(agent, ConnectionRecord).subscribe((record) =>
+        setState(removeRecord(record, state))
+      )
 
       return () => {
-        agent?.events.off(ConnectionEventTypes.ConnectionStateChanged, listener)
+        connectionAdded$.unsubscribe()
+        connectionUpdated$.unsubscribe()
+        connectionRemoved$.unsubscribe()
       }
     }
-  }, [connectionState, agent])
+  }, [state, agent])
 
-  return <ConnectionContext.Provider value={connectionState}>{children}</ConnectionContext.Provider>
+  return <ConnectionContext.Provider value={state}>{children}</ConnectionContext.Provider>
 }
 
 export default ConnectionProvider

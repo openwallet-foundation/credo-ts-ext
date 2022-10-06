@@ -1,6 +1,12 @@
 import 'reflect-metadata'
 
-export { PushNotificationsModule } from './PushNotificationsModule'
-export { DeviceInfo, DevicePlatform } from './services'
-
-export * from './messages'
+export { PushNotificationsApnsModule, PushNotificationsFcmModule } from './modules'
+export {
+  PushNotificationsApnsDeviceInfoMessage,
+  PushNotificationsApnsGetDeviceInfoMessage,
+  PushNotificationsApnsSetDeviceInfoMessage,
+  PushNotificationsFcmDeviceInfoMessage,
+  PushNotificationsFcmGetDeviceInfoMessage,
+  PushNotificationsFcmSetDeviceInfoMessage,
+} from './messages'
+export { ApnsDeviceInfo, FcmDeviceInfo } from './services'

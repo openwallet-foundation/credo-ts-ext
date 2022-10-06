@@ -23,7 +23,7 @@ const ProofsSelectors = {
    * Selector that retrieves all ProofRecords from the state.
    */
   proofRecordsSelector: createSelector(proofsStateSelector, (proofsState) =>
-    proofsState.records.map((p) => JsonTransformer.fromJSON(p, ProofRecord))
+    proofsState.records.map((r) => JsonTransformer.fromJSON(r, ProofRecord))
   ),
 
   /**
@@ -31,9 +31,7 @@ const ProofsSelectors = {
    */
   proofRecordsByStateSelector: (state: ProofState) =>
     createSelector(proofsStateSelector, (proofsState) =>
-      proofsState.records
-        .filter((record) => record.state === state)
-        .map((p) => JsonTransformer.fromJSON(p, ProofRecord))
+      proofsState.records.filter((r) => r.state === state).map((r) => JsonTransformer.fromJSON(r, ProofRecord))
     ),
 
   /**
@@ -41,7 +39,7 @@ const ProofsSelectors = {
    */
   proofRecordByIdSelector: (proofRecordId: string) =>
     createSelector(proofsStateSelector, (proofsState) => {
-      const record = proofsState.records.find((x) => x.id === proofRecordId)
+      const record = proofsState.records.find((r) => r.id === proofRecordId)
 
       return record ? JsonTransformer.fromJSON(record, ProofRecord) : null
     }),
