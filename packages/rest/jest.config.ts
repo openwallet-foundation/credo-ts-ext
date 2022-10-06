@@ -6,7 +6,7 @@ const config: Config.InitialOptions = {
   ...base,
   name: '@aries-framework/rest',
   displayName: '@aries-framework/rest',
-  testTimeout: 12000,
+  testTimeout: 120000,
 }
 
 export default config
