@@ -29,9 +29,9 @@ export const useQuestionAnswerByConnectionId = (connectionId: string): QuestionA
 }
 
 export const useQuestionAnswerById = (id: string): QuestionAnswerRecord | undefined => {
-    const { questionAnswerMessages } = useQuestionAnswer()
-    return questionAnswerMessages.find((c: QuestionAnswerRecord) => c.id === id)
-  }
+  const { questionAnswerMessages } = useQuestionAnswer()
+  return questionAnswerMessages.find((c: QuestionAnswerRecord) => c.id === id)
+}
 
 interface Props {
   agent: Agent | undefined
@@ -62,9 +62,9 @@ const QuestionAnswerProvider: React.FC<Props> = ({ agent, children }) => {
           (questionAnswerMessage) => questionAnswerMessage.id === event.payload.questionAnswerRecord.id
         )
         if (index > -1) {
-            newQuestionAnswerState[index] = event.payload.questionAnswerRecord
+          newQuestionAnswerState[index] = event.payload.questionAnswerRecord
         } else {
-            newQuestionAnswerState.unshift(event.payload.questionAnswerRecord)
+          newQuestionAnswerState.unshift(event.payload.questionAnswerRecord)
         }
 
         setQuestionAnswerState({
