@@ -15,7 +15,10 @@ import type {
   V1CredentialService,
   V2CredentialService,
   OutOfBandDidCommService,
+  DidResolutionMetadata,
+  DidDocumentMetadata,
 } from '@aries-framework/core'
+import type { DIDDocument } from 'did-resolver'
 
 export interface AgentInfo {
   label: string
@@ -31,6 +34,12 @@ export interface AgentMessageType {
   '@id': string
   '@type': string
   [key: string]: unknown
+}
+
+export interface DidResolutionResultProps {
+  didResolutionMetadata: DidResolutionMetadata
+  didDocument: DIDDocument | null
+  didDocumentMetadata: DidDocumentMetadata
 }
 
 export interface ProofRequestMessageResponse {
