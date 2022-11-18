@@ -18,6 +18,11 @@ import type {
 export type RecordId = string
 
 /**
+ * @example "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+ */
+export type Did = string
+
+/**
  * @example "1.0.0"
  */
 export type Version = string
@@ -66,6 +71,52 @@ export const ConnectionRecordExample = {
   invitationDid:
     'did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119',
   outOfBandId: 'edbc89fe-785f-4774-a288-46012486881d',
+}
+
+export const DidRecordExample = {
+  didDocument: {
+    '@context': [
+      'https://w3id.org/did/v1',
+      'https://w3id.org/security/suites/ed25519-2018/v1',
+      'https://w3id.org/security/suites/x25519-2019/v1',
+    ],
+    id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    alsoKnownAs: undefined,
+    controller: undefined,
+    verificationMethod: [
+      {
+        id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        type: 'Ed25519VerificationKey2018',
+        controller: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        publicKeyBase58: '6fioC1zcDPyPEL19pXRS2E4iJ46zH7xP6uSgAaPdwDrx',
+      },
+    ],
+    authentication: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    assertionMethod: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    capabilityInvocation: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    capabilityDelegation: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    keyAgreement: [
+      {
+        id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6LSrdqo4M24WRDJj1h2hXxgtDTyzjjKCiyapYVgrhwZAySn',
+        type: 'X25519KeyAgreementKey2019',
+        controller: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        publicKeyBase58: 'FxfdY3DCQxVZddKGAtSjZdFW9bCCW7oRwZn1NFJ2Tbg2',
+      },
+    ],
+    service: undefined,
+  },
+  didDocumentMetadata: {},
+  didResolutionMetadata: {
+    contentType: 'application/did+ld+json',
+  },
 }
 
 type OutOfBandRecordProperties = Omit<OutOfBandRecordProps, 'outOfBandInvitation'>

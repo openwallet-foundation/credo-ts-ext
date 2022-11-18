@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.9.4](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.3...rest-v0.9.4) (2022-10-07)
+
+
+### Features
+
+* **rest:** added did resolver endpoint and tests ([#172](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/172)) ([9a1a24e](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/9a1a24ee2c958d09fff13075e0f56e0d3ed9ce7c))
+
 ### [0.9.3](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.2...rest-v0.9.3) (2022-09-21)
 
 
