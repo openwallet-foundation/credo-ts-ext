@@ -36,13 +36,13 @@ The Aries Framework JavaScript REST API is the most convenient way for self-sove
 
 ### Quick start
 
-The Rest API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The docs can be viewed on the `/docs` endpoint (e.g. http://localhost:3000/docs).
+The REST API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The docs can be viewed on the `/docs` endpoint (e.g. http://localhost:3000/docs).
 
 > The OpenAPI spec is generated from the model classes used by Aries Framework JavaScript. Due to limitations in the inspection of these classes, the generated schema does not always exactly match the expected format. Keep this in mind when using this package. If you encounter any issues, feel free to open an issue.
 
 #### Using the CLI
 
-Using the CLI is the easiest way to get started with REST API.
+Using the CLI is the easiest way to get started with the REST API.
 
 **With Docker (easiest)**
 
@@ -59,15 +59,15 @@ docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/afj-rest \
   --inbound-transport http 5000
 ```
 
-See the [docker-compose.yml](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/docker-compose.yml) file for an example of using the afj-rest image with docker compose.
+See the [docker-compose.yml](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/docker-compose.yml) file for an example of using the afj-rest image with Docker Compose.
 
-> ⚠️ The docker image is not optimized for ARM architectures and won't work on Apple Silicon macs. See the **Directly on Computer** below on how to run it directly on your computer without docker.
+> ⚠️ The Docker image is not optimized for ARM architectures and won't work on Apple Silicon Macs. See the **Directly on Computer** below on how to run it directly on your computer without Docker.
 
 **Directly on Computer**
 
-To run AFJ rest directly on your computer you need to have the indy-sdk installed. Follow the indy [installation steps](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/libindy) for your platform and verify indy is installed.
+To run AFJ REST API directly on your computer you need to have the indy-sdk installed. Follow the indy [installation steps](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/libindy) for your platform and verify indy is installed.
 
-Once you have installed indy you can start the rest server using the following command:
+Once you have installed indy, you can start the rest server using the following command:
 
 ```sh
 npx -p @aries-framework/rest afj-rest start \
@@ -82,7 +82,7 @@ npx -p @aries-framework/rest afj-rest start \
 
 **Configuration**
 
-To find out all available configuration options from the cli, you can run the cli command with `--help`. This will print a full list of all available options.
+To find out all available configuration options from the CLI, you can run the CLI command with `--help`. This will print a full list of all available options.
 
 ```sh
 # With docker
@@ -92,7 +92,7 @@ docker run ghcr.io/hyperledger/afj-rest --help
 npx -p @aries-framework/rest afj-rest start --help
 ```
 
-It is also possible to configure the rest API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
+It is also possible to configure the REST API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
 
 ```json
 {
@@ -115,9 +115,9 @@ AFJ_REST_WALLET_KEY="my-secret-key" npx -p @aries-framework/rest afj-rest start 
 
 #### Starting Own Server
 
-Starting your own server is more involved than using the CLI, but allows more fine-grained control over the settings and allows you to extend the rest api with custom endpoints.
+Starting your own server is more involved than using the CLI, but allows more fine-grained control over the settings and allows you to extend the REST API with custom endpoints.
 
-You can create an agent instance and import the `startServer` method from the rest package. That's all you have to do.
+You can create an agent instance and import the `startServer` method from the `rest` package. That's all you have to do.
 
 ```ts
 import { startServer } from '@aries-framework/rest'
@@ -140,11 +140,11 @@ const run = async () => {
 run()
 ```
 
-### WebSocket & Webhooks
+### WebSocket & webhooks
 
-The REST API provides the option to connect as a client and receive events emitted from your agent using WebSocket and Webhooks
+The REST API provides the option to connect as a client and receive events emitted from your agent using WebSocket and webhooks.
 
-You can hook into the events listener using webhooks, or connect a Websocket client directly to the default server.
+You can hook into the events listener using webhooks, or connect a WebSocket client directly to the default server.
 
 The currently supported events are:
 
@@ -181,4 +181,4 @@ So in this case when a connection event is triggered, it will be sent to: http:/
 
 The payload of the webhook contains the serialized record related to the topic of the event. For the `connections` topic this will be a `ConnectionRecord`, for the `credentials` topic it will be a `CredentialRecord`, and so on.
 
-For the Websocket clients, the events are sent as JSON stringified objects
+For the WebSocket clients, the events are sent as JSON stringified objects
