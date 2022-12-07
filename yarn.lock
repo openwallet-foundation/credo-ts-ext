@@ -10,6 +10,13 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
+"@animo-id/react-native-ble-didcomm@^0.1.1":
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/@animo-id/react-native-ble-didcomm/-/react-native-ble-didcomm-0.1.1.tgz#9ac53ad4af83426e0041ae1b678ccbef7804c948"
+  integrity sha512-ueLnBUlb5nqAbV0l31CmsrbQTHrUIwr7Z9MPXoNKEwv0Po78VMJf9EHRkIfPQQku01bgbrfOrIdztYSlpbQKSA==
+  dependencies:
+    convert-string "0.1.0"
+
 "@aries-framework/core@0.2.1", "@aries-framework/core@^0.2.0":
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.1.tgz#67b78558ff3cc71d7fac3036154238a225f2d890"
@@ -1957,6 +1964,11 @@ convert-source-map@^1.4.0, convert-source-map@^1.6.0, convert-source-map@^1.7.0:
   integrity sha512-+OQdjP49zViI/6i7nIJpA8rAl4sV/JdPfU9nZs3VqOwGIgizICvuN2ru6fMd+4llL0tar18UYJXfZ/TWtmhUjA==
   dependencies:
     safe-buffer "~5.1.1"
+
+convert-string@0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/convert-string/-/convert-string-0.1.0.tgz#79ce41a9bb0d03bcf72cdc6a8f3c56fbbc64410a"
+  integrity sha512-1KX9ESmtl8xpT2LN2tFnKSbV4NiarbVi8DVb39ZriijvtTklyrT+4dT1wsGMHKD3CJUjXgvJzstm9qL9ICojGA==
 
 cookie-signature@1.0.6:
   version "1.0.6"
