@@ -25,9 +25,9 @@
     "prepublishOnly": "yarn run build",
     "test": "jest"
   },
-  "devDependencies": {
+  "dependencies": {
     "@aries-framework/core": "^0.2.3",
     "@aries-framework/node": "^0.2.3",
-    "@animo-id/react-native-ble-didcomm": "^0.1.1"
+    "@animo-id/react-native-ble-didcomm": "^0.2.1"
   }
 }
