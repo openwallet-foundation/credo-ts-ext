@@ -26,8 +26,16 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aries-framework/core": "^0.2.3",
-    "@aries-framework/node": "^0.2.3",
-    "@animo-id/react-native-ble-didcomm": "^0.2.1"
+    "@animo-id/react-native-ble-didcomm": "0.2.1"
+  },
+  "devDependencies": {
+    "@types/react-native": "0.70.8",
+    "@aries-framework/core": "0.2.5",
+    "rimraf": "~3.0.2",
+    "typescript": "~4.4.2"
+  },
+  "peerDependencies": {
+    "@aries-framework/core": "^0.2.0",
+    "react-native": ">=0.60.0"
   }
 }
