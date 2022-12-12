@@ -27,11 +27,12 @@
   },
   "dependencies": {
     "@animo-id/react-native-ble-didcomm": "0.2.1",
-    "@aries-framework/node": "^0.2.5"
+    "@aries-framework/node": "^0.2.5",
+    "tslog": "^4.4.4"
   },
   "devDependencies": {
-    "@types/react-native": "0.70.8",
     "@aries-framework/core": "0.2.5",
+    "@types/react-native": "0.70.8",
     "rimraf": "~3.0.2",
     "typescript": "~4.4.2"
   },
