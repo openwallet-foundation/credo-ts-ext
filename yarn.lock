@@ -133,6 +133,19 @@
     ref-napi "^3.0.3"
     ws "^7.5.3"
 
+"@aries-framework/node@^0.2.5":
+  version "0.2.5"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.2.5.tgz#f23a08813355eec066c9c0942743039d72f87bc5"
+  integrity sha512-dz0a2RscytlGr5zPK6+ic0EpGE2qKbvCfvwm2MhqVC6qZQEOSo6lbsiIItDh1j+CyG/vIJiZFAUH5s+EzgNN4A==
+  dependencies:
+    "@aries-framework/core" "0.2.5"
+    express "^4.17.1"
+    ffi-napi "^4.0.3"
+    indy-sdk "^1.16.0-dev-1636"
+    node-fetch "^2.6.1"
+    ref-napi "^3.0.3"
+    ws "^7.5.3"
+
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6":
   version "7.18.6"
   resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.18.6.tgz#3b25d38c89600baa2dcc219edfa88a74eb2c427a"
@@ -999,10 +1012,10 @@
   resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
   integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
-"@types/indy-sdk@1.16.9", "@types/indy-sdk@^1.16.19":
-  version "1.16.9"
-  resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.9.tgz#647a77ead1e93c77b2b0ef5f2c399ba2ea461b89"
-  integrity sha512-X8fdwcGaXfCxayBOb4NUny37JDd9Q3ZDKnm7WBhPRcdOXw3kmsy+WX52751nJQRBcltu883rbqYAIzcZE83XRA==
+"@types/indy-sdk@^1.16.19":
+  version "1.16.21"
+  resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.21.tgz#bb6178e2a515115b1bf225fb78506a3017d08aa8"
+  integrity sha512-SIu1iOa77lkxkGlW09OinFwebe7U5oDYwI70NnPoe9nbDr63i0FozITWEyIdC1BloKvZRXne6nM4i9zy6E3n6g==
   dependencies:
     buffer "^6.0.0"
 
@@ -1204,17 +1217,17 @@
   resolved "https://registry.yarnpkg.com/@types/validator/-/validator-13.7.4.tgz#33cc949ee87dd47c63e35ba4ad94f6888852be04"
   integrity sha512-uAaSWegu2lymY18l+s5nmcXu3sFeeTOl1zhSGoYzcr6T3wz1M+3OcW4UjfPhIhHGd13tIMRDsEpR+d8w/MexwQ==
 
-"@types/ws@8.5.3":
-  version "8.5.3"
-  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.3.tgz#7d25a1ffbecd3c4f2d35068d0b283c037003274d"
-  integrity sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==
-  dependencies:
-    "@types/node" "*"
-
 "@types/ws@^7.4.6", "@types/ws@^7.4.7":
   version "7.4.7"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-7.4.7.tgz#f7c390a36f7a0679aa69de2d501319f4f8d9b702"
   integrity sha512-JQbbmxZTZehdc2iszGKs5oC3NFnjeay7mtAWrdt7qNtAVK0g19muApzAy4bm9byz79xa2ZnO/BOBC2R8RC5Lww==
+  dependencies:
+    "@types/node" "*"
+
+"@types/ws@^8.2.1":
+  version "8.5.3"
+  resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.3.tgz#7d25a1ffbecd3c4f2d35068d0b283c037003274d"
+  integrity sha512-6YOoWjruKj1uLf3INHH7D3qTXwFfEsg1kf3c0uDdSBJwfa/llkwIjrAGV7j7mVgGNbzTQ3HiHKKDXl6bJPD97w==
   dependencies:
     "@types/node" "*"
 
@@ -5580,6 +5593,11 @@ tslog@^3.2.2, tslog@^3.3.3:
   integrity sha512-lGrkndwpAohZ9ntQpT+xtUw5k9YFV1DjsksiWQlBSf82TTqsSAWBARPRD9juI730r8o3Awpkjp2aXy9k+6vr+g==
   dependencies:
     source-map-support "^0.5.21"
+
+tslog@^4.4.4:
+  version "4.4.4"
+  resolved "https://registry.yarnpkg.com/tslog/-/tslog-4.4.4.tgz#ec121512a0094c4b9fe16ce8170d578a46be12af"
+  integrity sha512-+IJBVcB6h4BhMH3+IvB69lDZ/5ClHX40I66bGTKPAx+/S9nDqJCYN323MxR/gch3Agvrwif4HQorI/YLqAeoNA==
 
 tsoa@^4.1.2:
   version "4.1.2"
