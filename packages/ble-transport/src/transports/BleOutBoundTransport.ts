@@ -1,12 +1,9 @@
 import type { StartOptions } from '@animo-id/react-native-ble-didcomm'
-import type { Agent, Logger, OutboundTransport } from '@aries-framework/core'
+import type { Agent, Logger, OutboundPackage, OutboundTransport } from '@aries-framework/core'
 
 import { Central } from '@animo-id/react-native-ble-didcomm'
-import { utils } from '@aries-framework/core'
 import { MessageReceiver } from '@aries-framework/core/build/agent/MessageReceiver'
 import { isValidJweStructure, JsonEncoder } from '@aries-framework/core/build/utils'
-
-import { BleTransportSession } from './BleTransportSession'
 
 export class BleOutboundTransport implements OutboundTransport {
   private agent!: Agent
@@ -41,14 +38,14 @@ export class BleOutboundTransport implements OutboundTransport {
     })
 
     // Listen for messages
-    this.sdk.registerMessageListener(this.handleNotification)
+    this.sdk.registerMessageListener(this.handleMessage)
   }
 
-  public async sendMessage(message: unknown) {
-    await this.sdk.sendMessage(message as string)
+  public async sendMessage(outboundPackage: OutboundPackage) {
+    await this.sdk.sendMessage(outboundPackage as unknown as string)
   }
 
-  public handleNotification = async (message: string) => {
+  private handleMessage = async (message: string) => {
     const messageReceiver = this.agent.injectionContainer.resolve(MessageReceiver)
 
     const encryptedMessage = JsonEncoder.fromString(message)
@@ -63,9 +60,7 @@ export class BleOutboundTransport implements OutboundTransport {
 
     this.logger.debug('Payload received from mediator:', encryptedMessage)
 
-    await messageReceiver.receiveMessage(encryptedMessage, {
-      session: new BleTransportSession(utils.uuid(), this.sdk),
-    })
+    await messageReceiver.receiveMessage(encryptedMessage, {})
   }
 
   public async stop(): Promise<void> {

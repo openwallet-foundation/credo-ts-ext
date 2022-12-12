@@ -1,12 +1,12 @@
-import type { Ble } from '@animo-id/react-native-ble-didcomm'
+import type { Peripheral } from '@animo-id/react-native-ble-didcomm'
 import type { EncryptedMessage, TransportSession } from '@aries-framework/core'
 
 export class BleTransportSession implements TransportSession {
   public id: string
-  public readonly type = 'BLE'
-  public sdk: Ble
+  public readonly type = 'ble'
+  public sdk: Peripheral
 
-  public constructor(id: string, sdk: Ble) {
+  public constructor(id: string, sdk: Peripheral) {
     this.id = id
     this.sdk = sdk
   }

@@ -1,5 +1,5 @@
 import type { StartOptions } from '@animo-id/react-native-ble-didcomm'
-import type { Agent, InboundTransport, Logger } from '@aries-framework/core'
+import type { Agent, InboundTransport, Logger, OutboundPackage } from '@aries-framework/core'
 
 import { Peripheral } from '@animo-id/react-native-ble-didcomm'
 import { utils } from '@aries-framework/core'
@@ -41,14 +41,14 @@ export class BleInboundTransport implements InboundTransport {
     })
 
     // Listen for messages
-    this.sdk.registerMessageListener(this.handleNotification)
+    this.sdk.registerMessageListener(this.handleMessage)
   }
 
-  public async sendMessage(message: unknown) {
-    await this.sdk.sendMessage(message as string)
+  public async sendMessage(outboundPackage: OutboundPackage) {
+    await this.sdk.sendMessage(outboundPackage as unknown as string)
   }
 
-  public handleNotification = async (message: string) => {
+  private handleMessage = async (message: string) => {
     const messageReceiver = this.agent.injectionContainer.resolve(MessageReceiver)
 
     const encryptedMessage = JsonEncoder.fromString(message)
