@@ -1012,10 +1012,10 @@
   resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
   integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
-"@types/indy-sdk@^1.16.19":
-  version "1.16.21"
-  resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.21.tgz#bb6178e2a515115b1bf225fb78506a3017d08aa8"
-  integrity sha512-SIu1iOa77lkxkGlW09OinFwebe7U5oDYwI70NnPoe9nbDr63i0FozITWEyIdC1BloKvZRXne6nM4i9zy6E3n6g==
+"@types/indy-sdk@1.16.9", "@types/indy-sdk@^1.16.19":
+  version "1.16.9"
+  resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.9.tgz#647a77ead1e93c77b2b0ef5f2c399ba2ea461b89"
+  integrity sha512-X8fdwcGaXfCxayBOb4NUny37JDd9Q3ZDKnm7WBhPRcdOXw3kmsy+WX52751nJQRBcltu883rbqYAIzcZE83XRA==
   dependencies:
     buffer "^6.0.0"
 
@@ -5593,11 +5593,6 @@ tslog@^3.2.2, tslog@^3.3.3:
   integrity sha512-lGrkndwpAohZ9ntQpT+xtUw5k9YFV1DjsksiWQlBSf82TTqsSAWBARPRD9juI730r8o3Awpkjp2aXy9k+6vr+g==
   dependencies:
     source-map-support "^0.5.21"
-
-tslog@^4.4.4:
-  version "4.4.4"
-  resolved "https://registry.yarnpkg.com/tslog/-/tslog-4.4.4.tgz#ec121512a0094c4b9fe16ce8170d578a46be12af"
-  integrity sha512-+IJBVcB6h4BhMH3+IvB69lDZ/5ClHX40I66bGTKPAx+/S9nDqJCYN323MxR/gch3Agvrwif4HQorI/YLqAeoNA==
 
 tsoa@^4.1.2:
   version "4.1.2"
