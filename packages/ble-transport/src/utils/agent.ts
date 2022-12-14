@@ -1,19 +1,11 @@
-import { AutoAcceptCredential, AutoAcceptProof, Agent, LogLevel, utils } from '@aries-framework/core'
+import { AutoAcceptCredential, AutoAcceptProof, Agent, LogLevel, utils, ConsoleLogger } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
-import path from 'path'
 
 import { BleInboundTransport, BleOutboundTransport } from '../transports'
 
-import { TsLogger } from './logger'
 import { BCOVRIN_TEST_GENESIS } from './util'
 
-export const genesisPath = process.env.GENESIS_TXN_PATH
-  ? path.resolve(process.env.GENESIS_TXN_PATH)
-  : path.join(__dirname, '../../../../network/genesis/local-genesis.txn')
-
 export const setupAgent = async ({ name, publicDidSeed }: { name: string; publicDidSeed: string }) => {
-  const logger = new TsLogger(LogLevel.debug)
-
   const agent = new Agent(
     {
       publicDidSeed,
@@ -23,7 +15,7 @@ export const setupAgent = async ({ name, publicDidSeed }: { name: string; public
       autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
       walletConfig: { id: name, key: name },
       useLegacyDidSovPrefix: true,
-      logger: logger,
+      logger: new ConsoleLogger(LogLevel.off),
       indyLedgers: [
         {
           id: `TestLedger-${utils.uuid()}`,
