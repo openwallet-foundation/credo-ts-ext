@@ -26,8 +26,7 @@
     "test": "jest"
   },
   "dependencies": {
-    "@animo-id/react-native-ble-didcomm": "0.2.1",
-    "@aries-framework/node": "^0.2.5",
+    "@animo-id/react-native-ble-didcomm": "0.2.2",
     "tslog": "^3.3.3"
   },
   "devDependencies": {

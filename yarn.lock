@@ -10,10 +10,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@animo-id/react-native-ble-didcomm@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@animo-id/react-native-ble-didcomm/-/react-native-ble-didcomm-0.2.1.tgz#e0ffff1d806e0061fa0766f4c8b50f492b78ab0d"
-  integrity sha512-RXlCdqdobpq9uyhdTRusejOgc9UkubOQE7PXQbw7e1csdeQMPt5254kcj0vXjtvFjexxz6h6PLsffAY55DyvQA==
+"@animo-id/react-native-ble-didcomm@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@animo-id/react-native-ble-didcomm/-/react-native-ble-didcomm-0.2.2.tgz#f8809317a48063f7421a9c741774e0ec18a12b2a"
+  integrity sha512-P/IqZy4Rkl6InfC96OcgyxZM1rGvxRfzFl2X923V0BqtebTwVN/MCVyNhbYNZ4mX+EayazOs5FB1Bf7bBxqh4w==
   dependencies:
     convert-string "0.1.0"
 
