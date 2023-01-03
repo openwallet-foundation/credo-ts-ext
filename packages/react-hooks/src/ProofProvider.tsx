@@ -30,6 +30,11 @@ export const useProofById = (id: string): ProofRecord | undefined => {
   return proofs.find((p: ProofRecord) => p.id === id)
 }
 
+export const useProofByConnectionId = (connectionId: string): ProofRecord[] => {
+  const { records: proofs } = useProofs()
+  return proofs.filter((p: ProofRecord) => p.connectionId === connectionId)
+}
+
 export const useProofByState = (state: ProofState): ProofRecord[] => {
   const { records: proofs } = useProofs()
   const filteredProofs = useMemo(() => proofs.filter((p: ProofRecord) => p.state === state), [proofs, state])

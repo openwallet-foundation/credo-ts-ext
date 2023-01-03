@@ -1,26 +1,15 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, CredentialExchangeRecord, ProofRecord } from '@aries-framework/core'
+import type { Agent, BaseRecord } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { BasicMessageRecord } from '@aries-framework/core'
 import { useState, createContext, useContext, useEffect } from 'react'
 import * as React from 'react'
 
-import { useBasicMessagesByConnectionId } from './BasicMessageProvider'
-import { useCredentialById } from './CredentialProvider'
-import { useProofById } from './ProofProvider'
-import {
-  recordsAddedByType,
-  recordsRemovedByType,
-  recordsUpdatedByType,
-  removeRecord,
-  updateRecord,
-  addRecord,
-} from './recordUtils'
+import { useBasicMessages, useBasicMessagesByConnectionId } from './BasicMessageProvider'
+import { useCredentialByConnectionId, useCredentials } from './CredentialProvider'
+import { useProofByConnectionId, useProofs } from './ProofProvider'
 
-const MessageContext = createContext<
-  RecordsState<BasicMessageRecord | CredentialExchangeRecord | ProofRecord> | undefined
->(undefined)
+const MessageContext = createContext<RecordsState<BaseRecord> | undefined>(undefined)
 
 export const useMessages = () => {
   const messageContext = useContext(MessageContext)
@@ -30,16 +19,12 @@ export const useMessages = () => {
   return messageContext
 }
 
-export const useMessagesByConnectionId = (connectionId: string) => {
+export const useMessagesByConnectionId = (connectionId: string): BaseRecord[] | undefined => {
   const basicMessages = useBasicMessagesByConnectionId(connectionId)
-  const proofMessages = useProofById(connectionId)
-  const credentialMessags = useCredentialById(connectionId)
+  const proofMessages = useProofByConnectionId(connectionId)
+  const credentialMessages = useCredentialByConnectionId(connectionId)
 
-  return {
-    basicMessages,
-    proofMessages,
-    credentialMessags,
-  }
+  return [...basicMessages, ...proofMessages, ...credentialMessages] as BaseRecord[]
 }
 
 interface Props {
@@ -47,14 +32,17 @@ interface Props {
 }
 
 const MessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
-  const [state, setState] = useState<RecordsState<BasicMessageRecord>>({
+  const [state, setState] = useState<RecordsState<BaseRecord>>({
     records: [],
     loading: true,
   })
 
-  const setInitialState = async () => {
+  const setInitialState = () => {
     if (agent) {
-      const records = await agent.basicMessages.findAllByQuery({})
+      const { records: basicMessages } = useBasicMessages()
+      const { records: proofs } = useProofs()
+      const { records: credentials } = useCredentials()
+      const records = [...basicMessages, ...proofs, ...credentials] as BaseRecord[]
       setState({ records, loading: false })
     }
   }
@@ -62,28 +50,6 @@ const MessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }
   useEffect(() => {
     setInitialState()
   }, [agent])
-
-  useEffect(() => {
-    if (!state.loading) {
-      const basicMessageAdded$ = recordsAddedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
-
-      const basicMessageUpdated$ = recordsUpdatedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
-
-      const basicMessageRemoved$ = recordsRemovedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
-
-      return () => {
-        basicMessageAdded$?.unsubscribe()
-        basicMessageUpdated$?.unsubscribe()
-        basicMessageRemoved$?.unsubscribe()
-      }
-    }
-  }, [state, agent])
 
   return <MessageContext.Provider value={state}>{children}</MessageContext.Provider>
 }
