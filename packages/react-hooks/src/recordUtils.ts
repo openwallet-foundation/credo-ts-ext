@@ -95,7 +95,7 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
   if (!recordClass) {
     throw new Error("The recordClass can't be undefined")
   }
-  
+
   return agent?.events
     .observable<RecordDeletedEvent<R>>(RepositoryEventTypes.RecordDeleted)
     .pipe(filterByType(recordClass))
