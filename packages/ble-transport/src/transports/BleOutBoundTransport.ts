@@ -1,5 +1,6 @@
 import type { StartOptions } from '@animo-id/react-native-ble-didcomm'
 import type { Agent, Logger, OutboundPackage, OutboundTransport } from '@aries-framework/core'
+import type { EmitterSubscription } from 'react-native'
 
 import { Central } from '@animo-id/react-native-ble-didcomm'
 import { MessageReceiver } from '@aries-framework/core/build/agent/MessageReceiver'
@@ -37,20 +38,33 @@ export class BleOutboundTransport implements OutboundTransport {
       indicationUUID: this.uuids.indicationUUID,
     })
 
-    // Listen for messages
-    this.sdk.registerMessageListener(this.handleMessage)
+    await this.sdk.scan()
+
+    const onDiscoveredPeripheralListener = this.sdk.registerOnDiscoveredListener(async ({ peripheralId, name }) => {
+      this.logger.debug(`Discovered: ${name} with id: ${peripheralId}`)
+      await this.sdk.connect(peripheralId)
+    })
+
+    const onConnectedPeripheralListener = this.sdk.registerOnConnectedListener(async ({ peripheralId, name }) => {
+      this.logger.debug(`Connected to: ${name} with id: ${peripheralId}`)
+      onDiscoveredPeripheralListener.remove()
+    })
+
+    this.sdk.registerMessageListener(
+      async (message) => await this.handleMessage(message, onConnectedPeripheralListener)
+    )
   }
 
   public async sendMessage(outboundPackage: OutboundPackage) {
-    await this.sdk.sendMessage(outboundPackage as unknown as string)
+    await this.sdk.sendMessage(JSON.stringify(outboundPackage))
   }
 
-  private handleMessage = async (message: string) => {
+  private handleMessage = async (message: string, onConnectedPeripheralListener: EmitterSubscription) => {
     const messageReceiver = this.agent.injectionContainer.resolve(MessageReceiver)
 
     const encryptedMessage = JsonEncoder.fromString(message)
 
-    this.logger.trace('BLE notify message received.', { message: encryptedMessage })
+    this.logger.debug('BLE notify message received.', { message: encryptedMessage })
 
     if (!isValidJweStructure(encryptedMessage)) {
       throw new Error(
@@ -61,6 +75,8 @@ export class BleOutboundTransport implements OutboundTransport {
     this.logger.debug('Payload received from mediator:', encryptedMessage)
 
     await messageReceiver.receiveMessage(encryptedMessage, {})
+
+    onConnectedPeripheralListener.remove()
   }
 
   public async stop(): Promise<void> {

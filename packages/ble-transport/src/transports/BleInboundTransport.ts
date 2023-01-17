@@ -40,12 +40,14 @@ export class BleInboundTransport implements InboundTransport {
       indicationUUID: this.uuids.indicationUUID,
     })
 
+    await this.sdk.advertise()
+
     // Listen for messages
     this.sdk.registerMessageListener(this.handleMessage)
   }
 
   public async sendMessage(outboundPackage: OutboundPackage) {
-    await this.sdk.sendMessage(outboundPackage as unknown as string)
+    await this.sdk.sendMessage(JSON.stringify(outboundPackage))
   }
 
   private handleMessage = async (message: string) => {
@@ -53,7 +55,7 @@ export class BleInboundTransport implements InboundTransport {
 
     const encryptedMessage = JsonEncoder.fromString(message)
 
-    this.logger.trace('BLE write message received.', { message: encryptedMessage })
+    this.logger.debug('BLE write message received.', { message: encryptedMessage })
 
     if (!isValidJweStructure(encryptedMessage)) {
       throw new Error(
