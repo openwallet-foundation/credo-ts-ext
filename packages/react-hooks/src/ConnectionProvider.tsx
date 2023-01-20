@@ -23,50 +23,77 @@ export type useConnectionsOptions = {
 const ConnectionContext = createContext<RecordsState<ConnectionRecord> | undefined>(undefined)
 
 /**
- * This method retreives the connection context for the current agent.
+ * This method retrieves the connection context for the current agent.
  * From this you can access all connection records for the agent.
  * @param options options for useConnections hook, lets us filter out specific types and limit states
  * @returns a connection context containing information about the agents connections
  */
 export const useConnections = (options: useConnectionsOptions = {}) => {
   const connectionContext = useContext(ConnectionContext)
-  if (!connectionContext) {
-    throw new Error('useConnections must be used within a ConnectionContextProvider')
-  }
 
-  let connections = connectionContext.records
-
-  // Only run this code if we don't have options.excludedTypes or options.connectionState to limit amount of loops
-  if (!options.connectionState && !options.excludedTypes) return { ...connectionContext, records: connections }
-
+  let connections = connectionContext?.records
+  
   connections = useMemo(() => {
+    if (!connections) {
+      throw new Error('useConnections must be used within a ConnectionContextProvider')
+    }
     // do not filter if not filter options are provided to save on a loop
     if (!options.connectionState && !options.excludedTypes) return connections
 
-      return connections.filter((record: ConnectionRecord) => {
-    // By default we include this connection
-    let valid = true
-    
-    
-    // Filter by state (if connectionState is defined)
-    if (options.connectionState) valid = record.state === options.connectionState
-    
-    // Exclude records with certain connection types (if defined)
-    const recordTypes = record.getTag('connectionType') as string[] | null
-    if (options.excludedTypes && recordTypes) {
-      valid = recordTypes.some(connectionType => options.excludedTypes?.includes(connectionType))
-    }
-    
-    return valid
-    })
-  }, [connections, options.connectionState, options.excludedTypes])
+    return connections.filter((record: ConnectionRecord) => {
+      // By default we include this connection
+      
+      // Filter by state (if connectionState is defined)
+      if (options.connectionState !== record.state) return false
+      
+      // Exclude records with certain connection types (if defined)
+      const recordTypes = record.connectionTypes as ConnectionType[] | null
+      if (options.excludedTypes && recordTypes) {
+        return recordTypes.some(connectionType => options.excludedTypes?.includes(connectionType))
+      }
+      return true
+      })
+    }, [connections, options.connectionState, options.excludedTypes])
 
   return { ...connectionContext, records: connections }
 }
 
+//  Currently included, but soon to be deprecated and incorporated into the main useConnections hook
 export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   const { records: connections } = useConnections()
   return connections.find((c: ConnectionRecord) => c.id === id)
+}
+
+//  Currently included, but soon to be deprecated and incorporated into the main useConnections hook
+export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: connections } = useConnections()
+
+  const filteredConnections = useMemo(
+    () =>
+      connections.filter((r: ConnectionRecord) => {
+        if (states.includes(r.state)) return r
+      }),
+    [connections]
+  )
+  return filteredConnections
+}
+
+//  Currently included, but soon to be deprecated and incorporated into the main useConnections hook
+export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
+  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
+
+  const { records: connections } = useConnections()
+
+  const filteredConnections = useMemo(
+    () =>
+      connections.filter((r: ConnectionRecord) => {
+        if (!states.includes(r.state)) return r
+      }),
+    [connections]
+  )
+  return filteredConnections
 }
 
 interface Props {
