@@ -19,8 +19,7 @@ export class BleInboundTransport implements InboundTransport {
     this.central = sdk
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  public async start(agent: Agent<any>): Promise<void> {
+  public async start(agent: Agent): Promise<void> {
     this.agent = agent
 
     this.logger = agent.config.logger
