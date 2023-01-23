@@ -1,21 +1,31 @@
-import type { Peripheral } from '@animo-id/react-native-ble-didcomm'
-import type { EncryptedMessage, TransportSession } from '@aries-framework/core'
+import type { Central } from '@animo-id/react-native-ble-didcomm'
+import type { EncryptedMessage, Logger, TransportSession } from '@aries-framework/core'
+
+import { ConsoleLogger, LogLevel, JsonEncoder } from '@aries-framework/core'
 
 export class BleTransportSession implements TransportSession {
+  public readonly type = 'Bluetooth Low Energy'
   public id: string
-  public readonly type = 'ble'
-  public sdk: Peripheral
+  private logger: Logger
+  private central: Central
 
-  public constructor(id: string, sdk: Peripheral) {
+  public constructor(id: string, sdk: Central) {
     this.id = id
-    this.sdk = sdk
+    this.logger = new ConsoleLogger(LogLevel.debug)
+    this.central = sdk
   }
 
-  public send(encryptedMessage: EncryptedMessage): Promise<void> {
-    return this.sdk.sendMessage(JSON.stringify(encryptedMessage))
+  public async send(encryptedMessage: EncryptedMessage): Promise<void> {
+    const serializedMessage = JsonEncoder.toString(encryptedMessage)
+
+    this.logger.debug('Sending BLE inbound message')
+
+    await this.central.sendMessage(serializedMessage)
   }
 
   public async close(): Promise<void> {
-    this.sdk.shutdown()
+    this.logger.debug('Stopping BLE inbound transport')
+
+    await this.central.shutdown()
   }
 }

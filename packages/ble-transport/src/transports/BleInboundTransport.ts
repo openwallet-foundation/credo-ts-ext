@@ -1,7 +1,7 @@
-import type { StartOptions } from '@animo-id/react-native-ble-didcomm'
-import type { Agent, InboundTransport, Logger, OutboundPackage } from '@aries-framework/core'
+import type { Central } from '@animo-id/react-native-ble-didcomm'
+import type { Agent, InboundTransport, Logger } from '@aries-framework/core'
+import type { EmitterSubscription } from 'react-native'
 
-import { Peripheral } from '@animo-id/react-native-ble-didcomm'
 import { utils } from '@aries-framework/core'
 import { MessageReceiver } from '@aries-framework/core/build/agent/MessageReceiver'
 import { isValidJweStructure, JsonEncoder } from '@aries-framework/core/build/utils'
@@ -9,68 +9,47 @@ import { isValidJweStructure, JsonEncoder } from '@aries-framework/core/build/ut
 import { BleTransportSession } from './BleTransportSession'
 
 export class BleInboundTransport implements InboundTransport {
+  public supportedSchemes: string[] = ['ble']
   private agent!: Agent
+  private central: Central
   private logger!: Logger
-  private sdk: Peripheral
+  private listener!: EmitterSubscription
 
-  // FIXME: When is this going to be invoked, the connection (or invitation) would need a ble: endpoint?
-  // AFJ Needs an endpoint
-  // @berend, any thoughts on this?
-
-  public supportedSchemes: string[] = []
-  public uuids: StartOptions
-
-  // We can only initialize this transport when the QR is scanned.
-  public constructor(uuids: StartOptions) {
-    this.sdk = new Peripheral()
-    this.uuids = uuids
+  public constructor(sdk: Central) {
+    this.central = sdk
   }
 
-  public async start(agent: Agent): Promise<void> {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  public async start(agent: Agent<any>): Promise<void> {
     this.agent = agent
 
     this.logger = agent.config.logger
 
     this.logger.debug('Starting BLE inbound transport')
 
-    // Start the Peripheral
-    await this.sdk.start({
-      serviceUUID: this.uuids.serviceUUID,
-      messagingUUID: this.uuids.messagingUUID,
-      indicationUUID: this.uuids.indicationUUID,
-    })
+    const messageListener = async (message: string) => {
+      const session = new BleTransportSession(utils.uuid(), this.central)
+      const messageReceiver = this.agent.injectionContainer.resolve(MessageReceiver)
 
-    await this.sdk.advertise()
+      const encryptedMessage = JsonEncoder.fromString(message)
 
-    // Listen for messages
-    this.sdk.registerMessageListener(this.handleMessage)
-  }
+      this.logger.debug('BLE indicate message received.', { message: encryptedMessage })
 
-  public async sendMessage(outboundPackage: OutboundPackage) {
-    await this.sdk.sendMessage(JSON.stringify(outboundPackage))
-  }
+      if (!isValidJweStructure(encryptedMessage)) {
+        throw new Error(
+          `Received a response from the other agent but the structure of the incoming message is not a DIDComm message: ${encryptedMessage}`
+        )
+      }
 
-  private handleMessage = async (message: string) => {
-    const messageReceiver = this.agent.injectionContainer.resolve(MessageReceiver)
-
-    const encryptedMessage = JsonEncoder.fromString(message)
-
-    this.logger.debug('BLE write message received.', { message: encryptedMessage })
-
-    if (!isValidJweStructure(encryptedMessage)) {
-      throw new Error(
-        `Received a response from the other agent but the structure of the incoming message is not a DIDComm message: ${encryptedMessage}`
-      )
+      await messageReceiver.receiveMessage(encryptedMessage, {
+        session,
+      })
     }
 
-    this.logger.debug('Payload received from mediator:', encryptedMessage)
-
-    await messageReceiver.receiveMessage(encryptedMessage, {
-      session: new BleTransportSession(utils.uuid(), this.sdk),
-    })
+    this.listener = this.central.registerMessageListener(messageListener)
   }
 
   public async stop(): Promise<void> {
-    await this.sdk.shutdown()
+    this.listener.remove()
   }
 }
