@@ -47,9 +47,9 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
       if (options.connectionState !== record.state) return false
       
       // Exclude records with certain connection types (if defined)
-      const recordTypes = record.connectionTypes as ConnectionType[] | null
+      const recordTypes = record.connectionTypes as ConnectionType[] | string[] | null
       if (options.excludedTypes && recordTypes) {
-        return recordTypes.some(connectionType => options.excludedTypes?.includes(connectionType))
+        return recordTypes.some(connectionType => !options.excludedTypes?.includes(connectionType))
       }
       return true
       })
@@ -58,13 +58,14 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
   return { ...connectionContext, records: connections }
 }
 
-//  Currently included, but soon to be deprecated and incorporated into the main useConnections hook
 export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   const { records: connections } = useConnections()
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-//  Currently included, but soon to be deprecated and incorporated into the main useConnections hook
+  /**
+   * @deprecated filtering by state can now be done by passing options to useConnections hook
+   */
 export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
@@ -80,7 +81,9 @@ export const useConnectionByState = (state: DidExchangeState | DidExchangeState[
   return filteredConnections
 }
 
-//  Currently included, but soon to be deprecated and incorporated into the main useConnections hook
+  /**
+   * @deprecated filtering by state can now be done by passing options to useConnections hook
+   */
 export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
