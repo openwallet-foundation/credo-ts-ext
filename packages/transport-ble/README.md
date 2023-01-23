@@ -19,11 +19,10 @@
       alt="typescript"
       src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg"
   /></a>
-    <a href="https://www.npmjs.com/package/@aries-framework/ble-transport"
+    <a href="https://www.npmjs.com/package/@aries-framework/transport-ble"
     ><img
-      alt="@aries-framework/ble-transport version"
-      src="https://img.shield.io/npm/v/@aries-framework/ble-transport"
+      alt="@aries-framework/transport-ble version"
+      src="https://img.shield.io/npm/v/@aries-framework/transport-ble"
   /></a>
-
+  <br />
 </p>
-<br />

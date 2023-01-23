@@ -1,5 +1,5 @@
 import type { Central } from '@animo-id/react-native-ble-didcomm'
-import type { Agent, InboundTransport, Logger } from '@aries-framework/core'
+import type { Agent, InboundTransport } from '@aries-framework/core'
 import type { EmitterSubscription } from 'react-native'
 
 import { utils } from '@aries-framework/core'
@@ -10,29 +10,24 @@ import { BleTransportSession } from './BleTransportSession'
 
 export class BleInboundTransport implements InboundTransport {
   public supportedSchemes: string[] = ['ble']
-  private agent!: Agent
   private central: Central
-  private logger!: Logger
-  private listener!: EmitterSubscription
+  private listener?: EmitterSubscription
+  private session?: BleTransportSession
 
   public constructor(sdk: Central) {
     this.central = sdk
   }
 
   public async start(agent: Agent): Promise<void> {
-    this.agent = agent
-
-    this.logger = agent.config.logger
-
-    this.logger.debug('Starting BLE inbound transport')
+    agent.config.logger.debug('Starting BLE inbound transport')
 
     const messageListener = async (message: string) => {
-      const session = new BleTransportSession(utils.uuid(), this.central)
-      const messageReceiver = this.agent.injectionContainer.resolve(MessageReceiver)
+      this.session = new BleTransportSession(utils.uuid(), this.central, agent)
+      const messageReceiver = agent.injectionContainer.resolve(MessageReceiver)
 
       const encryptedMessage = JsonEncoder.fromString(message)
 
-      this.logger.debug('BLE indicate message received.', { message: encryptedMessage })
+      agent.config.logger.debug('BLE indicate message received.', { message: encryptedMessage })
 
       if (!isValidJweStructure(encryptedMessage)) {
         throw new Error(
@@ -41,7 +36,7 @@ export class BleInboundTransport implements InboundTransport {
       }
 
       await messageReceiver.receiveMessage(encryptedMessage, {
-        session,
+        session: this.session,
       })
     }
 
@@ -49,6 +44,6 @@ export class BleInboundTransport implements InboundTransport {
   }
 
   public async stop(): Promise<void> {
-    this.listener.remove()
+    this.listener?.remove()
   }
 }
