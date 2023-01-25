@@ -1,7 +1,7 @@
 import type { Central } from '@animo-id/react-native-ble-didcomm'
 import type { Agent, EncryptedMessage, TransportSession } from '@aries-framework/core'
 
-import { TransportService, JsonEncoder } from '@aries-framework/core'
+import { JsonEncoder } from '@aries-framework/core'
 
 export class BleTransportSession implements TransportSession {
   public readonly type = 'BluetoothLowEnergy'
@@ -25,11 +25,5 @@ export class BleTransportSession implements TransportSession {
 
   public async close(): Promise<void> {
     this.agent.config.logger.debug('Stopping BLE inbound transport')
-
-    await this.central.shutdown()
-
-    const transportService = this.agent.dependencyManager.resolve(TransportService)
-
-    transportService.removeSession(this)
   }
 }

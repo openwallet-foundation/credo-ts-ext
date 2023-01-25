@@ -40,6 +40,8 @@ export class BleInboundTransport implements InboundTransport {
       })
     }
 
+    // Implement some functionality that listens for broken/shutdown BLE connection, and removes the session from the transport table when this happens
+
     this.listener = this.central.registerMessageListener(messageListener)
   }
 

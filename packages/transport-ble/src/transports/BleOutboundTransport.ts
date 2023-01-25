@@ -5,7 +5,6 @@ import { JsonEncoder } from '@aries-framework/core/build/utils'
 
 export class BleOutboundTransport implements OutboundTransport {
   public supportedSchemes: string[] = ['ble']
-  private agent!: Agent
   private peripheral: Peripheral
   private logger!: Logger
 
@@ -14,10 +13,9 @@ export class BleOutboundTransport implements OutboundTransport {
   }
 
   public async start(agent: Agent): Promise<void> {
-    this.agent = agent
     this.logger = agent.config.logger
 
-    this.logger.debug('Starting BLE outbound transport')
+    agent.config.logger.debug('Starting BLE outbound transport')
 
     await this.peripheral.start()
   }
