@@ -15,8 +15,8 @@ import {
   addRecord,
 } from './recordUtils'
 
-export type useConnectionsOptions = {
-  excludedTypes?: [ConnectionType | string]
+export type UseConnectionsOptions = {
+  excludedTypes?: Array<ConnectionType | string>
   connectionState?: DidExchangeState
 }
 
@@ -28,7 +28,7 @@ const ConnectionContext = createContext<RecordsState<ConnectionRecord> | undefin
  * @param options options for useConnections hook, lets us filter out specific types and limit states
  * @returns a connection context containing information about the agents connections
  */
-export const useConnections = (options: useConnectionsOptions = {}) => {
+export const useConnections = (options: UseConnectionsOptions = {}) => {
   const connectionContext = useContext(ConnectionContext)
 
   let connections = connectionContext?.records
@@ -44,12 +44,12 @@ export const useConnections = (options: useConnectionsOptions = {}) => {
       // By default we include this connection
       
       // Filter by state (if connectionState is defined)
-      if (options.connectionState !== record.state) return false
+      if (options.connectionState && options.connectionState !== record.state) return false
       
       // Exclude records with certain connection types (if defined)
-      const recordTypes = record.connectionTypes as ConnectionType[] | string[] | null
+      const recordTypes = record.connectionTypes as Array<ConnectionType | string> | null
       if (options.excludedTypes && recordTypes) {
-        return recordTypes.some(connectionType => !options.excludedTypes?.includes(connectionType))
+        return recordTypes.some(connectionType => !options.excludedTypes!.includes(connectionType))
       }
       return true
       })
