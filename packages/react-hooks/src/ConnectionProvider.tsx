@@ -32,7 +32,6 @@ export const useConnections = (options: UseConnectionsOptions = {}) => {
   const connectionContext = useContext(ConnectionContext)
 
   let connections = connectionContext?.records
-  
   connections = useMemo(() => {
     if (!connections) {
       throw new Error('useConnections must be used within a ConnectionContextProvider')
@@ -42,18 +41,17 @@ export const useConnections = (options: UseConnectionsOptions = {}) => {
 
     return connections.filter((record: ConnectionRecord) => {
       // By default we include this connection
-      
       // Filter by state (if connectionState is defined)
       if (options.connectionState && options.connectionState !== record.state) return false
-      
+
       // Exclude records with certain connection types (if defined)
       const recordTypes = record.connectionTypes as Array<ConnectionType | string> | null
       if (options.excludedTypes && recordTypes) {
-        return recordTypes.some(connectionType => !options.excludedTypes!.includes(connectionType))
+        return recordTypes.some((connectionType) => !options.excludedTypes?.includes(connectionType))
       }
       return true
-      })
-    }, [connections, options.connectionState, options.excludedTypes])
+    })
+  }, [connections, options.connectionState, options.excludedTypes])
 
   return { ...connectionContext, records: connections }
 }
@@ -63,9 +61,9 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-  /**
-   * @deprecated filtering by state can now be done by passing options to useConnections hook
-   */
+/**
+ * @deprecated filtering by state can now be done by passing options to useConnections hook
+ */
 export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
@@ -81,9 +79,9 @@ export const useConnectionByState = (state: DidExchangeState | DidExchangeState[
   return filteredConnections
 }
 
-  /**
-   * @deprecated filtering by state can now be done by passing options to useConnections hook
-   */
+/**
+ * @deprecated filtering by state can now be done by passing options to useConnections hook
+ */
 export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
