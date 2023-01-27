@@ -1,47 +1,45 @@
-import type { WebhookData } from './utils/webhook'
+/* eslint-disable @typescript-eslint/no-non-null-assertion */
+import type { WebhookData } from '../src/utils/webhook'
 import type { Agent, CredentialStateChangedEvent, ProofStateChangedEvent } from '@aries-framework/core'
-import type { Server } from 'http'
+import type { Server } from 'net'
 
 import {
+  CredentialExchangeRecord,
   ProofEventTypes,
   ProofState,
   ProofRecord,
   CredentialState,
-  CredentialRecord,
   CredentialEventTypes,
 } from '@aries-framework/core'
 import { EventEmitter } from '@aries-framework/core/build/agent/EventEmitter'
 
 import { setupServer } from '../src/server'
+import { sleep, webhookListener } from '../src/utils/webhook'
 
 import { getTestAgent } from './utils/helpers'
-import { sleep, webhookListener } from './utils/webhook'
 
-describe('WebhookTest', () => {
-  let agent: Agent
+describe('WebhookTests', () => {
+  let aliceAgent: Agent
+  let bobAgent: Agent
   let server: Server
   const webhooks: WebhookData[] = []
 
-  beforeEach(async () => {
-    agent = await getTestAgent('Rest Webhook Test Bob', 3012)
-    server = await webhookListener(3000, webhooks)
-    await setupServer(agent, { webhookUrl: 'http://localhost:3000', port: 3013 })
-  })
-
-  afterEach(async () => {
-    await agent.shutdown()
-    await agent.wallet.delete()
-    server.close()
+  beforeAll(async () => {
+    aliceAgent = await getTestAgent('Webhook REST Agent Test Alice', 3042)
+    bobAgent = await getTestAgent('Webhook REST Agent Bob', 3043)
+    server = await webhookListener(3044, webhooks)
+    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3044', port: 6045 })
   })
 
   test('should return a webhook event when basic message state changed', async () => {
-    const { invitation } = await agent.connections.createConnection()
-    const { id } = await agent.connections.receiveInvitation(invitation)
+    const { outOfBandInvitation } = await aliceAgent.oob.createInvitation()
+    const { connectionRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
+    const connection = await bobAgent.connections.returnWhenIsConnected(connectionRecord!.id)
 
-    await agent.basicMessages.sendMessage(id, 'Hello')
+    await bobAgent.basicMessages.sendMessage(connection.id, 'Hello')
 
     /*
-     * we sleep here to wait for the event to have processed and sent out
+     * A sleep is placed here to wait for the event to have processed and sent out
      * an webhook first before searching for the webhook
      */
     await sleep(100)
@@ -52,34 +50,33 @@ describe('WebhookTest', () => {
   })
 
   test('should return a webhook event when connection state changed', async () => {
-    const { connectionRecord } = await agent.connections.createConnection()
+    const { outOfBandInvitation } = await aliceAgent.oob.createInvitation()
+    const { connectionRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
+    const connection = await bobAgent.connections.returnWhenIsConnected(connectionRecord!.id)
 
     /*
-     * we sleep here to wait for the event to have processed and sent out
+     * A sleep is placed here to wait for the event to have processed and sent out
      * an webhook first before searching for the webhook
      */
     await sleep(100)
 
     const webhook = webhooks.find(
       (webhook) =>
-        webhook.topic === 'connections' &&
-        webhook.body.id === connectionRecord.id &&
-        webhook.body.state === connectionRecord.state
+        webhook.topic === 'connections' && webhook.body.id === connection.id && webhook.body.state === connection.state
     )
 
-    expect(JSON.parse(JSON.stringify(connectionRecord.toJSON()))).toMatchObject(
-      webhook?.body as Record<string, unknown>
-    )
+    expect(JSON.parse(JSON.stringify(connection.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)
   })
 
   test('should return a webhook event when credential state changed', async () => {
-    const credentialRecord = new CredentialRecord({
+    const credentialRecord = new CredentialExchangeRecord({
       id: 'testest',
       state: CredentialState.OfferSent,
       threadId: 'random',
+      protocolVersion: 'v1',
     })
 
-    const eventEmitter = agent.injectionContainer.resolve(EventEmitter)
+    const eventEmitter = bobAgent.injectionContainer.resolve(EventEmitter)
     eventEmitter.emit<CredentialStateChangedEvent>({
       type: CredentialEventTypes.CredentialStateChanged,
       payload: {
@@ -89,7 +86,7 @@ describe('WebhookTest', () => {
     })
 
     /*
-     * we sleep here to wait for the event to have processed and sent out
+     * A sleep is placed here to wait for the event to have processed and sent out
      * an webhook first before searching for the webhook
      */
     await sleep(100)
@@ -113,7 +110,7 @@ describe('WebhookTest', () => {
       threadId: 'random',
     })
 
-    const eventEmitter = agent.injectionContainer.resolve(EventEmitter)
+    const eventEmitter = bobAgent.injectionContainer.resolve(EventEmitter)
     eventEmitter.emit<ProofStateChangedEvent>({
       type: ProofEventTypes.ProofStateChanged,
       payload: {
@@ -123,7 +120,7 @@ describe('WebhookTest', () => {
     })
 
     /*
-     * we sleep here to wait for the event to have processed and sent out
+     * A sleep is placed here to wait for the event to have processed and sent out
      * an webhook first before searching for the webhook
      */
     await sleep(100)
@@ -134,5 +131,13 @@ describe('WebhookTest', () => {
     )
 
     expect(JSON.parse(JSON.stringify(proofRecord.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)
+  })
+
+  afterAll(async () => {
+    await aliceAgent.shutdown()
+    await aliceAgent.wallet.delete()
+    await bobAgent.shutdown()
+    await bobAgent.wallet.delete()
+    server.close()
   })
 })

@@ -1,0 +1,4787 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"AgentInfo": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"endpoints": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"isInitialized": {
+						"type": "boolean"
+					},
+					"publicDid": {
+						"properties": {
+							"verkey": {
+								"type": "string"
+							},
+							"did": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"verkey",
+							"did"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"label",
+					"endpoints",
+					"isInitialized"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"BasicMessageRecord": {
+				"$ref": "#/components/schemas/Record_string.unknown_"
+			},
+			"RecordId": {
+				"type": "string",
+				"example": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e"
+			},
+			"Record_content.string_": {
+				"properties": {
+					"content": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"DidExchangeState": {
+				"description": "Connection states as defined in RFC 0023.",
+				"enum": [
+					"start",
+					"invitation-sent",
+					"invitation-received",
+					"request-sent",
+					"request-received",
+					"response-sent",
+					"response-received",
+					"abandoned",
+					"completed"
+				],
+				"type": "string"
+			},
+			"Record_string.any_": {
+				"properties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"CredentialState": {
+				"description": "Issue Credential states as defined in RFC 0036 and RFC 0453",
+				"enum": [
+					"proposal-sent",
+					"proposal-received",
+					"offer-sent",
+					"offer-received",
+					"declined",
+					"request-sent",
+					"request-received",
+					"credential-issued",
+					"credential-received",
+					"done"
+				],
+				"type": "string"
+			},
+			"ProtocolVersionType_CredentialServices_": {
+				"type": "string",
+				"description": "Get the supported protocol versions based on the provided credential services."
+			},
+			"AutoAcceptCredential": {
+				"description": "Typing of the state for auto acceptance",
+				"enum": [
+					"always",
+					"contentApproved",
+					"never"
+				],
+				"type": "string"
+			},
+			"ProposeCredentialOptions": {
+				"properties": {
+					"protocolVersion": {
+						"$ref": "#/components/schemas/ProtocolVersionType_CredentialServices_"
+					},
+					"credentialFormats": {
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"issuerDid": {
+										"type": "string"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									},
+									"schemaVersion": {
+										"type": "string"
+									},
+									"schemaName": {
+										"type": "string"
+									},
+									"schemaId": {
+										"type": "string"
+									},
+									"schemaIssuerDid": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"issuerDid",
+									"credentialDefinitionId",
+									"schemaVersion",
+									"schemaName",
+									"schemaId",
+									"schemaIssuerDid"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
+					},
+					"autoAcceptCredential": {
+						"$ref": "#/components/schemas/AutoAcceptCredential"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"connectionId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"protocolVersion",
+					"credentialFormats",
+					"connectionId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AcceptCredentialProposalOptions": {
+				"properties": {
+					"credentialFormats": {
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"issuerDid": {
+										"type": "string"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									},
+									"schemaVersion": {
+										"type": "string"
+									},
+									"schemaName": {
+										"type": "string"
+									},
+									"schemaId": {
+										"type": "string"
+									},
+									"schemaIssuerDid": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"issuerDid",
+									"credentialDefinitionId",
+									"schemaVersion",
+									"schemaName",
+									"schemaId",
+									"schemaIssuerDid"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
+					},
+					"autoAcceptCredential": {
+						"$ref": "#/components/schemas/AutoAcceptCredential"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateOfferOptions": {
+				"properties": {
+					"protocolVersion": {
+						"$ref": "#/components/schemas/ProtocolVersionType_CredentialServices_"
+					},
+					"credentialFormats": {
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"credentialDefinitionId"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
+					},
+					"autoAcceptCredential": {
+						"$ref": "#/components/schemas/AutoAcceptCredential"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"protocolVersion",
+					"credentialFormats"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OfferCredentialOptions": {
+				"properties": {
+					"protocolVersion": {
+						"$ref": "#/components/schemas/ProtocolVersionType_CredentialServices_"
+					},
+					"credentialFormats": {
+						"properties": {
+							"indy": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"properties": {
+												"value": {
+													"type": "string"
+												},
+												"name": {
+													"type": "string"
+												}
+											},
+											"required": [
+												"value",
+												"name"
+											],
+											"type": "object"
+										},
+										"type": "array"
+									},
+									"credentialDefinitionId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"credentialDefinitionId"
+								],
+								"type": "object"
+							}
+						},
+						"required": [
+							"indy"
+						],
+						"type": "object"
+					},
+					"autoAcceptCredential": {
+						"$ref": "#/components/schemas/AutoAcceptCredential"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"connectionId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"protocolVersion",
+					"credentialFormats",
+					"connectionId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IndyAcceptOfferFormat": {
+				"properties": {
+					"holderDid": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatPayload_CredentialFormats.acceptOffer_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/IndyAcceptOfferFormat"
+					}
+				},
+				"type": "object",
+				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
+			},
+			"AcceptCredentialOfferOptions": {
+				"properties": {
+					"credentialFormats": {
+						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptOffer_"
+					},
+					"autoAcceptCredential": {
+						"$ref": "#/components/schemas/AutoAcceptCredential"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatPayload_CredentialFormats.acceptRequest_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/Record_string.any_"
+					}
+				},
+				"type": "object",
+				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
+			},
+			"AcceptCredentialRequestOptions": {
+				"properties": {
+					"credentialFormats": {
+						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.acceptRequest_"
+					},
+					"autoAcceptCredential": {
+						"$ref": "#/components/schemas/AutoAcceptCredential"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialDefinitionId": {
+				"type": "string",
+				"example": "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag"
+			},
+			"SchemaId": {
+				"type": "string",
+				"example": "WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0"
+			},
+			"Version": {
+				"type": "string",
+				"example": "1.0.0"
+			},
+			"DidResolutionMetadata": {
+				"properties": {
+					"contentType": {
+						"type": "string"
+					},
+					"error": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"type": "string",
+								"enum": [
+									"invalidDid",
+									"notFound",
+									"representationNotSupported",
+									"unsupportedDidMethod"
+								]
+							}
+						]
+					},
+					"message": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DidDocument": {
+				"$ref": "#/components/schemas/Record_string.any_"
+			},
+			"DIDDocumentMetadata": {
+				"properties": {
+					"created": {
+						"type": "string"
+					},
+					"updated": {
+						"type": "string"
+					},
+					"deactivated": {
+						"type": "boolean"
+					},
+					"versionId": {
+						"type": "string"
+					},
+					"nextUpdate": {
+						"type": "string"
+					},
+					"nextVersionId": {
+						"type": "string"
+					},
+					"equivalentId": {
+						"type": "string"
+					},
+					"canonicalId": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DidDocumentMetadata": {
+				"$ref": "#/components/schemas/DIDDocumentMetadata"
+			},
+			"DidResolutionResult": {
+				"properties": {
+					"didResolutionMetadata": {
+						"$ref": "#/components/schemas/DidResolutionMetadata"
+					},
+					"didDocument": {
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/DidDocument"
+							}
+						],
+						"nullable": true
+					},
+					"didDocumentMetadata": {
+						"$ref": "#/components/schemas/DidDocumentMetadata"
+					}
+				},
+				"required": [
+					"didResolutionMetadata",
+					"didDocument",
+					"didDocumentMetadata"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Did": {
+				"type": "string",
+				"example": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+			},
+			"HandshakeProtocol": {
+				"enum": [
+					"https://didcomm.org/connections/1.0",
+					"https://didcomm.org/didexchange/1.0"
+				],
+				"type": "string"
+			},
+			"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments-or-messages__": {
+				"properties": {
+					"alias": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"goal": {
+						"type": "string"
+					},
+					"handshake": {
+						"type": "boolean"
+					},
+					"handshakeProtocols": {
+						"items": {
+							"$ref": "#/components/schemas/HandshakeProtocol"
+						},
+						"type": "array"
+					},
+					"multiUseInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_CreateOutOfBandInvitationConfig.routing-or-appendedAttachments-or-messages_": {
+				"$ref": "#/components/schemas/Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments-or-messages__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__": {
+				"properties": {
+					"alias": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"multiUseInvitation": {
+						"type": "boolean"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_CreateLegacyInvitationConfig.routing_": {
+				"$ref": "#/components/schemas/Pick_CreateLegacyInvitationConfig.Exclude_keyofCreateLegacyInvitationConfig.routing__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"AgentMessageType": {
+				"properties": {
+					"@id": {
+						"type": "string"
+					},
+					"@type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"@id",
+					"@type"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"OutOfBandDidCommService": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"serviceEndpoint": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"recipientKeys": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"routingKeys": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"accept": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"serviceEndpoint",
+					"type",
+					"recipientKeys"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_OutOfBandInvitationSchema.Exclude_keyofOutOfBandInvitationSchema.appendedAttachments__": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"goal": {
+						"type": "string"
+					},
+					"@id": {
+						"type": "string"
+					},
+					"@type": {
+						"type": "string"
+					},
+					"accept": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"handshake_protocols": {
+						"items": {
+							"$ref": "#/components/schemas/HandshakeProtocol"
+						},
+						"type": "array"
+					},
+					"services": {
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/components/schemas/OutOfBandDidCommService"
+								},
+								{
+									"type": "string"
+								}
+							]
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"label",
+					"@type",
+					"services"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_OutOfBandInvitationSchema.appendedAttachments_": {
+				"$ref": "#/components/schemas/Pick_OutOfBandInvitationSchema.Exclude_keyofOutOfBandInvitationSchema.appendedAttachments__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"Pick_ReceiveOutOfBandInvitationConfig.Exclude_keyofReceiveOutOfBandInvitationConfig.routing__": {
+				"properties": {
+					"alias": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"autoAcceptInvitation": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_ReceiveOutOfBandInvitationConfig.routing_": {
+				"$ref": "#/components/schemas/Pick_ReceiveOutOfBandInvitationConfig.Exclude_keyofReceiveOutOfBandInvitationConfig.routing__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"ReceiveInvitationProps": {
+				"properties": {
+					"alias": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"autoAcceptInvitation": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
+					},
+					"invitation": {
+						"$ref": "#/components/schemas/Omit_OutOfBandInvitationSchema.appendedAttachments_"
+					}
+				},
+				"required": [
+					"invitation"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ReceiveInvitationByUrlProps": {
+				"properties": {
+					"alias": {
+						"type": "string"
+					},
+					"label": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"autoAcceptInvitation": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
+					},
+					"invitationUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"invitationUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AcceptInvitationConfig": {
+				"properties": {
+					"autoAcceptConnection": {
+						"type": "boolean"
+					},
+					"reuseConnection": {
+						"type": "boolean"
+					},
+					"label": {
+						"type": "string"
+					},
+					"alias": {
+						"type": "string"
+					},
+					"imageUrl": {
+						"type": "string"
+					},
+					"mediatorId": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PresentationPreviewAttributeOptions": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"credentialDefinitionId": {
+						"type": "string"
+					},
+					"mimeType": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					},
+					"referent": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PredicateType": {
+				"enum": [
+					"<",
+					"<=",
+					">",
+					">="
+				],
+				"type": "string"
+			},
+			"PresentationPreviewPredicateOptions": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"credentialDefinitionId": {
+						"type": "string"
+					},
+					"predicate": {
+						"$ref": "#/components/schemas/PredicateType"
+					},
+					"threshold": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"name",
+					"credentialDefinitionId",
+					"predicate",
+					"threshold"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AutoAcceptProof": {
+				"description": "Typing of the state for auto acceptance",
+				"enum": [
+					"always",
+					"contentApproved",
+					"never"
+				],
+				"type": "string"
+			},
+			"RequestProofProposalOptions": {
+				"properties": {
+					"connectionId": {
+						"type": "string"
+					},
+					"attributes": {
+						"items": {
+							"$ref": "#/components/schemas/PresentationPreviewAttributeOptions"
+						},
+						"type": "array"
+					},
+					"predicates": {
+						"items": {
+							"$ref": "#/components/schemas/PresentationPreviewPredicateOptions"
+						},
+						"type": "array"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					}
+				},
+				"required": [
+					"connectionId",
+					"attributes",
+					"predicates"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProofRecord": {
+				"$ref": "#/components/schemas/Record_string.unknown_"
+			},
+			"IndyRevocationInterval": {
+				"properties": {
+					"from": {
+						"type": "number",
+						"format": "double"
+					},
+					"to": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AttributeValue": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AttributeFilter": {
+				"properties": {
+					"schemaId": {
+						"type": "string"
+					},
+					"schemaIssuerDid": {
+						"type": "string"
+					},
+					"schemaName": {
+						"type": "string"
+					},
+					"schemaVersion": {
+						"type": "string"
+					},
+					"issuerDid": {
+						"type": "string"
+					},
+					"credentialDefinitionId": {
+						"type": "string"
+					},
+					"attributeValue": {
+						"$ref": "#/components/schemas/AttributeValue"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProofAttributeInfo": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"names": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"nonRevoked": {
+						"$ref": "#/components/schemas/IndyRevocationInterval"
+					},
+					"restrictions": {
+						"items": {
+							"$ref": "#/components/schemas/AttributeFilter"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProofPredicateInfo": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"predicateType": {
+						"$ref": "#/components/schemas/PredicateType"
+					},
+					"predicateValue": {
+						"type": "number",
+						"format": "double"
+					},
+					"nonRevoked": {
+						"$ref": "#/components/schemas/IndyRevocationInterval"
+					},
+					"restrictions": {
+						"items": {
+							"$ref": "#/components/schemas/AttributeFilter"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"name",
+					"predicateType",
+					"predicateValue"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_RequestProofOptions.Exclude_keyofRequestProofOptions.connectionId__": {
+				"properties": {
+					"comment": {
+						"type": "string"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"proofRequestOptions": {
+						"properties": {
+							"requestedPredicates": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofPredicateInfo"
+								},
+								"type": "object"
+							},
+							"requestedAttributes": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofAttributeInfo"
+								},
+								"type": "object"
+							},
+							"version": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"version",
+							"name"
+						],
+						"type": "object"
+					},
+					"parentThreadId": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"proofRequestOptions"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_RequestProofOptions.connectionId_": {
+				"$ref": "#/components/schemas/Pick_RequestProofOptions.Exclude_keyofRequestProofOptions.connectionId__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"RequestProofOptions": {
+				"properties": {
+					"comment": {
+						"type": "string"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"parentThreadId": {
+						"type": "string"
+					},
+					"connectionId": {
+						"type": "string"
+					},
+					"proofRequestOptions": {
+						"properties": {
+							"requestedPredicates": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofPredicateInfo"
+								},
+								"type": "object"
+							},
+							"requestedAttributes": {
+								"properties": {},
+								"additionalProperties": {
+									"$ref": "#/components/schemas/ProofAttributeInfo"
+								},
+								"type": "object"
+							},
+							"version": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"version",
+							"name"
+						],
+						"type": "object"
+					}
+				},
+				"required": [
+					"connectionId",
+					"proofRequestOptions"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "@aries-framework/rest",
+		"version": "0.9.3",
+		"description": "Rest endpoint wrapper for using your agent over HTTP",
+		"license": {
+			"name": "Apache-2.0"
+		},
+		"contact": {}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/agent": {
+			"get": {
+				"operationId": "GetAgentInfo",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/AgentInfo"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve basic agent information",
+				"tags": [
+					"Agent"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/basic-messages/{connectionId}": {
+			"get": {
+				"operationId": "GetBasicMessages",
+				"responses": {
+					"200": {
+						"description": "BasicMessageRecord[]",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/BasicMessageRecord"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"_tags": {
+													"role": "sender",
+													"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834"
+												},
+												"metadata": {},
+												"id": "74bcf865-1fdc-45b4-b517-9def02dfd25f",
+												"createdAt": "2022-08-18T08:38:40.216Z",
+												"content": "string",
+												"sentTime": "2022-08-18T08:38:40.216Z",
+												"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve basic messages by connection id",
+				"tags": [
+					"Basic Messages"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Connection identifier",
+						"in": "path",
+						"name": "connectionId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			},
+			"post": {
+				"operationId": "SendMessage",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Send a basic message to a connection",
+				"tags": [
+					"Basic Messages"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Connection identifier",
+						"in": "path",
+						"name": "connectionId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Record_content.string_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/connections": {
+			"get": {
+				"operationId": "GetAllConnections",
+				"responses": {
+					"200": {
+						"description": "ConnectionRecord[]",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"_tags": {
+													"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+													"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+													"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+													"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+													"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+												},
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve all connections records",
+				"tags": [
+					"Connections"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "outOfBandId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Alias",
+						"in": "query",
+						"name": "alias",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Connection state",
+						"in": "query",
+						"name": "state",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/DidExchangeState"
+						}
+					},
+					{
+						"description": "My DID",
+						"in": "query",
+						"name": "myDid",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Their DID",
+						"in": "query",
+						"name": "theirDid",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"description": "Their label",
+						"in": "query",
+						"name": "theirLabel",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/connections/{connectionId}": {
+			"get": {
+				"operationId": "GetConnectionById",
+				"responses": {
+					"200": {
+						"description": "ConnectionRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+												"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+											},
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+											"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+											"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve connection record by connection id",
+				"tags": [
+					"Connections"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Connection identifier",
+						"in": "path",
+						"name": "connectionId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteConnection",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deletes a connection record from the connection repository.",
+				"tags": [
+					"Connections"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Connection identifier",
+						"in": "path",
+						"name": "connectionId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/connections/{connectionId}/accept-request": {
+			"post": {
+				"operationId": "AcceptRequest",
+				"responses": {
+					"200": {
+						"description": "ConnectionRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+												"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+											},
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+											"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+											"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a connection request as inviter by sending a connection response message\nfor the connection with the specified connection id.\n\nThis is not needed when auto accepting of connection is enabled.",
+				"tags": [
+					"Connections"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Connection identifier",
+						"in": "path",
+						"name": "connectionId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/connections/{connectionId}/accept-response": {
+			"post": {
+				"operationId": "AcceptResponse",
+				"responses": {
+					"200": {
+						"description": "ConnectionRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+												"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+											},
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+											"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+											"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a connection response as invitee by sending a trust ping message\nfor the connection with the specified connection id.\n\nThis is not needed when auto accepting of connection is enabled.",
+				"tags": [
+					"Connections"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Connection identifier",
+						"in": "path",
+						"name": "connectionId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/credentials": {
+			"get": {
+				"operationId": "GetAllCredentials",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord[]",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Record_string.any_"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"_tags": {
+													"state": "offer-sent",
+													"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+													"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+												},
+												"metadata": {
+													"_internal/indyCredential": {
+														"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+														"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+													}
+												},
+												"credentials": [],
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"credentialAttributes": [],
+												"protocolVersion": "v1"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve all credential exchange records",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "threadId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "connectionId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "state",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/CredentialState"
+						}
+					}
+				]
+			}
+		},
+		"/credentials/{credentialRecordId}": {
+			"get": {
+				"operationId": "GetCredentialById",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve credential exchange record by credential record id",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteCredential",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deletes a credential exchange record in the credential repository.",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/credentials/propose-credential": {
+			"post": {
+				"operationId": "ProposeCredential",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Initiate a new credential exchange as holder by sending a propose credential message\nto the connection with a specified connection id.",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ProposeCredentialOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/{credentialRecordId}/accept-proposal": {
+			"post": {
+				"operationId": "AcceptProposal",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a credential proposal as issuer by sending an accept proposal message\nto the connection associated with the credential exchange record.",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "credential identifier",
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AcceptCredentialProposalOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/create-offer": {
+			"post": {
+				"operationId": "CreateOffer",
+				"responses": {
+					"200": {
+						"description": "AgentMessage, CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Initiate a new credential exchange as issuer by creating a credential offer\nwithout specifying a connection id",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateOfferOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/offer-credential": {
+			"post": {
+				"operationId": "OfferCredential",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Initiate a new credential exchange as issuer by sending a offer credential message\nto the connection with the specified connection id.",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OfferCredentialOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/{credentialRecordId}/accept-offer": {
+			"post": {
+				"operationId": "AcceptOffer",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a credential offer as holder by sending an accept offer message\nto the connection associated with the credential exchange record.",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "credential identifier",
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AcceptCredentialOfferOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/{credentialRecordId}/accept-request": {
+			"post": {
+				"operationId": "AcceptRequest",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a credential request as issuer by sending an accept request message\nto the connection associated with the credential exchange record.",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "credential identifier",
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
+				"requestBody": {
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AcceptCredentialRequestOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/credentials/{credentialRecordId}/accept-credential": {
+			"post": {
+				"operationId": "AcceptCredential",
+				"responses": {
+					"200": {
+						"description": "CredentialExchangeRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"state": "offer-sent",
+												"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+												"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b"
+											},
+											"metadata": {
+												"_internal/indyCredential": {
+													"credentialDefinitionId": "q7ATwTYbQDgiigVijUAej:3:CL:318187:latest",
+													"schemaId": "q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0"
+												}
+											},
+											"credentials": [],
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b",
+											"threadId": "82701488-b43c-4d7b-9244-4bb204a7ae26",
+											"credentialAttributes": [],
+											"protocolVersion": "v1"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a credential as holder by sending an accept credential message\nto the connection associated with the credential exchange record.",
+				"tags": [
+					"Credentials"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "credentialRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/credential-definitions/{credentialDefinitionId}": {
+			"get": {
+				"operationId": "GetCredentialDefinitionById",
+				"responses": {
+					"200": {
+						"description": "CredDef",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"ver": "1.0",
+											"id": "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag",
+											"schemaId": "351936",
+											"type": "CL",
+											"tag": "definition",
+											"value": {
+												"primary": {
+													"n": "string",
+													"s": "string",
+													"r": {
+														"master_secret": "string",
+														"string": "string"
+													},
+													"rctxt": "string",
+													"z": "string"
+												},
+												"revocation": {
+													"g": "1 string",
+													"g_dash": "string",
+													"h": "string",
+													"h0": "string",
+													"h1": "string",
+													"h2": "string",
+													"htilde": "string",
+													"h_cap": "string",
+													"u": "string",
+													"pk": "string",
+													"y": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve credential definition by credential definition id",
+				"tags": [
+					"Credential Definitions"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "credentialDefinitionId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/CredentialDefinitionId"
+						}
+					}
+				]
+			}
+		},
+		"/credential-definitions": {
+			"post": {
+				"operationId": "CreateCredentialDefinition",
+				"responses": {
+					"200": {
+						"description": "CredDef",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"ver": "1.0",
+											"id": "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag",
+											"schemaId": "351936",
+											"type": "CL",
+											"tag": "definition",
+											"value": {
+												"primary": {
+													"n": "string",
+													"s": "string",
+													"r": {
+														"master_secret": "string",
+														"string": "string"
+													},
+													"rctxt": "string",
+													"z": "string"
+												},
+												"revocation": {
+													"g": "1 string",
+													"g_dash": "string",
+													"h": "string",
+													"h0": "string",
+													"h1": "string",
+													"h2": "string",
+													"htilde": "string",
+													"h_cap": "string",
+													"u": "string",
+													"pk": "string",
+													"y": "string"
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a new credential definition.",
+				"tags": [
+					"Credential Definitions"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"tag": {
+										"type": "string"
+									},
+									"supportRevocation": {
+										"type": "boolean"
+									},
+									"schemaId": {
+										"$ref": "#/components/schemas/SchemaId"
+									}
+								},
+								"required": [
+									"tag",
+									"supportRevocation",
+									"schemaId"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/schemas/{schemaId}": {
+			"get": {
+				"operationId": "GetSchemaById",
+				"responses": {
+					"200": {
+						"description": "Schema",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"ver": "1.0",
+											"id": "WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0",
+											"name": "schema",
+											"version": "1.0",
+											"attrNames": [
+												"string"
+											],
+											"seqNo": 351936
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"403": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve schema by schema id",
+				"tags": [
+					"Schemas"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "schemaId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/SchemaId"
+						}
+					}
+				]
+			}
+		},
+		"/schemas": {
+			"post": {
+				"operationId": "CreateSchema",
+				"responses": {
+					"200": {
+						"description": "schema",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"ver": "1.0",
+											"id": "WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0",
+											"name": "schema",
+											"version": "1.0",
+											"attrNames": [
+												"string"
+											],
+											"seqNo": 351936
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a new schema and registers schema on ledger",
+				"tags": [
+					"Schemas"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"attributes": {
+										"items": {
+											"type": "string"
+										},
+										"type": "array"
+									},
+									"version": {
+										"$ref": "#/components/schemas/Version"
+									},
+									"name": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"attributes",
+									"version",
+									"name"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/dids/{did}": {
+			"get": {
+				"operationId": "GetDidRecordByDid",
+				"responses": {
+					"200": {
+						"description": "DidResolutionResult",
+						"content": {
+							"application/json": {
+								"schema": {
+									"anyOf": [
+										{
+											"properties": {
+												"resolveResult": {
+													"$ref": "#/components/schemas/DidResolutionResult"
+												}
+											},
+											"required": [
+												"resolveResult"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"resolveResult": {},
+												"didDocumentMetadata": {
+													"$ref": "#/components/schemas/DIDDocumentMetadata"
+												},
+												"didResolutionMetadata": {
+													"$ref": "#/components/schemas/DidResolutionMetadata"
+												},
+												"didDocument": {
+													"$ref": "#/components/schemas/Record_string.any_"
+												}
+											},
+											"required": [
+												"didDocumentMetadata",
+												"didResolutionMetadata",
+												"didDocument"
+											],
+											"type": "object"
+										}
+									]
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"didDocument": {
+												"@context": [
+													"https://w3id.org/did/v1",
+													"https://w3id.org/security/suites/ed25519-2018/v1",
+													"https://w3id.org/security/suites/x25519-2019/v1"
+												],
+												"id": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+												"verificationMethod": [
+													{
+														"id": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+														"type": "Ed25519VerificationKey2018",
+														"controller": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+														"publicKeyBase58": "6fioC1zcDPyPEL19pXRS2E4iJ46zH7xP6uSgAaPdwDrx"
+													}
+												],
+												"authentication": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"assertionMethod": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"capabilityInvocation": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"capabilityDelegation": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"keyAgreement": [
+													{
+														"id": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6LSrdqo4M24WRDJj1h2hXxgtDTyzjjKCiyapYVgrhwZAySn",
+														"type": "X25519KeyAgreementKey2019",
+														"controller": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+														"publicKeyBase58": "FxfdY3DCQxVZddKGAtSjZdFW9bCCW7oRwZn1NFJ2Tbg2"
+													}
+												]
+											},
+											"didDocumentMetadata": {},
+											"didResolutionMetadata": {
+												"contentType": "application/did+ld+json"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Resolves did and returns did resolution result",
+				"tags": [
+					"Dids"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Decentralized Identifier",
+						"in": "path",
+						"name": "did",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/Did"
+						}
+					}
+				]
+			}
+		},
+		"/oob": {
+			"get": {
+				"operationId": "GetAllOutOfBandRecords",
+				"responses": {
+					"200": {
+						"description": "OutOfBandRecord[]",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Record_string.any_"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve all out of band records",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "invitation identifier",
+						"in": "query",
+						"name": "invitationId",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/oob/{outOfBandId}": {
+			"get": {
+				"operationId": "GetOutOfBandRecordById",
+				"responses": {
+					"200": {
+						"description": "OutOfBandRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"_tags": {
+												"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+												"state": "await-response",
+												"role": "sender",
+												"recipientKeyFingerprints": [
+													"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+												]
+											},
+											"outOfBandInvitation": {
+												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+												"label": "Aries Test Agent",
+												"accept": [
+													"didcomm/aip1",
+													"didcomm/aip2;env=rfc19"
+												],
+												"handshake_protocols": [
+													"https://didcomm.org/didexchange/1.0",
+													"https://didcomm.org/connections/1.0"
+												],
+												"services": [
+													{
+														"id": "#inline-0",
+														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+														"type": "did-communication",
+														"recipientKeys": [
+															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+														],
+														"routingKeys": []
+													}
+												]
+											},
+											"metadata": {},
+											"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"reusable": false
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve an out of band record by id",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "outOfBandId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteOutOfBandRecord",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deletes an out of band record from the repository.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"description": "Record identifier",
+						"in": "path",
+						"name": "outOfBandId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/oob/create-invitation": {
+			"post": {
+				"operationId": "CreateInvitation",
+				"responses": {
+					"200": {
+						"description": "Out of band record",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"invitationUrl": "string",
+											"invitation": {
+												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+												"label": "Aries Test Agent",
+												"accept": [
+													"didcomm/aip1",
+													"didcomm/aip2;env=rfc19"
+												],
+												"handshake_protocols": [
+													"https://didcomm.org/didexchange/1.0",
+													"https://didcomm.org/connections/1.0"
+												],
+												"services": [
+													{
+														"id": "#inline-0",
+														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+														"type": "did-communication",
+														"recipientKeys": [
+															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+														],
+														"routingKeys": []
+													}
+												]
+											},
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates an outbound out-of-band record containing out-of-band invitation message defined in\nAries RFC 0434: Out-of-Band Protocol 1.1.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "configuration of how out-of-band invitation should be created",
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Omit_CreateOutOfBandInvitationConfig.routing-or-appendedAttachments-or-messages_",
+								"description": "configuration of how out-of-band invitation should be created"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/create-legacy-invitation": {
+			"post": {
+				"operationId": "CreateLegacyInvitation",
+				"responses": {
+					"200": {
+						"description": "out-of-band record and invitation",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"invitation": {
+												"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+												"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+												"label": "Aries Test Agent",
+												"accept": [
+													"didcomm/aip1",
+													"didcomm/aip2;env=rfc19"
+												],
+												"handshake_protocols": [
+													"https://didcomm.org/didexchange/1.0",
+													"https://didcomm.org/connections/1.0"
+												],
+												"services": [
+													{
+														"id": "#inline-0",
+														"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+														"type": "did-communication",
+														"recipientKeys": [
+															"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+														],
+														"routingKeys": []
+													}
+												]
+											},
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates an outbound out-of-band record in the same way how `createInvitation` method does it,\nbut it also converts out-of-band invitation message to an \"legacy\" invitation message defined\nin RFC 0160: Connection Protocol and returns it together with out-of-band record.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "configuration of how a invitation should be created",
+					"required": false,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Omit_CreateLegacyInvitationConfig.routing_",
+								"description": "configuration of how a invitation should be created"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/create-legacy-connectionless-invitation": {
+			"post": {
+				"operationId": "CreateLegacyConnectionlessInvitation",
+				"responses": {
+					"200": {
+						"description": "a message and a invitationUrl",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": {
+												"@id": "eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00",
+												"@type": "https://didcomm.org/connections/1.0/invitation"
+											},
+											"invitationUrl": "http://example.com/invitation_url"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a new connectionless legacy invitation.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"description": "configuration of how a connection invitation should be created",
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"domain": {
+										"type": "string"
+									},
+									"message": {
+										"$ref": "#/components/schemas/AgentMessageType"
+									},
+									"recordId": {
+										"type": "string"
+									}
+								},
+								"required": [
+									"domain",
+									"message",
+									"recordId"
+								],
+								"type": "object",
+								"description": "configuration of how a connection invitation should be created"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/receive-invitation": {
+			"post": {
+				"operationId": "ReceiveInvitation",
+				"responses": {
+					"200": {
+						"description": "out-of-band record and connection record if one has been created.",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											},
+											"connectionRecord": {
+												"_tags": {
+													"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+													"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+													"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+													"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+													"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+												},
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates inbound out-of-band record and assigns out-of-band invitation message to it if the\nmessage is valid.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReceiveInvitationProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/receive-invitation-url": {
+			"post": {
+				"operationId": "ReceiveInvitationFromUrl",
+				"responses": {
+					"200": {
+						"description": "out-of-band record and connection record if one has been created.",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											},
+											"connectionRecord": {
+												"_tags": {
+													"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+													"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+													"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+													"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+													"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+												},
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates inbound out-of-band record and assigns out-of-band invitation message to it if the\nmessage is valid.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ReceiveInvitationByUrlProps"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/oob/{outOfBandId}/accept-invitation": {
+			"post": {
+				"operationId": "AcceptInvitation",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"outOfBandRecord": {
+												"_tags": {
+													"invitationId": "1cbd22e4-1906-41e9-8807-83d84437f978",
+													"state": "await-response",
+													"role": "sender",
+													"recipientKeyFingerprints": [
+														"z6MktUCPZjfRJXD4GMcYuXiqX2qZ8vBw6UAYpDFiHEUfwuLj"
+													]
+												},
+												"outOfBandInvitation": {
+													"@type": "did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation",
+													"@id": "d6472943-e5d0-4d95-8b48-790ed5a41931",
+													"label": "Aries Test Agent",
+													"accept": [
+														"didcomm/aip1",
+														"didcomm/aip2;env=rfc19"
+													],
+													"handshake_protocols": [
+														"https://didcomm.org/didexchange/1.0",
+														"https://didcomm.org/connections/1.0"
+													],
+													"services": [
+														{
+															"id": "#inline-0",
+															"serviceEndpoint": "https://6b77-89-20-162-146.ngrok.io",
+															"type": "did-communication",
+															"recipientKeys": [
+																"did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM"
+															],
+															"routingKeys": []
+														}
+													]
+												},
+												"metadata": {},
+												"id": "42a95528-0e30-4f86-a462-0efb02178b53",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"reusable": false
+											},
+											"connectionRecord": {
+												"_tags": {
+													"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+													"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+													"invitationKey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz",
+													"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d",
+													"verkey": "9HG4rJFpLiWf56MWxHj9rgdpErFzim2zEpHuxy1dw7oz"
+												},
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"did": "did:peer:1zQmfQh1T3rSqarP2FZ37uKjdQHPKFdVyo2mGiAPHZ8Ep7hv",
+												"invitationDid": "did:peer:2.SeyJzIjoiaHR0cHM6Ly9kYTIzLTg5LTIwLTE2Mi0xNDYubmdyb2suaW8iLCJ0IjoiZGlkLWNvbW11bmljYXRpb24iLCJwcmlvcml0eSI6MCwicmVjaXBpZW50S2V5cyI6WyJkaWQ6a2V5Ono2TWtualg3U1lXRmdHMThCYkNEZHJnemhuQnA0UlhyOGVITHZxQ3FvRXllckxiTiN6Nk1rbmpYN1NZV0ZnRzE4QmJDRGRyZ3pobkJwNFJYcjhlSEx2cUNxb0V5ZXJMYk4iXSwiciI6W119",
+												"outOfBandId": "edbc89fe-785f-4774-a288-46012486881d"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a connection invitation as invitee (by sending a connection request message) for the connection with the specified connection id.\nThis is not needed when auto accepting of connections is enabled.",
+				"tags": [
+					"Out Of Band"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "outOfBandId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/AcceptInvitationConfig"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/proofs": {
+			"get": {
+				"operationId": "GetAllProofs",
+				"responses": {
+					"200": {
+						"description": "ProofRecord[]",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/Record_string.any_"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+												"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve all proof records",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "threadId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/proofs/{proofRecordId}": {
+			"get": {
+				"operationId": "GetProofById",
+				"responses": {
+					"200": {
+						"description": "ProofRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve proof record by proof record id",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "proofRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteProof",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Deletes a proof record in the proof repository.",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "proofRecordId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/proofs/propose-proof": {
+			"post": {
+				"operationId": "ProposeProof",
+				"responses": {
+					"200": {
+						"description": "ProofRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Initiate a new presentation exchange as prover by sending a presentation proposal request\nto the connection with the specified connection id.",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RequestProofProposalOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/proofs/{proofRecordId}/accept-proposal": {
+			"post": {
+				"operationId": "AcceptProposal",
+				"responses": {
+					"200": {
+						"description": "ProofRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a presentation proposal as verifier by sending an accept proposal message\nto the connection associated with the proof record.",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "proofRecordId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"comment": {
+										"type": "string"
+									},
+									"request": {
+										"properties": {
+											"nonce": {
+												"type": "string"
+											},
+											"version": {
+												"type": "string"
+											},
+											"name": {
+												"type": "string"
+											}
+										},
+										"type": "object"
+									}
+								},
+								"required": [
+									"request"
+								],
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/proofs/request-outofband-proof": {
+			"post": {
+				"operationId": "RequestProofOutOfBand",
+				"responses": {
+					"200": {
+						"description": "ProofRequestMessageResponse",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"proofRecord": {
+											"$ref": "#/components/schemas/ProofRecord"
+										},
+										"proofUrl": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"proofRecord",
+										"proofUrl"
+									],
+									"type": "object"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"proofUrl": "https://example.com/proof-url",
+											"proofRecord": {
+												"metadata": {},
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"createdAt": "2022-01-01T00:00:00.000Z",
+												"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+												"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a presentation request not bound to any proposal or existing connection",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/Omit_RequestProofOptions.connectionId_"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/proofs/request-proof": {
+			"post": {
+				"operationId": "RequestProof",
+				"responses": {
+					"200": {
+						"description": "ProofRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a presentation request bound to existing connection",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/RequestProofOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/proofs/{proofRecordId}/accept-request": {
+			"post": {
+				"operationId": "AcceptRequest",
+				"responses": {
+					"200": {
+						"description": "ProofRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a presentation request as prover by sending an accept request message\nto the connection associated with the proof record.",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "proofRecordId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"properties": {
+									"comment": {
+										"type": "string"
+									},
+									"filterByNonRevocationRequirements": {
+										"type": "boolean"
+									},
+									"filterByPresentationPreview": {
+										"type": "boolean"
+									}
+								},
+								"type": "object"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/proofs/{proofRecordId}/accept-presentation": {
+			"post": {
+				"operationId": "AcceptPresentation",
+				"responses": {
+					"200": {
+						"description": "ProofRecord",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"metadata": {},
+											"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+											"createdAt": "2022-01-01T00:00:00.000Z",
+											"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+											"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7"
+										}
+									}
+								}
+							}
+						}
+					},
+					"404": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Accept a presentation as prover by sending an accept presentation message\nto the connection associated with the proof record.",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "proofRecordId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}
