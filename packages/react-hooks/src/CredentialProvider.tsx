@@ -30,6 +30,11 @@ export const useCredentialById = (id: string): CredentialExchangeRecord | undefi
   return credentials.find((c: CredentialExchangeRecord) => c.id === id)
 }
 
+export const useCredentialByConnectionId = (connectionId: string): CredentialExchangeRecord[] => {
+  const { records: credentials } = useCredentials()
+  return credentials.filter((c: CredentialExchangeRecord) => c.connectionId === connectionId)
+}
+
 export const useCredentialByState = (state: CredentialState | CredentialState[]): CredentialExchangeRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 
