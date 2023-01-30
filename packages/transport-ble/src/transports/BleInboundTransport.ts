@@ -2,9 +2,7 @@ import type { Central } from '@animo-id/react-native-ble-didcomm'
 import type { Agent, InboundTransport } from '@aries-framework/core'
 import type { EmitterSubscription } from 'react-native'
 
-import { utils } from '@aries-framework/core'
-import { MessageReceiver } from '@aries-framework/core/build/agent/MessageReceiver'
-import { isValidJweStructure, JsonEncoder } from '@aries-framework/core/build/utils'
+import { utils, isValidJweStructure, JsonEncoder, MessageReceiver } from '@aries-framework/core/build'
 
 import { BleTransportSession } from './BleTransportSession'
 

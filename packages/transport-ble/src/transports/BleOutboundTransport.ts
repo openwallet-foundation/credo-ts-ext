@@ -16,8 +16,6 @@ export class BleOutboundTransport implements OutboundTransport {
     this.logger = agent.config.logger
 
     agent.config.logger.debug('Starting BLE outbound transport')
-
-    await this.peripheral.start()
   }
 
   public async sendMessage(outboundPackage: OutboundPackage): Promise<void> {
