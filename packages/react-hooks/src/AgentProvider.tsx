@@ -54,9 +54,7 @@ const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
             <QuestionAnswerProvider agent={agent}>
               <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider> 
               </QuestionAnswerProvider>
-              :
-              <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider> 
-              }
+              :<BasicMessageProvider agent={agent}>{children}</BasicMessageProvider> }
           </ProofProvider>
         </CredentialProvider>
       </ConnectionProvider>
