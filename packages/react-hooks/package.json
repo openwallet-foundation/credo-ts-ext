@@ -2,7 +2,7 @@
   "name": "@aries-framework/react-hooks",
   "main": "build/index",
   "types": "build/index",
-  "version": "0.3.1",
+  "version": "0.3.1-questionAnswer.0",
   "files": [
     "build"
   ],
