@@ -1,7 +1,7 @@
-import type { Agent, QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/core'
+import { Agent } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
-import { QuestionAnswerEventTypes } from '@aries-framework/core'
+import type { QuestionAnswerEventTypes, QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
@@ -9,6 +9,8 @@ interface QuestionAnswerContextInterface {
   loading: boolean
   questionAnswerMessages: QuestionAnswerRecord[]
 }
+
+
 
 const QuestionAnswerContext = createContext<QuestionAnswerContextInterface | undefined>(undefined)
 
@@ -46,7 +48,7 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
 
   const setInitialState = async () => {
     if (agent) {
-      const questionAnswerMessages = await agent.questionAnswer.getAll()
+      const questionAnswerMessages = await agent.modules.questionAnswer.getAll()
       setQuestionAnswerState({ questionAnswerMessages, loading: false })
     }
   }
