@@ -59,6 +59,11 @@ export const recordsAddedByType = <R extends BaseRecordAny>(agent: Agent | undef
   if (!agent) {
     throw new Error('Agent is required to subscribe to events')
   }
+
+  if (!recordClass) {
+    throw new Error("The recordClass can't be undefined")
+  }
+
   return agent?.events.observable<RecordSavedEvent<R>>(RepositoryEventTypes.RecordSaved).pipe(filterByType(recordClass))
 }
 
@@ -69,6 +74,11 @@ export const recordsUpdatedByType = <R extends BaseRecordAny>(
   if (!agent) {
     throw new Error('Agent is required to subscribe to events')
   }
+
+  if (!recordClass) {
+    throw new Error("The recordClass can't be undefined")
+  }
+
   return agent?.events
     .observable<RecordUpdatedEvent<R>>(RepositoryEventTypes.RecordUpdated)
     .pipe(filterByType(recordClass))
@@ -81,6 +91,11 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
   if (!agent) {
     throw new Error('Agent is required to subscribe to events')
   }
+
+  if (!recordClass) {
+    throw new Error("The recordClass can't be undefined")
+  }
+
   return agent?.events
     .observable<RecordDeletedEvent<R>>(RepositoryEventTypes.RecordDeleted)
     .pipe(filterByType(recordClass))
