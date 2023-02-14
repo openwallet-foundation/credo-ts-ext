@@ -1,16 +1,15 @@
-import { Agent } from '@aries-framework/core'
+import type { Agent } from '@aries-framework/core'
+import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
 import type { PropsWithChildren } from 'react'
 
-import { QuestionAnswerEventTypes, QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
-import * as React from 'react'
+import { QuestionAnswerEventTypes } from '@aries-framework/question-answer'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
+import * as React from 'react'
 
 interface QuestionAnswerContextInterface {
   loading: boolean
   questionAnswerMessages: QuestionAnswerRecord[]
 }
-
-
 
 const QuestionAnswerContext = createContext<QuestionAnswerContextInterface | undefined>(undefined)
 
