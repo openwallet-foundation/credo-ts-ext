@@ -1,23 +1,30 @@
-import type { Agent } from '@aries-framework/core'
+import { Agent, AgentContext } from '@aries-framework/core'
 import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
 import type { PropsWithChildren } from 'react'
 
-import { QuestionAnswerEventTypes } from '@aries-framework/question-answer'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 import * as React from 'react'
 
 interface QuestionAnswerContextInterface {
-  loading: boolean
+  loading: true | 'no-qa' | 'yes-qa'
   questionAnswerMessages: QuestionAnswerRecord[]
 }
 
 const QuestionAnswerContext = createContext<QuestionAnswerContextInterface | undefined>(undefined)
 
-export const useQuestionAnswer = (): { questionAnswerMessages: QuestionAnswerRecord[]; loading: boolean } => {
+const checkLoading = () => {
+  const questionAnswerContext = useContext(QuestionAnswerContext)
+  if (questionAnswerContext!.loading === 'no-qa') {
+    throw new Error('Question Answer hooks can only be used if Question Answer module is configured.')
+  } 
+}
+
+export const useQuestionAnswer = (): { questionAnswerMessages: QuestionAnswerRecord[] } => {
   const questionAnswerContext = useContext(QuestionAnswerContext)
   if (!questionAnswerContext) {
     throw new Error('useQuestionAnswer must be used within a QuestionAnswerContextProvider')
-  }
+  } 
+  checkLoading()
   return questionAnswerContext
 }
 
@@ -47,9 +54,14 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
 
   const setInitialState = async () => {
     if (agent) {
-      const questionAnswerMessages = await agent.modules.questionAnswer.getAll()
-      setQuestionAnswerState({ questionAnswerMessages, loading: false })
-    }
+      if (agent.modules.questionAnswer!) {
+        const questionAnswerMessages = await agent.modules.questionAnswer.getAll()
+        setQuestionAnswerState({ questionAnswerMessages, loading: 'yes-qa' })
+      } else {
+        setQuestionAnswerState({ questionAnswerMessages: [], loading: 'no-qa' })
+      }
+      
+    } 
   }
 
   useEffect(() => {
@@ -75,10 +87,10 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
         })
       }
 
-      agent?.events.on(QuestionAnswerEventTypes.QuestionAnswerStateChanged, listener)
+      agent?.events.on("QuestionAnswerStateChanged", listener)
 
       return () => {
-        agent?.events.off(QuestionAnswerEventTypes.QuestionAnswerStateChanged, listener)
+        agent?.events.off("QuestionAnswerStateChanged", listener)
       }
     }
   }, [questionAnswerState, agent])

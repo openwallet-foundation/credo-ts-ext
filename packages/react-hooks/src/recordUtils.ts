@@ -100,3 +100,8 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
     .observable<RecordDeletedEvent<R>>(RepositoryEventTypes.RecordDeleted)
     .pipe(filterByType(recordClass))
 }
+
+export const importModule = async (moduleName: string): Promise<any> => {
+  const importedModule = await import(moduleName)
+  return importedModule
+}

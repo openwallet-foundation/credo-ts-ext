@@ -41,6 +41,7 @@ const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
     }
   }
 
+
   useEffect(() => {
     setInitialState()
   }, [agent])
@@ -50,13 +51,9 @@ const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
       <ConnectionProvider agent={agent}>
         <CredentialProvider agent={agent}>
           <ProofProvider agent={agent}>
-            {agent?.modules.questionAnswer ? (
               <QuestionAnswerProvider agent={agent}>
                 <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
               </QuestionAnswerProvider>
-            ) : (
-              <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
-            )}
           </ProofProvider>
         </CredentialProvider>
       </ConnectionProvider>
