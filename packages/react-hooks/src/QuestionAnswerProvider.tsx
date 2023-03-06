@@ -1,7 +1,6 @@
-import type { PropsWithChildren } from 'react'
-
 import type { Agent } from '@aries-framework/core'
 import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
+import type { PropsWithChildren } from 'react'
 
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 import * as React from 'react'
