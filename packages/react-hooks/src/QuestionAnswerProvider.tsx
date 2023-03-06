@@ -1,4 +1,4 @@
-import { Agent, AgentContext } from '@aries-framework/core'
+import { Agent } from '@aries-framework/core'
 import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
 import type { PropsWithChildren } from 'react'
 
@@ -16,14 +16,14 @@ const checkLoading = () => {
   const questionAnswerContext = useContext(QuestionAnswerContext)
   if (questionAnswerContext!.loading === 'no-qa') {
     throw new Error('Question Answer hooks can only be used if Question Answer module is configured.')
-  } 
+  }
 }
 
 export const useQuestionAnswer = (): { questionAnswerMessages: QuestionAnswerRecord[] } => {
   const questionAnswerContext = useContext(QuestionAnswerContext)
   if (!questionAnswerContext) {
     throw new Error('useQuestionAnswer must be used within a QuestionAnswerContextProvider')
-  } 
+  }
   checkLoading()
   return questionAnswerContext
 }
@@ -60,8 +60,7 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
       } else {
         setQuestionAnswerState({ questionAnswerMessages: [], loading: 'no-qa' })
       }
-      
-    } 
+    }
   }
 
   useEffect(() => {
@@ -87,10 +86,10 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
         })
       }
 
-      agent?.events.on("QuestionAnswerStateChanged", listener)
+      agent?.events.on('QuestionAnswerStateChanged', listener)
 
       return () => {
-        agent?.events.off("QuestionAnswerStateChanged", listener)
+        agent?.events.off('QuestionAnswerStateChanged', listener)
       }
     }
   }, [questionAnswerState, agent])
