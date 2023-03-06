@@ -1,5 +1,5 @@
 import type { Agent } from '@aries-framework/core'
-import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
+import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent, QuestionAnswerEventTypes } from '@aries-framework/question-answer'
 import type { PropsWithChildren } from 'react'
 
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
@@ -86,10 +86,10 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
         })
       }
 
-      agent?.events.on('QuestionAnswerStateChanged', listener)
+      agent?.events.on('QuestionAnswerStateChanged' as QuestionAnswerEventTypes, listener)
 
       return () => {
-        agent?.events.off('QuestionAnswerStateChanged', listener)
+        agent?.events.off('QuestionAnswerStateChanged' as QuestionAnswerEventTypes, listener)
       }
     }
   }, [questionAnswerState, agent])
