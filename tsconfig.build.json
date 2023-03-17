@@ -12,8 +12,7 @@
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true
+    "emitDecoratorMetadata": true
   },
   "exclude": [
     "node_modules",
