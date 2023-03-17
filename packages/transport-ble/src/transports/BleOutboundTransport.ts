@@ -8,8 +8,8 @@ export class BleOutboundTransport implements OutboundTransport {
   private peripheral: Peripheral
   private logger!: Logger
 
-  public constructor(sdk: Peripheral) {
-    this.peripheral = sdk
+  public constructor(peripheral: Peripheral) {
+    this.peripheral = peripheral
   }
 
   public async start(agent: Agent): Promise<void> {

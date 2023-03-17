@@ -14,8 +14,8 @@ export class BleInboundTransport implements InboundTransport {
   private disconnectionListener?: EmitterSubscription
   private logger!: Logger
 
-  public constructor(sdk: Central) {
-    this.central = sdk
+  public constructor(central: Central) {
+    this.central = central
   }
 
   public async start(agent: Agent): Promise<void> {
@@ -38,7 +38,7 @@ export class BleInboundTransport implements InboundTransport {
 
       const message = messageData.message
 
-      this.logger.debug('Parsing stringified object payload: ', { message })
+      this.logger.debug('Parsing stringified message payload: ', { message })
 
       const encryptedMessage = await JSON.parse(message)
 

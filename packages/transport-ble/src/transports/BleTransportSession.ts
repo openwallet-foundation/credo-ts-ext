@@ -7,16 +7,16 @@ export class BleTransportSession implements TransportSession {
   private agent: Agent
   private central: Central
 
-  public constructor(id: string, sdk: Central, agent: Agent) {
+  public constructor(id: string, central: Central, agent: Agent) {
     this.id = id
     this.agent = agent
-    this.central = sdk
+    this.central = central
   }
 
   public async send(encryptedMessage: EncryptedMessage): Promise<void> {
     const serializedMessage = JSON.stringify(encryptedMessage)
 
-    this.agent.config.logger.debug('Sending BLE inbound session message')
+    this.agent.config.logger.debug('Sending BLE inbound message via session')
 
     await this.central.sendMessage(serializedMessage)
   }
