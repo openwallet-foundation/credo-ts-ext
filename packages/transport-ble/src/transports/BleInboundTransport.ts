@@ -62,7 +62,7 @@ export class BleInboundTransport implements InboundTransport {
     this.messageListener = this.central.registerMessageListener(messageListener)
 
     const disconnectionListener = async (data: unknown) => {
-      this.logger.debug('BLE disconnection detected', data as Record<string, unknown>)
+      this.logger.debug('BLE disconnection detected', { data })
 
       const transportService = agent.dependencyManager.resolve(TransportService)
 
