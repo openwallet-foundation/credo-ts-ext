@@ -20,37 +20,20 @@ export class BleInboundTransport implements InboundTransport {
 
   public async start(agent: Agent): Promise<void> {
     this.logger = agent.config.logger
-
     this.logger.debug('Starting BLE inbound transport')
 
     const sessionId = utils.uuid()
-
     this.session = new BleTransportSession(sessionId, this.central, agent)
 
     const messageListener = async (data: unknown) => {
-      this.logger.debug('BLE indicate message object received: ', { message: data })
-
-      this.logger.debug('Resolving BLE indicate message object to correct type')
-
       const messageData = (await data) as { message: string }
-
-      this.logger.debug('Resolved BLE indicate message object: ', { message: messageData })
-
       const message = messageData.message
-
-      this.logger.debug('Parsing stringified message payload: ', { message })
-
-      const encryptedMessage = await JSON.parse(message)
-
-      this.logger.debug('Starting agent message receiver')
 
       const messageReceiver = agent.dependencyManager.resolve(MessageReceiver)
 
-      this.logger.debug('Receiving parsed BLE indicate message payload: ', {
-        message: encryptedMessage,
-      })
-
       try {
+        const encryptedMessage = await JSON.parse(message)
+
         await messageReceiver.receiveMessage(encryptedMessage, {
           session: this.session,
         })
@@ -61,11 +44,10 @@ export class BleInboundTransport implements InboundTransport {
 
     this.messageListener = this.central.registerMessageListener(messageListener)
 
-    const disconnectionListener = async (data: unknown) => {
+    const disconnectionListener = async (data: { identifier: string }) => {
       this.logger.debug('BLE disconnection detected', { data })
 
       const transportService = agent.dependencyManager.resolve(TransportService)
-
       transportService.removeSession(this.session)
     }
 
@@ -76,7 +58,6 @@ export class BleInboundTransport implements InboundTransport {
     this.logger.debug('Stopping BLE inbound transport')
 
     this.messageListener?.remove()
-
     this.disconnectionListener?.remove()
   }
 }

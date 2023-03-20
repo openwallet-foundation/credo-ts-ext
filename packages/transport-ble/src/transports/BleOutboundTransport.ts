@@ -20,7 +20,6 @@ export class BleOutboundTransport implements OutboundTransport {
 
   public async sendMessage(outboundPackage: OutboundPackage): Promise<void> {
     const { payload, endpoint } = outboundPackage
-
     if (!endpoint) {
       throw new AriesFrameworkError(`Missing endpoint. I don't know how and where to send the message.`)
     }
@@ -32,7 +31,6 @@ export class BleOutboundTransport implements OutboundTransport {
     const serializedMessage = JSON.stringify(payload)
 
     this.logger.debug('Sending BLE outbound message')
-
     await this.peripheral.sendMessage(serializedMessage)
   }
 

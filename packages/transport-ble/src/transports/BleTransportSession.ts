@@ -1,6 +1,8 @@
 import type { Central } from '@animo-id/react-native-ble-didcomm'
 import type { Agent, EncryptedMessage, TransportSession } from '@aries-framework/core'
 
+import { utils } from '@aries-framework/core'
+
 export class BleTransportSession implements TransportSession {
   public readonly type = 'ble'
   public id: string
@@ -8,7 +10,7 @@ export class BleTransportSession implements TransportSession {
   private central: Central
 
   public constructor(id: string, central: Central, agent: Agent) {
-    this.id = id
+    this.id = id ?? utils.uuid()
     this.agent = agent
     this.central = central
   }
@@ -17,7 +19,6 @@ export class BleTransportSession implements TransportSession {
     const serializedMessage = JSON.stringify(encryptedMessage)
 
     this.agent.config.logger.debug('Sending BLE inbound message via session')
-
     await this.central.sendMessage(serializedMessage)
   }
 
