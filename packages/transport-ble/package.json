@@ -26,7 +26,7 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@animo-id/react-native-ble-didcomm": "^0.4.1",
+    "@animo-id/react-native-ble-didcomm": "^0.4.2",
     "@aries-framework/core": "^0.3.2",
     "@types/react-native": "^0.70.8",
     "react-native": "^0.70.6",
@@ -34,7 +34,7 @@
     "typescript": "^4.4.2"
   },
   "peerDependencies": {
-    "@animo-id/react-native-ble-didcomm": "^0.4.1",
+    "@animo-id/react-native-ble-didcomm": "^0.4.2",
     "@aries-framework/core": "^0.3.2",
     "react-native": "^0.70.6"
   }
