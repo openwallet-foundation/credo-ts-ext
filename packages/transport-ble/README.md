@@ -60,12 +60,13 @@ So, `BleInboundTransport` for agent acting as the `Central` , and `BleOutboundTr
 ```ts
 // If you want to register the transports only after initializing the agent, you can do this anywhere else in your app, and just leave out the agent config and initialization
 
+// Full examples of how to use the transports are located in the `samples` directory.
+
 import { BleOutboundTransport, BleInboundTransport } from '@aries-framework/transport-ble'
 import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/react-native'
 import { Central, Peripheral } from '@animo-id/react-native-ble-didcomm'
 
-// Full examples of how to use the transports are located in the `samples` directory.
 const createAgent = async () => {
   const agent = new Agent({
     config: {
