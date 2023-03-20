@@ -29,13 +29,13 @@
 
 The Aries Framework JavaScript BLE Transport package provides a simple way to add Bluetooth Low Energy (BLE) data transport into AFJ React Native mobile agents.
 
-It implements the same transport interface as the outbound transports in [@aries-framework/core](), and the inbound transports in [@aries-framework/node]().
+It implements the same transport interface as the outbound transports in [@aries-framework/core](https://www.npmjs.com/package/@aries-framework/core), and the inbound transports in [@aries-framework/node](https://www.npmjs.com/package/@aries-framework/node).
 
 With this transport enabled, AFJ React Native mobile agents gain the ability to do offline DIDComm exchanges using Bluetooth Low Energy (BLE).
 
-To keep this transport implementation focused on the 'DIDComm' wrapper needed to make it useful to AFJ agents, this transport package is built on this [BLE DIDComm SDK]().
+To keep this transport implementation focused on the 'DIDComm' wrapper needed to make it useful to AFJ agents, this transport package is built on this [BLE DIDComm SDK](https://www.npmjs.com/package/@animo-id/react-native-ble-didcomm).
 
-The BLE DIDComm SDK implements the core Bluetooth hardware interface for Android (in Kotlin) and iOS (Swift), and exposes the simple APIs that this BLE transport implementation uses.
+The **BLE DIDComm SDK** implements the core Bluetooth hardware interface for Android (in Kotlin) and iOS (Swift), and exposes the simple APIs that this BLE transport implementation uses.
 
 And to keep the implementation simple, this transport only implements the core message listening and receiving functionality, and leaves the powerful startup and service controls provided by the BLE DIDComm SDK, to user control and discretion.
 
