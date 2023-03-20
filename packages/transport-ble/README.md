@@ -74,7 +74,7 @@ const createAgent = async () => {
     modules: {
       // ... AFJ Module config
     },
-    dependencies: agentDependencies
+    dependencies: agentDependencies,
   })
 
   // Instantiate the BLE controller you want
@@ -90,7 +90,6 @@ const createAgent = async () => {
 
   return agent
 }
-
 
 // Inside your React Native app/component
 const agent = await createAgent()
