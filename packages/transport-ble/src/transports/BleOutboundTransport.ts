@@ -6,7 +6,7 @@ import { AriesFrameworkError } from '@aries-framework/core'
 export class BleOutboundTransport implements OutboundTransport {
   public supportedSchemes: string[] = ['ble']
   private peripheral: Peripheral
-  private logger!: Logger
+  private logger?: Logger
 
   public constructor(peripheral: Peripheral) {
     this.peripheral = peripheral
@@ -24,17 +24,17 @@ export class BleOutboundTransport implements OutboundTransport {
       throw new AriesFrameworkError(`Missing endpoint. I don't know how and where to send the message.`)
     }
 
-    this.logger.debug(`Sending outbound message to endpoint '${endpoint}'`, {
+    this.logger?.debug(`Sending outbound message to endpoint '${endpoint}'`, {
       payload,
     })
 
     const serializedMessage = JSON.stringify(payload)
 
-    this.logger.debug('Sending BLE outbound message')
+    this.logger?.debug('Sending BLE outbound message')
     await this.peripheral.sendMessage(serializedMessage)
   }
 
   public async stop(): Promise<void> {
-    this.logger.debug('Stopping BLE outbound transport')
+    this.logger?.debug('Stopping BLE outbound transport')
   }
 }

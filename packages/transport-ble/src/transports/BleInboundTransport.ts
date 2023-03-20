@@ -12,7 +12,7 @@ export class BleInboundTransport implements InboundTransport {
   private messageListener?: EmitterSubscription
   private session!: BleTransportSession
   private disconnectionListener?: EmitterSubscription
-  private logger!: Logger
+  private logger?: Logger
 
   public constructor(central: Central) {
     this.central = central
@@ -25,9 +25,8 @@ export class BleInboundTransport implements InboundTransport {
     const sessionId = utils.uuid()
     this.session = new BleTransportSession(sessionId, this.central, agent)
 
-    const messageListener = async (data: unknown) => {
-      const messageData = (await data) as { message: string }
-      const message = messageData.message
+    const messageListener = async (data: { message: string }) => {
+      const message = data.message
 
       const messageReceiver = agent.dependencyManager.resolve(MessageReceiver)
 
@@ -45,7 +44,7 @@ export class BleInboundTransport implements InboundTransport {
     this.messageListener = this.central.registerMessageListener(messageListener)
 
     const disconnectionListener = async (data: { identifier: string }) => {
-      this.logger.debug('BLE disconnection detected', { data })
+      this.logger?.debug('BLE disconnection detected', { data })
 
       const transportService = agent.dependencyManager.resolve(TransportService)
       transportService.removeSession(this.session)
@@ -55,7 +54,7 @@ export class BleInboundTransport implements InboundTransport {
   }
 
   public async stop(): Promise<void> {
-    this.logger.debug('Stopping BLE inbound transport')
+    this.logger?.debug('Stopping BLE inbound transport')
 
     this.messageListener?.remove()
     this.disconnectionListener?.remove()
