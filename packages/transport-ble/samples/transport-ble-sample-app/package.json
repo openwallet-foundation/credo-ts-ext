@@ -1,0 +1,49 @@
+{
+  "name": "transport-ble-sample-app",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "prebuild": "expo prebuild",
+    "android": "expo run:android",
+    "ios": "expo run:ios",
+    "web": "expo start --web",
+    "prettier": "prettier --ignore-path .gitignore '**/*.+(js|json|ts|tsx|md|yml|yaml)'",
+    "format": "yarn prettier --write",
+    "check-format": "yarn prettier --list-different"
+  },
+  "dependencies": {
+    "@animo-id/react-native-ble-didcomm": "^0.4.2",
+    "@aries-framework/anoncreds": "0.4.0-alpha.71",
+    "@aries-framework/core": "0.4.0-alpha.71",
+    "@aries-framework/indy-sdk": "0.4.0-alpha.71",
+    "@aries-framework/react-native": "0.4.0-alpha.71",
+    "@types/indy-sdk-react-native": "npm:@types/indy-sdk",
+    "expo": "~48.0.6",
+    "expo-status-bar": "~1.4.4",
+    "indy-sdk-react-native": "^0.3.1",
+    "react": "18.2.0",
+    "react-native": "0.71.3",
+    "react-native-fs": "^2.20.0",
+    "react-native-get-random-values": "^1.8.0",
+    "expo-splash-screen": "~0.18.1"
+  },
+  "resolutions": {
+    "@unimodules/react-native-adapter": "./noop",
+    "@unimodules/core": "./noop"
+  },
+  "devDependencies": {
+    "@animo-id/indy-sdk-expo-plugin": "0.2.0",
+    "@babel/core": "^7.20.0",
+    "@types/react": "~18.0.14",
+    "@typescript-eslint/eslint-plugin": "^5.52.0",
+    "@typescript-eslint/parser": "^5.52.0",
+    "eslint": "^8.34.0",
+    "eslint-config-universe": "^11.1.1",
+    "prettier": "^2.8.4",
+    "typescript": "^4.9.4"
+  },
+  "eslintConfig": {
+    "extends": "universe/native"
+  },
+  "private": true
+}

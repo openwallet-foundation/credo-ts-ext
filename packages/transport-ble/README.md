@@ -39,7 +39,7 @@ The **BLE DIDComm SDK** implements the core Bluetooth hardware interface for And
 
 And to keep the implementation simple, this transport only implements the core message listening and receiving functionality, and leaves the powerful startup and service controls provided by the BLE DIDComm SDK, to user control and discretion.
 
-We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here]()
+We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here]().
 
 ## Installing the required dependencies
 
@@ -49,7 +49,7 @@ yarn add @aries-framework/transport-ble @aries-framework/core @aries-framework/r
 
 ## Configuration
 
-Configuring your agent to use the transport is simple; all you need is to import the transports (`BleOutboundTransport` and `BleInboundTransport`) from the package, and register them on the agent, either before or after initialization.
+Configuring your agent to use the transport is simple; all you need is to import the transports (`BleOutboundTransport` and `BleInboundTransport`) from the package, and register them on the agent, either before or after agent initialization.
 
 The only difference is that unlike HTTP and WebSockets, an agent can only register one of either outbound (`BleOutboundTransport`) or inbound (`BleInboundTransport`) transport, depending on which role the agent wants to take in the BLE DIDComm exchange.
 
