@@ -39,7 +39,7 @@ The **BLE DIDComm SDK** implements the core Bluetooth hardware interface for And
 
 And to keep the implementation simple, this transport only implements the core message listening and receiving functionality, and leaves the powerful startup and service controls provided by the BLE DIDComm SDK, to user control and discretion.
 
-We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here](<https://github.com/hyperledger/aries-framework-javascript-ext/issues/197>).
+We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here](https://github.com/hyperledger/aries-framework-javascript-ext/issues/197).
 
 ## Installing the required dependencies
 
