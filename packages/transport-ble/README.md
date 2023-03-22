@@ -39,7 +39,7 @@ The **BLE DIDComm SDK** implements the core Bluetooth hardware interface for And
 
 And to keep the implementation simple, this transport only implements the core message listening and receiving functionality, and leaves the powerful startup and service controls provided by the BLE DIDComm SDK, to user control and discretion.
 
-We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here]()
+We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here]().
 
 ## Installing the required dependencies
 
@@ -65,7 +65,13 @@ So, `BleInboundTransport` for agent acting as the `Central` , and `BleOutboundTr
 import { BleOutboundTransport, BleInboundTransport } from '@aries-framework/transport-ble'
 import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/react-native'
-import { Central, Peripheral } from '@animo-id/react-native-ble-didcomm'
+import { 
+  Central, 
+  Peripheral, 
+  DEFAULT_DIDCOMM_SERVICE_CHARACTERISTIC_UUID,
+  DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
+  DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID
+  } from '@animo-id/react-native-ble-didcomm'
 
 const createAgent = async () => {
   const agent = new Agent({
@@ -84,6 +90,36 @@ const createAgent = async () => {
   // It is important that you start the BLE controllers before you use/register them on your agent
   await central.start() // await peripheral.start()
 
+
+  /* IMPORTANT: Setting up the service, messaging and indication UUIDs. 
+  The values passed must be the same in the central and peripheral, 
+  as this is how both devices will be able to recognize each other. 
+  There are default values for these that can be imported, 
+  but if you want to maintain control over the sessions and/or prevent collisions 
+  (due to multiple other devices broadcasting using these same values), 
+  you might want to generate your own serviceUUID and share it across both mobile agents 
+  (using a scannable QR code or something similar that allows easy sharing with little overhead)
+  
+  This can be done anywhere after starting the controller (step above), 
+  even after registering the controller as a transport on the agent (step below) */
+
+  const uuid = '56847593-40ea-4a92-bd8c-e1514dca1c61'
+  await central.setService({
+    serviceUUID: uuid || DEFAULT_DIDCOMM_SERVICE_CHARACTERISTIC_UUID,
+    messagingUUID: DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
+    indicationUUID: DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID
+  })
+
+  /* On the peripheral agent
+    await peripheral.setService({
+      serviceUUID: uuid || DEFAULT_DIDCOMM_SERVICE_CHARACTERISTIC_UUID,
+      messagingUUID: DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
+      indicationUUID: DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID
+    })
+  */
+
+
+  // Registering the controller as a transport on the agent
   const bleInboundTransport = new BleInboundTransport(central) // const bleOutboundTransport = new BleOutboundTransport(peripheral)
   agent.registerInboundTransport(bleInboundTransport) // agent.registerOutboundTransport(bleOutboundTransport)
 
