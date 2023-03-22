@@ -39,7 +39,7 @@ The **BLE DIDComm SDK** implements the core Bluetooth hardware interface for And
 
 And to keep the implementation simple, this transport only implements the core message listening and receiving functionality, and leaves the powerful startup and service controls provided by the BLE DIDComm SDK, to user control and discretion.
 
-We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here](<LINK>).
+We're this discussing if this is the best approach to use in future versions. If after using this first version and you have strong opinions on this, kindly join the conversation [here](<https://github.com/hyperledger/aries-framework-javascript-ext/issues/197>).
 
 ## Installing the required dependencies
 
@@ -49,18 +49,16 @@ yarn add @aries-framework/transport-ble @aries-framework/core @aries-framework/r
 
 ## Configuration
 
-Configuring your agent to use the transport is simple; all you need is to import the transports, `BleOutboundTransport` and `BleInboundTransport`, from the package, and register them on the agent, either before or after initialization.
+Configuring your agent to use the transport is simple; all you need is to import the transports, `BleOutboundTransport` and `BleInboundTransport`, from the package, and register them on the agent, either before or after agent initialization.
 
 The only difference is that unlike HTTP and WebSockets, an agent can only register one of either outbound, `BleOutboundTransport`, or inbound, `BleInboundTransport`, transport, depending on which role the agent wants to take in the BLE DIDComm exchange.
 
-To this end, the BLE DIDComm SDK provides two controllers for this purpose: `Central`, to be used by the agent who will be initiating the exchange (creating and sending the out-of-band invitation), and `Peripheral`, for the agent who will be receiving and accepting the invitation.
+The BLE DIDComm SDK provides two controllers: `Central`, to be used by the agent who will be initiating the exchange (creating and sending the out-of-band invitation), and `Peripheral`, for the agent who will be receiving and accepting the invitation.
 
-So, `BleInboundTransport` for agent acting as the `Central` , and `BleOutboundTransport` for the agent acting as the `Peripheral`.
+This means that the agent acting as the connection initiator should use the `Central` controller with `BleInboundTransport`, while the agent acting as the connection receptor uses the Peripheral controller with `BleOutboundTransport`.
 
 ```ts
 // If you want to register the transports only after initializing the agent, you can do this anywhere else in your app, and just leave out the agent config and initialization
-
-// Full examples of how to use the transports are located in the `samples` directory.
 
 import { BleOutboundTransport, BleInboundTransport } from '@aries-framework/transport-ble'
 import { Agent } from '@aries-framework/core'
