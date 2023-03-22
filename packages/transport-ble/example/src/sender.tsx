@@ -12,7 +12,7 @@ import { Spacer } from './spacer'
 
 import { createAgent } from './agent'
 
-import { BleOutboundTransport } from './transports'
+import { BleOutboundTransport } from '../transports'
 
 export const Sender = () => {
   const [{ agent }] = useState<{ agent: Agent; config: InitConfig }>(() => createAgent())

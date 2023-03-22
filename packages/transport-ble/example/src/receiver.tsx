@@ -9,7 +9,7 @@ import React, { useState } from 'react'
 import { Text, Button } from 'react-native'
 
 import { Spacer } from './spacer'
-import { BleInboundTransport } from './transports'
+import { BleInboundTransport } from '../transports'
 import { createAgent } from './agent'
 
 export const Receiver = () => {
