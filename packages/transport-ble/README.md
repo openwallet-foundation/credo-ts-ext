@@ -49,7 +49,7 @@ yarn add @aries-framework/transport-ble @aries-framework/core @aries-framework/r
 
 ## Configuration
 
-Configuring your agent to use the transport is simple; all you need is to import the transports (`BleOutboundTransport` and `BleInboundTransport`) from the package, and register them on the agent, either before or after initialization.
+Configuring your agent to use the transport is simple; all you need is to import the transports, `BleOutboundTransport` and `BleInboundTransport`, from the package, and register them on the agent, either before or after initialization.
 
 The only difference is that unlike HTTP and WebSockets, an agent can only register one of either outbound (`BleOutboundTransport`) or inbound (`BleInboundTransport`) transport, depending on which role the agent wants to take in the BLE DIDComm exchange.
 
