@@ -65,13 +65,13 @@ So, `BleInboundTransport` for agent acting as the `Central` , and `BleOutboundTr
 import { BleOutboundTransport, BleInboundTransport } from '@aries-framework/transport-ble'
 import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/react-native'
-import { 
-  Central, 
-  Peripheral, 
+import {
+  Central,
+  Peripheral,
   DEFAULT_DIDCOMM_SERVICE_CHARACTERISTIC_UUID,
   DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
-  DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID
-  } from '@animo-id/react-native-ble-didcomm'
+  DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID,
+} from '@animo-id/react-native-ble-didcomm'
 
 const createAgent = async () => {
   const agent = new Agent({
@@ -90,7 +90,6 @@ const createAgent = async () => {
   // It is important that you start the BLE controllers before you use/register them on your agent
   await central.start() // await peripheral.start()
 
-
   /* IMPORTANT: Setting up the service, messaging and indication UUIDs. 
   The values passed must be the same in the central and peripheral, 
   as this is how both devices will be able to recognize each other. 
@@ -107,7 +106,7 @@ const createAgent = async () => {
   await central.setService({
     serviceUUID: uuid || DEFAULT_DIDCOMM_SERVICE_CHARACTERISTIC_UUID,
     messagingUUID: DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
-    indicationUUID: DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID
+    indicationUUID: DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID,
   })
 
   /* On the peripheral agent
@@ -117,7 +116,6 @@ const createAgent = async () => {
       indicationUUID: DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID
     })
   */
-
 
   // Registering the controller as a transport on the agent
   const bleInboundTransport = new BleInboundTransport(central) // const bleOutboundTransport = new BleOutboundTransport(peripheral)
