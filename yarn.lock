@@ -10,10 +10,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@aries-framework/core@0.2.1", "@aries-framework/core@^0.2.0":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.1.tgz#67b78558ff3cc71d7fac3036154238a225f2d890"
-  integrity sha512-FI1IEfaDxYt2w1pfbqpyEvukyOQOmL82T6Bl89FsYyzT8/00cfPSNDlNV3DnKgpyqT3IpdjaQnDqUtnefwNAOg==
+"@aries-framework/core@0.2.2":
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.2.tgz#43d798b4d0e9f212048cf2d79b99643db54f67a1"
+  integrity sha512-f9UXUa0Nl4tM8mE5O5BgQupKE6o53N/kba/F4oJc6mMpTXt1qk0HYtU52WjR5WHz3sqrXh2HgcsDerrQZmQulQ==
   dependencies:
     "@multiformats/base-x" "^4.0.1"
     "@stablelib/ed25519" "^1.0.2"
@@ -70,10 +70,10 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@^0.3.2":
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.3.2.tgz#90fb9e1901f00329e63e6f29d25637e2372eca5e"
-  integrity sha512-4EnY8RMZnA5V8V2bcGTK7yYnRhLfntt6GTD1cSoI8dRHqejKYzP80S9N7SEFzDXDL3AnAXfTZWb01qn2PEERlw==
+"@aries-framework/core@0.3.3":
+  version "0.3.3"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.3.3.tgz#7bb097366bef8f53225785881376d56311edaf83"
+  integrity sha512-IJECvx+ZUSTRUE43oGoOQuQqDFR7dycpwY+cYgAIXF9tjJ04u9nCNedf+aL6tFDNAbZXlPclTED3oSzvXl7AAQ==
   dependencies:
     "@digitalcredentials/jsonld" "^5.2.1"
     "@digitalcredentials/jsonld-signatures" "^9.3.1"
@@ -82,7 +82,7 @@
     "@stablelib/ed25519" "^1.0.2"
     "@stablelib/random" "^1.0.1"
     "@stablelib/sha256" "^1.0.1"
-    "@types/indy-sdk" "^1.16.21"
+    "@types/indy-sdk" "1.16.24"
     "@types/node-fetch" "^2.5.10"
     "@types/ws" "^7.4.6"
     abort-controller "^3.0.0"
@@ -100,6 +100,36 @@
     reflect-metadata "^0.1.13"
     rxjs "^7.2.0"
     tsyringe "^4.7.0"
+    uuid "^8.3.2"
+    varint "^6.0.0"
+    web-did-resolver "^2.0.8"
+
+"@aries-framework/core@^0.2.0":
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.1.tgz#67b78558ff3cc71d7fac3036154238a225f2d890"
+  integrity sha512-FI1IEfaDxYt2w1pfbqpyEvukyOQOmL82T6Bl89FsYyzT8/00cfPSNDlNV3DnKgpyqT3IpdjaQnDqUtnefwNAOg==
+  dependencies:
+    "@multiformats/base-x" "^4.0.1"
+    "@stablelib/ed25519" "^1.0.2"
+    "@stablelib/sha256" "^1.0.1"
+    "@types/indy-sdk" "^1.16.19"
+    "@types/node-fetch" "^2.5.10"
+    "@types/ws" "^7.4.6"
+    abort-controller "^3.0.0"
+    bn.js "^5.2.0"
+    borc "^3.0.0"
+    buffer "^6.0.3"
+    class-transformer "0.5.1"
+    class-validator "0.13.1"
+    did-resolver "^3.1.3"
+    lru_map "^0.4.1"
+    luxon "^1.27.0"
+    make-error "^1.3.6"
+    object-inspect "^1.10.3"
+    query-string "^7.0.1"
+    reflect-metadata "^0.1.13"
+    rxjs "^7.2.0"
+    tsyringe "^4.5.0"
     uuid "^8.3.2"
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
@@ -1085,7 +1115,7 @@
   resolved "https://registry.npmjs.org/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz"
   integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
-"@types/indy-sdk@1.16.9", "@types/indy-sdk@^1.16.19", "@types/indy-sdk@^1.16.21":
+"@types/indy-sdk@1.16.24", "@types/indy-sdk@1.16.9", "@types/indy-sdk@^1.16.19":
   version "1.16.9"
   resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.9.tgz#647a77ead1e93c77b2b0ef5f2c399ba2ea461b89"
   integrity sha512-X8fdwcGaXfCxayBOb4NUny37JDd9Q3ZDKnm7WBhPRcdOXw3kmsy+WX52751nJQRBcltu883rbqYAIzcZE83XRA==
@@ -2357,7 +2387,7 @@ dezalgo@1.0.3:
     asap "^2.0.0"
     wrappy "1"
 
-did-resolver@^3.1.3, did-resolver@^3.2.2:
+did-resolver@^3.1.3:
   version "3.2.2"
   resolved "https://registry.yarnpkg.com/did-resolver/-/did-resolver-3.2.2.tgz#6f4e252a810f785d1b28a10265fad6dffee25158"
   integrity sha512-Eeo2F524VM5N3W4GwglZrnul2y6TLTwMQP3In62JdG34NZoqihYyOZLk+5wUW8sSgvIYIcJM8Dlt3xsdKZZ3tg==
@@ -3025,7 +3055,7 @@ find-up@^4.0.0, find-up@^4.1.0:
     locate-path "^5.0.0"
     path-exists "^4.0.0"
 
-find-up@~5.0.0:
+find-up@^5.0.0, find-up@~5.0.0:
   version "5.0.0"
   resolved "https://registry.yarnpkg.com/find-up/-/find-up-5.0.0.tgz#4c92819ecb7083561e4f4a240a86be5198f536fc"
   integrity sha512-78/PXT1wlLLDgTzDs7sjq9hzz0vXD+zn+7wypEe4fXQxCmdmqfGsEPQxmiCSQI3ajFV91bVSsvNtrJRiW6nGng==
@@ -3293,6 +3323,11 @@ graceful-fs@^4.1.6, graceful-fs@^4.2.0, graceful-fs@^4.2.6, graceful-fs@^4.2.9:
   version "4.2.10"
   resolved "https://registry.npmjs.org/graceful-fs/-/graceful-fs-4.2.10.tgz"
   integrity sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==
+
+grapheme-splitter@^1.0.4:
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/grapheme-splitter/-/grapheme-splitter-1.0.4.tgz#9cf3a665c6247479896834af35cf1dbb4400767e"
+  integrity sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==
 
 handlebars@^4.7.7:
   version "4.7.7"
@@ -5132,7 +5167,7 @@ q@^1.5.1:
   resolved "https://registry.npmjs.org/q/-/q-1.5.1.tgz"
   integrity sha512-kV/CThkXo6xyFEZUugw/+pIOywXcDbFYgSct5cT3gqlbkBE1SJdwy6UQoZvodiWF/ckQLZyDE/Bu1M6gVu5lVw==
 
-qs@6.10.3, qs@^6.10.3, qs@^6.5.2:
+qs@6.10.3:
   version "6.10.3"
   resolved "https://registry.npmjs.org/qs/-/qs-6.10.3.tgz"
   integrity sha512-wr7M2E0OFRfIfJZjKGieI8lBKb7fRCH4Fv5KNPEs7gJ8jadvotdsS08PzOKR7opXhZ/Xkjtt3WF9g38drmyRqQ==
