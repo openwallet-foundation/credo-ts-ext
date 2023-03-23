@@ -25,6 +25,14 @@ export const useCredentials = () => {
   return credentialContext
 }
 
+export const useCredentialsByConnectionId = (connectionId: string): CredentialExchangeRecord[] => {
+  const { records: credentials } = useCredentials()
+  return useMemo(
+    () => credentials.filter((credential: CredentialExchangeRecord) => credential.connectionId === connectionId),
+    [credentials, connectionId]
+  )
+}
+
 export const useCredentialById = (id: string): CredentialExchangeRecord | undefined => {
   const { records: credentials } = useCredentials()
   return credentials.find((c: CredentialExchangeRecord) => c.id === id)
