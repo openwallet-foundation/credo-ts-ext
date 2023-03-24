@@ -2113,6 +2113,13 @@
   resolved "https://registry.yarnpkg.com/@types/range-parser/-/range-parser-1.2.4.tgz#cd667bcfdd025213aafb7ca5915a932590acdcdc"
   integrity sha512-EEhsLsD6UsDM1yFhAvy0Cjr6VwmpMWqFBCb9w07wVugF7w9nfajxLuVmngTIpgS6svCnm6Vaw+MZhoDCKnOfsw==
 
+"@types/react-native@>=0.60.6":
+  version "0.71.4"
+  resolved "https://registry.yarnpkg.com/@types/react-native/-/react-native-0.71.4.tgz#0d0afb7784edc2f618add87c87445cbd45afa7b7"
+  integrity sha512-83wkRqauxJUtLrQN9S8P5HUSx7FalE8sDHBmvtxXGk3eb0bOsyOaOgEIfy59P/ypCDXY0oc3GiJejs/ko94tJg==
+  dependencies:
+    "@types/react" "*"
+
 "@types/react-redux@^7.1.20":
   version "7.1.24"
   resolved "https://registry.yarnpkg.com/@types/react-redux/-/react-redux-7.1.24.tgz#6caaff1603aba17b27d20f8ad073e4c077e975c0"
