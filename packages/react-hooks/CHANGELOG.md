@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.4.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.4.1...react-hooks-v0.4.2) (2023-03-23)
+
+
+### Features
+
+* **react-hooks:** filter by connection id ([#196](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/196)) ([11ff947](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/11ff9473feeb5549b2f9c9c081fb1a68e83afab5))
+
 ### [0.4.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.4.0...react-hooks-v0.4.1) (2023-01-27)
 
 
