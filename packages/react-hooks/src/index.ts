@@ -2,7 +2,7 @@ import AgentProvider, { useAgent } from './AgentProvider'
 import { useBasicMessages, useBasicMessagesByConnectionId } from './BasicMessageProvider'
 import { useConnections, useConnectionById, useConnectionByState, useConnectionNotInState } from './ConnectionProvider'
 import { useCredentials, useCredentialById, useCredentialByState, useCredentialNotInState } from './CredentialProvider'
-import { useMessages, useMessagesByConnectionId } from './MessagesProvider'
+import { useExchanges, useExchangesByConnectionId } from './ExchangesProvider'
 import { useProofs, useProofById, useProofByState, useProofNotInState } from './ProofProvider'
 
 export {
@@ -21,8 +21,8 @@ export {
   useProofById,
   useProofByState,
   useProofNotInState,
-  useMessages,
-  useMessagesByConnectionId,
+  useExchanges,
+  useExchangesByConnectionId,
 }
 
 export default AgentProvider
