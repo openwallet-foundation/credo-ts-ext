@@ -7,5 +7,6 @@
     "types": ["react-native"]
   },
 
-  "include": ["src/**/*"]
+  "include": ["src/**/*"],
+  "exclude": ["samples/**/*"]
 }
