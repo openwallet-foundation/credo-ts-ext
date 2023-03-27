@@ -8,5 +8,5 @@
     "types": ["jest", "node"]
   },
   "include": ["tests", "samples", "**/tests", "**/samples"],
-  "exclude": ["node_modules", "build", "**/build/**"]
+  "exclude": ["node_modules", "build", "**/build/**", "packages/transport-ble/samples"]
 }
