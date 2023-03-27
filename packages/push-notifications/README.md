@@ -64,7 +64,7 @@ await agent.initialize()
 
 /* -- iOS -- */
 
-// To send apns device info to another agent you have to accquire the device token and send it.
+// To send apns device info to another agent you have to acquire the device token and send it.
 pushNotificationsApnsModule.sendDeviceInfo(
   'a-valid-connection-id'
   { deviceToken: '123' },
