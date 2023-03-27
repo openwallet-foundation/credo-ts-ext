@@ -1,7 +1,7 @@
 /* This example agent setup shows how to use setup and agent to use indy sdk and anoncreds.
 To use this with other ledgers/credential formats, you will have to update the necessary config values/modules */
 
-import { ConnectionsModule, InitConfig } from '@aries-framework/core'
+import type { InitConfig } from '@aries-framework/core'
 
 import {
   AnonCredsModule,
@@ -11,6 +11,7 @@ import {
   V1ProofProtocol,
 } from '@aries-framework/anoncreds'
 import {
+  ConnectionsModule,
   Agent,
   AutoAcceptCredential,
   AutoAcceptProof,

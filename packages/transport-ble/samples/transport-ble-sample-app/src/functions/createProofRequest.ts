@@ -1,4 +1,4 @@
-import { Agent } from '@aries-framework/core'
+import type { Agent } from '@aries-framework/core'
 
 export const createProofRequest = async (agent: Agent) => {
   return await agent.proofs.createRequest({
