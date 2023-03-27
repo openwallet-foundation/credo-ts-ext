@@ -4,6 +4,19 @@ import { Button, View, StyleSheet, Platform } from 'react-native'
 import { Sender, Receiver, Spacer } from './src/components'
 import { requestPermissions } from './src/functions'
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  box: {
+    width: 60,
+    height: 60,
+    marginVertical: 20,
+  },
+})
+
 export default function App() {
   const [hasRequestedPermissions, setHasRequestedPermissions] = useState(false)
 
@@ -19,7 +32,6 @@ export default function App() {
             onPress={async () => {
               await requestPermissions()
               setHasRequestedPermissions(true)
-              console.log('Has requested permissions!')
             }}
           />
           <Spacer />
@@ -36,16 +48,3 @@ export default function App() {
     </View>
   )
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  box: {
-    width: 60,
-    height: 60,
-    marginVertical: 20,
-  },
-})

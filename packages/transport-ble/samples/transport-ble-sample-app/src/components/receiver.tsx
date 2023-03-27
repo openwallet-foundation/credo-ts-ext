@@ -1,17 +1,19 @@
+import type { Agent, InitConfig } from '@aries-framework/core'
+
 import {
   Central,
   DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID,
   DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
   DEFAULT_DIDCOMM_SERVICE_UUID,
 } from '@animo-id/react-native-ble-didcomm'
-import { Agent, InitConfig } from '@aries-framework/core'
+import { BleInboundTransport } from '@aries-framework/transport-ble'
 import React, { useState } from 'react'
 import { Text, Button } from 'react-native'
 
-import { Spacer } from './spacer'
-import { createAgent } from '../functions/agent'
-import { BleInboundTransport } from '@aries-framework/transport-ble'
 import { createProofRequest } from '../functions'
+import { createAgent } from '../functions/agent'
+
+import { Spacer } from './spacer'
 
 export const Receiver = () => {
   const [{ agent }] = useState<{ agent: Agent; config: InitConfig }>(() => createAgent())
@@ -36,13 +38,15 @@ export const Receiver = () => {
 
   const prepareScanning = async () => {
     central.registerOnDiscoveredListener((out) => {
-      console.log(`Discovered: ${out.identifier}`)
+      agent.config.logger.info(`Discovered: ${out.identifier}`)
       setPeripheralId(out.identifier)
     })
     central.registerOnConnectedListener((out) => {
-      console.log(`Connected to: ${out.identifier}`)
+      agent.config.logger.info(`Connected to: ${out.identifier}`)
     })
-    central.registerOnDisconnectedListener(console.log)
+    central.registerOnDisconnectedListener((out) => {
+      agent.config.logger.info(`Disconnected from: ${out.identifier}`)
+    })
     await central.setService({
       serviceUUID: DEFAULT_DIDCOMM_SERVICE_UUID,
       messagingUUID: DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
@@ -65,7 +69,7 @@ export const Receiver = () => {
     const { message: agentMessage } = await agent.oob.createLegacyConnectionlessInvitation({
       recordId: proofRecord.id,
       message,
-      domain: `ble://${DEFAULT_DIDCOMM_SERVICE_UUID}`
+      domain: `ble://${DEFAULT_DIDCOMM_SERVICE_UUID}`,
     })
 
     if (agentMessage.service) agentMessage.service.serviceEndpoint = `ble://${DEFAULT_DIDCOMM_SERVICE_UUID}`

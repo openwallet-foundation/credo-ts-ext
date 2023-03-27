@@ -1,24 +1,20 @@
+import type { Agent, CredentialStateChangedEvent, InitConfig } from '@aries-framework/core'
+
 import {
   DEFAULT_DIDCOMM_INDICATE_CHARACTERISTIC_UUID,
   DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
   DEFAULT_DIDCOMM_SERVICE_UUID,
   Peripheral,
 } from '@animo-id/react-native-ble-didcomm'
-import { Agent, CredentialEventTypes, CredentialState, CredentialStateChangedEvent, InitConfig } from '@aries-framework/core'
-import { useState } from 'react'
+import { CredentialEventTypes, CredentialState } from '@aries-framework/core'
+import { BleOutboundTransport } from '@aries-framework/transport-ble'
+import React, { useState } from 'react'
 import { Text, Button } from 'react-native'
 
-import { Spacer } from './spacer'
-
-import {
-  COMMUNITY_AGENT_API_ENDPOINT,
-  CREDENTIAL_OFFER_DATA,
-  MEDIATOR_INVITATION
-} from '../constants'
-
+import { COMMUNITY_AGENT_API_ENDPOINT, CREDENTIAL_OFFER_DATA, MEDIATOR_INVITATION } from '../constants'
 import { createAgent } from '../functions/agent'
-import React from 'react'
-import { BleOutboundTransport } from '@aries-framework/transport-ble'
+
+import { Spacer } from './spacer'
 
 export const Sender = () => {
   const [{ agent }] = useState<{ agent: Agent; config: InitConfig }>(() => createAgent())
@@ -52,33 +48,24 @@ export const Sender = () => {
 
     try {
       const connectionInvitation = await (
-        await fetch(
-          `${COMMUNITY_AGENT_API_ENDPOINT}/connections/create-invitation?auto_accept=true`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            }
-          }
-        )
+        await fetch(`${COMMUNITY_AGENT_API_ENDPOINT}/connections/create-invitation?auto_accept=true`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        })
       ).json()
 
-      const { connectionRecord } = await agent.oob.receiveInvitationFromUrl(
-        connectionInvitation.invitation_url
-      )
+      const { connectionRecord } = await agent.oob.receiveInvitationFromUrl(connectionInvitation.invitation_url)
 
       if (!connectionRecord) throw new Error('No connection')
 
       await agent.connections.returnWhenIsConnected(connectionRecord.id)
 
       const waitForCredentialExchangeStateToBeDone = new Promise((resolve) => {
-        agent.events.on<CredentialStateChangedEvent>(
-          CredentialEventTypes.CredentialStateChanged,
-          ({ payload }) => {
-            if (payload.credentialRecord.state === CredentialState.Done)
-              resolve(payload.credentialRecord)
-          }
-        )
+        agent.events.on<CredentialStateChangedEvent>(CredentialEventTypes.CredentialStateChanged, ({ payload }) => {
+          if (payload.credentialRecord.state === CredentialState.Done) resolve(payload.credentialRecord)
+        })
       })
 
       CREDENTIAL_OFFER_DATA.connection_id = connectionInvitation.connection_id
@@ -86,15 +73,15 @@ export const Sender = () => {
       await fetch(`${COMMUNITY_AGENT_API_ENDPOINT}/issue-credential/send-offer`, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
         },
-        body: JSON.stringify(CREDENTIAL_OFFER_DATA)
+        body: JSON.stringify(CREDENTIAL_OFFER_DATA),
       })
 
       // Wait for process to complete
       const credentialExchangeRecord = await waitForCredentialExchangeStateToBeDone
 
-      console.log('Credential issuance completed', credentialExchangeRecord as Record<string, any>)
+      agent.config.logger.info('Credential issuance completed', credentialExchangeRecord as Record<string, unknown>)
     } catch (error) {
       agent.config.logger.error(error as string)
     }
@@ -102,15 +89,19 @@ export const Sender = () => {
 
   const prepareAdvertising = async () => {
     peripheral.registerMessageListener(async (data: { message: string }) => {
-      console.log(`Received out-of-band message: ${data.message}`)
+      agent.config.logger.info(`Received out-of-band message: ${data.message}`)
 
       const message = data.message
 
       await agent.receiveMessage(await JSON.parse(message))
     })
 
-    peripheral.registerOnConnectedListener(console.log)
-    peripheral.registerOnDisconnectedListener(console.log)
+    peripheral.registerOnConnectedListener((out) => {
+      agent.config.logger.info(`Connected to: ${out.identifier}`)
+    })
+    peripheral.registerOnDisconnectedListener((out) => {
+      agent.config.logger.info(`Disconnected from: ${out.identifier}`)
+    })
     await peripheral.setService({
       serviceUUID: DEFAULT_DIDCOMM_SERVICE_UUID,
       messagingUUID: DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
