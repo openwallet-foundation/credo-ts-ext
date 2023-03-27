@@ -18,7 +18,7 @@ import {
 
 import { createAgent } from '../functions/agent'
 import React from 'react'
-import { BleOutboundTransport } from '../../transports'
+import { BleOutboundTransport } from '@aries-framework/transport-ble'
 
 export const Sender = () => {
   const [{ agent }] = useState<{ agent: Agent; config: InitConfig }>(() => createAgent())

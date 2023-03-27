@@ -91,6 +91,11 @@
     "@types/react-native" "^0.64.10"
     events "^3.3.0"
 
+"@aries-framework/transport-ble@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/transport-ble/-/transport-ble-0.1.0.tgz#df0f354e222af74537c406055e15da913c4d1ca2"
+  integrity sha512-xRGfu8lv4Z6Q8gXJqnNK9e9tTXRB9R0jbd5+vkY60LAQwMEKh7Gr1jbCfhAdktOWbSBrKUBAfPImYI/pwmgoyA==
+
 "@azure/core-asynciterator-polyfill@^1.0.0":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@azure/core-asynciterator-polyfill/-/core-asynciterator-polyfill-1.0.2.tgz#0dd3849fb8d97f062a39db0e5cadc9ffaf861fec"

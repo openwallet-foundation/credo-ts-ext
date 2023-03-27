@@ -14,6 +14,7 @@
     "@aries-framework/core": "0.4.0-alpha.71",
     "@aries-framework/indy-sdk": "0.4.0-alpha.71",
     "@aries-framework/react-native": "0.4.0-alpha.71",
+    "@aries-framework/transport-ble": "^0.1.0",
     "expo": "~47.0.12",
     "expo-barcode-scanner": "~12.1.0",
     "expo-dev-client": "~2.0.1",

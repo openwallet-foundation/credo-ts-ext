@@ -4,13 +4,13 @@ import {
   DEFAULT_DIDCOMM_MESSAGE_CHARACTERISTIC_UUID,
   DEFAULT_DIDCOMM_SERVICE_UUID,
 } from '@animo-id/react-native-ble-didcomm'
-import { Agent, AutoAcceptCredential, InitConfig, KeyType, TypedArrayEncoder } from '@aries-framework/core'
+import { Agent, InitConfig } from '@aries-framework/core'
 import React, { useState } from 'react'
 import { Text, Button } from 'react-native'
 
 import { Spacer } from './spacer'
 import { createAgent } from '../functions/agent'
-import { BleInboundTransport } from '../../transports'
+import { BleInboundTransport } from '@aries-framework/transport-ble'
 import { createProofRequest } from '../functions'
 
 export const Receiver = () => {
