@@ -38,11 +38,6 @@ export const useProofById = (id: string): ProofExchangeRecord | undefined => {
   return proofs.find((p: ProofExchangeRecord) => p.id === id)
 }
 
-export const useProofByConnectionId = (connectionId: string): ProofExchangeRecord[] => {
-  const { records: proofs } = useProofs()
-  return proofs.filter((p: ProofExchangeRecord) => p.connectionId === connectionId)
-}
-
 export const useProofByState = (state: ProofState | ProofState[]): ProofExchangeRecord[] => {
   const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
 

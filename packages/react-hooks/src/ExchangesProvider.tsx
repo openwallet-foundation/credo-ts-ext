@@ -6,23 +6,23 @@ import { useState, createContext, useContext, useEffect } from 'react'
 import * as React from 'react'
 
 import { useBasicMessages, useBasicMessagesByConnectionId } from './BasicMessageProvider'
-import { useCredentialByConnectionId, useCredentials } from './CredentialProvider'
-import { useProofByConnectionId, useProofs } from './ProofProvider'
+import { useCredentialsByConnectionId, useCredentials } from './CredentialProvider'
+import { useProofsByConnectionId, useProofs } from './ProofProvider'
 
-const MessageContext = createContext<RecordsState<BaseRecord> | undefined>(undefined)
+const ExchangesContext = createContext<RecordsState<BaseRecord> | undefined>(undefined)
 
-export const useMessages = () => {
-  const messageContext = useContext(MessageContext)
-  if (!MessageContext) {
-    throw new Error('useMessages must be used within a MessageContextProvider')
+export const useExchanges = () => {
+  const exchangesContext = useContext(ExchangesContext)
+  if (!ExchangesContext) {
+    throw new Error('useExchanges must be used within a ExchangesContextProvider')
   }
-  return messageContext
+  return exchangesContext
 }
 
-export const useMessagesByConnectionId = (connectionId: string): BaseRecord[] | undefined => {
+export const useExchangesByConnectionId = (connectionId: string): BaseRecord[] | undefined => {
   const basicMessages = useBasicMessagesByConnectionId(connectionId)
-  const proofMessages = useProofByConnectionId(connectionId)
-  const credentialMessages = useCredentialByConnectionId(connectionId)
+  const proofMessages = useProofsByConnectionId(connectionId)
+  const credentialMessages = useCredentialsByConnectionId(connectionId)
 
   return [...basicMessages, ...proofMessages, ...credentialMessages] as BaseRecord[]
 }
@@ -31,7 +31,7 @@ interface Props {
   agent: Agent | undefined
 }
 
-const MessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
+const ExchangesProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
   const [state, setState] = useState<RecordsState<BaseRecord>>({
     records: [],
     loading: true,
@@ -51,7 +51,7 @@ const MessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }
     setInitialState()
   }, [agent])
 
-  return <MessageContext.Provider value={state}>{children}</MessageContext.Provider>
+  return <ExchangesContext.Provider value={state}>{children}</ExchangesContext.Provider>
 }
 
-export default MessageProvider
+export default ExchangesProvider
