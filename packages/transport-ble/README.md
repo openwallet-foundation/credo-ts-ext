@@ -115,6 +115,13 @@ const createAgent = async () => {
     })
   */
 
+  /* NOTE: Just like the other AFJ transports, if you register the transport after initializing the agent,
+  you will have to start it manually.
+
+  For example:
+   await agent.outboundTransports[0].start() 
+  */
+
   // Registering the controller as a transport on the agent
   const bleInboundTransport = new BleInboundTransport(central) // const bleOutboundTransport = new BleOutboundTransport(peripheral)
   agent.registerInboundTransport(bleInboundTransport) // agent.registerOutboundTransport(bleOutboundTransport)
