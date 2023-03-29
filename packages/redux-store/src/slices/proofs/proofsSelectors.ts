@@ -1,7 +1,7 @@
 import type { ProofsState } from './proofsSlice'
 import type { ProofState } from '@aries-framework/core'
 
-import { JsonTransformer, ProofRecord } from '@aries-framework/core'
+import { JsonTransformer, ProofExchangeRecord } from '@aries-framework/core'
 import { createSelector } from '@reduxjs/toolkit'
 
 interface PartialProofsState {
@@ -23,7 +23,7 @@ const ProofsSelectors = {
    * Selector that retrieves all ProofRecords from the state.
    */
   proofRecordsSelector: createSelector(proofsStateSelector, (proofsState) =>
-    proofsState.records.map((r) => JsonTransformer.fromJSON(r, ProofRecord))
+    proofsState.records.map((r) => JsonTransformer.fromJSON(r, ProofExchangeRecord))
   ),
 
   /**
@@ -31,7 +31,7 @@ const ProofsSelectors = {
    */
   proofRecordsByStateSelector: (state: ProofState) =>
     createSelector(proofsStateSelector, (proofsState) =>
-      proofsState.records.filter((r) => r.state === state).map((r) => JsonTransformer.fromJSON(r, ProofRecord))
+      proofsState.records.filter((r) => r.state === state).map((r) => JsonTransformer.fromJSON(r, ProofExchangeRecord))
     ),
 
   /**
@@ -41,7 +41,7 @@ const ProofsSelectors = {
     createSelector(proofsStateSelector, (proofsState) => {
       const record = proofsState.records.find((r) => r.id === proofRecordId)
 
-      return record ? JsonTransformer.fromJSON(record, ProofRecord) : null
+      return record ? JsonTransformer.fromJSON(record, ProofExchangeRecord) : null
     }),
 }
 

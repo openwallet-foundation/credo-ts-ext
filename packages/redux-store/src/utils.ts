@@ -22,7 +22,7 @@ interface AgentThunkApiConfig {
 
 function createAsyncAgentThunk<Returned, ThunkArg = void>(
   typePrefix: string,
-  payloadCreator: AsyncThunkPayloadCreator<Returned, ThunkArg, AgentThunkApiConfig>
+  payloadCreator: AsyncThunkPayloadCreator<Promise<Returned>, ThunkArg, AgentThunkApiConfig>
 ) {
   return createAsyncThunk<Returned, ThunkArg, AgentThunkApiConfig>(typePrefix, async (thunkArg, thunkApi) => {
     if (!thunkApi.extra.agent) return thunkApi.rejectWithValue('Agent not set')
