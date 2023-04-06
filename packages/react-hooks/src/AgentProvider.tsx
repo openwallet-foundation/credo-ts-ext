@@ -1,6 +1,7 @@
 import type { Agent } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
+import { QuestionAnswerModule } from '@aries-framework/question-answer'
 import * as React from 'react'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
@@ -9,7 +10,6 @@ import ConnectionProvider from './ConnectionProvider'
 import CredentialProvider from './CredentialProvider'
 import ProofProvider from './ProofProvider'
 import QuestionAnswerProvider from './QuestionAnswerProvider'
-import { QuestionAnswerModule } from '@aries-framework/question-answer'
 import { checkModuleEnabled } from './recordUtils'
 
 interface AgentContextInterface {
