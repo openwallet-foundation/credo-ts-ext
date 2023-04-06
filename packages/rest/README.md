@@ -65,9 +65,9 @@ See the [docker-compose.yml](https://github.com/hyperledger/aries-framework-java
 
 **Directly on Computer**
 
-To run AFJ REST API directly on your computer you need to have the indy-sdk installed. Follow the indy [installation steps](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/libindy) for your platform and verify indy is installed.
+To run AFJ REST API directly on your computer you need to have the indy-sdk installed. Follow the Indy [installation steps](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/libindy) for your platform and verify Indy is installed.
 
-Once you have installed indy, you can start the rest server using the following command:
+Once you have installed Indy, you can start the REST server using the following command:
 
 ```sh
 npx -p @aries-framework/rest afj-rest start \
