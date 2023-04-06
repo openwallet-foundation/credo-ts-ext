@@ -1,13 +1,6 @@
 import type { SerializedInstance } from './types'
 import type { RecordConstructor } from './utils'
-import type {
-  Agent,
-  BaseRecord,
-  RecordDeletedEvent,
-  RecordSavedEvent,
-  RecordUpdatedEvent,
-  TagsBase,
-} from '@aries-framework/core'
+import type { Agent, BaseRecord, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
 import type { Store } from '@reduxjs/toolkit'
 
 import { JsonTransformer, RepositoryEventTypes } from '@aries-framework/core'
@@ -15,9 +8,14 @@ import { createAction } from '@reduxjs/toolkit'
 
 import { isRecordType } from './utils'
 
+export interface GenRecord {
+  id: string
+  type: string
+}
+
 export const addRecord = createAction<BaseRecord>('record/add')
 export const updateRecord = createAction<BaseRecord>('record/update')
-export const removeRecord = createAction<BaseRecord>('record/remove')
+export const removeRecord = createAction<BaseRecord | GenRecord>('record/remove')
 
 /**
  * Starts an EventListener that listens for record events
@@ -28,7 +26,19 @@ export const removeRecord = createAction<BaseRecord>('record/remove')
  */
 export const startRecordListeners = (agent: Agent, store: Store) => {
   const onDeleted = (event: RecordDeletedEvent<BaseRecord>) => {
-    store.dispatch(removeRecord(event.payload.record as BaseRecord<TagsBase, TagsBase, Record<string, unknown>>))
+    // Extract the record
+    const record = event.payload.record
+    // Retrieve and delete the record if it is of the generic type
+    const retrieveAndDeleteGeneric = async (record: GenRecord) => {
+      const retrievedRecord = await agent.genericRecords.findById(record.id)
+      if (retrievedRecord) store.dispatch(removeRecord(retrievedRecord))
+    }
+    if (record.type && record.type === 'GenericRecord') {
+      // Use void to avoid async
+      void retrieveAndDeleteGeneric(record)
+    } else {
+      store.dispatch(removeRecord(record))
+    }
   }
 
   const onSaved = (event: RecordSavedEvent<BaseRecord>) => {
