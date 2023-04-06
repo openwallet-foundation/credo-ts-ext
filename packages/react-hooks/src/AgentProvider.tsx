@@ -2,13 +2,15 @@ import type { Agent } from '@aries-framework/core'
 import type { PropsWithChildren } from 'react'
 
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext } from 'react'
+import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 
 import BasicMessageProvider from './BasicMessageProvider'
 import ConnectionProvider from './ConnectionProvider'
 import CredentialProvider from './CredentialProvider'
 import ProofProvider from './ProofProvider'
 import QuestionAnswerProvider from './QuestionAnswerProvider'
+import { QuestionAnswerModule } from '@aries-framework/question-answer'
+import { checkModuleEnabled } from './recordUtils'
 
 interface AgentContextInterface {
   loading: boolean
@@ -35,9 +37,13 @@ const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
     agent,
   })
 
+  const [qaEnabled, setQaEnabled] = useState<boolean>(false)
+
   const setInitialState = async () => {
     if (agent) {
       setAgentState({ agent, loading: false })
+      const isQuestionAnswerModuleEnabled = useMemo(() => checkModuleEnabled(agent, QuestionAnswerModule), [agent])
+      setQaEnabled(isQuestionAnswerModuleEnabled)
     }
   }
 
@@ -50,9 +56,13 @@ const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
       <ConnectionProvider agent={agent}>
         <CredentialProvider agent={agent}>
           <ProofProvider agent={agent}>
-            <QuestionAnswerProvider agent={agent}>
+            {qaEnabled ? (
+              <QuestionAnswerProvider agent={agent}>
+                <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
+              </QuestionAnswerProvider>
+            ) : (
               <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
-            </QuestionAnswerProvider>
+            )}
           </ProofProvider>
         </CredentialProvider>
       </ConnectionProvider>
