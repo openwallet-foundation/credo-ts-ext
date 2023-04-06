@@ -8,14 +8,14 @@ import { createAction } from '@reduxjs/toolkit'
 
 import { isRecordType } from './utils'
 
-export interface GenRecord {
+interface GenRecord {
   id: string
   type: string
 }
 
 export const addRecord = createAction<BaseRecord>('record/add')
 export const updateRecord = createAction<BaseRecord>('record/update')
-export const removeRecord = createAction<BaseRecord | GenRecord>('record/remove')
+export const removeRecord = createAction<BaseRecord>('record/remove')
 
 /**
  * Starts an EventListener that listens for record events
@@ -33,11 +33,13 @@ export const startRecordListeners = (agent: Agent, store: Store) => {
       const retrievedRecord = await agent.genericRecords.findById(record.id)
       if (retrievedRecord) store.dispatch(removeRecord(retrievedRecord))
     }
-    if (record.type && record.type === 'GenericRecord') {
+    // GenRecord type
+    if (Object.keys(record).length === 2) {
       // Use void to avoid async
       void retrieveAndDeleteGeneric(record)
+      // Some base record
     } else {
-      store.dispatch(removeRecord(record))
+      store.dispatch(removeRecord(record as BaseRecord))
     }
   }
 
