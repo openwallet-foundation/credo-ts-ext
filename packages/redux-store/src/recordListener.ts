@@ -8,11 +8,6 @@ import { createAction } from '@reduxjs/toolkit'
 
 import { isRecordType } from './utils'
 
-interface GenRecord {
-  id: string
-  type: string
-}
-
 export const addRecord = createAction<BaseRecord>('record/add')
 export const updateRecord = createAction<BaseRecord>('record/update')
 export const removeRecord = createAction<BaseRecord>('record/remove')
@@ -29,7 +24,7 @@ export const startRecordListeners = (agent: Agent, store: Store) => {
     // Extract the record
     const record = event.payload.record
     // Retrieve and delete the record if it is of the generic type
-    const retrieveAndDeleteGeneric = async (record: GenRecord) => {
+    const retrieveAndDeleteGeneric = async (record: { id: string; type: string }) => {
       const retrievedRecord = await agent.genericRecords.findById(record.id)
       if (retrievedRecord) store.dispatch(removeRecord(retrievedRecord))
     }

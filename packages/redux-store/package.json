@@ -29,7 +29,7 @@
     "react-redux": "^7.2.5"
   },
   "devDependencies": {
-    "@aries-framework/core": "^0.4.0-alpha.87",
+    "@aries-framework/core": "^0.4.0-alpha.104",
     "react": "^17.0.2",
     "rimraf": "~3.0.2",
     "typescript": "~4.4.2"
