@@ -81,7 +81,7 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@^0.4.0-alpha.104":
+"@aries-framework/core@^0.4.0-alpha.106":
   version "0.4.0-alpha.106"
   resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.0-alpha.106.tgz#a4cede3046637b6b5f2fc6ac39ac30d7dd509af5"
   integrity sha512-UC18N0rrls0vT8CQld0B5+dRHL5v2lceYmXJHjtcnzPrSAZs1PxVRvxxzZ4KOiGt72hULqr4u9tcEo9fZBhhwg==

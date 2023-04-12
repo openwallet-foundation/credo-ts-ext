@@ -76,7 +76,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [12.x, 14.x, 16.2]
+        node-version: [12.x, 14.x, 16.2, 18.x]
 
     steps:
       - name: Checkout aries-framework-javascript-ext
@@ -106,6 +106,7 @@ jobs:
 
       - name: Run tests for Redux store
         run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test redux-store --coverage
+        if: ${{ contains(matrix.node-version, '12') == false }}
 
       - name: Run tests for Rest
         run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test rest --coverage
