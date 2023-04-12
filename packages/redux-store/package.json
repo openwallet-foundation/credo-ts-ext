@@ -35,6 +35,6 @@
     "typescript": "~4.4.2"
   },
   "peerDependencies": {
-    "@aries-framework/core": "^0.4.0-alpha.87"
+    "@aries-framework/core": "^0.4.0-alpha.106"
   }
 }
