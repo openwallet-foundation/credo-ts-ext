@@ -47,6 +47,38 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
+"@aries-framework/core@0.4.0-alpha.106+b35fec43", "@aries-framework/core@^0.4.0-alpha.106":
+  version "0.4.0-alpha.106"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.0-alpha.106.tgz#a4cede3046637b6b5f2fc6ac39ac30d7dd509af5"
+  integrity sha512-UC18N0rrls0vT8CQld0B5+dRHL5v2lceYmXJHjtcnzPrSAZs1PxVRvxxzZ4KOiGt72hULqr4u9tcEo9fZBhhwg==
+  dependencies:
+    "@digitalcredentials/jsonld" "^5.2.1"
+    "@digitalcredentials/jsonld-signatures" "^9.3.1"
+    "@digitalcredentials/vc" "^1.1.2"
+    "@multiformats/base-x" "^4.0.1"
+    "@stablelib/ed25519" "^1.0.2"
+    "@stablelib/random" "^1.0.1"
+    "@stablelib/sha256" "^1.0.1"
+    "@types/node-fetch" "^2.5.10"
+    "@types/ws" "^8.5.4"
+    abort-controller "^3.0.0"
+    borc "^3.0.0"
+    buffer "^6.0.3"
+    class-transformer "0.5.1"
+    class-validator "0.14.0"
+    did-resolver "^4.1.0"
+    lru_map "^0.4.1"
+    luxon "^3.3.0"
+    make-error "^1.3.6"
+    object-inspect "^1.10.3"
+    query-string "^7.0.1"
+    reflect-metadata "^0.1.13"
+    rxjs "^7.2.0"
+    tsyringe "^4.7.0"
+    uuid "^9.0.0"
+    varint "^6.0.0"
+    web-did-resolver "^2.0.21"
+
 "@aries-framework/core@^0.3.2":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.3.3.tgz#7bb097366bef8f53225785881376d56311edaf83"
@@ -81,7 +113,7 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/node@^0.2.0", "@aries-framework/node@^0.2.3":
+"@aries-framework/node@^0.2.3":
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.2.5.tgz#f23a08813355eec066c9c0942743039d72f87bc5"
   integrity sha512-dz0a2RscytlGr5zPK6+ic0EpGE2qKbvCfvwm2MhqVC6qZQEOSo6lbsiIItDh1j+CyG/vIJiZFAUH5s+EzgNN4A==
@@ -93,6 +125,19 @@
     node-fetch "^2.6.1"
     ref-napi "^3.0.3"
     ws "^7.5.3"
+
+"@aries-framework/node@^0.4.0-alpha.106":
+  version "0.4.0-alpha.106"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.4.0-alpha.106.tgz#652d71b2a84869588f2cd2cbe199dcd890914761"
+  integrity sha512-RANuTgQhoB/jMs0xb6gqf2bwjK+Hgvdx2raRYlj99CJcGkNSIaQsJRYRotJOeqlOBOzdYpoK8tl65vpmegDxHA==
+  dependencies:
+    "@aries-framework/core" "0.4.0-alpha.106+b35fec43"
+    "@types/express" "^4.17.15"
+    express "^4.17.1"
+    ffi-napi "^4.0.3"
+    node-fetch "^2.6.1"
+    ref-napi "^3.0.3"
+    ws "^8.13.0"
 
 "@babel/code-frame@^7.0.0", "@babel/code-frame@^7.12.13", "@babel/code-frame@^7.18.6":
   version "7.18.6"
@@ -1710,7 +1755,7 @@
     "@types/qs" "*"
     "@types/range-parser" "*"
 
-"@types/express@*", "@types/express@^4.17.13":
+"@types/express@*", "@types/express@^4.17.13", "@types/express@^4.17.15":
   version "4.17.17"
   resolved "https://registry.yarnpkg.com/@types/express/-/express-4.17.17.tgz#01d5437f6ef9cfa8668e616e13c2f2ac9a491ae4"
   integrity sha512-Q4FmmuLGBG58btUnfS1c1r/NQdlp3DMfGDGig8WhfpA2YRUtEkxAjkZb0yvplJGYdF1fsQ81iMDcH24sSCNC/Q==
@@ -1966,7 +2011,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/ws@^8.2.1":
+"@types/ws@^8.2.1", "@types/ws@^8.5.4":
   version "8.5.4"
   resolved "https://registry.yarnpkg.com/@types/ws/-/ws-8.5.4.tgz#bb10e36116d6e570dd943735f86c933c1587b8a5"
   integrity sha512-zdQDHKUgcX/zBc4GrwsE/7dVdAD8JR4EuiAXiiUhhfyIJXXb2+PrGshFyeXWQPMmmZ2XxgaqclgpIC7eTXc1mg==
@@ -3637,7 +3682,7 @@ did-resolver@^3.1.3:
   resolved "https://registry.yarnpkg.com/did-resolver/-/did-resolver-3.2.2.tgz#6f4e252a810f785d1b28a10265fad6dffee25158"
   integrity sha512-Eeo2F524VM5N3W4GwglZrnul2y6TLTwMQP3In62JdG34NZoqihYyOZLk+5wUW8sSgvIYIcJM8Dlt3xsdKZZ3tg==
 
-did-resolver@^4.0.0:
+did-resolver@^4.0.0, did-resolver@^4.1.0:
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/did-resolver/-/did-resolver-4.1.0.tgz#740852083c4fd5bf9729d528eca5d105aff45eb6"
   integrity sha512-S6fWHvCXkZg2IhS4RcVHxwuyVejPR7c+a4Go0xbQ9ps5kILa8viiYQgrM4gfTyeTjJ0ekgJH9gk/BawTpmkbZA==
@@ -6428,6 +6473,11 @@ luxon@^1.27.0:
   version "1.28.1"
   resolved "https://registry.yarnpkg.com/luxon/-/luxon-1.28.1.tgz#528cdf3624a54506d710290a2341aa8e6e6c61b0"
   integrity sha512-gYHAa180mKrNIUJCbwpmD0aTu9kV0dREDrwNnuyFAsO1Wt0EVYSZelPnJlbj9HplzXX/YWXHFTL45kvZ53M0pw==
+
+luxon@^3.3.0:
+  version "3.3.0"
+  resolved "https://registry.yarnpkg.com/luxon/-/luxon-3.3.0.tgz#d73ab5b5d2b49a461c47cedbc7e73309b4805b48"
+  integrity sha512-An0UCfG/rSiqtAIiBPO0Y9/zAnHUZxAMiCpTd5h2smgsj7GGmcenvrvww2cqNA8/4A5ZrD1gJpHN2mIHZQF+Mg==
 
 make-dir@^2.0.0, make-dir@^2.1.0:
   version "2.1.0"
@@ -9379,6 +9429,11 @@ uuid@^3.3.2:
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-8.3.2.tgz#80d5b5ced271bb9af6c445f21a1a04c606cefbe2"
   integrity sha512-+NYs2QeMWy+GWFOEm9xnn6HCDp0l7QBD7ml8zLUmJ+93Q5NF0NocErnwkTkXVFNiX3/fpC6afS8Dhb/gz7R7eg==
 
+uuid@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-9.0.0.tgz#592f550650024a38ceb0c562f2f6aa435761efb5"
+  integrity sha512-MXcSTerfPa4uqyzStbRoTgt5XIe3x5+42+q1sDuy3R5MDk66URdLMOZe5aPX/SQd+kuYAh0FdP/pO28IkQyTeg==
+
 v8-compile-cache-lib@^3.0.1:
   version "3.0.1"
   resolved "https://registry.yarnpkg.com/v8-compile-cache-lib/-/v8-compile-cache-lib-3.0.1.tgz#6336e8d71965cb3d35a1bbb7868445a7c05264bf"
@@ -9440,6 +9495,14 @@ wcwidth@^1.0.1:
   integrity sha512-XHPEwS0q6TaxcvG85+8EYkbiCux2XtWG2mkc47Ng2A77BQu9+DqIOJldST4HgPkuea7dvKSj5VgX3P1d4rW8Tg==
   dependencies:
     defaults "^1.0.3"
+
+web-did-resolver@^2.0.21:
+  version "2.0.23"
+  resolved "https://registry.yarnpkg.com/web-did-resolver/-/web-did-resolver-2.0.23.tgz#59806a8bc6f5709403929a3d2b49c06279580632"
+  integrity sha512-7yOKnY9E322cVFfVkpV6g2j7QWB3H32aezGn2VagBmTAQr74zf0hxRN0p/PzK/kcgnc/oDCIRuiWUGwJEJAh0w==
+  dependencies:
+    cross-fetch "^3.1.5"
+    did-resolver "^4.0.0"
 
 web-did-resolver@^2.0.8:
   version "2.0.22"
@@ -9627,6 +9690,11 @@ ws@^7, ws@^7.4.6, ws@^7.5.3:
   version "7.5.9"
   resolved "https://registry.yarnpkg.com/ws/-/ws-7.5.9.tgz#54fa7db29f4c7cec68b1ddd3a89de099942bb591"
   integrity sha512-F+P9Jil7UiSKSkppIiD94dN07AwvFixvLIj1Og1Rl9GGMuNipJnV9JzjD6XuqmAeiswGvUmNLjr5cFuXwNS77Q==
+
+ws@^8.13.0:
+  version "8.13.0"
+  resolved "https://registry.yarnpkg.com/ws/-/ws-8.13.0.tgz#9a9fb92f93cf41512a0735c8f4dd09b8a1211cd0"
+  integrity sha512-x9vcZYTrFPC7aSIbj7sRCYo7L/Xb8Iy+pW0ng0wt2vCJv7M9HOMy0UoN3rr+IFC7hb7vXoqS+P9ktyLLLhO+LA==
 
 xcode@^2.0.0:
   version "2.1.0"
