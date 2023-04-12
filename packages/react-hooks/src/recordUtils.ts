@@ -112,9 +112,9 @@ export const checkModuleEnabled = (agent: Agent, moduleName: any) => {
     throw new Error('Agent is required to check if a module is enabled')
   }
 
-  let enabled = false
-  if (Object.values(agent.dependencyManager.registeredModules).find((module: any) => module instanceof moduleName)) {
-    enabled = true
-  }
-  return enabled
+  const foundModule = Object.values(agent.dependencyManager.registeredModules).find(
+    (module: any) => module instanceof moduleName
+  )
+
+  return foundModule !== undefined
 }
