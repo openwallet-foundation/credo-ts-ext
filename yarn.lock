@@ -17,6 +17,17 @@
   dependencies:
     convert-string "0.1.0"
 
+"@aries-framework/anoncreds@0.4.0-alpha.106+b35fec43":
+  version "0.4.0-alpha.106"
+  resolved "https://registry.yarnpkg.com/@aries-framework/anoncreds/-/anoncreds-0.4.0-alpha.106.tgz#aad61e9233ca39efaa9d7e8b85ded12f96f096c6"
+  integrity sha512-p2dzq1Ow9uRkfUepTrnhe9wKxH6OVE4BXQT+UzNEdu3JiFq2CKbc4zcStmk1kWw6NXIGUnNPnLPXIt6Zr0R/2g==
+  dependencies:
+    "@aries-framework/core" "0.4.0-alpha.106+b35fec43"
+    bn.js "^5.2.1"
+    class-transformer "0.5.1"
+    class-validator "0.14.0"
+    reflect-metadata "^0.1.13"
+
 "@aries-framework/core@0.2.5", "@aries-framework/core@^0.2.0", "@aries-framework/core@^0.2.3":
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.2.5.tgz#085b69519c275e742418545a96534f12283de4de"
@@ -112,6 +123,20 @@
     uuid "^8.3.2"
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
+
+"@aries-framework/indy-sdk@0.4.0-alpha.106":
+  version "0.4.0-alpha.106"
+  resolved "https://registry.yarnpkg.com/@aries-framework/indy-sdk/-/indy-sdk-0.4.0-alpha.106.tgz#4b8461d2fe957b534e4f12586b9637544dc97617"
+  integrity sha512-0pWLtoudWM+QwChlubEaDkw0l7hrwrbj+DWtY40HDQCLDBYK/wySQde5qANbm1TKGAILfFLnZ4qu0RVCMxMCwQ==
+  dependencies:
+    "@aries-framework/anoncreds" "0.4.0-alpha.106+b35fec43"
+    "@aries-framework/core" "0.4.0-alpha.106+b35fec43"
+    "@stablelib/ed25519" "^1.0.3"
+    "@types/indy-sdk" "1.16.26"
+    class-transformer "0.5.1"
+    class-validator "0.14.0"
+    rxjs "^7.2.0"
+    tsyringe "^4.7.0"
 
 "@aries-framework/node@0.4.0-alpha.106":
   version "0.4.0-alpha.106"
@@ -1557,7 +1582,7 @@
   dependencies:
     "@stablelib/int" "^1.0.1"
 
-"@stablelib/ed25519@^1.0.2":
+"@stablelib/ed25519@^1.0.2", "@stablelib/ed25519@^1.0.3":
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/@stablelib/ed25519/-/ed25519-1.0.3.tgz#f8fdeb6f77114897c887bb6a3138d659d3f35996"
   integrity sha512-puIMWaX9QlRsbhxfDc5i+mNPMY+0TmQEskunY1rZEBPi1acBCVQAhnsk/1Hk50DGPtVsZtAWQg4NHGlVaO9Hqg==
@@ -1787,7 +1812,14 @@
   resolved "https://registry.yarnpkg.com/@types/http-cache-semantics/-/http-cache-semantics-4.0.1.tgz#0ea7b61496902b95890dc4c3a116b60cb8dae812"
   integrity sha512-SZs7ekbP8CN0txVG2xVRH6EgKmEm31BOxA07vkFaETzZz1xh+cbt8BcI0slpymvwhx5dlFnQG2rTlPVQn+iRPQ==
 
-"@types/indy-sdk@1.16.24", "@types/indy-sdk@^1.16.19":
+"@types/indy-sdk-react-native@npm:@types/indy-sdk":
+  version "1.16.26"
+  resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.26.tgz#871f82c3f7d241d649aff5eb6800048890efb8f8"
+  integrity sha512-KlnjsVsX/7yTmyyIlHWcytlBHoQ1vPGeiLnLv5y1vDftL6OQ5V+hebfAr7d3roMEsjCTH3qKkklwGcj1qS90YA==
+  dependencies:
+    buffer "^6.0.0"
+
+"@types/indy-sdk@1.16.24", "@types/indy-sdk@1.16.26", "@types/indy-sdk@^1.16.19":
   version "1.16.24"
   resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.24.tgz#1b8e33e8fd2a095a29cb06b76146ed14d1477cdd"
   integrity sha512-5YliU8lqahihz46MPpiu1ZWNkG2c/lm9SI+Fp3DUV2HrGbuAPxI8dYg2CP6avuD5kfCYr6Y5+TaqeOH/aID0FQ==
@@ -2749,7 +2781,7 @@ bindings@^1.3.1, bindings@^1.5.0:
   dependencies:
     file-uri-to-path "1.0.0"
 
-bn.js@^5.2.0:
+bn.js@^5.2.0, bn.js@^5.2.1:
   version "5.2.1"
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.2.1.tgz#0bc527a6a0d18d0aa8d5b0538ce4a77dccfa7b70"
   integrity sha512-eXRvHzWyYPBuB4NBy0cmYQjGitUrtqwbvlzP3G6VFnNRbsZQIxQ10PbKKHt8gZ/HW/D/747aDl+QkDqg3KQLMQ==
@@ -2887,7 +2919,7 @@ buffer-from@^1.0.0:
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
 
-buffer@^6.0.0, buffer@^6.0.3:
+buffer@^6.0.0, buffer@^6.0.2, buffer@^6.0.3:
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-6.0.3.tgz#2ace578459cc8fbe2a70aaa8f52ee63b6a74c6c6"
   integrity sha512-FTiCpNxtwiZZHEZbcbTIcZjERVICn9yq/pDFkTl95/AxzD1naBctN7YO68riM/gLSDY7sdrMby8hofADYuuqOA==
@@ -5127,6 +5159,13 @@ indent-string@^4.0.0:
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-4.0.0.tgz#624f8f4497d619b2d9768531d58f4122854d7251"
   integrity sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==
+
+indy-sdk-react-native@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/indy-sdk-react-native/-/indy-sdk-react-native-0.3.1.tgz#6cea23d05d6f24aaba6596d2f0d7f2ae4160ce34"
+  integrity sha512-BSG/9QHKL0hjAsARxB+PEtlZomntBkG2DsUvCTItETwTOT2ns49BeUjZUHdm2GSyHT5NcOmjyXivNEWWjDaRLw==
+  dependencies:
+    buffer "^6.0.2"
 
 indy-sdk@^1.16.0-dev-1636:
   version "1.16.0-dev-1655"
