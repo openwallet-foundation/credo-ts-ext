@@ -1,27 +1,23 @@
-import {
-  Agent,
-  AutoAcceptCredential,
-  AutoAcceptProof,
-  ConsoleLogger,
-  HttpOutboundTransport,
-  LogLevel,
-  WsOutboundTransport,
-} from '@aries-framework/core'
+import type { InitConfig } from '@aries-framework/core'
+
+import { Agent, ConsoleLogger, HttpOutboundTransport, LogLevel, WsOutboundTransport } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
 
 export const setupAgent = ({ name, publicDidSeed }: { name: string; publicDidSeed: string }) => {
-  const agent = new Agent(
-    {
-      logger: new ConsoleLogger(LogLevel.off),
-      publicDidSeed,
-      label: name,
-      autoAcceptConnections: true,
-      autoAcceptProofs: AutoAcceptProof.ContentApproved,
-      autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
-      walletConfig: { id: name, key: name },
+  const agentConfig: InitConfig = {
+    label: name,
+    walletConfig: {
+      id: name,
+      key: publicDidSeed,
     },
-    agentDependencies
-  )
+    logger: new ConsoleLogger(LogLevel.off),
+    autoUpdateStorageOnStartup: true,
+  }
+  const agent = new Agent({
+    config: agentConfig,
+    dependencies: agentDependencies,
+    modules: undefined,
+  })
 
   agent.registerOutboundTransport(new WsOutboundTransport())
   agent.registerOutboundTransport(new HttpOutboundTransport())

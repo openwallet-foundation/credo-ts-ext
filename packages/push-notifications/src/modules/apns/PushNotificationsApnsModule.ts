@@ -1,10 +1,15 @@
 import type { ApnsDeviceInfo } from '../../services'
 
-import { ConnectionService, Dispatcher, MessageSender } from '@aries-framework/core'
-import { createOutboundMessage } from '@aries-framework/core/build/agent/helpers'
+import {
+  AgentContext,
+  ConnectionService,
+  DependencyManager,
+  MessageSender,
+  OutboundMessageContext,
+} from '@aries-framework/core'
 import { Lifecycle, scoped } from 'tsyringe'
 
-import { PushNotificationsApnsDeviceInfoHandler } from '../../handlers'
+import { PushNotificationsFcmDeviceInfoHandler } from '../../handlers'
 import { PushNotificationsApnsService } from '../../services'
 
 /**
@@ -16,21 +21,22 @@ export class PushNotificationsApnsModule {
     private pushNotificationApnsService: PushNotificationsApnsService,
     private connectionService: ConnectionService,
     private messageSender: MessageSender,
-    dispatcher: Dispatcher
+    private agentContext: AgentContext, // dispatcher: Dispatcher
+    private dependencyManager: DependencyManager
   ) {
-    this.registerHandlers(dispatcher)
+    this.register()
   }
 
   /**
    * Sends a set request with the apns device info (token) to another agent via a `connectionId`
    */
   public async setDeviceInfo(connectionId: string, deviceInfo: ApnsDeviceInfo) {
-    const connection = await this.connectionService.getById(connectionId)
+    const connection = await this.connectionService.getById(this.agentContext, connectionId)
     connection.assertReady()
 
     const message = this.pushNotificationApnsService.createSetDeviceInfo(deviceInfo)
 
-    const outbound = createOutboundMessage(connection, message)
+    const outbound = new OutboundMessageContext(message, { agentContext: this.agentContext })
     await this.messageSender.sendMessage(outbound)
   }
 
@@ -40,12 +46,12 @@ export class PushNotificationsApnsModule {
    *
    */
   public async deviceInfo(connectionId: string, deviceInfo: ApnsDeviceInfo) {
-    const connection = await this.connectionService.getById(connectionId)
+    const connection = await this.connectionService.getById(this.agentContext, connectionId)
     connection.assertReady()
 
     const message = this.pushNotificationApnsService.createDeviceInfo(deviceInfo)
 
-    const outbound = createOutboundMessage(connection, message)
+    const outbound = new OutboundMessageContext(message, { agentContext: this.agentContext })
     await this.messageSender.sendMessage(outbound)
   }
 
@@ -54,16 +60,16 @@ export class PushNotificationsApnsModule {
    *
    */
   public async getDeviceInfo(connectionId: string) {
-    const connection = await this.connectionService.getById(connectionId)
+    const connection = await this.connectionService.getById(this.agentContext, connectionId)
     connection.assertReady()
 
     const message = this.pushNotificationApnsService.createGetDeviceInfo()
 
-    const outbound = createOutboundMessage(connection, message)
+    const outbound = new OutboundMessageContext(message, { agentContext: this.agentContext })
     await this.messageSender.sendMessage(outbound)
   }
 
-  private registerHandlers(dispatcher: Dispatcher) {
-    dispatcher.registerHandler(new PushNotificationsApnsDeviceInfoHandler())
+  private register() {
+    this.dependencyManager.registerMessageHandlers([new PushNotificationsFcmDeviceInfoHandler()])
   }
 }

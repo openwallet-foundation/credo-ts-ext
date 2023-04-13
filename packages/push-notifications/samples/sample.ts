@@ -15,7 +15,7 @@ const run = async () => {
 
   // Inject the PushNotificationModule
   // NOTE: This has to be done before initializing the agent
-  const pushNotificationsApnsModule = agent.injectionContainer.resolve(PushNotificationsApnsModule)
+  const pushNotificationsApnsModule = agent.dependencyManager.resolve(PushNotificationsApnsModule)
 
   // Initialize the agent
   await agent.initialize()
@@ -25,7 +25,7 @@ const run = async () => {
     deviceToken: '123',
   })
 
-  // Gets the push notification device infomation located at the other agent behind the connection
+  // Gets the push notification device information located at the other agent behind the connection
   await pushNotificationsApnsModule.getDeviceInfo('a-valid-connection')
 }
 

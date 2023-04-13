@@ -13,11 +13,11 @@ describe('Push Notifications apns', () => {
 
   beforeAll(async () => {
     notificationReceiver = setupAgent({
-      name: 'push notifications apns serivce notification receiver test',
+      name: 'push notifications apns service notification receiver test',
       publicDidSeed: '65748374657483920193747564738290',
     })
 
-    pushNotificationsService = notificationReceiver.injectionContainer.resolve(PushNotificationsApnsService)
+    pushNotificationsService = notificationReceiver.dependencyManager.resolve(PushNotificationsApnsService)
     await notificationReceiver.initialize()
   })
 
