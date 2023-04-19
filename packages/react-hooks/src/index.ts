@@ -29,14 +29,11 @@ export {
   useProofById,
   useProofByState,
   useProofNotInState,
-<<<<<<< HEAD
   useQuestionAnswer,
   useQuestionAnswerByConnectionId,
   useQuestionAnswerById,
-=======
   useExchanges,
   useExchangesByConnectionId,
->>>>>>> main
   useProofsByConnectionId,
 }
 
