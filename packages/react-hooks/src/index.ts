@@ -8,6 +8,7 @@ import {
   useCredentialNotInState,
   useCredentialsByConnectionId,
 } from './CredentialProvider'
+import { useExchanges, useExchangesByConnectionId } from './ExchangesProvider'
 import { useProofs, useProofById, useProofByState, useProofNotInState, useProofsByConnectionId } from './ProofProvider'
 import { useQuestionAnswer, useQuestionAnswerByConnectionId, useQuestionAnswerById } from './QuestionAnswerProvider'
 
@@ -28,9 +29,14 @@ export {
   useProofById,
   useProofByState,
   useProofNotInState,
+<<<<<<< HEAD
   useQuestionAnswer,
   useQuestionAnswerByConnectionId,
   useQuestionAnswerById,
+=======
+  useExchanges,
+  useExchangesByConnectionId,
+>>>>>>> main
   useProofsByConnectionId,
 }
 
