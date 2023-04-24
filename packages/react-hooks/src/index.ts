@@ -10,6 +10,7 @@ import {
 } from './CredentialProvider'
 import { useExchanges, useExchangesByConnectionId } from './ExchangesProvider'
 import { useProofs, useProofById, useProofByState, useProofNotInState, useProofsByConnectionId } from './ProofProvider'
+import { useQuestionAnswer, useQuestionAnswerByConnectionId, useQuestionAnswerById } from './QuestionAnswerProvider'
 
 export {
   useAgent,
@@ -28,6 +29,9 @@ export {
   useProofById,
   useProofByState,
   useProofNotInState,
+  useQuestionAnswer,
+  useQuestionAnswerByConnectionId,
+  useQuestionAnswerById,
   useExchanges,
   useExchangesByConnectionId,
   useProofsByConnectionId,
