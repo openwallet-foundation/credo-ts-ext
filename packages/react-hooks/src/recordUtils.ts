@@ -5,6 +5,7 @@ import type {
   RecordUpdatedEvent,
   Agent,
   BaseEvent,
+  Module,
 } from '@aries-framework/core'
 import type { Constructor } from '@aries-framework/core/build/utils/mixins'
 
@@ -57,7 +58,7 @@ const filterByType = <R extends BaseRecordAny>(recordClass: RecordClass<R>) => {
 
 export const recordsAddedByType = <R extends BaseRecordAny>(agent: Agent | undefined, recordClass: RecordClass<R>) => {
   if (!agent) {
-    throw new Error('Agent is required to subscribe to events')
+    throw new Error('Agent is required to check record type')
   }
 
   if (!recordClass) {
@@ -72,7 +73,7 @@ export const recordsUpdatedByType = <R extends BaseRecordAny>(
   recordClass: RecordClass<R>
 ) => {
   if (!agent) {
-    throw new Error('Agent is required to subscribe to events')
+    throw new Error('Agent is required to update record type')
   }
 
   if (!recordClass) {
@@ -89,7 +90,7 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
   recordClass: RecordClass<R>
 ) => {
   if (!agent) {
-    throw new Error('Agent is required to subscribe to events')
+    throw new Error('Agent is required to remove records by type')
   }
 
   if (!recordClass) {
@@ -99,4 +100,21 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
   return agent?.events
     .observable<RecordDeletedEvent<R>>(RepositoryEventTypes.RecordDeleted)
     .pipe(filterByType(recordClass))
+}
+
+export const importModule = async (moduleName: string): Promise<any> => {
+  const importedModule = await import(moduleName)
+  return importedModule
+}
+
+export const checkModuleEnabled = (agent: Agent, moduleName: any) => {
+  if (!agent) {
+    throw new Error('Agent is required to check if a module is enabled')
+  }
+
+  const foundModule = Object.values(agent.dependencyManager.registeredModules).find(
+    (module: any) => module instanceof moduleName
+  )
+
+  return foundModule !== undefined
 }
