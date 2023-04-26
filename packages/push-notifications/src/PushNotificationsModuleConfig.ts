@@ -1,26 +1,28 @@
 /**
- * DummyModuleConfigOptions defines the interface for the options of the DummyModuleConfig class.
- * This can contain optional parameters that have default values in the config class itself.
+ * PushNotificationsModuleConfigOptions defines the interface for the options of the PushNotificationsModuleConfig class.
  */
+
+export enum Platform {
+  ANDROID = 'android',
+  IOS = 'ios',
+}
 export interface PushNotificationsModuleConfigOptions {
   /**
-   * Whether to automatically accept request messages.
+   * The platform to use - either android or ios.
    *
-   * @default false
+   * @default undefined
    */
-  //   autoAcceptRequests?: boolean
-  deviceToken?: string
+  platform: Platform
 }
 
 export class PushNotificationsModuleConfig {
   private options: PushNotificationsModuleConfigOptions
 
-  public constructor(options?: PushNotificationsModuleConfigOptions) {
-    this.options = options ?? {}
+  public constructor(options: PushNotificationsModuleConfigOptions) {
+    this.options = options
   }
 
-  /** See {@link PushNotificationsModuleConfigOptions.autoAcceptRequests} */
-  public get autoAcceptRequests() {
-    return this.options.deviceToken
+  public get platform() {
+    return this.options.platform
   }
 }

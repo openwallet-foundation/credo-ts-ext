@@ -1,5 +1,4 @@
-// import type { DummyRecord } from './repository/DummyRecord'
-import type { DeviceInfo } from '../services'
+import type { ApnsDeviceInfo } from '../../services'
 
 import {
   OutboundMessageContext,
@@ -9,23 +8,19 @@ import {
   MessageSender,
 } from '@aries-framework/core'
 
-import { PushNotificationsDeviceInfoHandler } from '../handlers'
-import { PushNotificationsService } from '../services'
-
-// import { DummyRequestHandler, DummyResponseHandler } from './handlers'
-// import { DummyState } from './repository'
-// import { DummyService } from './services'
+import { PushNotificationsApnsDeviceInfoHandler } from '../../handlers'
+import { PushNotificationsApnsService } from '../../services'
 
 @injectable()
-export class PushNotificationsApi {
+export class PushNotificationsApnsApi {
   private messageSender: MessageSender
-  private pushNotificationsService: PushNotificationsService
+  private pushNotificationsService: PushNotificationsApnsService
   private connectionService: ConnectionService
   private agentContext: AgentContext
 
   public constructor(
     messageSender: MessageSender,
-    pushNotificationsService: PushNotificationsService,
+    pushNotificationsService: PushNotificationsApnsService,
     connectionService: ConnectionService,
     agentContext: AgentContext
   ) {
@@ -34,10 +29,7 @@ export class PushNotificationsApi {
     this.connectionService = connectionService
     this.agentContext = agentContext
 
-    this.agentContext.dependencyManager.registerMessageHandlers([
-      new PushNotificationsDeviceInfoHandler(),
-      //   new DummyResponseHandler(this.dummyService),
-    ])
+    this.agentContext.dependencyManager.registerMessageHandlers([new PushNotificationsApnsDeviceInfoHandler()])
   }
 
   /**
@@ -47,7 +39,7 @@ export class PushNotificationsApi {
    * @param deviceInfo The APNS device info
    * @returns Promise<void>
    */
-  public async setDeviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
+  public async setDeviceInfo(connectionId: string, deviceInfo: ApnsDeviceInfo) {
     const connection = await this.connectionService.getById(this.agentContext, connectionId)
     connection.assertReady()
 
@@ -68,7 +60,7 @@ export class PushNotificationsApi {
    * @param deviceInfo The APNS device info
    * @returns Promise<void>
    */
-  public async deviceInfo(connectionId: string, deviceInfo: DeviceInfo) {
+  public async deviceInfo(connectionId: string, deviceInfo: ApnsDeviceInfo) {
     const connection = await this.connectionService.getById(this.agentContext, connectionId)
     connection.assertReady()
 
@@ -84,6 +76,8 @@ export class PushNotificationsApi {
   /**
    * Gets the apns device info (token) from another agent via the `connectionId`
    *
+   * @param connectionId The connection ID string
+   * @returns Promise<void>
    */
   public async getDeviceInfo(connectionId: string) {
     const connection = await this.connectionService.getById(this.agentContext, connectionId)

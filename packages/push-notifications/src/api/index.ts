@@ -1,1 +1,2 @@
-export * from './PushNotificationsApi'
+export * from './apns'
+export * from './fcm'

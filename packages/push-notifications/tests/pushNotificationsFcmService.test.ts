@@ -12,12 +12,12 @@ describe('Push Notifications Fcm ', () => {
   let pushNotificationsService: PushNotificationsFcmService
 
   beforeAll(async () => {
-    notificationReceiver = setupAgent({
-      name: 'push notifications fcm serivce notification receiver test',
+    notificationReceiver = await setupAgent({
+      name: 'push notifications fcm service notification receiver test',
       publicDidSeed: '65748374657483920193747564738290',
     })
 
-    pushNotificationsService = notificationReceiver.injectionContainer.resolve(PushNotificationsFcmService)
+    pushNotificationsService = notificationReceiver.dependencyManager.resolve(PushNotificationsFcmService)
     await notificationReceiver.initialize()
   })
 

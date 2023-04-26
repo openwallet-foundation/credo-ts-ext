@@ -1,30 +1,49 @@
-import {
-  Agent,
-  AutoAcceptCredential,
-  AutoAcceptProof,
-  ConsoleLogger,
-  HttpOutboundTransport,
-  LogLevel,
-  WsOutboundTransport,
-} from '@aries-framework/core'
+import type { InitConfig } from '@aries-framework/core'
+
+import { AskarModule } from '@aries-framework/askar'
+import { Agent, HttpOutboundTransport, KeyDerivationMethod, WsOutboundTransport } from '@aries-framework/core'
+// import { IndySdkModule } from '@aries-framework/indy-sdk'
 import { agentDependencies } from '@aries-framework/node'
+import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
+// import indySDKMod from 'indy-sdk'
 
-export const setupAgent = ({ name, publicDidSeed }: { name: string; publicDidSeed: string }) => {
-  const agent = new Agent(
-    {
-      logger: new ConsoleLogger(LogLevel.off),
-      publicDidSeed,
-      label: name,
-      autoAcceptConnections: true,
-      autoAcceptProofs: AutoAcceptProof.ContentApproved,
-      autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
-      walletConfig: { id: name, key: name },
+// import { indyNetworks } from './genesis'
+
+export const setupAgent = async ({ name, publicDidSeed }: { name: string; publicDidSeed: string }) => {
+  const agentConfig: InitConfig = {
+    label: name,
+    walletConfig: {
+      id: name,
+      key: publicDidSeed,
+      keyDerivationMethod: KeyDerivationMethod.Raw,
     },
-    agentDependencies
-  )
+    autoUpdateStorageOnStartup: true,
+  }
 
-  agent.registerOutboundTransport(new WsOutboundTransport())
+  // const createAgentModules = () => {
+  //   const modules = {
+  //     indySdk: new IndySdkModule({
+  //       indySdk,
+  //       networks: indyNetworks,
+  //     }),
+  //   }
+
+  //   return modules
+  // }
+
+  const agent = new Agent({
+    config: agentConfig,
+    dependencies: agentDependencies,
+    modules: {
+      askar: new AskarModule({
+        ariesAskar,
+      }),
+    },
+  })
+
   agent.registerOutboundTransport(new HttpOutboundTransport())
+  agent.registerOutboundTransport(new WsOutboundTransport())
 
+  await agent.initialize()
   return agent
 }

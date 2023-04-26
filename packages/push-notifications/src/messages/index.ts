@@ -1,5 +1,2 @@
 export * from './apns'
 export * from './fcm'
-export * from './PushNotificationsDeviceInfoMessage'
-export * from './PushNotificationsGetDeviceInfoMessage'
-export * from './PushNotificationsSetDeviceInfoMessage'
