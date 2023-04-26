@@ -1,3 +1,4 @@
+import type { PushNotificationsModuleConfigOptions } from '../../PushNotificationsModuleConfig'
 import type { DependencyManager, Module } from '@aries-framework/core'
 
 import { PushNotificationsModuleConfig } from '../../PushNotificationsModuleConfig'
@@ -9,10 +10,10 @@ import { PushNotificationsApnsService } from '../../services'
  */
 export class PushNotificationsApnsModule implements Module {
   public readonly config: PushNotificationsModuleConfig | undefined
-  public readonly api = undefined
+  public readonly api = PushNotificationsApnsApi
 
-  public constructor(config?: PushNotificationsModuleConfig) {
-    this.config = config
+  public constructor(config?: PushNotificationsModuleConfigOptions) {
+    this.config = new PushNotificationsModuleConfig(config ?? {})
   }
 
   public register(dependencyManager: DependencyManager): void {

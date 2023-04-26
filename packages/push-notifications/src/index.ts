@@ -1,6 +1,7 @@
 import 'reflect-metadata'
 
 export { PushNotificationsApnsModule, PushNotificationsFcmModule } from './modules'
+export { PushNotificationsApnsApi, PushNotificationsFcmApi } from './api'
 export {
   PushNotificationsApnsDeviceInfoMessage,
   PushNotificationsApnsGetDeviceInfoMessage,

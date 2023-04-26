@@ -1,28 +1,23 @@
 /**
  * PushNotificationsModuleConfigOptions defines the interface for the options of the PushNotificationsModuleConfig class.
  */
-
-export enum Platform {
-  ANDROID = 'android',
-  IOS = 'ios',
-}
 export interface PushNotificationsModuleConfigOptions {
   /**
-   * The platform to use - either android or ios.
+   * The provider to use - apns or fcm
    *
    * @default undefined
    */
-  platform: Platform
+  provider?: 'fcm' | 'apns'
 }
 
 export class PushNotificationsModuleConfig {
-  private options: PushNotificationsModuleConfigOptions
+  public options: PushNotificationsModuleConfigOptions
 
-  public constructor(options: PushNotificationsModuleConfigOptions) {
-    this.options = options
+  public constructor(options?: PushNotificationsModuleConfigOptions) {
+    this.options = options ?? {}
   }
 
-  public get platform() {
-    return this.options.platform
+  public get provider() {
+    return this.options.provider
   }
 }

@@ -1,43 +1,58 @@
 import type { InitConfig } from '@aries-framework/core'
 
-import { AskarModule } from '@aries-framework/askar'
-import { Agent, HttpOutboundTransport, KeyDerivationMethod, WsOutboundTransport } from '@aries-framework/core'
-// import { IndySdkModule } from '@aries-framework/indy-sdk'
+import { Agent, HttpOutboundTransport, WsOutboundTransport } from '@aries-framework/core'
+import { IndySdkModule } from '@aries-framework/indy-sdk'
 import { agentDependencies } from '@aries-framework/node'
-import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
-// import indySDKMod from 'indy-sdk'
+import indySdk from 'indy-sdk'
 
-// import { indyNetworks } from './genesis'
+import { PushNotificationsApnsModule, PushNotificationsFcmModule } from '../../src'
 
-export const setupAgent = async ({ name, publicDidSeed }: { name: string; publicDidSeed: string }) => {
+export const setupAgentFcm = async ({ name }: { name: string }) => {
   const agentConfig: InitConfig = {
     label: name,
     walletConfig: {
       id: name,
-      key: publicDidSeed,
-      keyDerivationMethod: KeyDerivationMethod.Raw,
+      key: 'someKey',
     },
     autoUpdateStorageOnStartup: true,
   }
-
-  // const createAgentModules = () => {
-  //   const modules = {
-  //     indySdk: new IndySdkModule({
-  //       indySdk,
-  //       networks: indyNetworks,
-  //     }),
-  //   }
-
-  //   return modules
-  // }
 
   const agent = new Agent({
     config: agentConfig,
     dependencies: agentDependencies,
     modules: {
-      askar: new AskarModule({
-        ariesAskar,
+      indySdk: new IndySdkModule({
+        indySdk,
       }),
+      pushNotificationsFcm: new PushNotificationsFcmModule(),
+    },
+  })
+
+  agent.registerOutboundTransport(new HttpOutboundTransport())
+  agent.registerOutboundTransport(new WsOutboundTransport())
+
+  await agent.initialize()
+  return agent
+}
+
+export const setupAgentApns = async ({ name }: { name: string }) => {
+  const agentConfig: InitConfig = {
+    label: name,
+    walletConfig: {
+      id: name,
+      key: 'someKey',
+    },
+    autoUpdateStorageOnStartup: true,
+  }
+
+  const agent = new Agent({
+    config: agentConfig,
+    dependencies: agentDependencies,
+    modules: {
+      indySdk: new IndySdkModule({
+        indySdk,
+      }),
+      pushNotificationsApns: new PushNotificationsApnsModule(),
     },
   })
 

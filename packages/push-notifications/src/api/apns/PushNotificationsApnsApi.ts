@@ -8,7 +8,11 @@ import {
   MessageSender,
 } from '@aries-framework/core'
 
-import { PushNotificationsApnsDeviceInfoHandler } from '../../handlers'
+import {
+  PushNotificationsApnsDeviceInfoHandler,
+  PushNotificationsApnsGetDeviceInfoHandler,
+  PushNotificationsApnsSetDeviceInfoHandler,
+} from '../../handlers'
 import { PushNotificationsApnsService } from '../../services'
 
 @injectable()
@@ -29,9 +33,12 @@ export class PushNotificationsApnsApi {
     this.connectionService = connectionService
     this.agentContext = agentContext
 
-    this.agentContext.dependencyManager.registerMessageHandlers([new PushNotificationsApnsDeviceInfoHandler()])
+    this.agentContext.dependencyManager.registerMessageHandlers([
+      new PushNotificationsApnsDeviceInfoHandler(),
+      new PushNotificationsApnsGetDeviceInfoHandler(),
+      new PushNotificationsApnsSetDeviceInfoHandler(),
+    ])
   }
-
   /**
    * Sends a set request with the apns device info (token) to another agent via a `connectionId`
    *

@@ -1,6 +1,6 @@
 import type { ApnsDeviceInfo } from './ApnsDeviceInfo'
 
-import { Lifecycle, scoped } from 'tsyringe'
+import { injectable } from 'tsyringe'
 
 import {
   PushNotificationsApnsSetDeviceInfoMessage,
@@ -8,7 +8,7 @@ import {
   PushNotificationsApnsDeviceInfoMessage,
 } from '../../messages'
 
-@scoped(Lifecycle.ContainerScoped)
+@injectable()
 export class PushNotificationsApnsService {
   public createSetDeviceInfo(deviceInfo: ApnsDeviceInfo) {
     return new PushNotificationsApnsSetDeviceInfoMessage(deviceInfo)
