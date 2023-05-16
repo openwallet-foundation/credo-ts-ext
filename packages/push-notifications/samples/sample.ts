@@ -13,6 +13,7 @@ const run = async () => {
   // Inject the PushNotificationModule
   // NOTE: This has to be done before initializing the agent
   const pushNotificationsApnsModule = agent.modules.pushNotificationsApns
+  // const pushNotificationsFcmModule = agent.modules.pushNotificationsFcm
 
   // Initialize the agent
 

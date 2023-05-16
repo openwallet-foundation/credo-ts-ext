@@ -10,7 +10,7 @@ import { PushNotificationsFcmService } from '../../services'
  */
 export class PushNotificationsFcmModule implements Module {
   public readonly config: PushNotificationsModuleConfig | undefined
-  public readonly api = undefined
+  public readonly api = PushNotificationsFcmApi
 
   public constructor(config?: PushNotificationsModuleConfigOptions) {
     this.config = new PushNotificationsModuleConfig(config ?? {})

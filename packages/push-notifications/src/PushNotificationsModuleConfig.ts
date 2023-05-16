@@ -7,7 +7,7 @@ export interface PushNotificationsModuleConfigOptions {
    *
    * @default undefined
    */
-  provider?: 'fcm' | 'apns'
+  options?: object
 }
 
 export class PushNotificationsModuleConfig {
@@ -15,9 +15,5 @@ export class PushNotificationsModuleConfig {
 
   public constructor(options?: PushNotificationsModuleConfigOptions) {
     this.options = options ?? {}
-  }
-
-  public get provider() {
-    return this.options.provider
   }
 }
