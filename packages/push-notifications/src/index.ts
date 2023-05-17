@@ -10,5 +10,3 @@ export {
   PushNotificationsFcmSetDeviceInfoMessage,
 } from './messages'
 export { ApnsDeviceInfo, FcmDeviceInfo } from './services'
-
-export * from './PushNotificationsModuleConfig'
