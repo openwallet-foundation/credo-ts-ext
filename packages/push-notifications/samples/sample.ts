@@ -10,20 +10,13 @@ const run = async () => {
     name: 'aries apns push notifications agent',
   })
 
-  // Inject the PushNotificationModule
-  // NOTE: This has to be done before initializing the agent
-  const pushNotificationsApnsModule = agent.modules.pushNotificationsApns
-  // const pushNotificationsFcmModule = agent.modules.pushNotificationsFcm
-
-  // Initialize the agent
-
   // Pushes a  device token and vendor to the specified connection record
-  await pushNotificationsApnsModule.setDeviceInfo('a-valid-connection', {
+  await agent.modules.pushNotificationsApns.setDeviceInfo('a-valid-connection', {
     deviceToken: '123',
   })
 
   // Gets the push notification device information located at the other agent behind the connection
-  await pushNotificationsApnsModule.getDeviceInfo('a-valid-connection')
+  await agent.modules.pushNotificationsApns.getDeviceInfo('a-valid-connection')
 }
 
 void run()

@@ -2,7 +2,7 @@ import type { Agent } from '@aries-framework/core'
 
 import { JsonTransformer } from '@aries-framework/core'
 
-import { PushNotificationsApnsService } from '../src/services'
+import { PushNotificationsApnsService } from '../src/apns/PushNotificationsApnsService'
 
 import { setupAgentApns } from './utils/agent'
 

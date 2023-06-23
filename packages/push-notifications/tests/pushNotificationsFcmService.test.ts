@@ -2,7 +2,7 @@ import type { Agent } from '@aries-framework/core'
 
 import { JsonTransformer } from '@aries-framework/core'
 
-import { PushNotificationsFcmService } from '../src/services/fcm/PushNotificationsFcmService'
+import { PushNotificationsFcmService } from '../src/fcm/PushNotificationsFcmService'
 
 import { setupAgentFcm } from './utils/agent'
 

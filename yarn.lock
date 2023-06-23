@@ -17,12 +17,12 @@
   dependencies:
     convert-string "0.1.0"
 
-"@aries-framework/anoncreds@0.4.0-alpha.115+d247b53d":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/anoncreds/-/anoncreds-0.4.0-alpha.115.tgz#1bcab93d3689bc22f82b30da18a404988c759a53"
-  integrity sha512-tWGrUn5sk3Y7oskam3hr54MJ/sEltTfma8lsOGvDnVr81weyA0qaXX1Spp+1NRVQCa6tm4hy+uKuDNOkFkFfEQ==
+"@aries-framework/anoncreds@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/anoncreds/-/anoncreds-0.4.0.tgz#abf0dd6b316d607fbee9fc5ef5d5709dfa2ded36"
+  integrity sha512-jzZVMXJoTutF5jrATYXHiavUi2APEUbvGiOA8EelP7cabVxCijoWh0DdTEBoGSUv9xuK26iSWVY0MmnAxD7l9g==
   dependencies:
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
+    "@aries-framework/core" "0.4.0"
     bn.js "^5.2.1"
     class-transformer "0.5.1"
     class-validator "0.14.0"
@@ -92,10 +92,10 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@0.4.0-alpha.115", "@aries-framework/core@0.4.0-alpha.115+d247b53d":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.0-alpha.115.tgz#177d8a4e4a2c3e80c1349b5949ffaf609fbcde6c"
-  integrity sha512-w/r8cHNVFf0ZKUFiIZoHF28fb68KkwlvQ2zKZ44SXqcavRGSCvns+3bMCIcyfj/yvvDsZg0GZ1DICtYbkfwf4Q==
+"@aries-framework/core@0.4.0", "@aries-framework/core@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.0.tgz#6af11446174d8f690aa1bf4abf6f61ad47a05b52"
+  integrity sha512-Z/rTgpJMKTl9iQQd8GnNEV5wCZKdV+kkd+Y4e/KS+j+6yMOxrgaVGcAKlcFIPcHUc6l1iOetJFeVLSwftXW2Kg==
   dependencies:
     "@digitalcredentials/jsonld" "^5.2.1"
     "@digitalcredentials/jsonld-signatures" "^9.3.1"
@@ -106,6 +106,7 @@
     "@stablelib/sha256" "^1.0.1"
     "@types/ws" "^8.5.4"
     abort-controller "^3.0.0"
+    big-integer "^1.6.51"
     borc "^3.0.0"
     buffer "^6.0.3"
     class-transformer "0.5.1"
@@ -124,32 +125,19 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.21"
 
-"@aries-framework/indy-sdk@^0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/indy-sdk/-/indy-sdk-0.4.0-alpha.115.tgz#4011778a1162af90f98c3e02e25c8a703031ae03"
-  integrity sha512-N7vY3jTIYZSaENw7v82/oPu89yIqqtDs2mR9nk8p7oVQa031oipzAbO8q6PqoHZO8LU78xqqKMaRnCcHBpBT9g==
+"@aries-framework/indy-sdk@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/indy-sdk/-/indy-sdk-0.4.0.tgz#d4bb59cf010b2e9166982d4a7a0103325bde9b80"
+  integrity sha512-Z54+a7yxFrynGTgc0vYs0proh+4MnV1e0+1SSwFi+kbi11i9rIpLj8pBN5PN1569qYVtCzSaFz4q6BtvzAHLJw==
   dependencies:
-    "@aries-framework/anoncreds" "0.4.0-alpha.115+d247b53d"
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
+    "@aries-framework/anoncreds" "0.4.0"
+    "@aries-framework/core" "0.4.0"
     "@stablelib/ed25519" "^1.0.3"
     "@types/indy-sdk" "1.16.26"
     class-transformer "0.5.1"
     class-validator "0.14.0"
     rxjs "^7.2.0"
     tsyringe "^4.7.0"
-
-"@aries-framework/node@0.4.0-alpha.115":
-  version "0.4.0-alpha.115"
-  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.4.0-alpha.115.tgz#03af9603b556c50e1bc42d6dec6db617ff4b1197"
-  integrity sha512-YifEY6KbXWwTmeUkrAyIktvTuZmveYfsggHT3jtryTyiIYhlnDT0EF7PbKOgViTf88Zv8JnERf8YWXjGJGn6vg==
-  dependencies:
-    "@aries-framework/core" "0.4.0-alpha.115+d247b53d"
-    "@types/express" "^4.17.15"
-    express "^4.17.1"
-    ffi-napi "^4.0.3"
-    node-fetch "^2.6.1"
-    ref-napi "^3.0.3"
-    ws "^8.13.0"
 
 "@aries-framework/node@^0.2.3":
   version "0.2.5"
@@ -163,6 +151,19 @@
     node-fetch "^2.6.1"
     ref-napi "^3.0.3"
     ws "^7.5.3"
+
+"@aries-framework/node@^0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@aries-framework/node/-/node-0.4.0.tgz#2d9f0f58f433c8ef61a5f275e3a1d7a75ecc4dbd"
+  integrity sha512-ydxkD+Hb8XLLUeX2G27baNUtC3BBB3LG2NfZgy2128q6mAg2mqhLnjWocncE7kWFVneZ5copBIoF2MIPQvwYhg==
+  dependencies:
+    "@aries-framework/core" "0.4.0"
+    "@types/express" "^4.17.15"
+    express "^4.17.1"
+    ffi-napi "^4.0.3"
+    node-fetch "^2.6.1"
+    ref-napi "^3.0.3"
+    ws "^8.13.0"
 
 "@aries-framework/question-answer@^0.3.2":
   version "0.3.3"
@@ -2776,7 +2777,7 @@ base@^0.11.1:
     mixin-deep "^1.2.0"
     pascalcase "^0.1.1"
 
-big-integer@1.6.x:
+big-integer@1.6.x, big-integer@^1.6.51:
   version "1.6.51"
   resolved "https://registry.yarnpkg.com/big-integer/-/big-integer-1.6.51.tgz#0df92a5d9880560d3ff2d5fd20245c889d130686"
   integrity sha512-GPEid2Y9QU1Exl1rpO9B2IPJGHPSupF5GnVIP0blYvNOMer2bTvSWs1jGOUg04hTmu67nmLsQ9TBo1puaotBHg==
