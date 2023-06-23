@@ -40,10 +40,10 @@
 <p align="center">
   <a href="#packages">Packages</a> &nbsp;|&nbsp;
   <a href="#contributing">Contributing</a> &nbsp;|&nbsp;
-  <a href="#license">License</a> 
+  <a href="#license">License</a>
 </p>
 
-Aries Framework JavaScript Extensions is an extension repo to [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git) (AFJ). It hosts libraries built on top of Aries Framework JavaScript that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for AFJ and A Rest API wrapper.
+Aries Framework JavaScript Extensions is an extension repo to [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git) (AFJ). It hosts libraries built on top of Aries Framework JavaScript that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
 
 If you're just getting started the [AFJ repo](https://github.com/hyperledger/aries-framework-javascript.git) is probably the place to start.
 
@@ -51,20 +51,21 @@ If you're just getting started the [AFJ repo](https://github.com/hyperledger/ari
 
 All packages are placed in the [`packages/`](./packages) directory.
 
-| Package                                                                                                    | Version                                                                                                          | Description                                             |
-| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------- | ------------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ | ------------------------------------------------------------- |
-| [`@aries-framework/rest`](https://www.npmjs.com/package/@aries-framework/rest)                             | ![@aries-framework/rest version](https://img.shields.io/npm/v/@aries-framework/rest)                             | REST endpoint wrapper for using your agent over HTTP    |
-| [`@aries-framework/react-hooks`](https://www.npmjs.com/package/@aries-framework/react-hooks)               | ![@aries-framework/react-hooks version](https://img.shields.io/npm/v/@aries-framework/react-hooks)               | React Hooks for data handling and agent interaction     |
-| [`@aries-framework/redux-store`](https://www.npmjs.com/package/@aries-framework/redux-store)               | ![@aries-framework/redux-store version](https://img.shields.io/npm/v/@aries-framework/redux-store)               | Redux Toolkit wrapper around Aries Framework JavaScript |
-| [`@aries-framework/push-notifications`](https://www.npmjs.com/package/@aries-framework/push-notifications) | ![@aries-framework/push-notifications version](https://img.shields.io/npm/v/@aries-framework/push-notifications) | Push notification plugin for Aries Framework JavaScript | [`@aries-framework/transport-ble`](https://www.npmjs.com/package/@aries-framework/transport-ble) | ![@aries-framework/transport-ble version](https://img.shields.io/npm/v/@aries-framework/transport-ble) | Bluetooth Low Energy transport for Aries Framework JavaScript |
+| Package                                                                                                    | Version                                                                                                          | Description                                                   |
+| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
+| [`@aries-framework/rest`](https://www.npmjs.com/package/@aries-framework/rest)                             | ![@aries-framework/rest version](https://img.shields.io/npm/v/@aries-framework/rest)                             | REST endpoint wrapper for using your agent over HTTP          |
+| [`@aries-framework/react-hooks`](https://www.npmjs.com/package/@aries-framework/react-hooks)               | ![@aries-framework/react-hooks version](https://img.shields.io/npm/v/@aries-framework/react-hooks)               | React Hooks for data handling and agent interaction           |
+| [`@aries-framework/redux-store`](https://www.npmjs.com/package/@aries-framework/redux-store)               | ![@aries-framework/redux-store version](https://img.shields.io/npm/v/@aries-framework/redux-store)               | Redux Toolkit wrapper around Aries Framework JavaScript       |
+| [`@aries-framework/push-notifications`](https://www.npmjs.com/package/@aries-framework/push-notifications) | ![@aries-framework/push-notifications version](https://img.shields.io/npm/v/@aries-framework/push-notifications) | Push notification plugin for Aries Framework JavaScript       |
+| [`@aries-framework/transport-ble`](https://www.npmjs.com/package/@aries-framework/transport-ble)           | ![@aries-framework/transport-ble version](https://img.shields.io/npm/v/@aries-framework/transport-ble)           | Bluetooth Low Energy transport for Aries Framework JavaScript |
 
 ## Contributing
 
 If you would like to contribute to this repository, please read the [CONTRIBUTING](/CONTRIBUTING.md) guidelines. These documents will provide more information to get you started!
 
-For running tests, make sure to follow the network setup guides from the Aries Framework JavaScript [DEVREADME.md](https://github.com/hyperledger/aries-framework-javascript/blob/main/DEVREADME.md)
+For running tests, make sure to follow the network setup guides from the Aries Framework JavaScript [DEVREADME.md](https://github.com/hyperledger/aries-framework-javascript/blob/main/DEVREADME.md).
 
-The Aries Framework JavaScript call takes place every week at Thursday, 14:00 UTC via [Zoom](https://zoom.us/j/92215586249?pwd=Vm5ZTGV4T0cwVEl4blh3MjBzYjVYZz09). This meeting is for contributors to groom and plan the backlog, and discuss issues. Feel free to join!
+The Aries Framework JavaScript call takes place every week at Thursday, 14:00 UTC via [Zoom](https://zoom.us/j/99751084865?pwd=TW1rU0FDVTBqUlhnWnY2NERkd1diZz09). This meeting is for contributors to groom and plan the backlog, and discuss issues. Feel free to join!
 
 ## License
 
