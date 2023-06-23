@@ -29,6 +29,7 @@
     "react-redux": "^7.2.5"
   },
   "devDependencies": {
+    "@types/node-fetch": "^2.6.4",
     "@aries-framework/core": "^0.4.0",
     "react": "^17.0.2",
     "rimraf": "~3.0.2",
