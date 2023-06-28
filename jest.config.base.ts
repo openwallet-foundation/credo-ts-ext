@@ -8,10 +8,13 @@ const config: Config.InitialOptions = {
   coverageDirectory: '<rootDir>/coverage/',
   verbose: true,
   testMatch: ['**/?(*.)+(spec|test).[tj]s?(x)'],
-  globals: {
-    'ts-jest': {
-      isolatedModules: true,
-    },
+  transform: {
+    '^.+\\.tsx?$': [
+      'ts-jest',
+      {
+        isolatedModules: true,
+      },
+    ],
   },
 }
 
