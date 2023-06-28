@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.4.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.4.0...push-notifications-v0.4.1) (2023-06-28)
+
+
+### Features
+
+* @aries-framework/transport-ble package ([#179](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/179)) ([5c46132](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/5c461322df0102f2b075b386447c7fd68575c278))
+
 ## [0.4.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.3.0...push-notifications-v0.4.0) (2022-06-28)
 
 
