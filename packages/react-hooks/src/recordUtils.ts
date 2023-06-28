@@ -5,7 +5,6 @@ import type {
   RecordUpdatedEvent,
   Agent,
   BaseEvent,
-  Module,
 } from '@aries-framework/core'
 import type { Constructor } from '@aries-framework/core/build/utils/mixins'
 
@@ -102,18 +101,14 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
     .pipe(filterByType(recordClass))
 }
 
-export const importModule = async (moduleName: string): Promise<any> => {
-  const importedModule = await import(moduleName)
-  return importedModule
-}
-
-export const checkModuleEnabled = (agent: Agent, moduleName: any) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const checkModuleEnabled = (agent: Agent, ModuleClass: any) => {
   if (!agent) {
     throw new Error('Agent is required to check if a module is enabled')
   }
 
   const foundModule = Object.values(agent.dependencyManager.registeredModules).find(
-    (module: any) => module instanceof moduleName
+    (module: unknown) => module instanceof ModuleClass
   )
 
   return foundModule !== undefined

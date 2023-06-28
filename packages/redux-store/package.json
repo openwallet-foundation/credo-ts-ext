@@ -30,9 +30,7 @@
   },
   "devDependencies": {
     "@aries-framework/core": "^0.2.0",
-    "react": "^17.0.2",
-    "rimraf": "~3.0.2",
-    "typescript": "~4.4.2"
+    "react": "^18.0.0"
   },
   "peerDependencies": {
     "@aries-framework/core": "^0.2.0"
