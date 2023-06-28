@@ -1,5 +1,18 @@
 # Changelog
 
+### [0.4.3](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.4.2...react-hooks-v0.4.3) (2023-06-28)
+
+
+### Features
+
+* message sorting ([#191](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/191)) ([f2847bc](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/f2847bcad80518ed8c383d7e4af4f8cd35a1e68f))
+
+
+### Bug Fixes
+
+* **react-hooks:** add missing exports ([#205](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/205)) ([350df41](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/350df414d1e3010dec6aad11a0d9a6d8977e15d0))
+* **react-hooks:** filtering untyped connections ([#211](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/211)) ([2ee0b6d](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/2ee0b6d152244c934ab8aaa9d3b569dcff70d0e3))
+
 ### [0.4.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.4.1...react-hooks-v0.4.2) (2023-03-23)
 
 
