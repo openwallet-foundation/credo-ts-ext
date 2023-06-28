@@ -101,8 +101,7 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
     .pipe(filterByType(recordClass))
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const checkModuleEnabled = (agent: Agent, ModuleClass: any) => {
+export const checkModuleEnabled = (agent: Agent, ModuleClass: Constructor) => {
   if (!agent) {
     throw new Error('Agent is required to check if a module is enabled')
   }
