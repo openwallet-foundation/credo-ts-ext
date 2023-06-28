@@ -18,7 +18,8 @@ const QuestionAnswerContext = createContext<QuestionAnswerContextInterface | und
 
 const checkLoading = () => {
   const questionAnswerContext = useContext(QuestionAnswerContext)
-  if (questionAnswerContext!.loading === 'no-qa') {
+
+  if (questionAnswerContext?.loading === 'no-qa') {
     throw new Error('Question Answer hooks can only be used if Question Answer module is configured.')
   }
 }
@@ -58,7 +59,7 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
 
   const setInitialState = async () => {
     if (agent) {
-      if (agent.modules.questionAnswer!) {
+      if (agent.modules.questionAnswer) {
         const questionAnswerMessages = await agent.modules.questionAnswer.getAll()
         setQuestionAnswerState({ questionAnswerMessages, loading: 'yes-qa' })
       } else {

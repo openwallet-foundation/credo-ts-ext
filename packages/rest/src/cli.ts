@@ -100,7 +100,7 @@ const parsed = yargs
   })
   .config()
   .env('AFJ_REST')
-  .parse()
+  .parseSync()
 
 export async function runCliServer() {
   await runRestAgent({
