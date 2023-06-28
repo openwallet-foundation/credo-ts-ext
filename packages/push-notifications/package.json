@@ -29,12 +29,9 @@
     "@aries-framework/core": "^0.4.0",
     "@aries-framework/indy-sdk": "^0.4.0",
     "@aries-framework/node": "^0.4.0",
-    "@types/jest": "^27.0.2",
     "@types/node-fetch": "^2.6.3",
     "indy-sdk": "^1.16.0-dev-1655",
-    "ts-node-dev": "^1.1.8",
-    "tslog": "^3.2.2",
-    "typescript": "~4.4.2"
+    "ts-node-dev": "^1.1.8"
   },
   "peerDependencies": {
     "@aries-framework/core": "^0.4.0"
