@@ -76,8 +76,7 @@ jobs:
 
     strategy:
       matrix:
-        # Node 18 will be added soon
-        node-version: [16.x]
+        node-version: [16.x, 18.x]
 
     steps:
       - name: Checkout aries-framework-javascript-ext

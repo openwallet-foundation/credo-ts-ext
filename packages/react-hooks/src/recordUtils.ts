@@ -40,7 +40,10 @@ export const updateRecord = <R extends BaseRecordAny>(record: R, state: RecordsS
   }
 }
 
-export const removeRecord = <R extends BaseRecordAny>(record: R, state: RecordsState<R>): RecordsState<R> => {
+export const removeRecord = <R extends BaseRecordAny>(
+  record: R | { id: string; type: R['type'] },
+  state: RecordsState<R>
+): RecordsState<R> => {
   const newRecordsState = state.records.filter((r) => r.id !== record.id)
   return {
     loading: state.loading,

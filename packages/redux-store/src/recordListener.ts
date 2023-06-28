@@ -1,6 +1,6 @@
 import type { SerializedInstance } from './types'
 import type { RecordConstructor } from './utils'
-import type { Agent, BaseRecord, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent } from '@aries-framework/core'
+import type { Agent, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent, BaseRecord } from '@aries-framework/core'
 import type { Store } from '@reduxjs/toolkit'
 
 import { JsonTransformer, RepositoryEventTypes } from '@aries-framework/core'
@@ -10,7 +10,7 @@ import { isRecordType } from './utils'
 
 export const addRecord = createAction<BaseRecord>('record/add')
 export const updateRecord = createAction<BaseRecord>('record/update')
-export const removeRecord = createAction<BaseRecord>('record/remove')
+export const removeRecord = createAction<BaseRecord | { id: string; type: string }>('record/remove')
 
 /**
  * Starts an EventListener that listens for record events
@@ -21,7 +21,8 @@ export const removeRecord = createAction<BaseRecord>('record/remove')
  */
 export const startRecordListeners = (agent: Agent, store: Store) => {
   const onDeleted = (event: RecordDeletedEvent<BaseRecord>) => {
-    store.dispatch(removeRecord(event.payload.record))
+    const record = event.payload.record
+    store.dispatch(removeRecord(record))
   }
 
   const onSaved = (event: RecordSavedEvent<BaseRecord>) => {
@@ -46,7 +47,7 @@ export const startRecordListeners = (agent: Agent, store: Store) => {
 export const removeRecordInState = (
   recordType: RecordConstructor,
   records: SerializedInstance<BaseRecord>[],
-  record: BaseRecord
+  record: BaseRecord | { id: string; type: string }
 ) => {
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return
