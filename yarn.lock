@@ -10,10 +10,10 @@
     "@jridgewell/gen-mapping" "^0.3.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@animo-id/react-native-ble-didcomm@^0.4.2":
-  version "0.4.3"
-  resolved "https://registry.yarnpkg.com/@animo-id/react-native-ble-didcomm/-/react-native-ble-didcomm-0.4.3.tgz#60a1e9bb1083d47d9d1807543a46b4db6942234e"
-  integrity sha512-gYf6lI0xfebwlQoAunz5kCLSkHXt45iuxam+4RbIXhIAqioGrFEFK2lp/PxV4VMixoSWtBlwQdWobgGwP8jwnA==
+"@animo-id/react-native-ble-didcomm@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@animo-id/react-native-ble-didcomm/-/react-native-ble-didcomm-0.5.1.tgz#01e5946af850aaa5144366ffe706d3aecdbc5e8f"
+  integrity sha512-gbye6o/9RaANX6nTqwDp3iZPARbT+RKOjWZ+E0cG3Niab50rhp01Q6QyhG4lJpSmoXzsoZkuN68uX0tfTqpB6A==
   dependencies:
     convert-string "0.1.0"
 
@@ -90,40 +90,6 @@
     uuid "^9.0.0"
     varint "^6.0.0"
     web-did-resolver "^2.0.21"
-
-"@aries-framework/core@^0.3.2":
-  version "0.3.3"
-  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.3.3.tgz#7bb097366bef8f53225785881376d56311edaf83"
-  integrity sha512-IJECvx+ZUSTRUE43oGoOQuQqDFR7dycpwY+cYgAIXF9tjJ04u9nCNedf+aL6tFDNAbZXlPclTED3oSzvXl7AAQ==
-  dependencies:
-    "@digitalcredentials/jsonld" "^5.2.1"
-    "@digitalcredentials/jsonld-signatures" "^9.3.1"
-    "@digitalcredentials/vc" "^1.1.2"
-    "@multiformats/base-x" "^4.0.1"
-    "@stablelib/ed25519" "^1.0.2"
-    "@stablelib/random" "^1.0.1"
-    "@stablelib/sha256" "^1.0.1"
-    "@types/indy-sdk" "1.16.24"
-    "@types/node-fetch" "^2.5.10"
-    "@types/ws" "^7.4.6"
-    abort-controller "^3.0.0"
-    bn.js "^5.2.0"
-    borc "^3.0.0"
-    buffer "^6.0.3"
-    class-transformer "0.5.1"
-    class-validator "0.13.1"
-    did-resolver "^3.1.3"
-    lru_map "^0.4.1"
-    luxon "^1.27.0"
-    make-error "^1.3.6"
-    object-inspect "^1.10.3"
-    query-string "^7.0.1"
-    reflect-metadata "^0.1.13"
-    rxjs "^7.2.0"
-    tsyringe "^4.7.0"
-    uuid "^8.3.2"
-    varint "^6.0.0"
-    web-did-resolver "^2.0.8"
 
 "@aries-framework/indy-sdk@^0.4.0":
   version "0.4.0"
@@ -2068,7 +2034,7 @@
   resolved "https://registry.yarnpkg.com/@types/http-errors/-/http-errors-2.0.1.tgz#20172f9578b225f6c7da63446f56d4ce108d5a65"
   integrity sha512-/K3ds8TRAfBvi5vfjuz8y6+GiAYBZ0x4tXv1Av6CWBWn0IlADc+ZX9pMq7oU0fNQPnBwIZl3rmeLp6SBApbxSQ==
 
-"@types/indy-sdk@1.16.24", "@types/indy-sdk@1.16.26", "@types/indy-sdk@1.16.9", "@types/indy-sdk@^1.16.19":
+"@types/indy-sdk@1.16.26", "@types/indy-sdk@1.16.9", "@types/indy-sdk@^1.16.19":
   version "1.16.9"
   resolved "https://registry.yarnpkg.com/@types/indy-sdk/-/indy-sdk-1.16.9.tgz#647a77ead1e93c77b2b0ef5f2c399ba2ea461b89"
   integrity sha512-X8fdwcGaXfCxayBOb4NUny37JDd9Q3ZDKnm7WBhPRcdOXw3kmsy+WX52751nJQRBcltu883rbqYAIzcZE83XRA==
@@ -8415,7 +8381,7 @@ typescript@<4.8.0:
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.7.4.tgz#1a88596d1cf47d59507a1bcdfb5b9dfe4d488235"
   integrity sha512-C0WQT0gezHuw6AdY1M2jxUO83Rjf0HP7Sk1DtXj6j1EwkQNZrHAg2XPWlq62oqEhYvONq5pkC2Y9oPljWToLmQ==
 
-typescript@~4.4.0, typescript@~4.4.2:
+typescript@~4.4.0:
   version "4.4.4"
   resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
   integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==

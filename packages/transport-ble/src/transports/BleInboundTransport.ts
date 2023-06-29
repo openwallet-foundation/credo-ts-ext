@@ -58,5 +58,6 @@ export class BleInboundTransport implements InboundTransport {
 
     this.messageListener?.remove()
     this.disconnectionListener?.remove()
+    await this.central.shutdown()
   }
 }
