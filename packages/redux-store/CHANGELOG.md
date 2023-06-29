@@ -1,5 +1,20 @@
 # Changelog
 
+## [0.4.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.3.2...redux-store-v0.4.0) (2023-06-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **transport-ble:** update to afj 0.4.0 (#217)
+* **react-hooks:** update to afj 0.4.0 (#216)
+* **redux-store:** update to afj 0.4.0 (#207)
+
+### Miscellaneous Chores
+
+* **react-hooks:** update to afj 0.4.0 ([#216](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/216)) ([1a2df27](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/1a2df2788a642cc715d4a033526174eab486cfa0))
+* **redux-store:** update to afj 0.4.0 ([#207](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/207)) ([241386c](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/241386c564a88e79806cd8366590dd55452804ac))
+* **transport-ble:** update to afj 0.4.0 ([#217](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/217)) ([8f147d2](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/8f147d22fe46a4014c63a11ecfe919b3286e63b3))
+
 ### [0.3.2](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.3.1...redux-store-v0.3.2) (2022-07-22)
 
 
