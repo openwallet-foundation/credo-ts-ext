@@ -11,6 +11,10 @@ import type { Constructor } from '@aries-framework/core/build/utils/mixins'
 import { RepositoryEventTypes } from '@aries-framework/core'
 import { map, filter, pipe } from 'rxjs'
 
+// BaseRecordAny makes sure we allow any type to be used for the generic
+// properties of the BaseRecord. The default BaseRecord type uses Empty objects
+// which means if you have a ConnectionRecord and BaseRecord with default properties
+// their types are incompatible.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type BaseRecordAny = BaseRecord<any, any, any>
 type RecordClass<R extends BaseRecordAny> = Constructor<R> & { type: string }
