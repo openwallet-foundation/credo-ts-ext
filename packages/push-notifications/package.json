@@ -26,12 +26,15 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@aries-framework/core": "^0.2.0",
-    "@aries-framework/node": "^0.2.0",
+    "@aries-framework/core": "^0.4.0",
+    "@aries-framework/indy-sdk": "^0.4.0",
+    "@aries-framework/node": "^0.4.0",
+    "@types/node-fetch": "^2.6.3",
+    "indy-sdk": "^1.16.0-dev-1655",
     "ts-node-dev": "^1.1.8"
   },
   "peerDependencies": {
-    "@aries-framework/core": "^0.2.0"
+    "@aries-framework/core": "^0.4.0"
   },
   "dependencies": {
     "class-transformer": "0.5.1",

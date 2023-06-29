@@ -26,7 +26,9 @@
   "devDependencies": {
     "@animo-id/react-native-ble-didcomm": "^0.4.2",
     "@aries-framework/core": "^0.3.2",
-    "react-native": "0.72.0"
+    "react-native": "0.72.0",
+    "rimraf": "^3.0.2",
+    "typescript": "~4.4.2"
   },
   "peerDependencies": {
     "@animo-id/react-native-ble-didcomm": "^0.4.2",

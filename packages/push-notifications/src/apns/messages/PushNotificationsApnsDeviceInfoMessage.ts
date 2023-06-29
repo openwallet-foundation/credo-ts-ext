@@ -1,4 +1,4 @@
-import type { ApnsDeviceInfo } from '../../services'
+import type { ApnsDeviceInfo } from '../models'
 
 import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
