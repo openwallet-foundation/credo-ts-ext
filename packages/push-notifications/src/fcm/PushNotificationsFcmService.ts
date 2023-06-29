@@ -1,4 +1,4 @@
-import type { FcmDeviceInfo } from './FcmDeviceInfo'
+import type { FcmDeviceInfo } from './models/FcmDeviceInfo'
 
 import { Lifecycle, scoped } from 'tsyringe'
 
@@ -6,7 +6,7 @@ import {
   PushNotificationsFcmSetDeviceInfoMessage,
   PushNotificationsFcmGetDeviceInfoMessage,
   PushNotificationsFcmDeviceInfoMessage,
-} from '../../messages'
+} from './messages'
 
 @scoped(Lifecycle.ContainerScoped)
 export class PushNotificationsFcmService {

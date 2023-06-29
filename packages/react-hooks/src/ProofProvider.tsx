@@ -71,7 +71,7 @@ export const useProofNotInState = (state: ProofState | ProofState[]): ProofExcha
 }
 
 interface Props {
-  agent: Agent | undefined
+  agent: Agent
 }
 
 const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {

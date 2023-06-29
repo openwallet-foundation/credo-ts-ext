@@ -69,7 +69,7 @@ export const useCredentialNotInState = (state: CredentialState | CredentialState
 }
 
 interface Props {
-  agent: Agent | undefined
+  agent: Agent
 }
 
 const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {

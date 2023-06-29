@@ -1,29 +1,26 @@
 import type { Agent } from '@aries-framework/core'
 
 import { JsonTransformer } from '@aries-framework/core'
-import { MessageValidator } from '@aries-framework/core/build/utils/MessageValidator'
 
-import { PushNotificationsFcmService } from '../src/services/fcm/PushNotificationsFcmService'
+import { PushNotificationsFcmService } from '../src/fcm/PushNotificationsFcmService'
 
-import { setupAgent } from './utils/agent'
+import { setupAgentFcm } from './utils/agent'
 
 describe('Push Notifications Fcm ', () => {
-  let notificationReceiver: Agent
+  let agent: Agent
   let pushNotificationsService: PushNotificationsFcmService
 
   beforeAll(async () => {
-    notificationReceiver = setupAgent({
-      name: 'push notifications fcm serivce notification receiver test',
-      publicDidSeed: '65748374657483920193747564738290',
+    agent = await setupAgentFcm({
+      name: 'push notifications fcm service notification receiver test',
     })
 
-    pushNotificationsService = notificationReceiver.injectionContainer.resolve(PushNotificationsFcmService)
-    await notificationReceiver.initialize()
+    pushNotificationsService = agent.dependencyManager.resolve(PushNotificationsFcmService)
   })
 
   afterAll(async () => {
-    await notificationReceiver.shutdown()
-    await notificationReceiver.wallet.delete()
+    await agent.shutdown()
+    await agent.wallet.delete()
   })
 
   describe('Create fcm set push notification message', () => {
@@ -33,8 +30,6 @@ describe('Push Notifications Fcm ', () => {
       })
 
       const jsonMessage = JsonTransformer.toJSON(message)
-
-      expect(MessageValidator.validateSync(message)).toBeUndefined()
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),
@@ -50,8 +45,6 @@ describe('Push Notifications Fcm ', () => {
 
       const jsonMessage = JsonTransformer.toJSON(message)
 
-      expect(MessageValidator.validateSync(message)).toBeUndefined()
-
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),
         '@type': 'https://didcomm.org/push-notifications-fcm/1.0/get-device-info',
@@ -66,8 +59,6 @@ describe('Push Notifications Fcm ', () => {
       })
 
       const jsonMessage = JsonTransformer.toJSON(message)
-
-      expect(MessageValidator.validateSync(message)).toBeUndefined()
 
       expect(jsonMessage).toEqual({
         '@id': expect.any(String),

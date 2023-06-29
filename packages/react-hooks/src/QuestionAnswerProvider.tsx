@@ -1,42 +1,30 @@
 import type { Agent } from '@aries-framework/core'
-import type {
-  QuestionAnswerRecord,
-  QuestionAnswerStateChangedEvent,
-  QuestionAnswerEventTypes,
-} from '@aries-framework/question-answer'
+import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
 import type { PropsWithChildren } from 'react'
 
+import { QuestionAnswerApi, QuestionAnswerEventTypes } from '@aries-framework/question-answer'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 import * as React from 'react'
 
 interface QuestionAnswerContextInterface {
-  loading: true | 'no-qa' | 'yes-qa'
+  loading: boolean
   questionAnswerMessages: QuestionAnswerRecord[]
 }
 
 const QuestionAnswerContext = createContext<QuestionAnswerContextInterface | undefined>(undefined)
-
-const checkLoading = () => {
-  const questionAnswerContext = useContext(QuestionAnswerContext)
-
-  if (questionAnswerContext?.loading === 'no-qa') {
-    throw new Error('Question Answer hooks can only be used if Question Answer module is configured.')
-  }
-}
 
 export const useQuestionAnswer = (): { questionAnswerMessages: QuestionAnswerRecord[] } => {
   const questionAnswerContext = useContext(QuestionAnswerContext)
   if (!questionAnswerContext) {
     throw new Error('useQuestionAnswer must be used within a QuestionAnswerContextProvider')
   }
-  checkLoading()
   return questionAnswerContext
 }
 
 export const useQuestionAnswerByConnectionId = (connectionId: string): QuestionAnswerRecord[] => {
   const { questionAnswerMessages } = useQuestionAnswer()
   const messages = useMemo(
-    () => questionAnswerMessages.filter((m: QuestionAnswerRecord) => m.connectionId === connectionId),
+    () => questionAnswerMessages.filter((m) => m.connectionId === connectionId),
     [questionAnswerMessages, connectionId]
   )
   return messages
@@ -44,11 +32,11 @@ export const useQuestionAnswerByConnectionId = (connectionId: string): QuestionA
 
 export const useQuestionAnswerById = (id: string): QuestionAnswerRecord | undefined => {
   const { questionAnswerMessages } = useQuestionAnswer()
-  return questionAnswerMessages.find((c: QuestionAnswerRecord) => c.id === id)
+  return questionAnswerMessages.find((c) => c.id === id)
 }
 
 interface Props {
-  agent: Agent | undefined
+  agent: Agent
 }
 
 const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
@@ -58,14 +46,10 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      if (agent.modules.questionAnswer) {
-        const questionAnswerMessages = await agent.modules.questionAnswer.getAll()
-        setQuestionAnswerState({ questionAnswerMessages, loading: 'yes-qa' })
-      } else {
-        setQuestionAnswerState({ questionAnswerMessages: [], loading: 'no-qa' })
-      }
-    }
+    const questAnswerApi = agent.dependencyManager.resolve(QuestionAnswerApi)
+    const questionAnswerMessages = await questAnswerApi.getAll()
+
+    setQuestionAnswerState({ questionAnswerMessages, loading: false })
   }
 
   useEffect(() => {
@@ -73,29 +57,29 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
   }, [agent])
 
   useEffect(() => {
-    if (!questionAnswerState.loading) {
-      const listener = (event: QuestionAnswerStateChangedEvent) => {
-        const newQuestionAnswerState = [...questionAnswerState.questionAnswerMessages]
-        const index = newQuestionAnswerState.findIndex(
-          (questionAnswerMessage) => questionAnswerMessage.id === event.payload.questionAnswerRecord.id
-        )
-        if (index > -1) {
-          newQuestionAnswerState[index] = event.payload.questionAnswerRecord
-        } else {
-          newQuestionAnswerState.unshift(event.payload.questionAnswerRecord)
-        }
+    if (questionAnswerState.loading) return
 
-        setQuestionAnswerState({
-          loading: questionAnswerState.loading,
-          questionAnswerMessages: newQuestionAnswerState,
-        })
+    const listener = (event: QuestionAnswerStateChangedEvent) => {
+      const newQuestionAnswerState = [...questionAnswerState.questionAnswerMessages]
+      const index = newQuestionAnswerState.findIndex(
+        (questionAnswerMessage) => questionAnswerMessage.id === event.payload.questionAnswerRecord.id
+      )
+      if (index > -1) {
+        newQuestionAnswerState[index] = event.payload.questionAnswerRecord
+      } else {
+        newQuestionAnswerState.unshift(event.payload.questionAnswerRecord)
       }
 
-      agent?.events.on('QuestionAnswerStateChanged' as QuestionAnswerEventTypes, listener)
+      setQuestionAnswerState({
+        loading: questionAnswerState.loading,
+        questionAnswerMessages: newQuestionAnswerState,
+      })
+    }
 
-      return () => {
-        agent?.events.off('QuestionAnswerStateChanged' as QuestionAnswerEventTypes, listener)
-      }
+    agent.events.on(QuestionAnswerEventTypes.QuestionAnswerStateChanged, listener)
+
+    return () => {
+      agent.events.off(QuestionAnswerEventTypes.QuestionAnswerStateChanged, listener)
     }
   }, [questionAnswerState, agent])
 

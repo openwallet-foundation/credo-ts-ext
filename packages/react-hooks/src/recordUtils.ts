@@ -9,6 +9,7 @@ import type {
 import type { Constructor } from '@aries-framework/core/build/utils/mixins'
 
 import { RepositoryEventTypes } from '@aries-framework/core'
+import { useMemo } from 'react'
 import { map, filter, pipe } from 'rxjs'
 
 // BaseRecordAny makes sure we allow any type to be used for the generic
@@ -16,7 +17,7 @@ import { map, filter, pipe } from 'rxjs'
 // which means if you have a ConnectionRecord and BaseRecord with default properties
 // their types are incompatible.
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-type BaseRecordAny = BaseRecord<any, any, any>
+export type BaseRecordAny = BaseRecord<any, any, any>
 type RecordClass<R extends BaseRecordAny> = Constructor<R> & { type: string }
 export interface RecordsState<R extends BaseRecordAny> {
   loading: boolean
@@ -108,7 +109,7 @@ export const recordsRemovedByType = <R extends BaseRecordAny>(
     .pipe(filterByType(recordClass))
 }
 
-export const checkModuleEnabled = (agent: Agent, ModuleClass: Constructor) => {
+export const isModuleRegistered = (agent: Agent, ModuleClass: Constructor) => {
   if (!agent) {
     throw new Error('Agent is required to check if a module is enabled')
   }
@@ -118,4 +119,8 @@ export const checkModuleEnabled = (agent: Agent, ModuleClass: Constructor) => {
   )
 
   return foundModule !== undefined
+}
+
+export const useIsModuleRegistered = (agent: Agent, ModuleClass: Constructor) => {
+  return useMemo(() => isModuleRegistered(agent, ModuleClass), [agent, ModuleClass])
 }
