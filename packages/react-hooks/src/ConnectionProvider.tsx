@@ -61,44 +61,8 @@ export const useConnectionById = (id: string): ConnectionRecord | undefined => {
   return connections.find((c: ConnectionRecord) => c.id === id)
 }
 
-/**
- * @deprecated filtering by state can now be done by passing options to useConnections hook
- */
-export const useConnectionByState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
-  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
-
-  const { records: connections } = useConnections()
-
-  const filteredConnections = useMemo(
-    () =>
-      connections.filter((r: ConnectionRecord) => {
-        if (states.includes(r.state)) return r
-      }),
-    [connections]
-  )
-  return filteredConnections
-}
-
-/**
- * @deprecated filtering by state can now be done by passing options to useConnections hook
- */
-export const useConnectionNotInState = (state: DidExchangeState | DidExchangeState[]): ConnectionRecord[] => {
-  const states = useMemo(() => (typeof state === 'string' ? [state] : state), [state])
-
-  const { records: connections } = useConnections()
-
-  const filteredConnections = useMemo(
-    () =>
-      connections.filter((r: ConnectionRecord) => {
-        if (!states.includes(r.state)) return r
-      }),
-    [connections]
-  )
-  return filteredConnections
-}
-
 interface Props {
-  agent: Agent | undefined
+  agent: Agent
 }
 
 const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {

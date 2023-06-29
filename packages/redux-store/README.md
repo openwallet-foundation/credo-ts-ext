@@ -30,16 +30,4 @@
 
 Aries Framework JavaScript Redux Store is a wrapper around [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git) (AFJ), built with [Redux Toolkit](https://redux-toolkit.js.org/). It can be used to build mobile applications in React Native.
 
-### Installation
-
-Make sure you have set up the correct version of Aries Framework JavaScript according to the AFJ repository. To find out which version of AFJ you need to have installed you can run the following command. This will list the required peer dependency for `@aries-framework/core`.
-
-```sh
-npm info "@aries-framework/redux-store" peerDependencies
-```
-
-Then add the redux store package to your project.
-
-```sh
-yarn add @aries-framework/redux-store
-```
+For documentation on installation and usage of the Redux Store package, refer to the [Docs](https://aries.js.org/guides/0.4/extensions/redux-store).

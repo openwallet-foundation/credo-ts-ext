@@ -25,16 +25,17 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aries-framework/question-answer": "^0.3.2",
+    "@aries-framework/question-answer": "^0.4.0",
+    "@types/node-fetch": "^2",
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
-    "@aries-framework/core": "0.3.3",
+    "@aries-framework/core": "0.4.0",
     "react": "^18.0.0",
     "@types/react": "^18.2.14"
   },
   "peerDependencies": {
-    "@aries-framework/core": "^0.3.3",
+    "@aries-framework/core": "^0.4.0",
     "react": ">=17.0.0 <19.0.0"
   }
 }

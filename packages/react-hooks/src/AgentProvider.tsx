@@ -3,66 +3,49 @@ import type { PropsWithChildren } from 'react'
 
 import { QuestionAnswerModule } from '@aries-framework/question-answer'
 import * as React from 'react'
-import { createContext, useState, useEffect, useContext, useMemo } from 'react'
+import { createContext, useState, useContext } from 'react'
 
 import BasicMessageProvider from './BasicMessageProvider'
 import ConnectionProvider from './ConnectionProvider'
 import CredentialProvider from './CredentialProvider'
 import ProofProvider from './ProofProvider'
 import QuestionAnswerProvider from './QuestionAnswerProvider'
-import { checkModuleEnabled } from './recordUtils'
+import { useIsModuleRegistered } from './recordUtils'
 
-interface AgentContextInterface {
+interface AgentContextInterface<AppAgent extends Agent = Agent> {
   loading: boolean
-  agent?: Agent
+  agent: AppAgent
 }
 
 const AgentContext = createContext<AgentContextInterface | undefined>(undefined)
 
-export const useAgent = () => {
+export const useAgent = <AppAgent extends Agent>() => {
   const agentContext = useContext(AgentContext)
   if (!agentContext) {
     throw new Error('useAgent must be used within a AgentContextProvider')
   }
-  return agentContext
+  return agentContext as AgentContextInterface<AppAgent>
 }
 
 interface Props {
-  agent: Agent | undefined
+  agent: Agent
 }
 
 const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
-  const [agentState, setAgentState] = useState<AgentContextInterface>({
-    loading: true,
+  const isQaRegistered = useIsModuleRegistered(agent, QuestionAnswerModule)
+  const [agentState] = useState<AgentContextInterface>({
+    loading: false,
     agent,
   })
-
-  const [qaEnabled, setQaEnabled] = useState<boolean>(false)
-
-  const setInitialState = async () => {
-    if (agent) {
-      setAgentState({ agent, loading: false })
-      const isQuestionAnswerModuleEnabled = useMemo(() => checkModuleEnabled(agent, QuestionAnswerModule), [agent])
-      setQaEnabled(isQuestionAnswerModuleEnabled)
-    }
-  }
-
-  useEffect(() => {
-    setInitialState()
-  }, [agent])
 
   return (
     <AgentContext.Provider value={agentState}>
       <ConnectionProvider agent={agent}>
         <CredentialProvider agent={agent}>
           <ProofProvider agent={agent}>
-            {qaEnabled ? (
-              <QuestionAnswerProvider agent={agent}>
-                <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
-              </QuestionAnswerProvider>
-            ) : (
-              <BasicMessageProvider agent={agent}>{children}</BasicMessageProvider>
-            )}
+            <BasicMessageProvider agent={agent}>
+              {isQaRegistered ? <QuestionAnswerProvider agent={agent}>{children} </QuestionAnswerProvider> : children}
+            </BasicMessageProvider>
           </ProofProvider>
         </CredentialProvider>
       </ConnectionProvider>

@@ -27,15 +27,17 @@ export const useBasicMessages = () => {
 
 export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessageRecord[] => {
   const { records: basicMessages } = useBasicMessages()
+
   const messages = useMemo(
-    () => basicMessages.filter((m: BasicMessageRecord) => m.connectionId === connectionId),
+    () => basicMessages.filter((m) => m.connectionId === connectionId),
     [basicMessages, connectionId]
   )
+
   return messages
 }
 
 interface Props {
-  agent: Agent | undefined
+  agent: Agent
 }
 
 const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {

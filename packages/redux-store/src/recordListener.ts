@@ -8,9 +8,12 @@ import { createAction } from '@reduxjs/toolkit'
 
 import { isRecordType } from './utils'
 
-export const addRecord = createAction<BaseRecord>('record/add')
-export const updateRecord = createAction<BaseRecord>('record/update')
-export const removeRecord = createAction<BaseRecord | { id: string; type: string }>('record/remove')
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type BaseRecordAny = BaseRecord<any, any, any>
+
+export const addRecord = createAction<BaseRecordAny>('record/add')
+export const updateRecord = createAction<BaseRecordAny>('record/update')
+export const removeRecord = createAction<BaseRecordAny | { id: string; type: string }>('record/remove')
 
 /**
  * Starts an EventListener that listens for record events
@@ -20,22 +23,22 @@ export const removeRecord = createAction<BaseRecord | { id: string; type: string
  * This function **must** be called. If you don't, the store won't be updated.
  */
 export const startRecordListeners = (agent: Agent, store: Store) => {
-  const onDeleted = (event: RecordDeletedEvent<BaseRecord>) => {
+  const onDeleted = (event: RecordDeletedEvent<BaseRecordAny>) => {
     const record = event.payload.record
     store.dispatch(removeRecord(record))
   }
 
-  const onSaved = (event: RecordSavedEvent<BaseRecord>) => {
+  const onSaved = (event: RecordSavedEvent<BaseRecordAny>) => {
     store.dispatch(addRecord(event.payload.record))
   }
 
-  const onUpdated = (event: RecordUpdatedEvent<BaseRecord>) => {
+  const onUpdated = (event: RecordUpdatedEvent<BaseRecordAny>) => {
     store.dispatch(updateRecord(event.payload.record))
   }
 
-  agent.events.on<RecordDeletedEvent<BaseRecord>>(RepositoryEventTypes.RecordDeleted, onDeleted)
-  agent.events.on<RecordSavedEvent<BaseRecord>>(RepositoryEventTypes.RecordSaved, onSaved)
-  agent.events.on<RecordUpdatedEvent<BaseRecord>>(RepositoryEventTypes.RecordUpdated, onUpdated)
+  agent.events.on<RecordDeletedEvent<BaseRecordAny>>(RepositoryEventTypes.RecordDeleted, onDeleted)
+  agent.events.on<RecordSavedEvent<BaseRecordAny>>(RepositoryEventTypes.RecordSaved, onSaved)
+  agent.events.on<RecordUpdatedEvent<BaseRecordAny>>(RepositoryEventTypes.RecordUpdated, onUpdated)
 
   return () => {
     agent.events.off(RepositoryEventTypes.RecordDeleted, onDeleted)
@@ -46,8 +49,8 @@ export const startRecordListeners = (agent: Agent, store: Store) => {
 
 export const removeRecordInState = (
   recordType: RecordConstructor,
-  records: SerializedInstance<BaseRecord>[],
-  record: BaseRecord | { id: string; type: string }
+  records: SerializedInstance<BaseRecordAny>[],
+  record: BaseRecordAny | { id: string; type: string }
 ) => {
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return
@@ -62,8 +65,8 @@ export const removeRecordInState = (
 
 export const addRecordInState = (
   recordType: RecordConstructor,
-  records: SerializedInstance<BaseRecord>[],
-  record: BaseRecord
+  records: SerializedInstance<BaseRecordAny>[],
+  record: BaseRecordAny
 ) => {
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return
@@ -73,8 +76,8 @@ export const addRecordInState = (
 
 export const updateRecordInState = (
   recordType: RecordConstructor,
-  records: SerializedInstance<BaseRecord>[],
-  record: BaseRecord
+  records: SerializedInstance<BaseRecordAny>[],
+  record: BaseRecordAny
 ) => {
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return

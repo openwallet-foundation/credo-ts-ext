@@ -1,6 +1,6 @@
 import AgentProvider, { useAgent } from './AgentProvider'
 import { useBasicMessages, useBasicMessagesByConnectionId } from './BasicMessageProvider'
-import { useConnections, useConnectionById, useConnectionByState, useConnectionNotInState } from './ConnectionProvider'
+import { useConnections, useConnectionById } from './ConnectionProvider'
 import {
   useCredentials,
   useCredentialById,
@@ -18,8 +18,6 @@ export {
   useBasicMessagesByConnectionId,
   useConnections,
   useConnectionById,
-  useConnectionByState,
-  useConnectionNotInState,
   useCredentials,
   useCredentialById,
   useCredentialByState,

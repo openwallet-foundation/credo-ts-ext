@@ -3,7 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@aries-framework/*": ["packages/*/src"]
+      "@aries-framework/react-hooks": ["packages/react-hooks/src"],
+      "@aries-framework/rest": ["packages/rest/src"],
+      "@aries-framework/redux-store": ["packages/redux-store/src"],
+      "@aries-framework/transport-ble": ["packages/transport-ble/src"],
+      "@aries-framework/push-notifications": ["packages/push-notifications/src"]
     },
     "types": ["jest", "node"]
   },
