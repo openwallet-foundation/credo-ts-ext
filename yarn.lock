@@ -10,10 +10,10 @@
     "@jridgewell/gen-mapping" "^0.1.0"
     "@jridgewell/trace-mapping" "^0.3.9"
 
-"@animo-id/react-native-ble-didcomm@^0.4.2":
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/@animo-id/react-native-ble-didcomm/-/react-native-ble-didcomm-0.4.2.tgz#cbdbcda4c74a1e23842a16ea40806f303259d4ec"
-  integrity sha512-KVNr3BnXLhEpZ10h2bSMp3gShlgKnsE3A9vClmbRk2BqnuUm4dhRkGwwV4lviAubDghwba4RzKHesT44njSHxw==
+"@animo-id/react-native-ble-didcomm@^0.5.1":
+  version "0.5.1"
+  resolved "https://registry.yarnpkg.com/@animo-id/react-native-ble-didcomm/-/react-native-ble-didcomm-0.5.1.tgz#01e5946af850aaa5144366ffe706d3aecdbc5e8f"
+  integrity sha512-gbye6o/9RaANX6nTqwDp3iZPARbT+RKOjWZ+E0cG3Niab50rhp01Q6QyhG4lJpSmoXzsoZkuN68uX0tfTqpB6A==
   dependencies:
     convert-string "0.1.0"
 
@@ -47,7 +47,7 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@0.3.3", "@aries-framework/core@^0.3.2":
+"@aries-framework/core@0.3.3":
   version "0.3.3"
   resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.3.3.tgz#7bb097366bef8f53225785881376d56311edaf83"
   integrity sha512-IJECvx+ZUSTRUE43oGoOQuQqDFR7dycpwY+cYgAIXF9tjJ04u9nCNedf+aL6tFDNAbZXlPclTED3oSzvXl7AAQ==
@@ -81,7 +81,7 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.8"
 
-"@aries-framework/core@^0.4.0":
+"@aries-framework/core@0.4.0", "@aries-framework/core@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.0.tgz#6af11446174d8f690aa1bf4abf6f61ad47a05b52"
   integrity sha512-Z/rTgpJMKTl9iQQd8GnNEV5wCZKdV+kkd+Y4e/KS+j+6yMOxrgaVGcAKlcFIPcHUc6l1iOetJFeVLSwftXW2Kg==
