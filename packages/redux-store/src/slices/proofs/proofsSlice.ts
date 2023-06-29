@@ -1,7 +1,7 @@
 import type { SerializedInstance } from '../../types'
 import type { SerializedError } from '@reduxjs/toolkit'
 
-import { ProofRecord, JsonTransformer } from '@aries-framework/core'
+import { ProofExchangeRecord, JsonTransformer } from '@aries-framework/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
@@ -17,7 +17,7 @@ import { ProofsThunks } from './proofsThunks'
 
 interface ProofsState {
   proofs: {
-    records: SerializedInstance<ProofRecord>[]
+    records: SerializedInstance<ProofExchangeRecord>[]
     isLoading: boolean
   }
   error: null | SerializedError
@@ -50,9 +50,15 @@ const proofsSlice = createSlice({
         state.proofs.records = action.payload.map((p) => JsonTransformer.toJSON(p))
       })
       // record events
-      .addCase(addRecord, (state, action) => addRecordInState(ProofRecord, state.proofs.records, action.payload))
-      .addCase(removeRecord, (state, action) => removeRecordInState(ProofRecord, state.proofs.records, action.payload))
-      .addCase(updateRecord, (state, action) => updateRecordInState(ProofRecord, state.proofs.records, action.payload))
+      .addCase(addRecord, (state, action) =>
+        addRecordInState(ProofExchangeRecord, state.proofs.records, action.payload)
+      )
+      .addCase(removeRecord, (state, action) =>
+        removeRecordInState(ProofExchangeRecord, state.proofs.records, action.payload)
+      )
+      .addCase(updateRecord, (state, action) =>
+        updateRecordInState(ProofExchangeRecord, state.proofs.records, action.payload)
+      )
   },
 })
 

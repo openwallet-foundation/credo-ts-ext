@@ -37,7 +37,7 @@ type BaseRecordAny = BaseRecord<any, any, any>
 type RecordConstructor<RecordType extends BaseRecordAny = BaseRecordAny> = Constructor<RecordType> & { type: string }
 
 const isRecordType = <RecordType extends BaseRecordAny>(
-  record: BaseRecord,
+  record: BaseRecord | { id: string; type: string },
   expectedRecordType: RecordConstructor<RecordType>
 ): record is RecordType => {
   return record.type === expectedRecordType.type
