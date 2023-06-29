@@ -1,4 +1,4 @@
-import type { FcmDeviceInfo } from '../../services/fcm'
+import type { FcmDeviceInfo } from '../models'
 
 import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 import { Expose } from 'class-transformer'

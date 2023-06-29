@@ -8,18 +8,22 @@
       "packages/*"
     ],
     "nohoist": [
-      "@aries-framework/node",
-      "**/@aries-framework/node",
-      "**/@aries-framework/node/**",
-      "@aries-framework/node/**",
-      "@aries-framework/core",
-      "**/@aries-framework/core",
-      "**/@aries-framework/core/**",
-      "@aries-framework/core/**",
+      "@aries-framework/*",
+      "**/@aries-framework/*",
+      "**/@aries-framework/*/**",
+      "@aries-framework/*/**",
+      "@hyperledger/*",
+      "**/@hyperledger/*",
+      "**/@hyperledger/*/**",
+      "@hyperledger/*/**",
       "tsyringe",
       "**/tsyringe",
       "**/tsyringe/**",
       "tsyringe/**",
+      "node-fetch",
+      "**/node-fetch",
+      "**/node-fetch/**",
+      "node-fetch/**",
       "reflect-metadata",
       "**/reflect-metadata",
       "**/reflect-metadata/**",
@@ -75,6 +79,7 @@
     "node": ">= 12"
   },
   "resolutions": {
-    "@types/indy-sdk": "1.16.9"
+    "@types/indy-sdk": "1.16.9",
+    "@jest/types": "^29.5.0"
   }
 }
