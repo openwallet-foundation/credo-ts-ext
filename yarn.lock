@@ -1397,29 +1397,7 @@
     slash "^3.0.0"
     write-file-atomic "^4.0.2"
 
-"@jest/types@^26.6.2":
-  version "26.6.2"
-  resolved "https://registry.yarnpkg.com/@jest/types/-/types-26.6.2.tgz#bef5a532030e1d88a2f5a6d933f84e97226ed48e"
-  integrity sha512-fC6QCp7Sc5sX6g8Tvbmj4XUTbyrik0akgRy03yjXbQaBWWNWGE7SGtJk98m0N8nzegD/7SggrUlivxo5ax4KWQ==
-  dependencies:
-    "@types/istanbul-lib-coverage" "^2.0.0"
-    "@types/istanbul-reports" "^3.0.0"
-    "@types/node" "*"
-    "@types/yargs" "^15.0.0"
-    chalk "^4.0.0"
-
-"@jest/types@^27.5.1":
-  version "27.5.1"
-  resolved "https://registry.yarnpkg.com/@jest/types/-/types-27.5.1.tgz#3c79ec4a8ba61c170bf937bcf9e98a9df175ec80"
-  integrity sha512-Cx46iJ9QpwQTjIdq5VJu2QTMMs3QlEjI0x1QbBP5W1+nMzyc2XmimiRR/CbX9TO0cPTeUlxWMOu8mslYsJ8DEw==
-  dependencies:
-    "@types/istanbul-lib-coverage" "^2.0.0"
-    "@types/istanbul-reports" "^3.0.0"
-    "@types/node" "*"
-    "@types/yargs" "^16.0.0"
-    chalk "^4.0.0"
-
-"@jest/types@^29.5.0":
+"@jest/types@^26.6.2", "@jest/types@^27.5.1", "@jest/types@^29.5.0":
   version "29.5.0"
   resolved "https://registry.yarnpkg.com/@jest/types/-/types-29.5.0.tgz#f59ef9b031ced83047c67032700d8c807d6e1593"
   integrity sha512-qbu7kN6czmVRc3xWFQcAN03RAUamgppVUdXrvl1Wr3jlNF93o9mJbGcDWrwGB6ht44u7efB1qCFgVQmca24Uog==
@@ -2329,20 +2307,6 @@
   version "21.0.0"
   resolved "https://registry.yarnpkg.com/@types/yargs-parser/-/yargs-parser-21.0.0.tgz#0c60e537fa790f5f9472ed2776c2b71ec117351b"
   integrity sha512-iO9ZQHkZxHn4mSakYV0vFHAVDyEOIJQrV2uZ06HxEPcx+mt8swXoZHIbaaJ2crJYFfErySgktuTZ3BeLz+XmFA==
-
-"@types/yargs@^15.0.0":
-  version "15.0.15"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-15.0.15.tgz#e609a2b1ef9e05d90489c2f5f45bbfb2be092158"
-  integrity sha512-IziEYMU9XoVj8hWg7k+UJrXALkGFjWJhn5QFEv9q4p+v40oZhSuC135M38st8XPjICL7Ey4TV64ferBGUoJhBg==
-  dependencies:
-    "@types/yargs-parser" "*"
-
-"@types/yargs@^16.0.0":
-  version "16.0.5"
-  resolved "https://registry.yarnpkg.com/@types/yargs/-/yargs-16.0.5.tgz#12cc86393985735a283e387936398c2f9e5f88e3"
-  integrity sha512-AxO/ADJOBFJScHbWhq2xAhlWP24rY4aCEG/NFaMvbT3X2MgRsLjhjQwsn0Zi5zn0LG9jUhCCZMeX9Dkuw6k+vQ==
-  dependencies:
-    "@types/yargs-parser" "*"
 
 "@types/yargs@^17.0.8":
   version "17.0.24"

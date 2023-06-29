@@ -79,6 +79,7 @@
     "node": ">= 12"
   },
   "resolutions": {
-    "@types/indy-sdk": "1.16.9"
+    "@types/indy-sdk": "1.16.9",
+    "@jest/types": "^29.5.0"
   }
 }
