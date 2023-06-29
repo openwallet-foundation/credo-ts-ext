@@ -28,7 +28,7 @@ export const useExchangesByConnectionId = (connectionId: string): BaseRecord[] |
 }
 
 interface Props {
-  agent: Agent | undefined
+  agent: Agent
 }
 
 const ExchangesProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
