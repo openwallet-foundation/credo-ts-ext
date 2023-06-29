@@ -1,5 +1,23 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.4.0...push-notifications-v0.5.0) (2023-06-29)
+
+
+### ⚠ BREAKING CHANGES
+
+* **react-hooks:** update to afj 0.4.0 (#216)
+* **push-notifications:** update to afj 0.4.0 (#209)
+
+### Features
+
+* @aries-framework/transport-ble package ([#179](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/179)) ([5c46132](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/5c461322df0102f2b075b386447c7fd68575c278))
+
+
+### Miscellaneous Chores
+
+* **push-notifications:** update to afj 0.4.0 ([#209](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/209)) ([7488de6](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/7488de64ee029dd58b6452532b4ef067497678c6))
+* **react-hooks:** update to afj 0.4.0 ([#216](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/216)) ([1a2df27](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/1a2df2788a642cc715d4a033526174eab486cfa0))
+
 ## [0.4.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.3.0...push-notifications-v0.4.0) (2022-06-28)
 
 
