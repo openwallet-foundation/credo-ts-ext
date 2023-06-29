@@ -36,5 +36,6 @@ export class BleOutboundTransport implements OutboundTransport {
 
   public async stop(): Promise<void> {
     this.logger?.debug('Stopping BLE outbound transport')
+    await this.peripheral.shutdown()
   }
 }

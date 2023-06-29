@@ -24,13 +24,13 @@
     "prepublishOnly": "yarn run build"
   },
   "devDependencies": {
-    "@animo-id/react-native-ble-didcomm": "^0.4.2",
-    "@aries-framework/core": "^0.3.2",
+    "@animo-id/react-native-ble-didcomm": "^0.5.1",
+    "@aries-framework/core": "0.4.0",
     "react-native": "0.72.0"
   },
   "peerDependencies": {
-    "@animo-id/react-native-ble-didcomm": "^0.4.2",
-    "@aries-framework/core": "^0.3.2",
+    "@animo-id/react-native-ble-didcomm": "^0.5.1",
+    "@aries-framework/core": "^0.4.0",
     "react-native": ">=0.60.6"
   }
 }
