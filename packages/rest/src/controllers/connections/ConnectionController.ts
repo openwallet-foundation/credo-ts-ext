@@ -49,7 +49,7 @@ export class ConnectionController extends Controller {
     } else {
       const connectionRepository = this.agent.dependencyManager.resolve(ConnectionRepository)
 
-      const connections = await connectionRepository.findByQuery({
+      const connections = await connectionRepository.findByQuery(this.agent.context, {
         alias,
         myDid,
         theirDid,

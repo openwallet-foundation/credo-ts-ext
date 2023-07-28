@@ -1,3 +1,4 @@
+import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@aries-framework/anoncreds'
 import type {
   AutoAcceptProof,
   BasicMessageRole,
@@ -6,10 +7,10 @@ import type {
   DidExchangeState,
   OutOfBandInvitationOptions,
   OutOfBandRecordProps,
-  ProofRecordProps,
   ProofState,
   OutOfBandRole,
   OutOfBandState,
+  ProofExchangeRecordProps,
 } from '@aries-framework/core'
 
 /**
@@ -184,33 +185,27 @@ export const CredentialExchangeRecordExample = {
   protocolVersion: 'v1',
 }
 
-export const ProofRecordExample = {
-  _tags: {
-    state: 'proposal-sent' as ProofState,
-    threadId: '0019d466-5eea-4269-8c40-031b4896c5b7',
-    connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
-  } as ProofRecordProps,
-  metadata: {},
+export const ProofRecordExample: ProofExchangeRecordProps = {
   id: '821f9b26-ad04-4f56-89b6-e2ef9c72b36e',
-  createdAt: new Date('2022-01-01T00:00:00.000Z'),
+  protocolVersion: 'v2',
   state: 'proposal-sent' as ProofState,
-  connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
   threadId: '0019d466-5eea-4269-8c40-031b4896c5b7',
+  connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
+  createdAt: new Date('2022-01-01T00:00:00.000Z'),
   autoAcceptProof: 'always' as AutoAcceptProof,
 }
 
-export const SchemaExample = {
-  ver: '1.0',
+export const SchemaExample: AnonCredsSchema & { id: string } = {
   id: 'WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0',
+  issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
   name: 'schema',
   version: '1.0',
   attrNames: ['string'],
-  seqNo: 351936,
 }
 
-export const CredentialDefinitionExample = {
-  ver: '1.0',
+export const CredentialDefinitionExample: AnonCredsCredentialDefinition & { id: string } = {
   id: 'WgWxqztrNooG92RXvxSTWv:3:CL:20:tag',
+  issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
   schemaId: '351936',
   type: 'CL',
   tag: 'definition',

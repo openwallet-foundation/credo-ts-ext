@@ -10,7 +10,6 @@ const run = async () => {
 
   const agent = await setupAgent({
     port: 3001,
-    publicDidSeed: 'testtesttesttesttesttesttesttest',
     endpoints: [endpoint],
     name: 'Aries Test Agent',
   })

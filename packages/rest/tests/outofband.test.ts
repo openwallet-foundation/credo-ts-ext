@@ -1,4 +1,10 @@
-import type { Agent, OutOfBandRecord, ConnectionRecord, OutOfBandInvitation } from '@aries-framework/core'
+import type {
+  Agent,
+  OutOfBandRecord,
+  ConnectionRecord,
+  OutOfBandInvitation,
+  ConnectionInvitationMessage,
+} from '@aries-framework/core'
 import type { Express } from 'express'
 
 import { JsonTransformer, AgentMessage } from '@aries-framework/core'
@@ -10,6 +16,7 @@ import {
   getTestAgent,
   getTestConnection,
   getTestOutOfBandInvitation,
+  getTestOutOfBandLegacyInvitation,
   getTestOutOfBandRecord,
   objectToJson,
 } from './utils/helpers'
@@ -20,6 +27,7 @@ describe('OutOfBandController', () => {
   let bobAgent: Agent
   let outOfBandRecord: OutOfBandRecord
   let outOfBandInvitation: OutOfBandInvitation
+  let outOfBandLegacyInvitation: ConnectionInvitationMessage
   let connectionRecord: ConnectionRecord
 
   beforeAll(async () => {
@@ -28,6 +36,7 @@ describe('OutOfBandController', () => {
     app = await setupServer(bobAgent, { port: 3000 })
     outOfBandRecord = getTestOutOfBandRecord()
     outOfBandInvitation = getTestOutOfBandInvitation()
+    outOfBandLegacyInvitation = getTestOutOfBandLegacyInvitation()
     connectionRecord = getTestConnection()
   })
 
@@ -84,9 +93,7 @@ describe('OutOfBandController', () => {
         invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({
           domain: bobAgent.config.endpoints[0],
         }),
-        invitation: outOfBandRecord.outOfBandInvitation.toJSON({
-          useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
-        }),
+        invitation: outOfBandRecord.outOfBandInvitation.toJSON(),
         outOfBandRecord: outOfBandRecord.toJSON(),
       })
     })
@@ -116,18 +123,19 @@ describe('OutOfBandController', () => {
     test('should return out of band invitation', async () => {
       jest.spyOn(bobAgent.oob, 'createLegacyInvitation').mockResolvedValueOnce({
         outOfBandRecord: outOfBandRecord,
-        invitation: outOfBandInvitation,
+        invitation: outOfBandLegacyInvitation,
       })
 
       const response = await request(app).post('/oob/create-legacy-invitation')
 
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual({
-        invitationUrl: outOfBandInvitation.toUrl({
+        invitationUrl: outOfBandLegacyInvitation.toUrl({
           domain: bobAgent.config.endpoints[0],
+          useDidSovPrefixWhereAllowed: bobAgent.config.useDidSovPrefixWhereAllowed,
         }),
-        invitation: outOfBandInvitation.toJSON({
-          useLegacyDidSovPrefix: bobAgent.config.useLegacyDidSovPrefix,
+        invitation: outOfBandLegacyInvitation.toJSON({
+          useDidSovPrefixWhereAllowed: bobAgent.config.useDidSovPrefixWhereAllowed,
         }),
         outOfBandRecord: outOfBandRecord.toJSON(),
       })
@@ -135,7 +143,7 @@ describe('OutOfBandController', () => {
     test('should use parameters', async () => {
       const spy = jest.spyOn(bobAgent.oob, 'createLegacyInvitation').mockResolvedValueOnce({
         outOfBandRecord: outOfBandRecord,
-        invitation: outOfBandInvitation,
+        invitation: outOfBandLegacyInvitation,
       })
 
       const params = {

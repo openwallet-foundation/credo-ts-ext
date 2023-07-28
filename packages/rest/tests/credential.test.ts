@@ -62,7 +62,7 @@ describe('CredentialController', () => {
 
       const response = await request(app).get('/credentials').query({ state: testCredential.state })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         state: testCredential.state,
       })
 
@@ -78,7 +78,7 @@ describe('CredentialController', () => {
 
       const response = await request(app).get('/credentials').query({ threadId: testCredential.threadId })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         threadId: testCredential.threadId,
       })
 
@@ -94,7 +94,7 @@ describe('CredentialController', () => {
 
       const response = await request(app).get('/credentials').query({ connectionId: testCredential.connectionId })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         connectionId: testCredential.connectionId,
       })
 
@@ -247,7 +247,7 @@ describe('CredentialController', () => {
       )
 
       // Emit event
-      bobAgent.events.emit<CredentialStateChangedEvent>({
+      bobAgent.events.emit<CredentialStateChangedEvent>(bobAgent.context, {
         type: CredentialEventTypes.CredentialStateChanged,
         payload: {
           credentialRecord: new CredentialExchangeRecord({
@@ -315,6 +315,9 @@ describe('CredentialController', () => {
             },
           },
           previousState: CredentialState.CredentialIssued,
+        },
+        metadata: {
+          contextCorrelationId: 'default',
         },
       })
     })

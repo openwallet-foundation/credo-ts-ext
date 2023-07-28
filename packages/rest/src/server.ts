@@ -1,5 +1,6 @@
 import 'reflect-metadata'
 import type { ServerConfig } from './utils/ServerConfig'
+import type { RestAgent } from './utils/agent'
 import type { Response as ExResponse, Request as ExRequest, NextFunction } from 'express'
 import type { Exception } from 'tsoa'
 
@@ -17,8 +18,8 @@ import { credentialEvents } from './events/CredentialEvents'
 import { proofEvents } from './events/ProofEvents'
 import { RegisterRoutes } from './routes/routes'
 
-export const setupServer = async (agent: Agent, config: ServerConfig) => {
-  container.registerInstance(Agent, agent)
+export const setupServer = async (agent: RestAgent, config: ServerConfig) => {
+  container.registerInstance(Agent, agent as Agent)
 
   const app = config.app ?? express()
   if (config.cors) app.use(cors())

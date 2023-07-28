@@ -1,3 +1,4 @@
+import type { RestAgent } from '../../utils/agent'
 import type { CredentialExchangeRecordProps } from '@aries-framework/core'
 
 import { CredentialRepository, CredentialState, Agent, RecordNotFoundError } from '@aries-framework/core'
@@ -18,7 +19,7 @@ import {
 @Route('/credentials')
 @injectable()
 export class CredentialController extends Controller {
-  private agent: Agent
+  private agent: RestAgent
 
   public constructor(agent: Agent) {
     super()
@@ -39,7 +40,7 @@ export class CredentialController extends Controller {
   ) {
     const credentialRepository = this.agent.dependencyManager.resolve(CredentialRepository)
 
-    const credentials = await credentialRepository.findByQuery({
+    const credentials = await credentialRepository.findByQuery(this.agent.context, {
       connectionId,
       threadId,
       state,

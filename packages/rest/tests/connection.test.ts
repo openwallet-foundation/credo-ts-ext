@@ -45,7 +45,7 @@ describe('ConnectionController', () => {
 
       const response = await request(app).get('/connections').query({ state: connection.state })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         state: connection.state,
       })
 
@@ -61,7 +61,7 @@ describe('ConnectionController', () => {
 
       const response = await request(app).get('/connections').query({ outOfBandId: connection.outOfBandId })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         outOfBandId: connection.outOfBandId,
       })
 
@@ -77,7 +77,7 @@ describe('ConnectionController', () => {
 
       const response = await request(app).get('/connections').query({ alias: connection.alias })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         alias: connection.alias,
       })
 
@@ -93,7 +93,7 @@ describe('ConnectionController', () => {
 
       const response = await request(app).get('/connections').query({ myDid: connection.did })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         myDid: connection.did,
       })
 
@@ -109,7 +109,7 @@ describe('ConnectionController', () => {
 
       const response = await request(app).get('/connections').query({ theirDid: connection.theirDid })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         theirDid: connection.theirDid,
       })
 
@@ -125,7 +125,7 @@ describe('ConnectionController', () => {
 
       const response = await request(app).get('/connections').query({ theirLabel: connection.theirLabel })
 
-      expect(findByQuerySpy).toBeCalledWith({
+      expect(findByQuerySpy).toBeCalledWith(bobAgent.context, {
         theirLabel: connection.theirLabel,
       })
 

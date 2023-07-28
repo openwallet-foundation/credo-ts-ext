@@ -1,26 +1,29 @@
+import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@aries-framework/anoncreds'
 import type { ConnectionRecordProps } from '@aries-framework/core'
 
 import {
   AgentMessage,
-  OutOfBandInvitation,
   OutOfBandRecord,
   ConnectionRecord,
   CredentialExchangeRecord,
   DidExchangeRole,
   DidExchangeState,
   JsonTransformer,
-  ProofRecord,
+  ProofExchangeRecord,
+  OutOfBandInvitation,
+  ConnectionInvitationMessage,
 } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
+import { randomUUID } from 'crypto'
 
 import { setupAgent } from '../../src/utils/agent'
 
 export async function getTestAgent(name: string, port: number) {
   return await setupAgent({
     port: port,
-    publicDidSeed: '00000000000000000000000000000000',
     endpoints: [`http://localhost:${port}`],
-    name: name,
+    // add some randomness to ensure test isolation
+    name: `${name} (${randomUUID()})`,
   })
 }
 
@@ -99,6 +102,19 @@ export function getTestOutOfBandInvitation() {
     ],
   }
   return JsonTransformer.fromJSON(json, OutOfBandInvitation)
+}
+
+export function getTestOutOfBandLegacyInvitation() {
+  const json = {
+    id: '42a95528-0e30-4f86-a462-0efb02178b53',
+    label: 'Aries Test Agent',
+    did: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    recipientKeys: ['did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM'],
+    serviceEndpoint: 'https://6b77-89-20-162-146.ngrok.io',
+    routingKeys: [],
+    imageUrl: 'https://example.com/image-url',
+  }
+  return JsonTransformer.fromJSON(json, ConnectionInvitationMessage)
 }
 
 export function getTestOutOfBandRecord() {
@@ -270,10 +286,18 @@ export function getTestOffer() {
   }
 }
 
-export function getTestCredDef() {
+export function getTestSchema(): AnonCredsSchema {
   return {
-    ver: '1.0',
-    id: 'WgWxqztrNooG92RXvxSTWv:3:CL:20:tag',
+    issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    name: 'test',
+    version: '1.0',
+    attrNames: ['prop1', 'prop2'],
+  }
+}
+
+export function getTestCredDef(): AnonCredsCredentialDefinition {
+  return {
+    issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
     schemaId: '9999',
     type: 'CL',
     tag: 'latest',
@@ -340,7 +364,7 @@ export function getTestProof() {
       },
     },
   }
-  return JsonTransformer.fromJSON(json, ProofRecord)
+  return JsonTransformer.fromJSON(json, ProofExchangeRecord)
 }
 
 export function getTestConnection({

@@ -1,6 +1,5 @@
 import type { ServerConfig } from '../src/utils/ServerConfig'
 
-import { AgentConfig } from '@aries-framework/core'
 import bodyParser from 'body-parser'
 import express from 'express'
 import { connect } from 'ngrok'
@@ -13,7 +12,6 @@ const run = async () => {
 
   const agent = await setupAgent({
     port: 3001,
-    publicDidSeed: 'testtesttesttesttesttesttesttest',
     endpoints: [endpoint],
     name: 'Aries Test Agent',
   })
@@ -22,7 +20,7 @@ const run = async () => {
   const jsonParser = bodyParser.json()
 
   app.post('/greeting', jsonParser, (req, res) => {
-    const config = agent.injectionContainer.resolve(AgentConfig)
+    const config = agent.config
 
     res.send(`Hello, ${config.label}!`)
   })

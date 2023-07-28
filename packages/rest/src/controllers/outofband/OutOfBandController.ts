@@ -85,7 +85,7 @@ export class OutOfBandController extends Controller {
           domain: this.agent.config.endpoints[0],
         }),
         invitation: outOfBandRecord.outOfBandInvitation.toJSON({
-          useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
+          useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
         }),
         outOfBandRecord: outOfBandRecord.toJSON(),
       }
@@ -117,10 +117,10 @@ export class OutOfBandController extends Controller {
       return {
         invitationUrl: invitation.toUrl({
           domain: this.agent.config.endpoints[0],
-          useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
+          useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
         }),
         invitation: invitation.toJSON({
-          useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix,
+          useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
         }),
         outOfBandRecord: outOfBandRecord.toJSON(),
       }

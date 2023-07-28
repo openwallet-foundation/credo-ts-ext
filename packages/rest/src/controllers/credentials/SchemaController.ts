@@ -1,9 +1,8 @@
-import type { Version } from '../examples'
-import type { Schema } from 'indy-sdk'
+import type { RestAgent } from '../../utils/agent'
+import type { Did, Version } from '../examples'
+import type { AnonCredsSchemaResponse } from '../types'
 
-import { Agent, AriesFrameworkError, IndySdkError } from '@aries-framework/core'
-import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
-import { isIndyError } from '@aries-framework/core/build/utils/indyError'
+import { Agent } from '@aries-framework/core'
 import { Body, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -13,7 +12,7 @@ import { SchemaId, SchemaExample } from '../examples'
 @Route('/schemas')
 @injectable()
 export class SchemaController {
-  private agent: Agent
+  private agent: RestAgent
 
   public constructor(agent: Agent) {
     this.agent = agent
@@ -23,38 +22,39 @@ export class SchemaController {
    * Retrieve schema by schema id
    *
    * @param schemaId
-   * @returns Schema
+   * @returns AnonCredsSchemaResponse
    */
-  @Example<Schema>(SchemaExample)
+  @Example<AnonCredsSchemaResponse>(SchemaExample)
   @Get('/:schemaId')
   public async getSchemaById(
     @Path('schemaId') schemaId: SchemaId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() forbiddenError: TsoaResponse<403, { reason: string }>,
     @Res() badRequestError: TsoaResponse<400, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
-    try {
-      return await this.agent.ledger.getSchema(schemaId)
-    } catch (error) {
-      if (error instanceof IndySdkError && error.message === 'IndyError(LedgerNotFound): LedgerNotFound') {
-        return notFoundError(404, {
-          reason: `schema definition with schemaId "${schemaId}" not found.`,
-        })
-      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
-        if (isIndyError(error.cause.cause, 'LedgerInvalidTransaction')) {
-          return forbiddenError(403, {
-            reason: `schema definition with schemaId "${schemaId}" can not be returned.`,
-          })
-        }
-        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          return badRequestError(400, {
-            reason: `schemaId "${schemaId}" has invalid structure.`,
-          })
-        }
-      }
+    const { schema, resolutionMetadata } = await this.agent.modules.anoncreds.getSchema(schemaId)
 
+    const error = resolutionMetadata?.error
+
+    if (error === 'notFound') {
+      return notFoundError(404, {
+        reason: `schema definition with schemaId "${schemaId}" not found.`,
+      })
+    }
+
+    if (error === 'invalid' || error === 'unsupportedAnonCredsMethod') {
+      return badRequestError(400, {
+        reason: `schemaId "${schemaId}" has invalid structure.`,
+      })
+    }
+
+    if (error !== undefined || schema === undefined) {
       return internalServerError(500, { message: `something went wrong: ${error}` })
+    }
+
+    return {
+      id: schemaId,
+      ...schema,
     }
   }
 
@@ -62,35 +62,41 @@ export class SchemaController {
    * Creates a new schema and registers schema on ledger
    *
    * @param schema
-   * @returns schema
+   * @returns AnonCredsSchemaResponse
    */
-  @Example<Schema>(SchemaExample)
+  @Example<AnonCredsSchemaResponse>(SchemaExample)
   @Post('/')
   public async createSchema(
     @Body()
     schema: {
+      issuerId: Did
       name: string
       version: Version
-      attributes: string[]
+      attrNames: string[]
     },
-    @Res() forbiddenError: TsoaResponse<400, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
-    try {
-      return await this.agent.ledger.registerSchema({
+    const { schemaState } = await this.agent.modules.anoncreds.registerSchema({
+      schema: {
+        issuerId: schema.issuerId,
         name: schema.name,
         version: schema.version,
-        attributes: schema.attributes,
-      })
-    } catch (error) {
-      if (error instanceof AriesFrameworkError) {
-        if (error.message.includes('UnauthorizedClientRequest')) {
-          return forbiddenError(400, {
-            reason: 'this action is not allowed.',
-          })
-        }
-      }
-      return internalServerError(500, { message: `something went wrong: ${error}` })
+        attrNames: schema.attrNames,
+      },
+      options: {},
+    })
+
+    if (schemaState.state === 'failed') {
+      return internalServerError(500, { message: `something went wrong: ${schemaState.reason}` })
+    }
+
+    if (schemaState.state !== 'finished' || schemaState.schemaId === undefined || schemaState.schema === undefined) {
+      return internalServerError(500, { message: `something went wrong: unknown` })
+    }
+
+    return {
+      id: schemaState.schemaId,
+      ...schemaState.schema,
     }
   }
 }

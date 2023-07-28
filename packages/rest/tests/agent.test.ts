@@ -23,7 +23,6 @@ describe('AgentController', () => {
       expect(response.body.label).toBeDefined()
       expect(response.body.endpoints).toBeDefined()
       expect(response.body.isInitialized).toBeTruthy()
-      expect(response.body.publicDid).toBeDefined()
     })
 
     test('should response with a 200 status code', async () => {

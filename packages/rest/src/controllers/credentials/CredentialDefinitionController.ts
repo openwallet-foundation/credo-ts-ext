@@ -1,10 +1,11 @@
-import type { SchemaId } from '../examples'
-import type { CredDef } from 'indy-sdk'
+import type { RestAgent } from '../../utils/agent'
+import type { Did, SchemaId } from '../examples'
+import type { AnonCredsCredentialDefinitionResponse } from '../types'
 
-import { Agent, IndySdkError } from '@aries-framework/core'
-import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
-import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
-import { isIndyError } from '@aries-framework/core/build/utils/indyError'
+import { Agent /* IndySdkError */ } from '@aries-framework/core'
+// import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
+// import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
+// import { isIndyError } from '@aries-framework/core/build/utils/indyError'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -14,7 +15,7 @@ import { CredentialDefinitionExample, CredentialDefinitionId } from '../examples
 @Route('/credential-definitions')
 @injectable()
 export class CredentialDefinitionController extends Controller {
-  private agent: Agent
+  private agent: RestAgent
 
   public constructor(agent: Agent) {
     super()
@@ -25,31 +26,40 @@ export class CredentialDefinitionController extends Controller {
    * Retrieve credential definition by credential definition id
    *
    * @param credentialDefinitionId
-   * @returns CredDef
+   * @returns AnonCredsCredentialDefinitionResponse
    */
-  @Example<CredDef>(CredentialDefinitionExample)
+  @Example<AnonCredsCredentialDefinitionResponse>(CredentialDefinitionExample)
   @Get('/:credentialDefinitionId')
   public async getCredentialDefinitionById(
     @Path('credentialDefinitionId') credentialDefinitionId: CredentialDefinitionId,
     @Res() badRequestError: TsoaResponse<400, { reason: string }>,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
-  ) {
-    try {
-      return await this.agent.ledger.getCredentialDefinition(credentialDefinitionId)
-    } catch (error) {
-      if (error instanceof IndySdkError && error.message === 'IndyError(LedgerNotFound): LedgerNotFound') {
-        return notFoundError(404, {
-          reason: `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`,
-        })
-      } else if (error instanceof LedgerError && error.cause instanceof IndySdkError) {
-        if (isIndyError(error.cause.cause, 'CommonInvalidStructure')) {
-          return badRequestError(400, {
-            reason: `credentialDefinitionId "${credentialDefinitionId}" has invalid structure.`,
-          })
-        }
-      }
+  ): Promise<AnonCredsCredentialDefinitionResponse> {
+    const {
+      credentialDefinition,
+      resolutionMetadata: { error },
+    } = await this.agent.modules.anoncreds.getCredentialDefinition(credentialDefinitionId)
+
+    if (error === 'notFound') {
+      return notFoundError(404, {
+        reason: `credential definition with credentialDefinitionId "${credentialDefinitionId}" not found.`,
+      })
+    }
+
+    if (error === 'invalid' || error === 'unsupportedAnonCredsMethod') {
+      return badRequestError(400, {
+        reason: `credentialDefinitionId "${credentialDefinitionId}" has invalid structure.`,
+      })
+    }
+
+    if (error !== undefined || credentialDefinition === undefined) {
       return internalServerError(500, { message: `something went wrong: ${error}` })
+    }
+
+    return {
+      id: credentialDefinitionId,
+      ...credentialDefinition,
     }
   }
 
@@ -57,36 +67,51 @@ export class CredentialDefinitionController extends Controller {
    * Creates a new credential definition.
    *
    * @param credentialDefinitionRequest
-   * @returns CredDef
+   * @returns AnonCredsCredentialDefinitionResponse
    */
-  @Example<CredDef>(CredentialDefinitionExample)
+  @Example<AnonCredsCredentialDefinitionResponse & { id: string }>(CredentialDefinitionExample)
   @Post('/')
   public async createCredentialDefinition(
     @Body()
     credentialDefinitionRequest: {
+      issuerId: Did
       schemaId: SchemaId
-      supportRevocation: boolean
       tag: string
     },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
-  ) {
-    try {
-      const schema = await this.agent.ledger.getSchema(credentialDefinitionRequest.schemaId)
+  ): Promise<AnonCredsCredentialDefinitionResponse> {
+    const {
+      resolutionMetadata: { error },
+    } = await this.agent.modules.anoncreds.getSchema(credentialDefinitionRequest.schemaId)
 
-      return await this.agent.ledger.registerCredentialDefinition({
-        schema,
-        supportRevocation: credentialDefinitionRequest.supportRevocation,
-        tag: credentialDefinitionRequest.tag,
+    if (error === 'notFound' || error === 'invalid' || error === 'unsupportedAnonCredsMethod') {
+      return notFoundError(404, {
+        reason: `schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`,
       })
-    } catch (error) {
-      if (error instanceof LedgerNotFoundError) {
-        return notFoundError(404, {
-          reason: `schema with schemaId "${credentialDefinitionRequest.schemaId}" not found.`,
-        })
-      }
-
+    }
+    if (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })
+    }
+
+    const {
+      credentialDefinitionState: { state, credentialDefinitionId, credentialDefinition },
+    } = await this.agent.modules.anoncreds.registerCredentialDefinition({
+      credentialDefinition: {
+        issuerId: credentialDefinitionRequest.issuerId,
+        schemaId: credentialDefinitionRequest.schemaId,
+        tag: credentialDefinitionRequest.tag,
+      },
+      options: {},
+    })
+
+    if (state !== 'finished' || credentialDefinitionId === undefined || credentialDefinition === undefined) {
+      return internalServerError(500, { message: `something went wrong` })
+    }
+
+    return {
+      id: credentialDefinitionId,
+      ...credentialDefinition,
     }
   }
 }

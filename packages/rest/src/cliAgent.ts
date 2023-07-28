@@ -1,8 +1,26 @@
-import type { IndyPoolConfig, InitConfig, AutoAcceptCredential, AutoAcceptProof } from '@aries-framework/core'
+import type { InitConfig } from '@aries-framework/core'
 import type { WalletConfig } from '@aries-framework/core/build/types'
+import type { IndyVdrPoolConfig } from '@aries-framework/indy-vdr'
 
-import { HttpOutboundTransport, WsOutboundTransport, LogLevel, Agent } from '@aries-framework/core'
+import { AnonCredsModule } from '@aries-framework/anoncreds'
+import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
+import { AskarModule } from '@aries-framework/askar'
+import {
+  HttpOutboundTransport,
+  WsOutboundTransport,
+  LogLevel,
+  Agent,
+  ConnectionsModule,
+  ProofsModule,
+  CredentialsModule,
+  AutoAcceptCredential,
+  AutoAcceptProof,
+} from '@aries-framework/core'
+import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@aries-framework/indy-vdr'
 import { agentDependencies, HttpInboundTransport, WsInboundTransport } from '@aries-framework/node'
+import { anoncreds } from '@hyperledger/anoncreds-nodejs'
+import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
+import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
 import { readFile } from 'fs/promises'
 
 import { setupServer } from './server'
@@ -27,7 +45,8 @@ const outboundTransportMapping = {
 export interface AriesRestConfig {
   label: string
   walletConfig: WalletConfig
-  indyLedgers?: IndyPoolConfig[]
+  // TODO: is there a sane default to keep this optional
+  indyLedgers: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
   publicDidSeed?: string
   endpoints?: string[]
   autoAcceptConnections?: boolean
@@ -52,7 +71,15 @@ export async function readRestConfig(path: string) {
 }
 
 export async function runRestAgent(restConfig: AriesRestConfig) {
-  const { logLevel, inboundTransports = [], outboundTransports = [], webhookUrl, adminPort, ...afjConfig } = restConfig
+  const {
+    logLevel,
+    inboundTransports = [],
+    outboundTransports = [],
+    webhookUrl,
+    adminPort,
+    indyLedgers,
+    ...afjConfig
+  } = restConfig
 
   const logger = new TsLogger(logLevel ?? LogLevel.error)
 
@@ -61,7 +88,34 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     logger,
   }
 
-  const agent = new Agent(agentConfig, agentDependencies)
+  const agent = new Agent({
+    config: agentConfig,
+    dependencies: agentDependencies,
+    modules: {
+      connections: new ConnectionsModule({
+        autoAcceptConnections: true,
+      }),
+      proofs: new ProofsModule({
+        autoAcceptProofs: AutoAcceptProof.ContentApproved,
+      }),
+      credentials: new CredentialsModule({
+        autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
+      }),
+      indyVdr: new IndyVdrModule({
+        indyVdr,
+        networks: indyLedgers,
+      }),
+      anoncreds: new AnonCredsModule({
+        registries: [new IndyVdrAnonCredsRegistry()],
+      }),
+      anoncredsRs: new AnonCredsRsModule({
+        anoncreds,
+      }),
+      askar: new AskarModule({
+        ariesAskar,
+      }),
+    },
+  })
 
   // Register outbound transports
   for (const outboundTransport of outboundTransports) {
