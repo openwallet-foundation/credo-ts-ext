@@ -984,6 +984,19 @@
 					},
 					"issuerDid": {
 						"type": "string"
+					},
+					"requiredAttributes": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"requiredAttributeValues": {
+						"properties": {},
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
 					}
 				},
 				"type": "object",

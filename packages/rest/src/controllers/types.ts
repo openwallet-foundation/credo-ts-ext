@@ -182,9 +182,8 @@ export interface RequestProofOptionsProofRequestRestriction {
   revRegId?: string
   schemaIssuerDid?: string
   issuerDid?: string
-  // TODO: sanely represent this in TSOA
-  // [key: `attr::${string}::marker`]: '1' | '0';
-  // [key: `attr::${string}::value`]: string;
+  requiredAttributes?: string[]
+  requiredAttributeValues?: { [key: string]: string }
 }
 
 export interface RequestProofOptionsRequestedAttribute {

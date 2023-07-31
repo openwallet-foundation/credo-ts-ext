@@ -212,6 +212,76 @@ describe('ProofController', () => {
       expect(response.body).toEqual(objectToJson(await getResult()))
     })
 
+    test('should transform proof request attribute restrictions', async () => {
+      const spy = jest.spyOn(bobAgent.proofs, 'requestProof').mockResolvedValueOnce(testProof)
+
+      const response = await request(app)
+        .post(`/proofs/request-proof`)
+        .send({
+          connectionId: 'string',
+          proofRequestOptions: {
+            name: 'string',
+            version: '1.0',
+            requestedAttributes: {
+              additionalProp1: {
+                name: 'string',
+                restrictions: [
+                  {
+                    schemaId: 'schemaId',
+                    schemaIssuerId: 'schemaIssuerId',
+                    schemaName: 'schemaName',
+                    schemaVersion: 'schemaVersion',
+                    issuerId: 'issuerId',
+                    credDefId: 'credDefId',
+                    revRegId: 'revRegId',
+                    schemaIssuerDid: 'schemaIssuerDid',
+                    issuerDid: 'issuerDid',
+                    requiredAttributes: ['a', 'b'],
+                    requiredAttributeValues: { c: 'd', e: 'f' },
+                  },
+                ],
+              },
+            },
+            requestedPredicates: {},
+          },
+        })
+
+      expect(response.statusCode).toBe(200)
+      expect(spy).toHaveBeenCalledWith({
+        connectionId: 'string',
+        protocolVersion: 'v2',
+        proofFormats: {
+          anoncreds: {
+            name: 'string',
+            version: '1.0',
+            requested_attributes: {
+              additionalProp1: {
+                name: 'string',
+                restrictions: [
+                  {
+                    schema_id: 'schemaId',
+                    schema_issuer_id: 'schemaIssuerId',
+                    schema_name: 'schemaName',
+                    schema_version: 'schemaVersion',
+                    issuer_id: 'issuerId',
+                    cred_def_id: 'credDefId',
+                    rev_reg_id: 'revRegId',
+                    schema_issuer_did: 'schemaIssuerDid',
+                    issuer_did: 'issuerDid',
+                    'attr::a::marker': '1',
+                    'attr::b::marker': '1',
+                    'attr::c::value': 'd',
+                    'attr::e::value': 'f',
+                  },
+                ],
+              },
+            },
+            requested_predicates: {},
+          },
+        },
+      })
+    })
+
     test('should give 404 not found when connection is not found', async () => {
       const response = await request(app)
         .post(`/proofs/request-proof`)

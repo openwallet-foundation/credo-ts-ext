@@ -23,6 +23,34 @@ const maybeMapValues = <V, U>(
   return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, transform(value)]))
 }
 
+const transformRequiredAttributes = (attributes?: string[]) => {
+  if (!attributes) {
+    return undefined
+  }
+
+  return attributes.reduce<{ [key in `attr::${string}::marker`]: '1' }>(
+    (acc, attr) => ({
+      [`attr::${attr}::marker`]: '1',
+      ...acc,
+    }),
+    {}
+  )
+}
+
+const transformRequiredAttributeValues = (attributeValues?: { [key in string]: string }) => {
+  if (!attributeValues) {
+    return undefined
+  }
+
+  return Object.entries(attributeValues).reduce<{ [key in `attr::${string}::value`]: string }>(
+    (acc, [attr, val]) => ({
+      [`attr::${attr}::value`]: val,
+      ...acc,
+    }),
+    {}
+  )
+}
+
 const transformRestriction = (
   restriction: RequestProofOptionsProofRequestRestriction
 ): AnonCredsProofRequestRestriction => ({
@@ -35,6 +63,8 @@ const transformRestriction = (
   rev_reg_id: restriction.revRegId,
   schema_issuer_did: restriction.schemaIssuerDid,
   issuer_did: restriction.issuerDid,
+  ...transformRequiredAttributes(restriction.requiredAttributes),
+  ...transformRequiredAttributeValues(restriction.requiredAttributeValues),
 })
 
 @Tags('Proofs')

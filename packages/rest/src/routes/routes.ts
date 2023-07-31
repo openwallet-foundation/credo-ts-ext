@@ -397,6 +397,8 @@ const models: TsoaRoute.Models = {
             "revRegId": {"dataType":"string"},
             "schemaIssuerDid": {"dataType":"string"},
             "issuerDid": {"dataType":"string"},
+            "requiredAttributes": {"dataType":"array","array":{"dataType":"string"}},
+            "requiredAttributeValues": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"dataType":"string"}},
         },
         "additionalProperties": false,
     },
