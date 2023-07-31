@@ -15,6 +15,7 @@ import {
   CredentialsModule,
   AutoAcceptCredential,
   AutoAcceptProof,
+  MediatorModule,
 } from '@aries-framework/core'
 import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@aries-framework/indy-vdr'
 import { agentDependencies, HttpInboundTransport, WsInboundTransport } from '@aries-framework/node'
@@ -45,14 +46,14 @@ const outboundTransportMapping = {
 export interface AriesRestConfig {
   label: string
   walletConfig: WalletConfig
-  // TODO: is there a sane default to keep this optional
   indyLedgers: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
-  publicDidSeed?: string
   endpoints?: string[]
   autoAcceptConnections?: boolean
   autoAcceptCredentials?: AutoAcceptCredential
   autoAcceptProofs?: AutoAcceptProof
-  useLegacyDidSovPrefix?: boolean
+  autoUpdateStorageOnStartup?: boolean
+  useDidKeyInProtocols?: boolean
+  useDidSovPrefixWhereAllowed?: boolean
   logLevel?: LogLevel
   inboundTransports?: InboundTransport[]
   outboundTransports?: Transports[]
@@ -78,6 +79,10 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     webhookUrl,
     adminPort,
     indyLedgers,
+    autoAcceptConnections = true,
+    autoAcceptCredentials = AutoAcceptCredential.ContentApproved,
+    autoAcceptMediationRequests = true,
+    autoAcceptProofs = AutoAcceptProof.ContentApproved,
     ...afjConfig
   } = restConfig
 
@@ -93,13 +98,13 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     dependencies: agentDependencies,
     modules: {
       connections: new ConnectionsModule({
-        autoAcceptConnections: true,
+        autoAcceptConnections,
       }),
       proofs: new ProofsModule({
-        autoAcceptProofs: AutoAcceptProof.ContentApproved,
+        autoAcceptProofs,
       }),
       credentials: new CredentialsModule({
-        autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
+        autoAcceptCredentials,
       }),
       indyVdr: new IndyVdrModule({
         indyVdr,
@@ -113,6 +118,9 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
       }),
       askar: new AskarModule({
         ariesAskar,
+      }),
+      mediator: new MediatorModule({
+        autoAcceptMediationRequests,
       }),
     },
   })

@@ -12,6 +12,7 @@ import {
   CredentialsModule,
   HttpOutboundTransport,
   LogLevel,
+  MediatorModule,
   ProofsModule,
 } from '@aries-framework/core'
 import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@aries-framework/indy-vdr'
@@ -32,6 +33,7 @@ export type RestAgent = Agent<{
   anoncredsRs: AnonCredsRsModule
   anoncreds: AnonCredsModule
   askar: AskarModule
+  mediator: MediatorModule
 }>
 
 export const genesisPath = process.env.GENESIS_TXN_PATH
@@ -80,6 +82,9 @@ export const setupAgent = async ({ name, endpoints, port }: { name: string; endp
       }),
       askar: new AskarModule({
         ariesAskar,
+      }),
+      mediator: new MediatorModule({
+        autoAcceptMediationRequests: true,
       }),
     },
   })

@@ -21,11 +21,9 @@ const parsed = yargs
   })
   .option('indy-ledger', {
     array: true,
+    // TODO: this default is invalid, fixme
     default: [],
     coerce: (items: unknown[]) => items.map((i) => (typeof i === 'string' ? JSON.parse(i) : i)),
-  })
-  .option('public-did-seed', {
-    string: true,
   })
   .option('endpoint', {
     array: true,
@@ -34,9 +32,13 @@ const parsed = yargs
     number: true,
     default: 3,
   })
-  .option('use-legacy-did-sov-prefix', {
+  .option('use-did-sov-prefix-where-allowed', {
     boolean: true,
     default: false,
+  })
+  .option('use-did-key-in-protocols', {
+    boolean: true,
+    default: true,
   })
   .option('outbound-transport', {
     default: [],
@@ -88,6 +90,10 @@ const parsed = yargs
     choices: ['always', 'never', 'contentApproved'],
     default: 'never',
   })
+  .option('auto-update-storage-on-startup', {
+    boolean: true,
+    default: true,
+  })
   .option('connection-image-url', {
     string: true,
   })
@@ -110,13 +116,14 @@ export async function runCliServer() {
       key: parsed['wallet-key'],
     },
     indyLedgers: parsed['indy-ledger'],
-    publicDidSeed: parsed['public-did-seed'],
     endpoints: parsed.endpoint,
     autoAcceptConnections: parsed['auto-accept-connections'],
     autoAcceptCredentials: parsed['auto-accept-credentials'],
     autoAcceptProofs: parsed['auto-accept-proofs'],
+    autoUpdateStorageOnStartup: parsed['auto-update-storage-on-startup'],
     autoAcceptMediationRequests: parsed['auto-accept-mediation-requests'],
-    useLegacyDidSovPrefix: parsed['use-legacy-did-sov-prefix'],
+    useDidKeyInProtocols: parsed['use-did-key-in-protocols'],
+    useDidSovPrefixWhereAllowed: parsed['use-legacy-did-sov-prefix'],
     logLevel: parsed['log-level'],
     inboundTransports: parsed['inbound-transport'],
     outboundTransports: parsed['outbound-transport'],
