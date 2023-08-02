@@ -2,10 +2,7 @@ import type { RestAgent } from '../../utils/agent'
 import type { Did, SchemaId } from '../examples'
 import type { AnonCredsCredentialDefinitionResponse } from '../types'
 
-import { Agent /* IndySdkError */ } from '@aries-framework/core'
-// import { LedgerError } from '@aries-framework/core/build/modules/ledger/error/LedgerError'
-// import { LedgerNotFoundError } from '@aries-framework/core/build/modules/ledger/error/LedgerNotFoundError'
-// import { isIndyError } from '@aries-framework/core/build/utils/indyError'
+import { Agent } from '@aries-framework/core'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
