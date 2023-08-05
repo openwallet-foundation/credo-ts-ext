@@ -1,3 +1,3 @@
 export type ApnsDeviceInfo = {
-  deviceToken: string
+  deviceToken: string | null
 }

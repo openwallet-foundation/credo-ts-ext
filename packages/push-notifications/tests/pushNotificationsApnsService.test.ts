@@ -25,16 +25,22 @@ describe('Push Notifications apns', () => {
   describe('Create apns set push notification message', () => {
     test('Should create a valid https://didcomm.org/push-notifications-apns/1.0/device-info message ', async () => {
       const message = pushNotificationsApnsService.createDeviceInfo({
-        deviceToken: '1234-1234-1234-1234',
+        threadId: '5678-5678-5678-5678',
+        deviceInfo: {
+          deviceToken: '1234-1234-1234-1234',
+        },
       })
 
       const jsonMessage = JsonTransformer.toJSON(message)
 
-      expect(jsonMessage).toEqual({
-        '@id': expect.any(String),
-        '@type': 'https://didcomm.org/push-notifications-apns/1.0/device-info',
-        device_token: '1234-1234-1234-1234',
-      })
+      expect(jsonMessage).toEqual(
+        expect.objectContaining({
+          '@id': expect.any(String),
+          '@type': 'https://didcomm.org/push-notifications-apns/1.0/device-info',
+          device_token: '1234-1234-1234-1234',
+          '~thread': expect.objectContaining({ thid: '5678-5678-5678-5678' }),
+        })
+      )
     })
   })
   describe('Create apns set push notification message', () => {

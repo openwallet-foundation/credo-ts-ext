@@ -2,17 +2,18 @@ import type { ApnsDeviceInfo } from '../models'
 
 import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
-import { IsString } from 'class-validator'
+import { IsString, ValidateIf } from 'class-validator'
 
 interface PushNotificationsApnsDeviceInfoOptions extends ApnsDeviceInfo {
   id?: string
+  threadId: string
 }
 
 /**
  * Message to send the apns device information from another agent for push notifications
  * This is used as a response for the `get-device-info` message
  *
- * @todo ADD RFC
+ * @todo @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0699-push-notifications-apns#device-info
  */
 export class PushNotificationsApnsDeviceInfoMessage extends AgentMessage {
   public constructor(options: PushNotificationsApnsDeviceInfoOptions) {
@@ -20,6 +21,7 @@ export class PushNotificationsApnsDeviceInfoMessage extends AgentMessage {
 
     if (options) {
       this.id = options.id ?? this.generateId()
+      this.setThread({ threadId: options.threadId })
       this.deviceToken = options.deviceToken
     }
   }
@@ -30,5 +32,6 @@ export class PushNotificationsApnsDeviceInfoMessage extends AgentMessage {
 
   @Expose({ name: 'device_token' })
   @IsString()
-  public deviceToken!: string
+  @ValidateIf((object, value) => value !== null)
+  public deviceToken!: string | null
 }

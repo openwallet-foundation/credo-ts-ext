@@ -28,6 +28,6 @@
 </p>
 <br />
 
-Push Notifications plugin for [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git).
+Push Notifications extension module for [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git). It currently implements [Aries RFC 0734](https://github.com/hyperledger/aries-rfcs/tree/main/features/0734-push-notifications-fcm) (Firebase Cloud Messaging) and [Aries RFC 0699](https://github.com/hyperledger/aries-rfcs/tree/main/features/0699-push-notifications-apns) (Apple Push Notifications).
 
 For documentation on installation and usage of the Push Notifications package, refer to the [Docs](https://aries.js.org/guides/0.4/extensions/push-notifications).

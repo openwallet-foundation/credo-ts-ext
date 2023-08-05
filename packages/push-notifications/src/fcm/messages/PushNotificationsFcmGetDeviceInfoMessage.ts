@@ -7,7 +7,7 @@ interface PushNotificationsFcmGetDeviceInfoOptions {
 /**
  * Message to get fcm  the device information from another agent for push notifications
  *
- * @todo ADD RFC
+ * @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0734-push-notifications-fcm#get-device-info
  */
 export class PushNotificationsFcmGetDeviceInfoMessage extends AgentMessage {
   public constructor(options: PushNotificationsFcmGetDeviceInfoOptions) {

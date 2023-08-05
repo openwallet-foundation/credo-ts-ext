@@ -2,7 +2,7 @@ import type { ApnsDeviceInfo } from '../models'
 
 import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
 import { Expose } from 'class-transformer'
-import { IsString } from 'class-validator'
+import { IsString, ValidateIf } from 'class-validator'
 
 interface PushNotificationsApnsSetDeviceInfoOptions extends ApnsDeviceInfo {
   id?: string
@@ -11,7 +11,7 @@ interface PushNotificationsApnsSetDeviceInfoOptions extends ApnsDeviceInfo {
 /**
  * Message to set the apns device information at another agent for push notifications
  *
- * @todo ADD RFC
+ * @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0699-push-notifications-apns#set-device-info
  */
 export class PushNotificationsApnsSetDeviceInfoMessage extends AgentMessage {
   public constructor(options: PushNotificationsApnsSetDeviceInfoOptions) {
@@ -25,7 +25,8 @@ export class PushNotificationsApnsSetDeviceInfoMessage extends AgentMessage {
 
   @Expose({ name: 'device_token' })
   @IsString()
-  public deviceToken!: string
+  @ValidateIf((object, value) => value !== null)
+  public deviceToken!: string | null
 
   @IsValidMessageType(PushNotificationsApnsSetDeviceInfoMessage.type)
   public readonly type = PushNotificationsApnsSetDeviceInfoMessage.type.messageTypeUri

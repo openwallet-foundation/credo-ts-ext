@@ -1,7 +1,10 @@
 import type { FcmDeviceInfo } from './models/FcmDeviceInfo'
+import type { InboundMessageContext } from '@aries-framework/core'
 
+import { AriesFrameworkError } from '@aries-framework/core'
 import { Lifecycle, scoped } from 'tsyringe'
 
+import { PushNotificationsFcmProblemReportError, PushNotificationsFcmProblemReportReason } from './errors'
 import {
   PushNotificationsFcmSetDeviceInfoMessage,
   PushNotificationsFcmGetDeviceInfoMessage,
@@ -11,6 +14,12 @@ import {
 @scoped(Lifecycle.ContainerScoped)
 export class PushNotificationsFcmService {
   public createSetDeviceInfo(deviceInfo: FcmDeviceInfo) {
+    if (
+      (deviceInfo.deviceToken === null && deviceInfo.devicePlatform !== null) ||
+      (deviceInfo.deviceToken !== null && deviceInfo.devicePlatform === null)
+    )
+      throw new AriesFrameworkError('Both or none of deviceToken and devicePlatform must be null')
+
     return new PushNotificationsFcmSetDeviceInfoMessage(deviceInfo)
   }
 
@@ -18,7 +27,29 @@ export class PushNotificationsFcmService {
     return new PushNotificationsFcmGetDeviceInfoMessage({})
   }
 
-  public createDeviceInfo(deviceInfo: FcmDeviceInfo) {
-    return new PushNotificationsFcmDeviceInfoMessage(deviceInfo)
+  public createDeviceInfo(options: { threadId: string; deviceInfo: FcmDeviceInfo }) {
+    const { threadId, deviceInfo } = options
+    if (
+      (deviceInfo.deviceToken === null && deviceInfo.devicePlatform !== null) ||
+      (deviceInfo.deviceToken !== null && deviceInfo.devicePlatform === null)
+    )
+      throw new AriesFrameworkError('Both or none of deviceToken and devicePlatform must be null')
+
+    return new PushNotificationsFcmDeviceInfoMessage({
+      threadId,
+      deviceToken: deviceInfo.deviceToken,
+      devicePlatform: deviceInfo.devicePlatform,
+    })
+  }
+
+  public processSetDeviceInfo(messageContext: InboundMessageContext<PushNotificationsFcmSetDeviceInfoMessage>) {
+    const { message } = messageContext
+    if (
+      (message.deviceToken === null && message.devicePlatform !== null) ||
+      (message.deviceToken !== null && message.devicePlatform === null)
+    )
+      throw new PushNotificationsFcmProblemReportError('Both or none of deviceToken and devicePlatform must be null', {
+        problemCode: PushNotificationsFcmProblemReportReason.MissingValue,
+      })
   }
 }
