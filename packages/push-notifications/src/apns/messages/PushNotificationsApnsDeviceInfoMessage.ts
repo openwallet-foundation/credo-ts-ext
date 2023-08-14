@@ -13,7 +13,7 @@ interface PushNotificationsApnsDeviceInfoOptions extends ApnsDeviceInfo {
  * Message to send the apns device information from another agent for push notifications
  * This is used as a response for the `get-device-info` message
  *
- * @todo @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0699-push-notifications-apns#device-info
+ * @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0699-push-notifications-apns#device-info
  */
 export class PushNotificationsApnsDeviceInfoMessage extends AgentMessage {
   public constructor(options: PushNotificationsApnsDeviceInfoOptions) {

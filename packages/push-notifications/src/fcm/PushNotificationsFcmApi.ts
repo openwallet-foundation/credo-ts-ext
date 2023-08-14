@@ -58,7 +58,8 @@ export class PushNotificationsFcmApi {
    * @param deviceInfo The FCM device info
    * @returns Promise<void>
    */
-  public async deviceInfo(connectionId: string, threadId: string, deviceInfo: FcmDeviceInfo) {
+  public async deviceInfo(options: { connectionId: string; threadId: string; deviceInfo: FcmDeviceInfo }) {
+    const { connectionId, threadId, deviceInfo } = options
     const connection = await this.connectionService.getById(this.agentContext, connectionId)
     connection.assertReady()
 

@@ -57,7 +57,8 @@ export class PushNotificationsApnsApi {
    * @param deviceInfo The APNS device info
    * @returns Promise<void>
    */
-  public async deviceInfo(connectionId: string, threadId: string, deviceInfo: ApnsDeviceInfo) {
+  public async deviceInfo(options: { connectionId: string; threadId: string; deviceInfo: ApnsDeviceInfo }) {
+    const { connectionId, threadId, deviceInfo } = options
     const connection = await this.connectionService.getById(this.agentContext, connectionId)
     connection.assertReady()
 
