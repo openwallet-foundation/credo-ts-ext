@@ -1,5 +1,16 @@
 # Changelog
 
+## [0.6.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.5.0...push-notifications-v0.6.0) (2023-08-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* **push-notifications:** align to RFCs 0699/0734 (#223)
+
+### Bug Fixes
+
+* **push-notifications:** align to RFCs 0699/0734 ([#223](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/223)) ([15e9f1f](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/15e9f1f76a4048e386b6023f0e0361a863e3a56f))
+
 ## [0.5.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/push-notifications-v0.4.0...push-notifications-v0.5.0) (2023-06-29)
 
 
