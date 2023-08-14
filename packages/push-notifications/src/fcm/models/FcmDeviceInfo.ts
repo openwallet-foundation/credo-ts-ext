@@ -1,3 +1,4 @@
 export type FcmDeviceInfo = {
-  deviceToken: string
+  deviceToken: string | null
+  devicePlatform: string | null
 }

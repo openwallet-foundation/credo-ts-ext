@@ -17,6 +17,15 @@ const run = async () => {
 
   // Gets the push notification device information located at the other agent behind the connection
   await agent.modules.pushNotificationsApns.getDeviceInfo('a-valid-connection')
+
+  // Sends device info as response from a get-device-info message
+  await agent.modules.pushNotificationsApns.deviceInfo({
+    connectionId: 'a-valid-connection',
+    threadId: 'get-device-info-msg-id',
+    deviceInfo: {
+      deviceToken: '123',
+    },
+  })
 }
 
 void run()

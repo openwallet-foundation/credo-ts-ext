@@ -18,7 +18,8 @@ export class PushNotificationsApnsService {
     return new PushNotificationsApnsGetDeviceInfoMessage({})
   }
 
-  public createDeviceInfo(deviceInfo: ApnsDeviceInfo) {
-    return new PushNotificationsApnsDeviceInfoMessage(deviceInfo)
+  public createDeviceInfo(options: { threadId: string; deviceInfo: ApnsDeviceInfo }) {
+    const { threadId, deviceInfo } = options
+    return new PushNotificationsApnsDeviceInfoMessage({ threadId, deviceToken: deviceInfo.deviceToken })
   }
 }
