@@ -1,5 +1,5 @@
 import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@aries-framework/anoncreds'
-import type { ConnectionRecordProps } from '@aries-framework/core'
+import type { ConnectionRecordProps, DidCreateResult } from '@aries-framework/core'
 
 import {
   AgentMessage,
@@ -12,6 +12,7 @@ import {
   ProofExchangeRecord,
   OutOfBandInvitation,
   ConnectionInvitationMessage,
+  DidDocument,
 } from '@aries-framework/core'
 import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
 import { randomUUID } from 'crypto'
@@ -387,4 +388,94 @@ export function getTestConnection({
     tags,
     theirLabel,
   })
+}
+
+export function getTestDidDocument() {
+  return {
+    '@context': [
+      'https://w3id.org/did/v1',
+      'https://w3id.org/security/suites/ed25519-2018/v1',
+      'https://w3id.org/security/suites/x25519-2019/v1',
+    ],
+    id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    verificationMethod: [
+      {
+        id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        type: 'Ed25519VerificationKey2018',
+        controller: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        publicKeyBase58: '6fioC1zcDPyPEL19pXRS2E4iJ46zH7xP6uSgAaPdwDrx',
+      },
+    ],
+    authentication: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    assertionMethod: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    keyAgreement: [
+      {
+        id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6LSrdqo4M24WRDJj1h2hXxgtDTyzjjKCiyapYVgrhwZAySn',
+        type: 'X25519KeyAgreementKey2019',
+        controller: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        publicKeyBase58: 'FxfdY3DCQxVZddKGAtSjZdFW9bCCW7oRwZn1NFJ2Tbg2',
+      },
+    ],
+    capabilityInvocation: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    capabilityDelegation: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+  } as { [x: string]: unknown }
+}
+
+export function getTestDidCreate() {
+  return {
+    didDocumentMetadata: {},
+    didRegistrationMetadata: {},
+    didState: {
+      state: 'finished',
+      did: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+      didDocument: JsonTransformer.fromJSON(
+        {
+          '@context': [
+            'https://w3id.org/did/v1',
+            'https://w3id.org/security/suites/ed25519-2018/v1',
+            'https://w3id.org/security/suites/x25519-2019/v1',
+          ],
+          id: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          verificationMethod: [
+            {
+              id: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+              type: 'Ed25519VerificationKey2018',
+              controller: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+              publicKeyBase58: 'ApexJxnhZHC6Ctq4fCoNHKYgu87HuRTZ7oSyfehG57zE',
+            },
+          ],
+          authentication: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+          assertionMethod: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+          keyAgreement: [
+            {
+              id: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6LSm5B4fB9NA55xB7PSeMYTMS9sf8uboJvyZBaDLLSZ7Ryd',
+              type: 'X25519KeyAgreementKey2019',
+              controller: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+              publicKeyBase58: 'APzu8sLW4cND5j1g7i2W2qwPozNV6hkpgCrXqso2Q4Cs',
+            },
+          ],
+          capabilityInvocation: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+          capabilityDelegation: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+        },
+        DidDocument
+      ),
+      secret: {},
+    },
+  } as DidCreateResult
 }

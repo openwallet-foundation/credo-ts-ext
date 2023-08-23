@@ -724,6 +724,90 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"KeyType": {
+				"enum": [
+					"ed25519",
+					"bls12381g1g2",
+					"bls12381g1",
+					"bls12381g2",
+					"x25519",
+					"p256",
+					"p384",
+					"p521"
+				],
+				"type": "string"
+			},
+			"PrivateKey": {
+				"properties": {
+					"keyType": {
+						"$ref": "#/components/schemas/KeyType"
+					},
+					"privateKey": {
+						"type": "string",
+						"format": "byte"
+					}
+				},
+				"required": [
+					"keyType",
+					"privateKey"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ImportDidOptions": {
+				"properties": {
+					"did": {
+						"type": "string",
+						"description": "The did to import."
+					},
+					"didDocument": {
+						"$ref": "#/components/schemas/DidDocument",
+						"description": "Optional did document to import. If not provided, the did document will be resolved using the did resolver."
+					},
+					"privateKeys": {
+						"items": {
+							"$ref": "#/components/schemas/PrivateKey"
+						},
+						"type": "array",
+						"description": "List of private keys associated with the did document that should be stored in the wallet."
+					},
+					"overwrite": {
+						"type": "boolean",
+						"description": "Whether to overwrite an existing did record if it exists. If set to false,\nan error will be thrown if the did record already exists.",
+						"default": "false"
+					}
+				},
+				"required": [
+					"did"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DidCreateOptions": {
+				"properties": {
+					"method": {
+						"type": "string"
+					},
+					"did": {
+						"type": "string"
+					},
+					"options": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object"
+					},
+					"secret": {
+						"properties": {},
+						"additionalProperties": {},
+						"type": "object"
+					},
+					"didDocument": {
+						"$ref": "#/components/schemas/DidDocument"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"HandshakeProtocol": {
 				"enum": [
 					"https://didcomm.org/connections/1.0",
@@ -3459,6 +3543,168 @@
 						}
 					}
 				]
+			}
+		},
+		"/dids/import": {
+			"post": {
+				"operationId": "ImportDid",
+				"responses": {
+					"200": {
+						"description": "DidResolutionResultProps",
+						"content": {
+							"application/json": {
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"didDocument": {
+												"@context": [
+													"https://w3id.org/did/v1",
+													"https://w3id.org/security/suites/ed25519-2018/v1",
+													"https://w3id.org/security/suites/x25519-2019/v1"
+												],
+												"id": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+												"verificationMethod": [
+													{
+														"id": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+														"type": "Ed25519VerificationKey2018",
+														"controller": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+														"publicKeyBase58": "6fioC1zcDPyPEL19pXRS2E4iJ46zH7xP6uSgAaPdwDrx"
+													}
+												],
+												"authentication": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"assertionMethod": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"capabilityInvocation": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"capabilityDelegation": [
+													"did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
+												],
+												"keyAgreement": [
+													{
+														"id": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6LSrdqo4M24WRDJj1h2hXxgtDTyzjjKCiyapYVgrhwZAySn",
+														"type": "X25519KeyAgreementKey2019",
+														"controller": "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL",
+														"publicKeyBase58": "FxfdY3DCQxVZddKGAtSjZdFW9bCCW7oRwZn1NFJ2Tbg2"
+													}
+												]
+											},
+											"didDocumentMetadata": {},
+											"didResolutionMetadata": {
+												"contentType": "application/did+ld+json"
+											}
+										}
+									}
+								}
+							}
+						}
+					},
+					"400": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"reason": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"reason"
+									],
+									"type": "object"
+								}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Import a Did to the Agent and return the did resolution result",
+				"tags": [
+					"Dids"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ImportDidOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/dids/create": {
+			"post": {
+				"operationId": "CreateDid",
+				"responses": {
+					"200": {
+						"description": "DidResolutionResultProps",
+						"content": {
+							"application/json": {
+								"schema": {}
+							}
+						}
+					},
+					"500": {
+						"description": "",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"message": {
+											"type": "string"
+										}
+									},
+									"required": [
+										"message"
+									],
+									"type": "object"
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a Did and return the did resolution result",
+				"tags": [
+					"Dids"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/DidCreateOptions"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/oob": {

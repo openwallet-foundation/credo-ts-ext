@@ -29,6 +29,8 @@ import type {
   AutoAcceptProof,
   ProofFormatPayload,
   ProofsProtocolVersionType,
+  DidDocument,
+  KeyType,
 } from '@aries-framework/core'
 import type { DIDDocument } from 'did-resolver'
 
@@ -63,6 +65,55 @@ type CredentialFormats = [LegacyIndyCredentialFormat, AnonCredsCredentialFormat]
 
 type ProofProtocols = [V1ProofProtocol, V2ProofProtocol<[LegacyIndyProofFormatService, AnonCredsProofFormatService]>]
 type ProofFormats = [LegacyIndyProofFormat, AnonCredsProofFormat]
+
+interface PrivateKey {
+  keyType: KeyType
+  privateKey: Buffer
+}
+
+export interface ImportDidOptions {
+  did: string
+  didDocument?: DidDocument
+  privateKeys?: PrivateKey[]
+  overwrite?: boolean
+}
+
+export interface DidCreateOptions {
+  method?: string
+  did?: string
+  options?: { [x: string]: unknown }
+  secret?: { [x: string]: unknown }
+  didDocument?: DidDocument
+}
+
+export interface DidOperationStateFinished {
+  state: 'finished'
+  did: string
+  secret?: { [x: string]: unknown }
+  didDocument: { [x: string]: unknown }
+}
+export interface DidOperationStateFailed {
+  state: 'failed'
+  did?: string
+  secret?: { [x: string]: unknown }
+  didDocument?: { [x: string]: unknown }
+  reason: string
+}
+export interface DidOperationStateWait {
+  state: 'wait'
+  did?: string
+  secret?: { [x: string]: unknown }
+  didDocument?: { [x: string]: unknown }
+}
+export interface DidOperationStateActionBase {
+  state: 'action'
+  action: string
+  did?: string
+  secret?: { [x: string]: unknown }
+  didDocument?: { [x: string]: unknown }
+}
+
+export type DidCreateResult = DidOperationStateWait | DidOperationStateActionBase | DidOperationStateFinished
 
 export interface ProposeCredentialOptions {
   protocolVersion: CredentialProtocolVersionType<CredentialProtocols>
