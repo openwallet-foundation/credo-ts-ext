@@ -1,30 +1,19 @@
-import type { InitConfig } from '@aries-framework/core'
-import type { WalletConfig } from '@aries-framework/core/build/types'
+import type { InitConfig, WalletConfig } from '@aries-framework/core'
 import type { IndyVdrPoolConfig } from '@aries-framework/indy-vdr'
 
-import { AnonCredsModule } from '@aries-framework/anoncreds'
-import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
-import { AskarModule } from '@aries-framework/askar'
 import {
   HttpOutboundTransport,
   WsOutboundTransport,
   LogLevel,
   Agent,
-  ConnectionsModule,
-  ProofsModule,
-  CredentialsModule,
   AutoAcceptCredential,
   AutoAcceptProof,
-  MediatorModule,
 } from '@aries-framework/core'
-import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@aries-framework/indy-vdr'
 import { agentDependencies, HttpInboundTransport, WsInboundTransport } from '@aries-framework/node'
-import { anoncreds } from '@hyperledger/anoncreds-nodejs'
-import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
-import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
 import { readFile } from 'fs/promises'
 
 import { setupServer } from './server'
+import { getAgentModules } from './utils/agent'
 import { TsLogger } from './utils/logger'
 
 export type Transports = 'ws' | 'http'
@@ -46,7 +35,7 @@ const outboundTransportMapping = {
 export interface AriesRestConfig {
   label: string
   walletConfig: WalletConfig
-  indyLedgers: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
+  indyLedgers: IndyVdrPoolConfig[]
   endpoints?: string[]
   autoAcceptConnections?: boolean
   autoAcceptCredentials?: AutoAcceptCredential
@@ -93,36 +82,19 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     logger,
   }
 
+  const maybeLedgers = indyLedgers.length > 0 ? (indyLedgers as [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]) : undefined
+  const modules = getAgentModules({
+    autoAcceptConnections,
+    autoAcceptProofs,
+    autoAcceptCredentials,
+    autoAcceptMediationRequests,
+    indyLedgers: maybeLedgers,
+  })
+
   const agent = new Agent({
     config: agentConfig,
     dependencies: agentDependencies,
-    modules: {
-      connections: new ConnectionsModule({
-        autoAcceptConnections,
-      }),
-      proofs: new ProofsModule({
-        autoAcceptProofs,
-      }),
-      credentials: new CredentialsModule({
-        autoAcceptCredentials,
-      }),
-      indyVdr: new IndyVdrModule({
-        indyVdr,
-        networks: indyLedgers,
-      }),
-      anoncreds: new AnonCredsModule({
-        registries: [new IndyVdrAnonCredsRegistry()],
-      }),
-      anoncredsRs: new AnonCredsRsModule({
-        anoncreds,
-      }),
-      askar: new AskarModule({
-        ariesAskar,
-      }),
-      mediator: new MediatorModule({
-        autoAcceptMediationRequests,
-      }),
-    },
+    modules,
   })
 
   // Register outbound transports

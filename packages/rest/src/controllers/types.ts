@@ -1,16 +1,23 @@
 import type {
   AnonCredsSchema,
   AnonCredsCredentialDefinition,
-  AnonCredsPresentationPreviewAttribute,
-  AnonCredsPresentationPreviewPredicate,
   AnonCredsNonRevokedInterval,
   AnonCredsPredicateType,
+  V1CredentialProtocol,
+  AnonCredsCredentialFormat,
+  LegacyIndyCredentialFormat,
+  AnonCredsCredentialFormatService,
+  LegacyIndyCredentialFormatService,
+  V1ProofProtocol,
+  LegacyIndyProofFormatService,
+  AnonCredsProofFormatService,
+  LegacyIndyProofFormat,
+  AnonCredsProofFormat,
 } from '@aries-framework/anoncreds'
 import type {
   AutoAcceptCredential,
   CredentialFormatPayload,
   HandshakeProtocol,
-  CredentialFormat,
   CredentialProtocolVersionType,
   ReceiveOutOfBandInvitationConfig,
   OutOfBandDidCommService,
@@ -18,6 +25,10 @@ import type {
   DidDocumentMetadata,
   ProofExchangeRecord,
   V2CredentialProtocol,
+  V2ProofProtocol,
+  AutoAcceptProof,
+  ProofFormatPayload,
+  ProofsProtocolVersionType,
 } from '@aries-framework/core'
 import type { DIDDocument } from 'did-resolver'
 
@@ -44,24 +55,19 @@ export interface ProofRequestMessageResponse {
   proofRecord: ProofExchangeRecord
 }
 
-type CredentialProtocols = [V2CredentialProtocol]
-type CredentialFormats = [CredentialFormat]
+type CredentialProtocols = [
+  V1CredentialProtocol,
+  V2CredentialProtocol<[LegacyIndyCredentialFormatService, AnonCredsCredentialFormatService]>
+]
+type CredentialFormats = [LegacyIndyCredentialFormat, AnonCredsCredentialFormat]
+
+type ProofProtocols = [V1ProofProtocol, V2ProofProtocol<[LegacyIndyProofFormatService, AnonCredsProofFormatService]>]
+type ProofFormats = [LegacyIndyProofFormat, AnonCredsProofFormat]
 
 export interface ProposeCredentialOptions {
   protocolVersion: CredentialProtocolVersionType<CredentialProtocols>
   credentialFormats: {
-    indy: {
-      schemaIssuerDid: string
-      schemaId: string
-      schemaName: string
-      schemaVersion: string
-      credentialDefinitionId: string
-      issuerDid: string
-      attributes: {
-        name: string
-        value: string
-      }[]
-    }
+    [key in CredentialFormats[number] as key['formatKey']]?: CredentialFormats[number]['credentialFormats']['createProposal']
   }
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
@@ -70,18 +76,7 @@ export interface ProposeCredentialOptions {
 
 export interface AcceptCredentialProposalOptions {
   credentialFormats?: {
-    indy: {
-      schemaIssuerDid: string
-      schemaId: string
-      schemaName: string
-      schemaVersion: string
-      credentialDefinitionId: string
-      issuerDid: string
-      attributes: {
-        name: string
-        value: string
-      }[]
-    }
+    [key in CredentialFormats[number] as key['formatKey']]?: CredentialFormats[number]['credentialFormats']['acceptProposal']
   }
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
@@ -89,30 +84,14 @@ export interface AcceptCredentialProposalOptions {
 
 export interface CreateOfferOptions {
   protocolVersion: CredentialProtocolVersionType<CredentialProtocols>
-  credentialFormats: {
-    indy: {
-      credentialDefinitionId: string
-      attributes: {
-        name: string
-        value: string
-      }[]
-    }
-  }
+  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createOffer'>
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
 }
 
 export interface OfferCredentialOptions {
   protocolVersion: CredentialProtocolVersionType<CredentialProtocols>
-  credentialFormats: {
-    indy: {
-      credentialDefinitionId: string
-      attributes: {
-        name: string
-        value: string
-      }[]
-    }
-  }
+  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createOffer'>
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
   connectionId: string
@@ -172,49 +151,90 @@ export interface ConnectionInvitationSchema {
   imageUrl?: string
 }
 
-export interface RequestProofOptionsProofRequestRestriction {
-  schemaId?: string
-  schemaIssuerId?: string
-  schemaName?: string
-  schemaVersion?: string
-  issuerId?: string
-  credDefId?: string
-  revRegId?: string
-  schemaIssuerDid?: string
-  issuerDid?: string
-  requiredAttributes?: string[]
-  requiredAttributeValues?: { [key: string]: string }
-}
-
-export interface RequestProofOptionsRequestedAttribute {
-  name?: string
-  names?: string[]
-  restrictions?: RequestProofOptionsProofRequestRestriction[]
-  nonRevoked?: AnonCredsNonRevokedInterval
-}
-export interface RequestProofOptionsRequestedPredicate {
-  name: string
-  pType: AnonCredsPredicateType
-  pValue: number
-  restrictions?: RequestProofOptionsProofRequestRestriction[]
-  nonRevoked?: AnonCredsNonRevokedInterval
-}
-
-export interface RequestProofOptions {
+export interface ProposeProofOptions {
   connectionId: string
-  proofRequestOptions: {
-    name: string
-    version: string
-    requestedAttributes?: { [key: string]: RequestProofOptionsRequestedAttribute }
-    requestedPredicates?: { [key: string]: RequestProofOptionsRequestedPredicate }
+  protocolVersion: ProofsProtocolVersionType<ProofProtocols>
+  proofFormats: ProofFormatPayload<ProofFormats, 'createProposal'>
+  goalCode?: string
+  parentThreadId?: string
+  autoAcceptProof?: AutoAcceptProof
+  comment?: string
+}
+
+export interface AcceptProofProposalOptions {
+  proofFormats?: ProofFormatPayload<ProofFormats, 'acceptProposal'>
+  goalCode?: string
+  willConfirm?: boolean
+  autoAcceptProof?: AutoAcceptProof
+  comment?: string
+}
+
+export interface AcceptProofRequestOptions {
+  useReturnRoute?: boolean
+  goalCode?: string
+  willConfirm?: boolean
+  autoAcceptProof?: AutoAcceptProof
+  comment?: string
+}
+
+export interface AnonCredsProofRequestRestrictionOptions {
+  schema_id?: string
+  schema_issuer_id?: string
+  schema_name?: string
+  schema_version?: string
+  issuer_id?: string
+  cred_def_id?: string
+  rev_reg_id?: string
+  schema_issuer_did?: string
+  issuer_did?: string
+  attributeValues?: {
+    [key: string]: string
+  }
+  attributeMarkers?: {
+    [key: string]: boolean
   }
 }
 
-export interface RequestProofProposalOptions {
-  connectionId: string
-  attributes: AnonCredsPresentationPreviewAttribute[]
-  predicates: AnonCredsPresentationPreviewPredicate[]
+export interface AnonCredsRequestedAttributeOptions {
+  name?: string
+  names?: string[]
+  restrictions?: AnonCredsProofRequestRestrictionOptions[]
+  non_revoked?: AnonCredsNonRevokedInterval
+}
+export interface AnonCredsRequestedPredicateOptions {
+  name: string
+  p_type: AnonCredsPredicateType
+  p_value: number
+  restrictions?: AnonCredsProofRequestRestrictionOptions[]
+  non_revoked?: AnonCredsNonRevokedInterval
+}
+
+export interface AnonCredsRequestProofFormatOptions {
+  name: string
+  version: string
+  non_revoked?: AnonCredsNonRevokedInterval
+  requested_attributes?: {
+    [key: string]: AnonCredsRequestedAttributeOptions
+  }
+  requested_predicates?: {
+    [key: string]: AnonCredsRequestedPredicateOptions
+  }
+}
+
+export interface CreateProofRequestOptions {
+  protocolVersion: ProofsProtocolVersionType<ProofProtocols>
+  proofFormats: {
+    [key in ProofFormats[number] as key['formatKey']]?: AnonCredsRequestProofFormatOptions
+  }
+  goalCode?: string
+  parentThreadId?: string
+  willConfirm?: boolean
+  autoAcceptProof?: AutoAcceptProof
   comment?: string
+}
+
+export interface RequestProofOptions extends CreateProofRequestOptions {
+  connectionId: string
 }
 
 export interface AnonCredsSchemaResponse extends AnonCredsSchema {

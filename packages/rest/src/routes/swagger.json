@@ -91,6 +91,220 @@
 				"type": "string",
 				"description": "Get the supported protocol versions based on the provided credential protocols."
 			},
+			"CredentialPreviewAttributeOptions": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"mimeType": {
+						"type": "string"
+					},
+					"value": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"name",
+					"value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_JwsGeneralFormat.Exclude_keyofJwsGeneralFormat.payload__": {
+				"properties": {
+					"header": {
+						"$ref": "#/components/schemas/Record_string.unknown_",
+						"description": "unprotected header"
+					},
+					"signature": {
+						"type": "string",
+						"description": "Base64url encoded signature"
+					},
+					"protected": {
+						"type": "string",
+						"description": "Base64url encoded protected header"
+					}
+				},
+				"required": [
+					"header",
+					"signature",
+					"protected"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_JwsGeneralFormat.payload_": {
+				"$ref": "#/components/schemas/Pick_JwsGeneralFormat.Exclude_keyofJwsGeneralFormat.payload__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"JwsDetachedFormat": {
+				"$ref": "#/components/schemas/Omit_JwsGeneralFormat.payload_"
+			},
+			"JwsFlattenedDetachedFormat": {
+				"properties": {
+					"signatures": {
+						"items": {
+							"$ref": "#/components/schemas/JwsDetachedFormat"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"signatures"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AttachmentData": {
+				"description": "A JSON object that gives access to the actual content of the attachment",
+				"properties": {
+					"base64": {
+						"type": "string",
+						"description": "Base64-encoded data, when representing arbitrary content inline instead of via links. Optional."
+					},
+					"json": {
+						"$ref": "#/components/schemas/Record_string.unknown_",
+						"description": "Directly embedded JSON data, when representing content inline instead of via links, and when the content is natively conveyable as JSON. Optional."
+					},
+					"links": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array",
+						"description": "A list of zero or more locations at which the content may be fetched. Optional."
+					},
+					"jws": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/JwsDetachedFormat"
+							},
+							{
+								"$ref": "#/components/schemas/JwsFlattenedDetachedFormat"
+							}
+						],
+						"description": "A JSON Web Signature over the content of the attachment. Optional."
+					},
+					"sha256": {
+						"type": "string",
+						"description": "The hash of the content. Optional."
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Attachment": {
+				"description": "Represents DIDComm attachment\nhttps://github.com/hyperledger/aries-rfcs/blob/master/concepts/0017-attachments/README.md",
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"description": {
+						"type": "string",
+						"description": "An optional human-readable description of the content."
+					},
+					"filename": {
+						"type": "string",
+						"description": "A hint about the name that might be used if this attachment is persisted as a file. It is not required, and need not be unique. If this field is present and mime-type is not, the extension on the filename may be used to infer a MIME type."
+					},
+					"mimeType": {
+						"type": "string",
+						"description": "Describes the MIME type of the attached content. Optional but recommended."
+					},
+					"lastmodTime": {
+						"type": "string",
+						"format": "date-time",
+						"description": "A hint about when the content in this attachment was last modified."
+					},
+					"byteCount": {
+						"type": "number",
+						"format": "double",
+						"description": "Optional, and mostly relevant when content is included by reference instead of by value. Lets the receiver guess how expensive it will be, in time, bandwidth, and storage, to fully fetch the attachment."
+					},
+					"data": {
+						"$ref": "#/components/schemas/AttachmentData"
+					}
+				},
+				"required": [
+					"id",
+					"data"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LinkedAttachment": {
+				"properties": {
+					"attributeName": {
+						"type": "string",
+						"description": "The name that will be used to generate the linked credential"
+					},
+					"attachment": {
+						"$ref": "#/components/schemas/Attachment",
+						"description": "The attachment that needs to be linked to the credential"
+					}
+				},
+				"required": [
+					"attributeName",
+					"attachment"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AnonCredsProposeCredentialFormat": {
+				"description": "This defines the module payload for calling CredentialsApi.createProposal\nor CredentialsApi.negotiateOffer",
+				"properties": {
+					"schemaIssuerId": {
+						"type": "string"
+					},
+					"schemaId": {
+						"type": "string"
+					},
+					"schemaName": {
+						"type": "string"
+					},
+					"schemaVersion": {
+						"type": "string"
+					},
+					"credentialDefinitionId": {
+						"type": "string"
+					},
+					"issuerId": {
+						"type": "string"
+					},
+					"attributes": {
+						"items": {
+							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
+						},
+						"type": "array"
+					},
+					"linkedAttachments": {
+						"items": {
+							"$ref": "#/components/schemas/LinkedAttachment"
+						},
+						"type": "array"
+					},
+					"schemaIssuerDid": {
+						"type": "string"
+					},
+					"issuerDid": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_AnonCredsProposeCredentialFormat.Exclude_keyofAnonCredsProposeCredentialFormat.schemaIssuerId-or-issuerId__": {
+				"properties": {},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_AnonCredsProposeCredentialFormat.schemaIssuerId-or-issuerId_": {
+				"$ref": "#/components/schemas/Pick_AnonCredsProposeCredentialFormat.Exclude_keyofAnonCredsProposeCredentialFormat.schemaIssuerId-or-issuerId__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"LegacyIndyProposeCredentialFormat": {
+				"$ref": "#/components/schemas/Omit_AnonCredsProposeCredentialFormat.schemaIssuerId-or-issuerId_",
+				"description": "This defines the module payload for calling CredentialsApi.createProposal\nor CredentialsApi.negotiateOffer\n\nNOTE: This doesn't include the `issuerId` and `schemaIssuerId` properties that are present in the newer format."
+			},
 			"AutoAcceptCredential": {
 				"description": "Typing of the state for auto acceptance",
 				"enum": [
@@ -108,59 +322,26 @@
 					"credentialFormats": {
 						"properties": {
 							"indy": {
-								"properties": {
-									"attributes": {
-										"items": {
-											"properties": {
-												"value": {
-													"type": "string"
-												},
-												"name": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"value",
-												"name"
-											],
-											"type": "object"
-										},
-										"type": "array"
+								"anyOf": [
+									{
+										"$ref": "#/components/schemas/AnonCredsProposeCredentialFormat"
 									},
-									"issuerDid": {
-										"type": "string"
-									},
-									"credentialDefinitionId": {
-										"type": "string"
-									},
-									"schemaVersion": {
-										"type": "string"
-									},
-									"schemaName": {
-										"type": "string"
-									},
-									"schemaId": {
-										"type": "string"
-									},
-									"schemaIssuerDid": {
-										"type": "string"
+									{
+										"$ref": "#/components/schemas/LegacyIndyProposeCredentialFormat"
 									}
-								},
-								"required": [
-									"attributes",
-									"issuerDid",
-									"credentialDefinitionId",
-									"schemaVersion",
-									"schemaName",
-									"schemaId",
-									"schemaIssuerDid"
-								],
-								"type": "object"
+								]
+							},
+							"anoncreds": {
+								"anyOf": [
+									{
+										"$ref": "#/components/schemas/AnonCredsProposeCredentialFormat"
+									},
+									{
+										"$ref": "#/components/schemas/LegacyIndyProposeCredentialFormat"
+									}
+								]
 							}
 						},
-						"required": [
-							"indy"
-						],
 						"type": "object"
 					},
 					"autoAcceptCredential": {
@@ -181,64 +362,39 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AnonCredsAcceptProposalFormat": {
+				"description": "This defines the module payload for calling CredentialsApi.acceptProposal",
+				"properties": {
+					"credentialDefinitionId": {
+						"type": "string"
+					},
+					"attributes": {
+						"items": {
+							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
+						},
+						"type": "array"
+					},
+					"linkedAttachments": {
+						"items": {
+							"$ref": "#/components/schemas/LinkedAttachment"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"AcceptCredentialProposalOptions": {
 				"properties": {
 					"credentialFormats": {
 						"properties": {
 							"indy": {
-								"properties": {
-									"attributes": {
-										"items": {
-											"properties": {
-												"value": {
-													"type": "string"
-												},
-												"name": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"value",
-												"name"
-											],
-											"type": "object"
-										},
-										"type": "array"
-									},
-									"issuerDid": {
-										"type": "string"
-									},
-									"credentialDefinitionId": {
-										"type": "string"
-									},
-									"schemaVersion": {
-										"type": "string"
-									},
-									"schemaName": {
-										"type": "string"
-									},
-									"schemaId": {
-										"type": "string"
-									},
-									"schemaIssuerDid": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"attributes",
-									"issuerDid",
-									"credentialDefinitionId",
-									"schemaVersion",
-									"schemaName",
-									"schemaId",
-									"schemaIssuerDid"
-								],
-								"type": "object"
+								"$ref": "#/components/schemas/AnonCredsAcceptProposalFormat"
+							},
+							"anoncreds": {
+								"$ref": "#/components/schemas/AnonCredsAcceptProposalFormat"
 							}
 						},
-						"required": [
-							"indy"
-						],
 						"type": "object"
 					},
 					"autoAcceptCredential": {
@@ -251,48 +407,51 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AnonCredsOfferCredentialFormat": {
+				"description": "This defines the module payload for calling CredentialsApi.offerCredential\nor CredentialsApi.negotiateProposal",
+				"properties": {
+					"credentialDefinitionId": {
+						"type": "string"
+					},
+					"attributes": {
+						"items": {
+							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
+						},
+						"type": "array"
+					},
+					"linkedAttachments": {
+						"items": {
+							"$ref": "#/components/schemas/LinkedAttachment"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"credentialDefinitionId",
+					"attributes"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatPayload_CredentialFormats.createOffer_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/AnonCredsOfferCredentialFormat"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsOfferCredentialFormat"
+					}
+				},
+				"type": "object",
+				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
+			},
 			"CreateOfferOptions": {
 				"properties": {
 					"protocolVersion": {
 						"$ref": "#/components/schemas/CredentialProtocolVersionType_CredentialProtocols_"
 					},
 					"credentialFormats": {
-						"properties": {
-							"indy": {
-								"properties": {
-									"attributes": {
-										"items": {
-											"properties": {
-												"value": {
-													"type": "string"
-												},
-												"name": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"value",
-												"name"
-											],
-											"type": "object"
-										},
-										"type": "array"
-									},
-									"credentialDefinitionId": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"attributes",
-									"credentialDefinitionId"
-								],
-								"type": "object"
-							}
-						},
-						"required": [
-							"indy"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.createOffer_"
 					},
 					"autoAcceptCredential": {
 						"$ref": "#/components/schemas/AutoAcceptCredential"
@@ -314,42 +473,7 @@
 						"$ref": "#/components/schemas/CredentialProtocolVersionType_CredentialProtocols_"
 					},
 					"credentialFormats": {
-						"properties": {
-							"indy": {
-								"properties": {
-									"attributes": {
-										"items": {
-											"properties": {
-												"value": {
-													"type": "string"
-												},
-												"name": {
-													"type": "string"
-												}
-											},
-											"required": [
-												"value",
-												"name"
-											],
-											"type": "object"
-										},
-										"type": "array"
-									},
-									"credentialDefinitionId": {
-										"type": "string"
-									}
-								},
-								"required": [
-									"attributes",
-									"credentialDefinitionId"
-								],
-								"type": "object"
-							}
-						},
-						"required": [
-							"indy"
-						],
-						"type": "object"
+						"$ref": "#/components/schemas/CredentialFormatPayload_CredentialFormats.createOffer_"
 					},
 					"autoAcceptCredential": {
 						"$ref": "#/components/schemas/AutoAcceptCredential"
@@ -369,8 +493,25 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AnonCredsAcceptOfferFormat": {
+				"description": "This defines the module payload for calling CredentialsApi.acceptOffer. No options are available for this\nmethod, so it's an empty object",
+				"properties": {
+					"linkSecretId": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"CredentialFormatPayload_CredentialFormats.acceptOffer_": {
-				"properties": {},
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/AnonCredsAcceptOfferFormat"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsAcceptOfferFormat"
+					}
+				},
 				"type": "object",
 				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
 			},
@@ -389,8 +530,31 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"AnonCredsAcceptRequestFormat": {
+				"$ref": "#/components/schemas/Record_string.never_",
+				"description": "This defines the module payload for calling CredentialsApi.acceptRequest. No options are available for this\nmethod, so it's an empty object"
+			},
+			"Record_string.never_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/AnonCredsAcceptRequestFormat"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsAcceptRequestFormat"
+					}
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
 			"CredentialFormatPayload_CredentialFormats.acceptRequest_": {
-				"properties": {},
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/AnonCredsAcceptRequestFormat"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsAcceptRequestFormat"
+					}
+				},
 				"type": "object",
 				"description": "Get the payload for a specific method from a list of CredentialFormat interfaces and a method"
 			},
@@ -869,6 +1033,10 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ProofsProtocolVersionType_ProofProtocols_": {
+				"type": "string",
+				"description": "Get the supported protocol versions based on the provided proof protocols."
+			},
 			"AnonCredsPresentationPreviewAttribute": {
 				"properties": {
 					"name": {
@@ -927,9 +1095,13 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RequestProofProposalOptions": {
+			"AnonCredsProposeProofFormat": {
+				"description": "Interface for creating an anoncreds proof proposal.",
 				"properties": {
-					"connectionId": {
+					"name": {
+						"type": "string"
+					},
+					"version": {
 						"type": "string"
 					},
 					"attributes": {
@@ -943,6 +1115,51 @@
 							"$ref": "#/components/schemas/AnonCredsPresentationPreviewPredicate"
 						},
 						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ProofFormatPayload_ProofFormats.createProposal_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/AnonCredsProposeProofFormat"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsProposeProofFormat"
+					}
+				},
+				"type": "object",
+				"description": "Get the payload for a specific method from a list of ProofFormat interfaces and a method"
+			},
+			"AutoAcceptProof": {
+				"description": "Typing of the state for auto acceptance",
+				"enum": [
+					"always",
+					"contentApproved",
+					"never"
+				],
+				"type": "string"
+			},
+			"ProposeProofOptions": {
+				"properties": {
+					"connectionId": {
+						"type": "string"
+					},
+					"protocolVersion": {
+						"$ref": "#/components/schemas/ProofsProtocolVersionType_ProofProtocols_"
+					},
+					"proofFormats": {
+						"$ref": "#/components/schemas/ProofFormatPayload_ProofFormats.createProposal_"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"parentThreadId": {
+						"type": "string"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
 					},
 					"comment": {
 						"type": "string"
@@ -950,57 +1167,66 @@
 				},
 				"required": [
 					"connectionId",
-					"attributes",
-					"predicates"
+					"protocolVersion",
+					"proofFormats"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RequestProofOptionsProofRequestRestriction": {
+			"ProofFormatPayload_ProofFormats.acceptProposal_": {
 				"properties": {
-					"schemaId": {
-						"type": "string"
-					},
-					"schemaIssuerId": {
-						"type": "string"
-					},
-					"schemaName": {
-						"type": "string"
-					},
-					"schemaVersion": {
-						"type": "string"
-					},
-					"issuerId": {
-						"type": "string"
-					},
-					"credDefId": {
-						"type": "string"
-					},
-					"revRegId": {
-						"type": "string"
-					},
-					"schemaIssuerDid": {
-						"type": "string"
-					},
-					"issuerDid": {
-						"type": "string"
-					},
-					"requiredAttributes": {
-						"items": {
-							"type": "string"
+					"indy": {
+						"properties": {
+							"version": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
 						},
-						"type": "array"
+						"type": "object"
 					},
-					"requiredAttributeValues": {
-						"properties": {},
-						"additionalProperties": {
-							"type": "string"
+					"anoncreds": {
+						"properties": {
+							"version": {
+								"type": "string"
+							},
+							"name": {
+								"type": "string"
+							}
 						},
 						"type": "object"
 					}
 				},
 				"type": "object",
+				"description": "Get the payload for a specific method from a list of ProofFormat interfaces and a method"
+			},
+			"AcceptProofProposalOptions": {
+				"properties": {
+					"proofFormats": {
+						"$ref": "#/components/schemas/ProofFormatPayload_ProofFormats.acceptProposal_"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"willConfirm": {
+						"type": "boolean"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
+				"type": "object",
 				"additionalProperties": false
+			},
+			"AgentMessage": {
+				"$ref": "#/components/schemas/Record_string.unknown_"
+			},
+			"ProofExchangeRecord": {
+				"$ref": "#/components/schemas/Record_string.unknown_"
 			},
 			"AnonCredsNonRevokedInterval": {
 				"properties": {
@@ -1016,7 +1242,54 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RequestProofOptionsRequestedAttribute": {
+			"AnonCredsProofRequestRestrictionOptions": {
+				"properties": {
+					"schema_id": {
+						"type": "string"
+					},
+					"schema_issuer_id": {
+						"type": "string"
+					},
+					"schema_name": {
+						"type": "string"
+					},
+					"schema_version": {
+						"type": "string"
+					},
+					"issuer_id": {
+						"type": "string"
+					},
+					"cred_def_id": {
+						"type": "string"
+					},
+					"rev_reg_id": {
+						"type": "string"
+					},
+					"schema_issuer_did": {
+						"type": "string"
+					},
+					"issuer_did": {
+						"type": "string"
+					},
+					"attributeValues": {
+						"properties": {},
+						"additionalProperties": {
+							"type": "string"
+						},
+						"type": "object"
+					},
+					"attributeMarkers": {
+						"properties": {},
+						"additionalProperties": {
+							"type": "boolean"
+						},
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AnonCredsRequestedAttributeOptions": {
 				"properties": {
 					"name": {
 						"type": "string"
@@ -1029,86 +1302,180 @@
 					},
 					"restrictions": {
 						"items": {
-							"$ref": "#/components/schemas/RequestProofOptionsProofRequestRestriction"
+							"$ref": "#/components/schemas/AnonCredsProofRequestRestrictionOptions"
 						},
 						"type": "array"
 					},
-					"nonRevoked": {
+					"non_revoked": {
 						"$ref": "#/components/schemas/AnonCredsNonRevokedInterval"
 					}
 				},
 				"type": "object",
 				"additionalProperties": false
 			},
-			"RequestProofOptionsRequestedPredicate": {
+			"AnonCredsRequestedPredicateOptions": {
 				"properties": {
 					"name": {
 						"type": "string"
 					},
-					"pType": {
+					"p_type": {
 						"$ref": "#/components/schemas/AnonCredsPredicateType"
 					},
-					"pValue": {
+					"p_value": {
 						"type": "number",
 						"format": "double"
 					},
 					"restrictions": {
 						"items": {
-							"$ref": "#/components/schemas/RequestProofOptionsProofRequestRestriction"
+							"$ref": "#/components/schemas/AnonCredsProofRequestRestrictionOptions"
 						},
 						"type": "array"
 					},
-					"nonRevoked": {
+					"non_revoked": {
 						"$ref": "#/components/schemas/AnonCredsNonRevokedInterval"
 					}
 				},
 				"required": [
 					"name",
-					"pType",
-					"pValue"
+					"p_type",
+					"p_value"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AnonCredsRequestProofFormatOptions": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"version": {
+						"type": "string"
+					},
+					"non_revoked": {
+						"$ref": "#/components/schemas/AnonCredsNonRevokedInterval"
+					},
+					"requested_attributes": {
+						"properties": {},
+						"additionalProperties": {
+							"$ref": "#/components/schemas/AnonCredsRequestedAttributeOptions"
+						},
+						"type": "object"
+					},
+					"requested_predicates": {
+						"properties": {},
+						"additionalProperties": {
+							"$ref": "#/components/schemas/AnonCredsRequestedPredicateOptions"
+						},
+						"type": "object"
+					}
+				},
+				"required": [
+					"name",
+					"version"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateProofRequestOptions": {
+				"properties": {
+					"protocolVersion": {
+						"$ref": "#/components/schemas/ProofsProtocolVersionType_ProofProtocols_"
+					},
+					"proofFormats": {
+						"properties": {
+							"indy": {
+								"$ref": "#/components/schemas/AnonCredsRequestProofFormatOptions"
+							},
+							"anoncreds": {
+								"$ref": "#/components/schemas/AnonCredsRequestProofFormatOptions"
+							}
+						},
+						"type": "object"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"parentThreadId": {
+						"type": "string"
+					},
+					"willConfirm": {
+						"type": "boolean"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"protocolVersion",
+					"proofFormats"
 				],
 				"type": "object",
 				"additionalProperties": false
 			},
 			"RequestProofOptions": {
 				"properties": {
-					"connectionId": {
-						"type": "string"
+					"protocolVersion": {
+						"$ref": "#/components/schemas/ProofsProtocolVersionType_ProofProtocols_"
 					},
-					"proofRequestOptions": {
+					"proofFormats": {
 						"properties": {
-							"requestedPredicates": {
-								"properties": {},
-								"additionalProperties": {
-									"$ref": "#/components/schemas/RequestProofOptionsRequestedPredicate"
-								},
-								"type": "object"
+							"indy": {
+								"$ref": "#/components/schemas/AnonCredsRequestProofFormatOptions"
 							},
-							"requestedAttributes": {
-								"properties": {},
-								"additionalProperties": {
-									"$ref": "#/components/schemas/RequestProofOptionsRequestedAttribute"
-								},
-								"type": "object"
-							},
-							"version": {
-								"type": "string"
-							},
-							"name": {
-								"type": "string"
+							"anoncreds": {
+								"$ref": "#/components/schemas/AnonCredsRequestProofFormatOptions"
 							}
 						},
-						"required": [
-							"version",
-							"name"
-						],
 						"type": "object"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"parentThreadId": {
+						"type": "string"
+					},
+					"willConfirm": {
+						"type": "boolean"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"comment": {
+						"type": "string"
+					},
+					"connectionId": {
+						"type": "string"
 					}
 				},
 				"required": [
-					"connectionId",
-					"proofRequestOptions"
+					"protocolVersion",
+					"proofFormats",
+					"connectionId"
 				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AcceptProofRequestOptions": {
+				"properties": {
+					"useReturnRoute": {
+						"type": "boolean"
+					},
+					"goalCode": {
+						"type": "string"
+					},
+					"willConfirm": {
+						"type": "boolean"
+					},
+					"autoAcceptProof": {
+						"$ref": "#/components/schemas/AutoAcceptProof"
+					},
+					"comment": {
+						"type": "string"
+					}
+				},
 				"type": "object",
 				"additionalProperties": false
 			}
@@ -4275,7 +4642,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/RequestProofProposalOptions"
+								"$ref": "#/components/schemas/ProposeProofOptions"
 							}
 						}
 					}
@@ -4362,26 +4729,66 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"comment": {
-										"type": "string"
-									},
-									"request": {
-										"properties": {
-											"version": {
-												"type": "string"
-											},
-											"name": {
-												"type": "string"
-											}
+								"$ref": "#/components/schemas/AcceptProofProposalOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/proofs/create-request": {
+			"post": {
+				"operationId": "CreateRequest",
+				"responses": {
+					"200": {
+						"description": "ProofRequestMessageResponse",
+						"content": {
+							"application/json": {
+								"schema": {
+									"properties": {
+										"proofRecord": {
+											"$ref": "#/components/schemas/ProofExchangeRecord"
 										},
-										"type": "object"
-									}
+										"message": {
+											"$ref": "#/components/schemas/AgentMessage"
+										}
+									},
+									"required": [
+										"proofRecord",
+										"message"
+									],
+									"type": "object"
 								},
-								"required": [
-									"request"
-								],
-								"type": "object"
+								"examples": {
+									"Example 1": {
+										"value": {
+											"message": {},
+											"proofRecord": {
+												"id": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e",
+												"protocolVersion": "v2",
+												"threadId": "0019d466-5eea-4269-8c40-031b4896c5b7",
+												"connectionId": "2aecf74c-3073-4f98-9acb-92415d096834",
+												"createdAt": "2022-01-01T00:00:00.000Z"
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Creates a presentation request not bound to any proposal or existing connection",
+				"tags": [
+					"Proofs"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateProofRequestOptions"
 							}
 						}
 					}
@@ -4546,12 +4953,7 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"properties": {
-									"comment": {
-										"type": "string"
-									}
-								},
-								"type": "object"
+								"$ref": "#/components/schemas/AcceptProofRequestOptions"
 							}
 						}
 					}

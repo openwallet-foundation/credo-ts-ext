@@ -1,3 +1,4 @@
+import type { AcceptCredentialProposalOptions, ProposeCredentialOptions } from '../src/controllers/types'
 import type { Agent, CredentialStateChangedEvent, OutOfBandRecord } from '@aries-framework/core'
 import type { Server } from 'net'
 
@@ -137,7 +138,7 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'proposeCredential').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const proposalRequest = {
+      const proposalRequest: ProposeCredentialOptions = {
         connectionId: '000000aa-aa00-00a0-aa00-000a0aa00000',
         protocolVersion: 'v1',
         credentialFormats: {
@@ -177,15 +178,10 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.credentials, 'acceptProposal').mockResolvedValueOnce(testCredential)
       const getResult = (): Promise<CredentialExchangeRecord> => spy.mock.results[0].value
 
-      const proposalRequest = {
+      const proposalRequest: AcceptCredentialProposalOptions = {
         credentialFormats: {
           indy: {
             credentialDefinitionId: 'WghBqNdoFjaYh6F5N9eBF:3:CL:3210:test',
-            issuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-            schemaId: 'WgWxqztrNooG92RXvxSTWv:2:test:1.0',
-            schemaIssuerDid: 'WghBqNdoFjaYh6F5N9eBF',
-            schemaName: 'test',
-            schemaVersion: '1.0',
             attributes: [
               {
                 name: 'name',
@@ -194,7 +190,7 @@ describe('CredentialController', () => {
             ],
           },
         },
-        autoAcceptCredential: 'always',
+        autoAcceptCredential: 'always' as AutoAcceptCredential,
         comment: 'test',
       }
 

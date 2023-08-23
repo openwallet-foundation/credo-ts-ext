@@ -21,7 +21,6 @@ const parsed = yargs
   })
   .option('indy-ledger', {
     array: true,
-    // TODO: this default is invalid, fixme
     default: [],
     coerce: (items: unknown[]) => items.map((i) => (typeof i === 'string' ? JSON.parse(i) : i)),
   })

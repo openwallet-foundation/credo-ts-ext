@@ -1,43 +1,37 @@
 import type { RestAgent } from '../../utils/agent'
-import type { RequestProofOptionsProofRequestRestriction } from '../types'
-import type { AnonCredsProofRequestRestriction } from '@aries-framework/anoncreds'
+import type { AnonCredsRequestProofFormatOptions, AnonCredsProofRequestRestrictionOptions } from '../types'
+import type { AnonCredsProofRequestRestriction, AnonCredsRequestProofFormat } from '@aries-framework/anoncreds'
 import type { ProofExchangeRecordProps } from '@aries-framework/core'
 
 import { Agent, RecordNotFoundError } from '@aries-framework/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { maybeMapValues } from '../../utils/helpers'
 import { ProofRecordExample, RecordId } from '../examples'
-import { RequestProofOptions, RequestProofProposalOptions } from '../types'
+import {
+  RequestProofOptions,
+  AcceptProofProposalOptions,
+  AcceptProofRequestOptions,
+  ProposeProofOptions,
+  CreateProofRequestOptions,
+} from '../types'
 
-const maybeMapValues = <V, U>(
-  transform: (input: V) => U,
-  obj?: {
-    [key: string]: V
-  }
-) => {
-  if (!obj) {
-    return obj
-  }
-
-  return Object.fromEntries(Object.entries(obj).map(([key, value]) => [key, transform(value)]))
-}
-
-const transformRequiredAttributes = (attributes?: string[]) => {
+const transformAttributeMarkers = (attributes?: { [key: string]: boolean }) => {
   if (!attributes) {
     return undefined
   }
 
-  return attributes.reduce<{ [key in `attr::${string}::marker`]: '1' }>(
-    (acc, attr) => ({
-      [`attr::${attr}::marker`]: '1',
+  return Object.entries(attributes).reduce<{ [key in `attr::${string}::marker`]: '1' | '0' }>(
+    (acc, [attr, val]) => ({
+      [`attr::${attr}::marker`]: val ? '1' : '0',
       ...acc,
     }),
     {}
   )
 }
 
-const transformRequiredAttributeValues = (attributeValues?: { [key in string]: string }) => {
+const transformAttributeValues = (attributeValues?: { [key in string]: string }) => {
   if (!attributeValues) {
     return undefined
   }
@@ -51,21 +45,43 @@ const transformRequiredAttributeValues = (attributeValues?: { [key in string]: s
   )
 }
 
-const transformRestriction = (
-  restriction: RequestProofOptionsProofRequestRestriction
-): AnonCredsProofRequestRestriction => ({
-  schema_id: restriction.schemaId,
-  schema_issuer_id: restriction.schemaIssuerId,
-  schema_name: restriction.schemaName,
-  schema_version: restriction.schemaVersion,
-  issuer_id: restriction.issuerId,
-  cred_def_id: restriction.credDefId,
-  rev_reg_id: restriction.revRegId,
-  schema_issuer_did: restriction.schemaIssuerDid,
-  issuer_did: restriction.issuerDid,
-  ...transformRequiredAttributes(restriction.requiredAttributes),
-  ...transformRequiredAttributeValues(restriction.requiredAttributeValues),
+const transformRestriction = ({
+  attributeValues,
+  attributeMarkers,
+  ...others
+}: AnonCredsProofRequestRestrictionOptions): AnonCredsProofRequestRestriction => ({
+  ...transformAttributeMarkers(attributeMarkers),
+  ...transformAttributeValues(attributeValues),
+  ...others,
 })
+
+const transformProofFormat = (
+  proofFormat?: AnonCredsRequestProofFormatOptions
+): AnonCredsRequestProofFormat | undefined => {
+  if (!proofFormat) {
+    return undefined
+  }
+
+  const { requested_attributes, requested_predicates, ...rest } = proofFormat
+
+  return {
+    ...rest,
+    requested_attributes: maybeMapValues(
+      ({ restrictions, ...other }) => ({
+        restrictions: restrictions?.map(transformRestriction),
+        ...other,
+      }),
+      requested_attributes
+    ),
+    requested_predicates: maybeMapValues(
+      ({ restrictions, ...other }) => ({
+        restrictions: restrictions?.map(transformRestriction),
+        ...other,
+      }),
+      requested_predicates
+    ),
+  }
+}
 
 @Tags('Proofs')
 @Route('/proofs')
@@ -155,30 +171,18 @@ export class ProofController extends Controller {
   @Post('/propose-proof')
   @Example<ProofExchangeRecordProps>(ProofRecordExample)
   public async proposeProof(
-    @Body() proposal: RequestProofProposalOptions,
+    @Body() proposal: ProposeProofOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
-    const { attributes, predicates, connectionId, comment } = proposal
-
     try {
-      const proof = await this.agent.proofs.proposeProof({
-        connectionId,
-        protocolVersion: 'v2',
-        proofFormats: {
-          anoncreds: {
-            attributes,
-            predicates,
-          },
-        },
-        comment,
-      })
+      const proof = await this.agent.proofs.proposeProof(proposal)
 
       return proof.toJSON()
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
-          reason: `connection with connectionId "${connectionId}" not found.`,
+          reason: `connection with connectionId "${proposal.connectionId}" not found.`,
         })
       }
       return internalServerError(500, { message: `something went wrong: ${error}` })
@@ -198,23 +202,14 @@ export class ProofController extends Controller {
   public async acceptProposal(
     @Path('proofRecordId') proofRecordId: string,
     @Body()
-    proposal: {
-      request: { name?: string; version?: string }
-      comment?: string
-    },
+    proposal: AcceptProofProposalOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
       const proof = await this.agent.proofs.acceptProposal({
         proofRecordId,
-        proofFormats: {
-          anoncreds: {
-            name: proposal.request.name,
-            version: proposal.request.version,
-          },
-        },
-        comment: proposal.comment,
+        ...proposal,
       })
 
       return proof.toJSON()
@@ -228,30 +223,32 @@ export class ProofController extends Controller {
     }
   }
 
-  // TODO: Represent out-of-band proof
-  // /**
-  //  * Creates a presentation request not bound to any proposal or existing connection
-  //  *
-  //  * @param request
-  //  * @returns ProofRequestMessageResponse
-  //  */
-  // @Post('/request-outofband-proof')
-  // @Example<{ proofUrl: string; proofRecord: ProofRecordProps }>({
-  //   proofUrl: 'https://example.com/proof-url',
-  //   proofRecord: ProofRecordExample,
-  // })
-  // public async requestProofOutOfBand(@Body() request: Omit<RequestProofOptions, 'connectionId'>) {
-  //   const { proofRequestOptions, ...requestOptions } = request
+  /**
+   * Creates a presentation request not bound to any proposal or existing connection
+   *
+   * @param request
+   * @returns ProofRequestMessageResponse
+   */
+  @Post('/create-request')
+  @Example<{ message: object; proofRecord: ProofExchangeRecordProps }>({
+    message: {},
+    proofRecord: ProofRecordExample,
+  })
+  public async createRequest(@Body() request: CreateProofRequestOptions) {
+    const { proofFormats, ...rest } = request
+    const { message, proofRecord } = await this.agent.proofs.createRequest({
+      proofFormats: {
+        anoncreds: transformProofFormat(proofFormats.anoncreds),
+        indy: transformProofFormat(proofFormats.indy),
+      },
+      ...rest,
+    })
 
-  //   const proof = await this.agent.proofs.createOutOfBandRequest(proofRequestOptions, requestOptions)
-
-  //   return {
-  //     proofUrl: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
-  //       proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
-  //     )}`,
-  //     proofRecord: proof.proofRecord,
-  //   }
-  // }
+    return {
+      message,
+      proofRecord: proofRecord,
+    }
+  }
 
   /**
    * Creates a presentation request bound to existing connection
@@ -266,37 +263,15 @@ export class ProofController extends Controller {
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
-    const { connectionId, proofRequestOptions } = request
-
+    const { connectionId, proofFormats, ...rest } = request
     try {
       const proof = await this.agent.proofs.requestProof({
         connectionId,
-        protocolVersion: 'v2',
         proofFormats: {
-          anoncreds: {
-            name: proofRequestOptions.name,
-            version: proofRequestOptions.version,
-            requested_attributes: maybeMapValues(
-              (attribute) => ({
-                name: attribute.name,
-                names: attribute.names,
-                non_revoked: attribute.nonRevoked,
-                restrictions: attribute.restrictions?.map(transformRestriction),
-              }),
-              proofRequestOptions.requestedAttributes
-            ),
-            requested_predicates: maybeMapValues(
-              (predicate) => ({
-                name: predicate.name,
-                p_type: predicate.pType,
-                p_value: predicate.pValue,
-                non_revoked: predicate.nonRevoked,
-                restrictions: predicate.restrictions?.map(transformRestriction),
-              }),
-              proofRequestOptions.requestedPredicates
-            ),
-          },
+          anoncreds: transformProofFormat(proofFormats.anoncreds),
+          indy: transformProofFormat(proofFormats.indy),
         },
+        ...rest,
       })
 
       return proof.toJSON()
@@ -323,15 +298,11 @@ export class ProofController extends Controller {
   public async acceptRequest(
     @Path('proofRecordId') proofRecordId: string,
     @Body()
-    request: {
-      comment?: string
-    },
+    request: AcceptProofRequestOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>
   ) {
     try {
-      const { comment } = request
-
       const retrievedCredentials = await this.agent.proofs.selectCredentialsForRequest({
         proofRecordId,
       })
@@ -339,7 +310,7 @@ export class ProofController extends Controller {
       const proof = await this.agent.proofs.acceptRequest({
         proofRecordId,
         proofFormats: retrievedCredentials.proofFormats,
-        comment,
+        ...request,
       })
 
       return proof.toJSON()
