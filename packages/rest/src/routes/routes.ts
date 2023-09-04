@@ -388,7 +388,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "keyType": {"ref":"KeyType","required":true},
-            "privateKey": {"dataType":"buffer","required":true},
+            "privateKey": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
     },
@@ -399,7 +399,7 @@ const models: TsoaRoute.Models = {
             "did": {"dataType":"string","required":true},
             "didDocument": {"ref":"DidDocument"},
             "privateKeys": {"dataType":"array","array":{"dataType":"refObject","ref":"PrivateKey"}},
-            "overwrite": {"dataType":"boolean","default":"false"},
+            "overwrite": {"dataType":"boolean"},
         },
         "additionalProperties": false,
     },

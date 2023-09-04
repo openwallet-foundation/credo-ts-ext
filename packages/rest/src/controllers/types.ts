@@ -68,7 +68,7 @@ type ProofFormats = [LegacyIndyProofFormat, AnonCredsProofFormat]
 
 interface PrivateKey {
   keyType: KeyType
-  privateKey: Buffer
+  privateKey: string
 }
 
 export interface ImportDidOptions {

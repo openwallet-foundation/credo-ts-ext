@@ -743,8 +743,7 @@
 						"$ref": "#/components/schemas/KeyType"
 					},
 					"privateKey": {
-						"type": "string",
-						"format": "byte"
+						"type": "string"
 					}
 				},
 				"required": [
@@ -757,24 +756,19 @@
 			"ImportDidOptions": {
 				"properties": {
 					"did": {
-						"type": "string",
-						"description": "The did to import."
+						"type": "string"
 					},
 					"didDocument": {
-						"$ref": "#/components/schemas/DidDocument",
-						"description": "Optional did document to import. If not provided, the did document will be resolved using the did resolver."
+						"$ref": "#/components/schemas/DidDocument"
 					},
 					"privateKeys": {
 						"items": {
 							"$ref": "#/components/schemas/PrivateKey"
 						},
-						"type": "array",
-						"description": "List of private keys associated with the did document that should be stored in the wallet."
+						"type": "array"
 					},
 					"overwrite": {
-						"type": "boolean",
-						"description": "Whether to overwrite an existing did record if it exists. If set to false,\nan error will be thrown if the did record already exists.",
-						"default": "false"
+						"type": "boolean"
 					}
 				},
 				"required": [
@@ -3666,7 +3660,51 @@
 						"description": "DidResolutionResultProps",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"did": "did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc",
+											"didDocument": {
+												"@context": [
+													"https://w3id.org/did/v1",
+													"https://w3id.org/security/suites/ed25519-2018/v1",
+													"https://w3id.org/security/suites/x25519-2019/v1"
+												],
+												"id": "did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc",
+												"verificationMethod": [
+													{
+														"id": "did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc",
+														"type": "Ed25519VerificationKey2018",
+														"controller": "did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc",
+														"publicKeyBase58": "ApexJxnhZHC6Ctq4fCoNHKYgu87HuRTZ7oSyfehG57zE"
+													}
+												],
+												"authentication": [
+													"did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc"
+												],
+												"assertionMethod": [
+													"did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc"
+												],
+												"keyAgreement": [
+													{
+														"id": "did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6LSm5B4fB9NA55xB7PSeMYTMS9sf8uboJvyZBaDLLSZ7Ryd",
+														"type": "X25519KeyAgreementKey2019",
+														"controller": "did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc",
+														"publicKeyBase58": "APzu8sLW4cND5j1g7i2W2qwPozNV6hkpgCrXqso2Q4Cs"
+													}
+												],
+												"capabilityInvocation": [
+													"did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc"
+												],
+												"capabilityDelegation": [
+													"did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc"
+												]
+											},
+											"secret": {}
+										}
+									}
+								}
 							}
 						}
 					},
