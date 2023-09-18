@@ -1,4 +1,4 @@
-import type { Central } from '@animo-id/react-native-ble-didcomm'
+import type { Ble } from '@animo-id/react-native-ble-didcomm'
 import type { Agent, InboundTransport, Logger } from '@aries-framework/core'
 import type { EmitterSubscription } from 'react-native'
 
@@ -8,14 +8,14 @@ import { BleTransportSession } from './BleTransportSession'
 
 export class BleInboundTransport implements InboundTransport {
   public supportedSchemes: string[] = ['ble']
-  private central: Central
+  private messenger: Ble
   private messageListener?: EmitterSubscription
   private session!: BleTransportSession
   private disconnectionListener?: EmitterSubscription
   private logger?: Logger
 
-  public constructor(central: Central) {
-    this.central = central
+  public constructor(messenger: Ble) {
+    this.messenger = messenger
   }
 
   public async start(agent: Agent): Promise<void> {
@@ -23,7 +23,7 @@ export class BleInboundTransport implements InboundTransport {
     this.logger.debug('Starting BLE inbound transport')
 
     const sessionId = utils.uuid()
-    this.session = new BleTransportSession(sessionId, this.central, agent)
+    this.session = new BleTransportSession(sessionId, this.messenger, agent.context)
 
     const messageListener = async (data: { message: string }) => {
       const message = data.message
@@ -37,11 +37,11 @@ export class BleInboundTransport implements InboundTransport {
           session: this.session,
         })
       } catch (error) {
-        agent.config.logger.error(`Error processing message: ${error}`)
+        this.logger?.error(`Error processing message: ${error}`)
       }
     }
 
-    this.messageListener = this.central.registerMessageListener(messageListener)
+    this.messageListener = this.messenger.registerMessageListener(messageListener)
 
     const disconnectionListener = async (data: { identifier: string }) => {
       this.logger?.debug('BLE disconnection detected', { data })
@@ -50,7 +50,7 @@ export class BleInboundTransport implements InboundTransport {
       transportService.removeSession(this.session)
     }
 
-    this.disconnectionListener = this.central.registerOnDisconnectedListener(disconnectionListener)
+    this.disconnectionListener = this.messenger.registerOnDisconnectedListener(disconnectionListener)
   }
 
   public async stop(): Promise<void> {
@@ -58,6 +58,6 @@ export class BleInboundTransport implements InboundTransport {
 
     this.messageListener?.remove()
     this.disconnectionListener?.remove()
-    await this.central.shutdown()
+    await this.messenger.shutdown()
   }
 }
