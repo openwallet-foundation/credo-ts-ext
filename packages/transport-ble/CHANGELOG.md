@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.2.1](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/transport-ble-v0.2.0...transport-ble-v0.2.1) (2023-09-18)
+
+
+### Bug Fixes
+
+* loosen types on ble inbound and outbound transport and session ([#226](https://www.github.com/hyperledger/aries-framework-javascript-ext/issues/226)) ([17c6203](https://www.github.com/hyperledger/aries-framework-javascript-ext/commit/17c6203b398ad2fd613bc237e2c852a86f44c444))
+
 ## [0.2.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/transport-ble-v0.1.0...transport-ble-v0.2.0) (2023-06-29)
 
 
