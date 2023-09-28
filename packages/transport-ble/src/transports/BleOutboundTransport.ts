@@ -1,21 +1,21 @@
-import type { Peripheral } from '@animo-id/react-native-ble-didcomm'
+import type { Ble } from '@animo-id/react-native-ble-didcomm'
 import type { Agent, Logger, OutboundPackage, OutboundTransport } from '@aries-framework/core'
 
 import { AriesFrameworkError } from '@aries-framework/core'
 
 export class BleOutboundTransport implements OutboundTransport {
   public supportedSchemes: string[] = ['ble']
-  private peripheral: Peripheral
+  private messenger: Ble
   private logger?: Logger
 
-  public constructor(peripheral: Peripheral) {
-    this.peripheral = peripheral
+  public constructor(messenger: Ble) {
+    this.messenger = messenger
   }
 
   public async start(agent: Agent): Promise<void> {
     this.logger = agent.config.logger
 
-    agent.config.logger.debug('Starting BLE outbound transport')
+    this.logger.debug('Starting BLE outbound transport')
   }
 
   public async sendMessage(outboundPackage: OutboundPackage): Promise<void> {
@@ -31,11 +31,11 @@ export class BleOutboundTransport implements OutboundTransport {
     const serializedMessage = JSON.stringify(payload)
 
     this.logger?.debug('Sending BLE outbound message')
-    await this.peripheral.sendMessage(serializedMessage)
+    await this.messenger.sendMessage(serializedMessage)
   }
 
   public async stop(): Promise<void> {
     this.logger?.debug('Stopping BLE outbound transport')
-    await this.peripheral.shutdown()
+    await this.messenger.shutdown()
   }
 }
