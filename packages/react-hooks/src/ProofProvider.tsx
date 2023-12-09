@@ -81,10 +81,8 @@ const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      const records = await agent.proofs.getAll()
-      setState({ records, loading: false })
-    }
+    const records = await agent.proofs.getAll()
+    setState({ records, loading: false })
   }
 
   useEffect(() => {
@@ -92,24 +90,24 @@ const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
   }, [agent])
 
   useEffect(() => {
-    if (!state.loading) {
-      const proofAdded$ = recordsAddedByType(agent, ProofExchangeRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+    if (state.loading) return
 
-      const proofUpdated$ = recordsUpdatedByType(agent, ProofExchangeRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+    const proofAdded$ = recordsAddedByType(agent, ProofExchangeRecord).subscribe((record) =>
+      setState(addRecord(record, state))
+    )
 
-      const proofRemoved$ = recordsRemovedByType(agent, ProofExchangeRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+    const proofUpdated$ = recordsUpdatedByType(agent, ProofExchangeRecord).subscribe((record) =>
+      setState(updateRecord(record, state))
+    )
 
-      return () => {
-        proofAdded$?.unsubscribe()
-        proofUpdated$?.unsubscribe()
-        proofRemoved$?.unsubscribe()
-      }
+    const proofRemoved$ = recordsRemovedByType(agent, ProofExchangeRecord).subscribe((record) =>
+      setState(removeRecord(record, state))
+    )
+
+    return () => {
+      proofAdded$?.unsubscribe()
+      proofUpdated$?.unsubscribe()
+      proofRemoved$?.unsubscribe()
     }
   }, [state, agent])
 

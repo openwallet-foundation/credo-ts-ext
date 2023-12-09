@@ -7,7 +7,9 @@ import { createContext, useState, useContext } from 'react'
 
 import BasicMessageProvider from './BasicMessageProvider'
 import ConnectionProvider from './ConnectionProvider'
+import CredentialFormatDataProvider from './CredentialFormatDataProvider'
 import CredentialProvider from './CredentialProvider'
+import ProofFormatDataProvider from './ProofFormatDataProvider'
 import ProofProvider from './ProofProvider'
 import QuestionAnswerProvider from './QuestionAnswerProvider'
 import { useIsModuleRegistered } from './recordUtils'
@@ -43,9 +45,17 @@ const AgentProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
       <ConnectionProvider agent={agent}>
         <CredentialProvider agent={agent}>
           <ProofProvider agent={agent}>
-            <BasicMessageProvider agent={agent}>
-              {isQaRegistered ? <QuestionAnswerProvider agent={agent}>{children} </QuestionAnswerProvider> : children}
-            </BasicMessageProvider>
+            <CredentialFormatDataProvider agent={agent}>
+              <ProofFormatDataProvider agent={agent}>
+                <BasicMessageProvider agent={agent}>
+                  {isQaRegistered ? (
+                    <QuestionAnswerProvider agent={agent}>{children} </QuestionAnswerProvider>
+                  ) : (
+                    children
+                  )}
+                </BasicMessageProvider>
+              </ProofFormatDataProvider>
+            </CredentialFormatDataProvider>
           </ProofProvider>
         </CredentialProvider>
       </ConnectionProvider>

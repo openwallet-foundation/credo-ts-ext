@@ -38,13 +38,11 @@ const ExchangesProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children
   })
 
   const setInitialState = () => {
-    if (agent) {
-      const { records: basicMessages } = useBasicMessages()
-      const { records: proofs } = useProofs()
-      const { records: credentials } = useCredentials()
-      const records = [...basicMessages, ...proofs, ...credentials] as BaseRecord[]
-      setState({ records, loading: false })
-    }
+    const { records: basicMessages } = useBasicMessages()
+    const { records: proofs } = useProofs()
+    const { records: credentials } = useCredentials()
+    const records = [...basicMessages, ...proofs, ...credentials] as BaseRecord[]
+    setState({ records, loading: false })
   }
 
   useEffect(() => {

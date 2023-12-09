@@ -72,10 +72,8 @@ const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      const records = await agent.connections.getAll()
-      setState({ records, loading: false })
-    }
+    const records = await agent.connections.getAll()
+    setState({ records, loading: false })
   }
 
   useEffect(() => {
@@ -83,24 +81,24 @@ const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   }, [agent])
 
   useEffect(() => {
-    if (!state.loading) {
-      const connectionAdded$ = recordsAddedByType(agent, ConnectionRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+    if (state.loading) return
 
-      const connectionUpdated$ = recordsUpdatedByType(agent, ConnectionRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+    const connectionAdded$ = recordsAddedByType(agent, ConnectionRecord).subscribe((record) =>
+      setState(addRecord(record, state))
+    )
 
-      const connectionRemoved$ = recordsRemovedByType(agent, ConnectionRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+    const connectionUpdated$ = recordsUpdatedByType(agent, ConnectionRecord).subscribe((record) =>
+      setState(updateRecord(record, state))
+    )
 
-      return () => {
-        connectionAdded$.unsubscribe()
-        connectionUpdated$.unsubscribe()
-        connectionRemoved$.unsubscribe()
-      }
+    const connectionRemoved$ = recordsRemovedByType(agent, ConnectionRecord).subscribe((record) =>
+      setState(removeRecord(record, state))
+    )
+
+    return () => {
+      connectionAdded$.unsubscribe()
+      connectionUpdated$.unsubscribe()
+      connectionRemoved$.unsubscribe()
     }
   }, [state, agent])
 
