@@ -91,6 +91,39 @@
     varint "^6.0.0"
     web-did-resolver "^2.0.21"
 
+"@aries-framework/core@0.4.2", "@aries-framework/core@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@aries-framework/core/-/core-0.4.2.tgz#f2118c732d6aff8d6557a15de14381e8782b54a1"
+  integrity sha512-2qmDRkxD5vnPlcMjVTqu/Wxog9bUVU+tSr+7mgANgJ9q170FuoSuChU7WA5VCKEdmbRIM4BmvsnTlU8Y+iQ07A==
+  dependencies:
+    "@digitalcredentials/jsonld" "^5.2.1"
+    "@digitalcredentials/jsonld-signatures" "^9.3.1"
+    "@digitalcredentials/vc" "^1.1.2"
+    "@multiformats/base-x" "^4.0.1"
+    "@stablelib/ed25519" "^1.0.2"
+    "@stablelib/random" "^1.0.1"
+    "@stablelib/sha256" "^1.0.1"
+    "@types/node-fetch" "2.6.2"
+    "@types/ws" "^8.5.4"
+    abort-controller "^3.0.0"
+    big-integer "^1.6.51"
+    borc "^3.0.0"
+    buffer "^6.0.3"
+    class-transformer "0.5.1"
+    class-validator "0.14.0"
+    did-resolver "^4.1.0"
+    lru_map "^0.4.1"
+    luxon "^3.3.0"
+    make-error "^1.3.6"
+    object-inspect "^1.10.3"
+    query-string "^7.0.1"
+    reflect-metadata "^0.1.13"
+    rxjs "^7.2.0"
+    tsyringe "^4.8.0"
+    uuid "^9.0.0"
+    varint "^6.0.0"
+    web-did-resolver "^2.0.21"
+
 "@aries-framework/indy-sdk@^0.4.0":
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/@aries-framework/indy-sdk/-/indy-sdk-0.4.0.tgz#d4bb59cf010b2e9166982d4a7a0103325bde9b80"
@@ -131,12 +164,12 @@
     ref-napi "^3.0.3"
     ws "^8.13.0"
 
-"@aries-framework/question-answer@^0.4.0":
-  version "0.4.0"
-  resolved "https://registry.yarnpkg.com/@aries-framework/question-answer/-/question-answer-0.4.0.tgz#f7e81f76b48a9d79710dd499b7acd0450a0a5422"
-  integrity sha512-r2Lwuj+RI7jVK8hQppa9qJb98L6A+QdjLfUsp5pHzia86yuSTpz5TrkXgJFvNMgkyQjagMflrCU4LSf94NFd9w==
+"@aries-framework/question-answer@^0.4.2":
+  version "0.4.2"
+  resolved "https://registry.yarnpkg.com/@aries-framework/question-answer/-/question-answer-0.4.2.tgz#f5d29f77d1545e2823d2296cf9a8e6d2a190ed2c"
+  integrity sha512-rk1ODjPjOjDsjUuEJ/A8vkiW3MPpCoQk1SaVrUVKvtyPFN52oPWvzANImGHFce0E/S440yBxYIr152JlRELb0w==
   dependencies:
-    "@aries-framework/core" "0.4.0"
+    "@aries-framework/core" "0.4.2"
     class-transformer "0.5.1"
     class-validator "0.14.0"
     rxjs "^7.2.0"
@@ -2102,7 +2135,15 @@
   dependencies:
     "@types/express" "*"
 
-"@types/node-fetch@^2", "@types/node-fetch@^2.5.10", "@types/node-fetch@^2.6.3", "@types/node-fetch@^2.6.4":
+"@types/node-fetch@2.6.2":
+  version "2.6.2"
+  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.6.2.tgz#d1a9c5fd049d9415dce61571557104dec3ec81da"
+  integrity sha512-DHqhlq5jeESLy19TYhLakJ07kNumXWjcDdxXsLUMJZ6ue8VZJj4kLPQVE/2mdHh3xZziNF1xppu5lwmS53HR+A==
+  dependencies:
+    "@types/node" "*"
+    form-data "^3.0.0"
+
+"@types/node-fetch@^2.5.10", "@types/node-fetch@^2.6.3", "@types/node-fetch@^2.6.4":
   version "2.6.4"
   resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.6.4.tgz#1bc3a26de814f6bf466b25aeb1473fa1afe6a660"
   integrity sha512-1ZX9fcN4Rvkvgv4E6PAY5WXUFWFcRWxZa3EW83UjycOB9ljJCedb2CupIP4RZMEwF/M3eTcCihbBRgwtGbg5Rg==
@@ -8325,7 +8366,7 @@ tsutils@^3.21.0:
   dependencies:
     tslib "^1.8.1"
 
-tsyringe@^4.5.0, tsyringe@^4.6.0, tsyringe@^4.7.0:
+tsyringe@^4.5.0, tsyringe@^4.6.0, tsyringe@^4.7.0, tsyringe@^4.8.0:
   version "4.8.0"
   resolved "https://registry.yarnpkg.com/tsyringe/-/tsyringe-4.8.0.tgz#d599651b36793ba872870fee4f845bd484a5cac1"
   integrity sha512-YB1FG+axdxADa3ncEtRnQCFq/M0lALGLxSZeVNbTU8NqhOVc51nnv2CISTcvc1kyv6EGPtXVr0v6lWeDxiijOA==

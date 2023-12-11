@@ -44,10 +44,7 @@ export const useCredentialByState = (state: CredentialState | CredentialState[])
   const { records: credentials } = useCredentials()
 
   const filteredCredentials = useMemo(
-    () =>
-      credentials.filter((r: CredentialExchangeRecord) => {
-        if (states.includes(r.state)) return r
-      }),
+    () => credentials.filter((r: CredentialExchangeRecord) => states.includes(r.state)),
     [credentials]
   )
   return filteredCredentials
@@ -59,12 +56,10 @@ export const useCredentialNotInState = (state: CredentialState | CredentialState
   const { records: credentials } = useCredentials()
 
   const filteredCredentials = useMemo(
-    () =>
-      credentials.filter((r: CredentialExchangeRecord) => {
-        if (!states.includes(r.state)) return r
-      }),
+    () => credentials.filter((r: CredentialExchangeRecord) => !states.includes(r.state)),
     [credentials]
   )
+
   return filteredCredentials
 }
 
@@ -79,10 +74,8 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      const records = await agent.credentials.getAll()
-      setState({ records, loading: false })
-    }
+    const records = await agent.credentials.getAll()
+    setState({ records, loading: false })
   }
 
   useEffect(() => {
@@ -90,24 +83,24 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   }, [agent])
 
   useEffect(() => {
-    if (!state.loading) {
-      const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+    if (state.loading) return
 
-      const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+    const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+      setState(addRecord(record, state))
+    )
 
-      const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+    const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+      setState(updateRecord(record, state))
+    )
 
-      return () => {
-        credentialAdded$?.unsubscribe()
-        credentialUpdated$?.unsubscribe()
-        credentialRemoved$?.unsubscribe()
-      }
+    const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+      setState(removeRecord(record, state))
+    )
+
+    return () => {
+      credentialAdded$?.unsubscribe()
+      credentialUpdated$?.unsubscribe()
+      credentialRemoved$?.unsubscribe()
     }
   }, [state, agent])
 

@@ -47,10 +47,8 @@ const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, child
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      const records = await agent.basicMessages.findAllByQuery({})
-      setState({ records, loading: false })
-    }
+    const records = await agent.basicMessages.findAllByQuery({})
+    setState({ records, loading: false })
   }
 
   useEffect(() => {
@@ -58,24 +56,24 @@ const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, child
   }, [agent])
 
   useEffect(() => {
-    if (!state.loading) {
-      const basicMessageAdded$ = recordsAddedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+    if (state.loading) return
 
-      const basicMessageUpdated$ = recordsUpdatedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+    const basicMessageAdded$ = recordsAddedByType(agent, BasicMessageRecord).subscribe((record) =>
+      setState(addRecord(record, state))
+    )
 
-      const basicMessageRemoved$ = recordsRemovedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+    const basicMessageUpdated$ = recordsUpdatedByType(agent, BasicMessageRecord).subscribe((record) =>
+      setState(updateRecord(record, state))
+    )
 
-      return () => {
-        basicMessageAdded$?.unsubscribe()
-        basicMessageUpdated$?.unsubscribe()
-        basicMessageRemoved$?.unsubscribe()
-      }
+    const basicMessageRemoved$ = recordsRemovedByType(agent, BasicMessageRecord).subscribe((record) =>
+      setState(removeRecord(record, state))
+    )
+
+    return () => {
+      basicMessageAdded$?.unsubscribe()
+      basicMessageUpdated$?.unsubscribe()
+      basicMessageRemoved$?.unsubscribe()
     }
   }, [state, agent])
 
