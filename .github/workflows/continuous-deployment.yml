@@ -6,7 +6,7 @@ on:
       - rest-v*
 
 env:
-  IMAGE_NAME: ghcr.io/hyperledger/afj-rest
+  IMAGE_NAME: ghcr.io/hyperledger/credo-rest
 
 jobs:
   release-rest-docker-image:
