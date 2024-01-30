@@ -65,7 +65,7 @@ See the [docker-compose.yml](https://github.com/openwallet-foundation/credo-ts-e
 
 **Directly on Computer**
 
-To run AFJ REST API directly on your computer you need to have the indy-sdk installed. Follow the Indy [installation steps](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/libindy) for your platform and verify Indy is installed.
+To run AFJ REST API directly on your computer you need to have the indy-sdk installed. Follow the Indy [installation steps](https://github.com/openwallet-foundation/credo-ts/tree/main/docs/libindy) for your platform and verify Indy is installed.
 
 Once you have installed Indy, you can start the REST server using the following command:
 
