@@ -1,17 +1,17 @@
 {
-  "name": "aries-framework-ext",
+  "name": "credo-ext",
   "private": true,
   "license": "Apache-2.0",
-  "description": "Monorepo containing extensions for Aries Framework JavaScript",
+  "description": "Monorepo containing extensions for Credo",
   "workspaces": {
     "packages": [
       "packages/*"
     ],
     "nohoist": [
-      "@aries-framework/*",
-      "**/@aries-framework/*",
-      "**/@aries-framework/*/**",
-      "@aries-framework/*/**",
+      "@credo-ts/*",
+      "**/@credo-ts/*",
+      "**/@credo-ts/*/**",
+      "@credo-ts/*/**",
       "@hyperledger/*",
       "**/@hyperledger/*",
       "**/@hyperledger/*/**",
@@ -39,7 +39,7 @@
     ]
   },
   "repository": {
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "type": "git"
   },
   "scripts": {

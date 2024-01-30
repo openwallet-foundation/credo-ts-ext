@@ -2,29 +2,29 @@
   <br />
   <img
     alt="Hyperledger Aries logo"
-    src="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
+    src="https://raw.githubusercontent.com/openwallet-foundation/credo-ts/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
     height="250px"
   />
 </p>
-<h1 align="center"><b>Aries Framework JavaScript Extensions</b></h1>
+<h1 align="center"><b>Credo Extensions</b></h1>
 <p align="center">
   <img
     alt="Pipeline Status"
-    src="https://github.com/hyperledger/aries-framework-javascript-ext/workflows/Continuous%20Integration/badge.svg?branch=main"
+    src="https://github.com/openwallet-foundation/credo-ts-ext/workflows/Continuous%20Integration/badge.svg?branch=main"
   />
   <a
-    href="https://lgtm.com/projects/g/hyperledger/aries-framework-javascript-ext/context:javascript"
+    href="https://lgtm.com/projects/g/openwallet-foundation/credo-ts-ext/context:javascript"
     ><img
       alt="Language grade: JavaScript"
-      src="https://img.shields.io/lgtm/grade/javascript/g/hyperledger/aries-framework-javascript-ext.svg?logo=lgtm&logoWidth=18"
+      src="https://img.shields.io/lgtm/grade/javascript/g/openwallet-foundation/credo-ts-ext.svg?logo=lgtm&logoWidth=18"
   /></a>
-  <a href="https://codecov.io/gh/hyperledger/aries-framework-javascript-ext/"
+  <a href="https://codecov.io/gh/openwallet-foundation/credo-ts-ext/"
     ><img
       alt="Codecov Coverage"
-      src="https://img.shields.io/codecov/c/github/hyperledger/aries-framework-javascript-ext/coverage.svg?style=flat-square"
+      src="https://img.shields.io/codecov/c/github/openwallet-foundation/credo-ts-ext/coverage.svg?style=flat-square"
   /></a>
   <a
-    href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"
+    href="https://raw.githubusercontent.com/openwallet-foundation/credo-ts-ext/main/LICENSE"
     ><img
       alt="License"
       src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
@@ -43,30 +43,30 @@
   <a href="#license">License</a>
 </p>
 
-Aries Framework JavaScript Extensions is an extension repo to [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git) (AFJ). It hosts libraries built on top of Aries Framework JavaScript that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
+Credo Extensions is an extension repo to [Credo](https://github.com/openwallet-foundation/credo-ts.git). It hosts libraries built on top of Credo that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for Credo and a REST API wrapper.
 
-If you're just getting started the [AFJ repo](https://github.com/hyperledger/aries-framework-javascript.git) is probably the place to start.
+If you're just getting started the [Credo repo](https://github.com/openwallet-foundation/credo-ts.git) is probably the place to start.
 
 ## Packages
 
 All packages are placed in the [`packages/`](./packages) directory.
 
-| Package                                                                                                    | Version                                                                                                          | Description                                                   |
-| ---------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| [`@aries-framework/rest`](https://www.npmjs.com/package/@aries-framework/rest)                             | ![@aries-framework/rest version](https://img.shields.io/npm/v/@aries-framework/rest)                             | REST endpoint wrapper for using your agent over HTTP          |
-| [`@aries-framework/react-hooks`](https://www.npmjs.com/package/@aries-framework/react-hooks)               | ![@aries-framework/react-hooks version](https://img.shields.io/npm/v/@aries-framework/react-hooks)               | React Hooks for data handling and agent interaction           |
-| [`@aries-framework/redux-store`](https://www.npmjs.com/package/@aries-framework/redux-store)               | ![@aries-framework/redux-store version](https://img.shields.io/npm/v/@aries-framework/redux-store)               | Redux Toolkit wrapper around Aries Framework JavaScript       |
-| [`@aries-framework/push-notifications`](https://www.npmjs.com/package/@aries-framework/push-notifications) | ![@aries-framework/push-notifications version](https://img.shields.io/npm/v/@aries-framework/push-notifications) | Push notification plugin for Aries Framework JavaScript       |
-| [`@aries-framework/transport-ble`](https://www.npmjs.com/package/@aries-framework/transport-ble)           | ![@aries-framework/transport-ble version](https://img.shields.io/npm/v/@aries-framework/transport-ble)           | Bluetooth Low Energy transport for Aries Framework JavaScript |
+| Package                                                                                      | Version                                                                                            | Description                                          |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [`@credo-ts/rest`](https://www.npmjs.com/package/@credo-ts/rest)                             | ![@credo-ts/rest version](https://img.shields.io/npm/v/@credo-ts/rest)                             | REST endpoint wrapper for using your agent over HTTP |
+| [`@credo-ts/react-hooks`](https://www.npmjs.com/package/@credo-ts/react-hooks)               | ![@credo-ts/react-hooks version](https://img.shields.io/npm/v/@credo-ts/react-hooks)               | React Hooks for data handling and agent interaction  |
+| [`@credo-ts/redux-store`](https://www.npmjs.com/package/@credo-ts/redux-store)               | ![@credo-ts/redux-store version](https://img.shields.io/npm/v/@credo-ts/redux-store)               | Redux Toolkit wrapper around Credo                   |
+| [`@credo-ts/push-notifications`](https://www.npmjs.com/package/@credo-ts/push-notifications) | ![@credo-ts/push-notifications version](https://img.shields.io/npm/v/@credo-ts/push-notifications) | Push notification plugin for Credo                   |
+| [`@credo-ts/transport-ble`](https://www.npmjs.com/package/@credo-ts/transport-ble)           | ![@credo-ts/transport-ble version](https://img.shields.io/npm/v/@credo-ts/transport-ble)           | Bluetooth Low Energy transport for Credo             |
 
 ## Contributing
 
 If you would like to contribute to this repository, please read the [CONTRIBUTING](/CONTRIBUTING.md) guidelines. These documents will provide more information to get you started!
 
-For running tests, make sure to follow the network setup guides from the Aries Framework JavaScript [DEVREADME.md](https://github.com/hyperledger/aries-framework-javascript/blob/main/DEVREADME.md).
+For running tests, make sure to follow the network setup guides from the Credo [DEVREADME.md](https://github.com/openwallet-foundation/credo-ts/blob/main/DEVREADME.md).
 
-The Aries Framework JavaScript call takes place every week at Thursday, 14:00 UTC via [Zoom](https://zoom.us/j/99751084865?pwd=TW1rU0FDVTBqUlhnWnY2NERkd1diZz09). This meeting is for contributors to groom and plan the backlog, and discuss issues. Feel free to join!
+There are regular community working groups to discuss ongoing efforts within Credo, showcase items you've built with Credo, or ask questions. See [Meeting Information](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information) for up to date information on the meeting schedule. Everyone is welcome to join!
 
 ## License
 
-Hyperledger Aries Framework JavaScript is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).
+Credo is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).

@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/react-hooks",
+  "name": "@credo-ts/react-hooks",
   "main": "build/index",
   "types": "build/index",
   "version": "0.5.0",
@@ -10,11 +10,11 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Exposes useful React hooks that allow easy interaction with AFJ.",
-  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/react-hooks",
+  "description": "Exposes useful React hooks that allow easy interaction with Credo.",
+  "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/react-hooks",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "directory": "packages/react-hooks"
   },
   "scripts": {

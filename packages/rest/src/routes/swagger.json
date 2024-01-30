@@ -1161,7 +1161,7 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "@aries-framework/rest",
+		"title": "@credo-ts/rest",
 		"version": "0.9.3",
 		"description": "Rest endpoint wrapper for using your agent over HTTP",
 		"license": {

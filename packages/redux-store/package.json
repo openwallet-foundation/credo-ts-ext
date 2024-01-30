@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/redux-store",
+  "name": "@credo-ts/redux-store",
   "main": "build/index",
   "types": "build/index",
   "version": "0.4.0",
@@ -10,11 +10,11 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Redux toolkit wrapper around Aries Framework JavaScript",
-  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/redux-store",
+  "description": "Redux toolkit wrapper around Credo",
+  "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/redux-store",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "directory": "packages/redux-store"
   },
   "scripts": {

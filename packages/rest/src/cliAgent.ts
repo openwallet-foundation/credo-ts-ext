@@ -52,12 +52,19 @@ export async function readRestConfig(path: string) {
 }
 
 export async function runRestAgent(restConfig: AriesRestConfig) {
-  const { logLevel, inboundTransports = [], outboundTransports = [], webhookUrl, adminPort, ...afjConfig } = restConfig
+  const {
+    logLevel,
+    inboundTransports = [],
+    outboundTransports = [],
+    webhookUrl,
+    adminPort,
+    ...credoConfig
+  } = restConfig
 
   const logger = new TsLogger(logLevel ?? LogLevel.error)
 
   const agentConfig: InitConfig = {
-    ...afjConfig,
+    ...credoConfig,
     logger,
   }
 

@@ -6,7 +6,7 @@ on:
       - rest-v*
 
 env:
-  IMAGE_NAME: ghcr.io/hyperledger/afj-rest
+  IMAGE_NAME: ghcr.io/openwallet-foundation/credo-rest
 
 jobs:
   release-rest-docker-image:
@@ -31,7 +31,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build rest package
-        run: yarn workspace @aries-framework/rest build
+        run: yarn workspace @credo-ts/rest build
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta

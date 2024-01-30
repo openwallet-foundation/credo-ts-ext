@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/transport-ble",
+  "name": "@credo-ts/transport-ble",
   "main": "build/index",
   "types": "build/index",
   "version": "0.2.1",
@@ -10,11 +10,11 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Bluetooth Low Energy transport for Aries Framework JavaScript",
-  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/transport-ble",
+  "description": "Bluetooth Low Energy transport for Credo",
+  "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/transport-ble",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "directory": "packages/transport-ble"
   },
   "scripts": {

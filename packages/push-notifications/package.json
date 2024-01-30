@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/push-notifications",
+  "name": "@credo-ts/push-notifications",
   "main": "build/index",
   "types": "build/index",
   "version": "0.6.0",
@@ -10,11 +10,11 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Push notification plugin for Aries Framework JavaScript",
-  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/push-notifications",
+  "description": "Push notification plugin for Credo",
+  "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/push-notifications",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "directory": "packages/push-notifications"
   },
   "scripts": {

@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/rest",
+  "name": "@credo-ts/rest",
   "main": "build/index",
   "types": "build/index",
   "version": "0.9.5",
@@ -11,14 +11,14 @@
   },
   "license": "Apache-2.0",
   "description": "Rest endpoint wrapper for using your agent over HTTP",
-  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest",
+  "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "directory": "packages/rest"
   },
   "bin": {
-    "afj-rest": "bin/afj-rest.js"
+    "credo-rest": "bin/credo-rest.js"
   },
   "scripts": {
     "tsoa": "tsoa spec-and-routes",
