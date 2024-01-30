@@ -1,5 +1,5 @@
 {
-  "name": "aries-framework-ext",
+  "name": "credo-ext",
   "private": true,
   "license": "Apache-2.0",
   "description": "Monorepo containing extensions for Credo",
