@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/redux-store",
+  "name": "@credo-ts/redux-store",
   "main": "build/index",
   "types": "build/index",
   "version": "0.4.0",
