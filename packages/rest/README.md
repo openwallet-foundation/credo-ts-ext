@@ -86,7 +86,7 @@ To find out all available configuration options from the CLI, you can run the CL
 
 ```sh
 # With docker
-docker run ghcr.io/hyperledger/credo-rest --help
+docker run ghcr.io/openwallet-foundation/credo-rest --help
 
 # Directly on computer
 npx -p @credo-ts/rest credo-rest start --help
