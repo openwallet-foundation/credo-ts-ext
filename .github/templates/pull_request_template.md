@@ -17,10 +17,10 @@ Provide a general summary of your changes in the Title above
 
 <!--- If it relates to an open issue, please link to the issue here.
 e.g.
-[#123](https://github.com/hyperledger/aries-framework-javascript-ext/issues/123)
+[#123](https://github.com/openwallet-foundation/credo-ts-ext/issues/123)
 -->
 
-[#](https://github.com/hyperledger/aries-framework-javascript-ext/issues/)
+[#](https://github.com/openwallet-foundation/credo-ts-ext/issues/)
 
 ## Does this PR introduce a breaking change?
 

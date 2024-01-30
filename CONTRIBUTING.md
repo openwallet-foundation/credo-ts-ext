@@ -32,7 +32,7 @@ Some general notes on creating a new package:
 
 Releases are managed using [Release Please](https://github.com/googleapis/release-please). It will automatically scan all commits using conventional commits standard. If changes are detected that will trigger a version bump using either the `feat:` or `fix:` scope, or `!` (e.g. `feat!:`) for breaking changes, release please will open a PR with the version bump and updates to `CHANGELOG.md`. The PR will be automatically kept up to date, and once it will be merged a new release will be created on Github and the package will be released on NPM.
 
-See [this PR](https://github.com/hyperledger/aries-framework-javascript-ext/pull/32) for an example. Each package is versioned independently, to let packages evolve at their own pace. To make the release process as smooth as possible, make sure you're following these guidelines:
+See [this PR](https://github.com/openwallet-foundation/credo-ts-ext/pull/32) for an example. Each package is versioned independently, to let packages evolve at their own pace. To make the release process as smooth as possible, make sure you're following these guidelines:
 
 - Make sure your commits follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
   - If you want to squash your PR only the title of the PR should be following conventional commits.

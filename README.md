@@ -10,7 +10,7 @@
 <p align="center">
   <img
     alt="Pipeline Status"
-    src="https://github.com/hyperledger/aries-framework-javascript-ext/workflows/Continuous%20Integration/badge.svg?branch=main"
+    src="https://github.com/openwallet-foundation/credo-ts-ext/workflows/Continuous%20Integration/badge.svg?branch=main"
   />
   <a
     href="https://lgtm.com/projects/g/hyperledger/aries-framework-javascript-ext/context:javascript"

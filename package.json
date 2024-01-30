@@ -39,7 +39,7 @@
     ]
   },
   "repository": {
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "type": "git"
   },
   "scripts": {
