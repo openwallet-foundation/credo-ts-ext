@@ -43,9 +43,9 @@
   <a href="#license">License</a>
 </p>
 
-Credo Extensions is an extension repo to [Credo](https://github.com/openwallet-foundation/credo-ts.git) (AFJ). It hosts libraries built on top of Credo that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
+Credo Extensions is an extension repo to [Credo](https://github.com/openwallet-foundation/credo-ts.git). It hosts libraries built on top of Credo that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for Credo and a REST API wrapper.
 
-If you're just getting started the [AFJ repo](https://github.com/openwallet-foundation/credo-ts.git) is probably the place to start.
+If you're just getting started the [Credo repo](https://github.com/openwallet-foundation/credo-ts.git) is probably the place to start.
 
 ## Packages
 

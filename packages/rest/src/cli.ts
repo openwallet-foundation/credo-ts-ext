@@ -5,7 +5,7 @@ import yargs from 'yargs'
 import { runRestAgent } from './cliAgent'
 
 const parsed = yargs
-  .command('start', 'Start AFJ Rest agent')
+  .command('start', 'Start Credo Rest agent')
   .option('label', {
     alias: 'l',
     string: true,
@@ -99,7 +99,7 @@ const parsed = yargs
     demandOption: true,
   })
   .config()
-  .env('AFJ_REST')
+  .env('CREDO_REST')
   .parseSync()
 
 export async function runCliServer() {

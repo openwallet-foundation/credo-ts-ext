@@ -50,7 +50,7 @@ Make sure you have [Docker](https://docs.docker.com/get-docker/) installed. To g
 
 ```sh
 docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/credo-rest \
-  --label "AFJ Rest" \
+  --label "Credo Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
   --endpoint http://localhost:5000 \
@@ -65,13 +65,13 @@ See the [docker-compose.yml](https://github.com/openwallet-foundation/credo-ts-e
 
 **Directly on Computer**
 
-To run AFJ REST API directly on your computer you need to have the indy-sdk installed. Follow the Indy [installation steps](https://github.com/openwallet-foundation/credo-ts/tree/main/docs/libindy) for your platform and verify Indy is installed.
+To run Credo REST API directly on your computer you need to have the indy-sdk installed. Follow the Indy [installation steps](https://github.com/openwallet-foundation/credo-ts/tree/main/docs/libindy) for your platform and verify Indy is installed.
 
 Once you have installed Indy, you can start the REST server using the following command:
 
 ```sh
 npx -p @credo-ts/rest credo-rest start \
-  --label "AFJ Rest" \
+  --label "Credo Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
   --endpoint http://localhost:5000 \
@@ -96,21 +96,21 @@ It is also possible to configure the REST API using a json config. When providin
 
 ```json
 {
-  "label": "AFJ Rest Agent",
+  "label": "Credo Rest Agent",
   "walletId": "walletId",
   "walletKey": "walletKey"
   // ... other config options ... //
 }
 ```
 
-As a final option it is possible to configure the agent using environment variables. All properties are prefixed by `AFJ_REST` transformed to UPPER_SNAKE_CASE.
+As a final option it is possible to configure the agent using environment variables. All properties are prefixed by `CREDO_REST` transformed to UPPER_SNAKE_CASE.
 
 ```sh
 # With docker
-docker run -e AFJ_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/credo-rest ...
+docker run -e CREDO_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/credo-rest ...
 
 # Directly on computer
-AFJ_REST_WALLET_KEY="my-secret-key" npx -p @credo-ts/rest credo-rest start ...
+CREDO_REST_WALLET_KEY="my-secret-key" npx -p @credo-ts/rest credo-rest start ...
 ```
 
 #### Starting Own Server
@@ -129,7 +129,7 @@ import { agentDependencies } from '@aries-framework/node'
 const run = async () => {
   const agent = new Agent(
     {
-      // ... AFJ Config ... //
+      // ... Credo Config ... //
     },
     agentDependencies
   )

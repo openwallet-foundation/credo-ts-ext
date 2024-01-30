@@ -28,7 +28,7 @@ RUN apt-get update -y && apt-get install -y --allow-unauthenticated \
 # Install yarn seperately due to `no-install-recommends` to skip nodejs install 
 RUN apt-get install -y --no-install-recommends yarn
 
-# AFJ specifc setup
+# Credo specifc setup
 WORKDIR /www
 
 COPY bin ./bin
