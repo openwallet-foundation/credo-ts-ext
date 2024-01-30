@@ -65,7 +65,7 @@ If you would like to contribute to this repository, please read the [CONTRIBUTIN
 
 For running tests, make sure to follow the network setup guides from the Credo [DEVREADME.md](https://github.com/openwallet-foundation/credo-ts/blob/main/DEVREADME.md).
 
-The Credo call takes place every week at Thursday, 14:00 UTC via [Zoom](https://zoom.us/j/99751084865?pwd=TW1rU0FDVTBqUlhnWnY2NERkd1diZz09). This meeting is for contributors to groom and plan the backlog, and discuss issues. Feel free to join!
+There are regular community working groups to discuss ongoing efforts within Credo, showcase items you've built with Credo, or ask questions. See [Meeting Information](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information) for up to date information on the meeting schedule. Everyone is welcome to join!
 
 ## License
 
