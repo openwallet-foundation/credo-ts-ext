@@ -2,7 +2,7 @@
   <br />
   <img
     alt="Hyperledger Aries logo"
-    src="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
+    src="https://raw.githubusercontent.com/openwallet-foundation/credo-ts/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
     height="250px"
   />
 </p>
@@ -13,18 +13,18 @@
     src="https://github.com/openwallet-foundation/credo-ts-ext/workflows/Continuous%20Integration/badge.svg?branch=main"
   />
   <a
-    href="https://lgtm.com/projects/g/hyperledger/aries-framework-javascript-ext/context:javascript"
+    href="https://lgtm.com/projects/g/openwallet-foundation/credo-ts-ext/context:javascript"
     ><img
       alt="Language grade: JavaScript"
-      src="https://img.shields.io/lgtm/grade/javascript/g/hyperledger/aries-framework-javascript-ext.svg?logo=lgtm&logoWidth=18"
+      src="https://img.shields.io/lgtm/grade/javascript/g/openwallet-foundation/credo-ts-ext.svg?logo=lgtm&logoWidth=18"
   /></a>
-  <a href="https://codecov.io/gh/hyperledger/aries-framework-javascript-ext/"
+  <a href="https://codecov.io/gh/openwallet-foundation/credo-ts-ext/"
     ><img
       alt="Codecov Coverage"
-      src="https://img.shields.io/codecov/c/github/hyperledger/aries-framework-javascript-ext/coverage.svg?style=flat-square"
+      src="https://img.shields.io/codecov/c/github/openwallet-foundation/credo-ts-ext/coverage.svg?style=flat-square"
   /></a>
   <a
-    href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"
+    href="https://raw.githubusercontent.com/openwallet-foundation/credo-ts-ext/main/LICENSE"
     ><img
       alt="License"
       src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
