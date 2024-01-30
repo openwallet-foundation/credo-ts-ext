@@ -37,4 +37,4 @@ RUN yarn install --production
 
 COPY build ./build
 
-ENTRYPOINT [ "./bin/afj-rest.js", "start" ]
+ENTRYPOINT [ "./bin/credo-rest.js", "start" ]

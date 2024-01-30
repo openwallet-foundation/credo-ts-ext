@@ -18,7 +18,7 @@
     "directory": "packages/rest"
   },
   "bin": {
-    "afj-rest": "bin/afj-rest.js"
+    "credo-rest": "bin/credo-rest.js"
   },
   "scripts": {
     "tsoa": "tsoa spec-and-routes",

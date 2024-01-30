@@ -49,7 +49,7 @@ Using the CLI is the easiest way to get started with the REST API.
 Make sure you have [Docker](https://docs.docker.com/get-docker/) installed. To get a minimal version of the agent running the following command is sufficient:
 
 ```sh
-docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/afj-rest \
+docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/credo-rest \
   --label "AFJ Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
@@ -59,7 +59,7 @@ docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/afj-rest \
   --inbound-transport http 5000
 ```
 
-See the [docker-compose.yml](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/docker-compose.yml) file for an example of using the afj-rest image with Docker Compose.
+See the [docker-compose.yml](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/docker-compose.yml) file for an example of using the credo-rest image with Docker Compose.
 
 > ⚠️ The Docker image is not optimized for ARM architectures and won't work on Apple Silicon Macs. See the **Directly on Computer** below on how to run it directly on your computer without Docker.
 
@@ -70,7 +70,7 @@ To run AFJ REST API directly on your computer you need to have the indy-sdk inst
 Once you have installed Indy, you can start the REST server using the following command:
 
 ```sh
-npx -p @credo-ts/rest afj-rest start \
+npx -p @credo-ts/rest credo-rest start \
   --label "AFJ Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
@@ -86,10 +86,10 @@ To find out all available configuration options from the CLI, you can run the CL
 
 ```sh
 # With docker
-docker run ghcr.io/hyperledger/afj-rest --help
+docker run ghcr.io/hyperledger/credo-rest --help
 
 # Directly on computer
-npx -p @credo-ts/rest afj-rest start --help
+npx -p @credo-ts/rest credo-rest start --help
 ```
 
 It is also possible to configure the REST API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
@@ -107,10 +107,10 @@ As a final option it is possible to configure the agent using environment variab
 
 ```sh
 # With docker
-docker run -e AFJ_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/afj-rest ...
+docker run -e AFJ_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/credo-rest ...
 
 # Directly on computer
-AFJ_REST_WALLET_KEY="my-secret-key" npx -p @credo-ts/rest afj-rest start ...
+AFJ_REST_WALLET_KEY="my-secret-key" npx -p @credo-ts/rest credo-rest start ...
 ```
 
 #### Starting Own Server
