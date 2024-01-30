@@ -49,7 +49,7 @@ Using the CLI is the easiest way to get started with the REST API.
 Make sure you have [Docker](https://docs.docker.com/get-docker/) installed. To get a minimal version of the agent running the following command is sufficient:
 
 ```sh
-docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/credo-rest \
+docker run -p 5000:5000 -p 3000:3000 ghcr.io/openwallet-foundation/credo-rest \
   --label "Credo Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
