@@ -10,7 +10,7 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Redux toolkit wrapper around Aries Framework JavaScript",
+  "description": "Redux toolkit wrapper around Credo",
   "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/redux-store",
   "repository": {
     "type": "git",

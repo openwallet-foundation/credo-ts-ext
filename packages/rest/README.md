@@ -6,7 +6,7 @@
     height="250px"
   />
 </p>
-<h1 align="center"><b>Aries Framework JavaScript REST API</b></h1>
+<h1 align="center"><b>Credo REST API</b></h1>
 <p align="center">
   <a
     href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"
@@ -28,7 +28,7 @@
 </p>
 <br />
 
-The Aries Framework JavaScript REST API is the most convenient way for self-sovereign identity (SSI) developers to interact with SSI agents.
+The Credo REST API is the most convenient way for self-sovereign identity (SSI) developers to interact with SSI agents.
 
 - ⭐ **Endpoints** to create connections, issue credentials, and request proofs.
 - 💻 **CLI** that makes it super easy to start an instance of the REST API.
@@ -38,7 +38,7 @@ The Aries Framework JavaScript REST API is the most convenient way for self-sove
 
 The REST API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The docs can be viewed on the `/docs` endpoint (e.g. http://localhost:3000/docs).
 
-> The OpenAPI spec is generated from the model classes used by Aries Framework JavaScript. Due to limitations in the inspection of these classes, the generated schema does not always exactly match the expected format. Keep this in mind when using this package. If you encounter any issues, feel free to open an issue.
+> The OpenAPI spec is generated from the model classes used by Credo. Due to limitations in the inspection of these classes, the generated schema does not always exactly match the expected format. Keep this in mind when using this package. If you encounter any issues, feel free to open an issue.
 
 #### Using the CLI
 
