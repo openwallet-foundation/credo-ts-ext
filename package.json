@@ -8,10 +8,10 @@
       "packages/*"
     ],
     "nohoist": [
-      "@aries-framework/*",
-      "**/@aries-framework/*",
-      "**/@aries-framework/*/**",
-      "@aries-framework/*/**",
+      "@credo-ts/*",
+      "**/@credo-ts/*",
+      "**/@credo-ts/*/**",
+      "@credo-ts/*/**",
       "@hyperledger/*",
       "**/@hyperledger/*",
       "**/@hyperledger/*/**",

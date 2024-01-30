@@ -5,7 +5,7 @@ import { ConnectionRecord, DidExchangeRole, DidExchangeState } from '@aries-fram
 
 import { addRecordInState, removeRecordInState, updateRecordInState } from '../src/recordListener'
 
-describe('@aries-framework/redux-store', () => {
+describe('@credo-ts/redux-store', () => {
   test('Should add record', () => {
     const records: SerializedInstance<BaseRecord>[] = []
     const record = new ConnectionRecord({

@@ -19,10 +19,10 @@
       alt="typescript"
       src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg"
   /></a>
-    <a href="https://www.npmjs.com/package/@aries-framework/push-notifications"
+    <a href="https://www.npmjs.com/package/@credo-ts/push-notifications"
     ><img
-      alt="@aries-framework/push-notifications version"
-      src="https://img.shield.io/npm/v/@aries-framework/push-notifications"
+      alt="@credo-ts/push-notifications version"
+      src="https://img.shield.io/npm/v/@credo-ts/push-notifications"
   /></a>
 
 </p>

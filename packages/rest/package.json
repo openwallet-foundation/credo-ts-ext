@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/rest",
+  "name": "@credo-ts/rest",
   "main": "build/index",
   "types": "build/index",
   "version": "0.9.5",

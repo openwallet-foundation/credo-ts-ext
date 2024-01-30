@@ -29,7 +29,7 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Build rest package
-        run: yarn workspace @aries-framework/rest build
+        run: yarn workspace @credo-ts/rest build
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta

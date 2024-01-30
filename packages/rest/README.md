@@ -19,10 +19,10 @@
       alt="typescript"
       src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg"
   /></a>
-    <a href="https://www.npmjs.com/package/@aries-framework/rest"
+    <a href="https://www.npmjs.com/package/@credo-ts/rest"
     ><img
-      alt="@aries-framework/rest version"
-      src="https://img.shields.io/npm/v/@aries-framework/rest"
+      alt="@credo-ts/rest version"
+      src="https://img.shields.io/npm/v/@credo-ts/rest"
   /></a>
 
 </p>
@@ -70,7 +70,7 @@ To run AFJ REST API directly on your computer you need to have the indy-sdk inst
 Once you have installed Indy, you can start the REST server using the following command:
 
 ```sh
-npx -p @aries-framework/rest afj-rest start \
+npx -p @credo-ts/rest afj-rest start \
   --label "AFJ Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
@@ -89,7 +89,7 @@ To find out all available configuration options from the CLI, you can run the CL
 docker run ghcr.io/hyperledger/afj-rest --help
 
 # Directly on computer
-npx -p @aries-framework/rest afj-rest start --help
+npx -p @credo-ts/rest afj-rest start --help
 ```
 
 It is also possible to configure the REST API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
@@ -110,7 +110,7 @@ As a final option it is possible to configure the agent using environment variab
 docker run -e AFJ_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/afj-rest ...
 
 # Directly on computer
-AFJ_REST_WALLET_KEY="my-secret-key" npx -p @aries-framework/rest afj-rest start ...
+AFJ_REST_WALLET_KEY="my-secret-key" npx -p @credo-ts/rest afj-rest start ...
 ```
 
 #### Starting Own Server
@@ -120,7 +120,7 @@ Starting your own server is more involved than using the CLI, but allows more fi
 You can create an agent instance and import the `startServer` method from the `rest` package. That's all you have to do.
 
 ```ts
-import { startServer } from '@aries-framework/rest'
+import { startServer } from '@credo-ts/rest'
 import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
 

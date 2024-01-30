@@ -19,9 +19,9 @@
       alt="typescript"
       src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg"
   /></a>
-    <a href="https://www.npmjs.com/package/@aries-framework/transport-ble"
+    <a href="https://www.npmjs.com/package/@credo-ts/transport-ble"
     ><img
-      alt="@aries-framework/transport-ble version"
+      alt="@credo-ts/transport-ble version"
       src="https://img.shield.io/npm/v/@aries-framework/transport-ble"
   /></a>
   <br />
@@ -44,7 +44,7 @@ We're this discussing if this is the best approach to use in future versions. If
 ## Installing the required dependencies
 
 ```sh
-yarn add @aries-framework/transport-ble @aries-framework/core @aries-framework/react-native @animo-id/react-native-ble-didcomm
+yarn add @credo-ts/transport-ble @aries-framework/core @aries-framework/react-native @animo-id/react-native-ble-didcomm
 ```
 
 ## Configuration
@@ -60,7 +60,7 @@ This means that the agent acting as the connection initiator should use the `Cen
 ```ts
 // If you want to register the transports only after initializing the agent, you can do this anywhere else in your app, and just leave out the agent config and initialization
 
-import { BleOutboundTransport, BleInboundTransport } from '@aries-framework/transport-ble'
+import { BleOutboundTransport, BleInboundTransport } from '@credo-ts/transport-ble'
 import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/react-native'
 import {

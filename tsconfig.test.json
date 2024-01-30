@@ -3,11 +3,11 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@aries-framework/react-hooks": ["packages/react-hooks/src"],
-      "@aries-framework/rest": ["packages/rest/src"],
-      "@aries-framework/redux-store": ["packages/redux-store/src"],
-      "@aries-framework/transport-ble": ["packages/transport-ble/src"],
-      "@aries-framework/push-notifications": ["packages/push-notifications/src"]
+      "@credo-ts/react-hooks": ["packages/react-hooks/src"],
+      "@credo-ts/rest": ["packages/rest/src"],
+      "@credo-ts/redux-store": ["packages/redux-store/src"],
+      "@credo-ts/transport-ble": ["packages/transport-ble/src"],
+      "@credo-tstions": ["packages/push-notifications/src"]
     },
     "types": ["jest", "node"]
   },

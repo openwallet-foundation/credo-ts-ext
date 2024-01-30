@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/push-notifications",
+  "name": "@credo-ts/push-notifications",
   "main": "build/index",
   "types": "build/index",
   "version": "0.6.0",
