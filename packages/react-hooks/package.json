@@ -10,7 +10,7 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Exposes useful React hooks that allow easy interaction with AFJ.",
+  "description": "Exposes useful React hooks that allow easy interaction with Credo.",
   "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/react-hooks",
   "repository": {
     "type": "git",

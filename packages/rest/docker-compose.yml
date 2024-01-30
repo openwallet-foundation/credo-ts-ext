@@ -6,7 +6,7 @@ services:
     restart: always
     environment:
       # possible to set values using env variables
-      AFJ_REST_LOG_LEVEL: 1
+      CREDO_REST_LOG_LEVEL: 1
     volumes:
       # also possible to set values using json
       - ./samples/cliConfig.json:/config.json

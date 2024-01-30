@@ -27,13 +27,13 @@
   <br />
 </p>
 
-The Credo (AFJ) BLE Transport package provides a simple way to add Bluetooth Low Energy (BLE) data transport into AFJ React Native mobile agents.
+The Credo  BLE Transport package provides a simple way to add Bluetooth Low Energy (BLE) data transport into Credo React Native mobile agents.
 
 It implements the same transport interface as the outbound transports in [@aries-framework/core](https://www.npmjs.com/package/@aries-framework/core), and the inbound transports in [@aries-framework/node](https://www.npmjs.com/package/@aries-framework/node).
 
-With this transport enabled, AFJ React Native mobile agents gain the ability to do offline DIDComm exchanges using Bluetooth Low Energy (BLE).
+With this transport enabled, Credo React Native mobile agents gain the ability to do offline DIDComm exchanges using Bluetooth Low Energy (BLE).
 
-To keep this transport implementation focused on the 'DIDComm' wrapper needed to make it useful to AFJ agents, this transport package is built on this [BLE DIDComm SDK](https://www.npmjs.com/package/@animo-id/react-native-ble-didcomm).
+To keep this transport implementation focused on the 'DIDComm' wrapper needed to make it useful to Credo agents, this transport package is built on this [BLE DIDComm SDK](https://www.npmjs.com/package/@animo-id/react-native-ble-didcomm).
 
 The **BLE DIDComm SDK** implements the core Bluetooth hardware interface for Android (in Kotlin) and iOS (Swift), and exposes the simple APIs that this BLE transport implementation uses.
 
@@ -74,10 +74,10 @@ import {
 const createAgent = async () => {
   const agent = new Agent({
     config: {
-      // ... AFJ Config ... //
+      // ... Credo Config ... //
     },
     modules: {
-      // ... AFJ Module config
+      // ... Credo Module config
     },
     dependencies: agentDependencies,
   })
