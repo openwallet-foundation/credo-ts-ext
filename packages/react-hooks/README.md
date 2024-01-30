@@ -6,7 +6,7 @@
     height="250px"
   />
 </p>
-<h1 align="center"><b>React Hooks for Aries Framework JavaScript</b></h1>
+<h1 align="center"><b>React Hooks for Credo</b></h1>
 <p align="center">
   <a
     href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"

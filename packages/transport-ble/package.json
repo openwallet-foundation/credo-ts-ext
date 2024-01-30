@@ -10,7 +10,7 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Bluetooth Low Energy transport for Aries Framework JavaScript",
+  "description": "Bluetooth Low Energy transport for Credo",
   "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/transport-ble",
   "repository": {
     "type": "git",

@@ -6,7 +6,7 @@
     height="250px"
   />
 </p>
-<h1 align="center"><b>Aries Framework JavaScript Redux Store</b></h1>
+<h1 align="center"><b>Credo Redux Store</b></h1>
 <p align="center">
   <a
     href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"
@@ -28,6 +28,6 @@
 </p>
 <br />
 
-Aries Framework JavaScript Redux Store is a wrapper around [Aries Framework JavaScript](https://github.com/openwallet-foundation/credo-ts.git) (AFJ), built with [Redux Toolkit](https://redux-toolkit.js.org/). It can be used to build mobile applications in React Native.
+Credo Redux Store is a wrapper around [Credo](https://github.com/openwallet-foundation/credo-ts.git) (AFJ), built with [Redux Toolkit](https://redux-toolkit.js.org/). It can be used to build mobile applications in React Native.
 
 For documentation on installation and usage of the Redux Store package, refer to the [Docs](https://aries.js.org/guides/0.4/extensions/redux-store).

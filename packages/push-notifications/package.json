@@ -10,7 +10,7 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Push notification plugin for Aries Framework JavaScript",
+  "description": "Push notification plugin for Credo",
   "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/push-notifications",
   "repository": {
     "type": "git",

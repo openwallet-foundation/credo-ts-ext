@@ -6,7 +6,7 @@
     height="250px"
   />
 </p>
-<h1 align="center"><b>Bluetooth Low Energy transport for Aries Framework JavaScript</b></h1>
+<h1 align="center"><b>Bluetooth Low Energy transport for Credo</b></h1>
 <p align="center">
   <a
     href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"
@@ -27,7 +27,7 @@
   <br />
 </p>
 
-The Aries Framework JavaScript (AFJ) BLE Transport package provides a simple way to add Bluetooth Low Energy (BLE) data transport into AFJ React Native mobile agents.
+The Credo (AFJ) BLE Transport package provides a simple way to add Bluetooth Low Energy (BLE) data transport into AFJ React Native mobile agents.
 
 It implements the same transport interface as the outbound transports in [@aries-framework/core](https://www.npmjs.com/package/@aries-framework/core), and the inbound transports in [@aries-framework/node](https://www.npmjs.com/package/@aries-framework/node).
 
