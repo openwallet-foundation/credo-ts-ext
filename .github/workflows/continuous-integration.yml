@@ -51,10 +51,12 @@ jobs:
       - name: Setup Libindy
         uses: ./.github/actions/setup-libindy
 
-      - name: Setup NodeJS
-        uses: ./.github/actions/setup-node
+      - name: Setup node v16
+        uses: actions/setup-node@v4
         with:
           node-version: 16
+          registry-url: 'https://registry.npmjs.org/'
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install
@@ -90,10 +92,12 @@ jobs:
         with:
           seed: ${TEST_AGENT_PUBLIC_DID_SEED}
 
-      - name: Setup NodeJS
-        uses: ./.github/actions/setup-node
+      - name: Setup node ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          registry-url: 'https://registry.npmjs.org/'
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install
@@ -127,10 +131,12 @@ jobs:
       - name: Setup Libindy
         uses: ./.github/actions/setup-libindy
 
-      - name: Setup NodeJS
-        uses: ./.github/actions/setup-node
+      - name: Setup node v16
+        uses: actions/setup-node@v4
         with:
           node-version: 16
+          registry-url: 'https://registry.npmjs.org/'
+          cache: yarn
 
       - name: Install dependencies
         run: yarn install
@@ -161,22 +167,28 @@ jobs:
 
       # Initiate release process if release was created
       - name: Checkout aries-framework-javascript-ext
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         if: ${{ steps.release-please.outputs.release_created }}
+
       # Some packages need indy-sdk for node as part of yarn install
       - name: Setup Libindy
         uses: ./.github/actions/setup-libindy
         if: ${{ steps.release-please.outputs.release_created }}
-      - name: Setup NodeJS
-        uses: ./.github/actions/setup-node
+
+      - name: Setup node v16
+        uses: actions/setup-node@v4
         with:
           node-version: 16
+          registry-url: 'https://registry.npmjs.org/'
+          cache: yarn
         if: ${{ steps.release-please.outputs.release_created }}
+
       - name: Install dependencies
         run: yarn install --frozen-lockfile
         if: ${{ steps.release-please.outputs.release_created }}
+
       - name: Release to NPM
         run: npm publish ./packages/${{ matrix.package }}
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_PUBLISH }}
         if: ${{ steps.release-please.outputs.release_created }}
