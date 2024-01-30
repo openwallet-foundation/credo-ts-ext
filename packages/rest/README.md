@@ -59,7 +59,7 @@ docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/afj-rest \
   --inbound-transport http 5000
 ```
 
-See the [docker-compose.yml](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/docker-compose.yml) file for an example of using the afj-rest image with Docker Compose.
+See the [docker-compose.yml](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/docker-compose.yml) file for an example of using the afj-rest image with Docker Compose.
 
 > ⚠️ The Docker image is not optimized for ARM architectures and won't work on Apple Silicon Macs. See the **Directly on Computer** below on how to run it directly on your computer without Docker.
 
@@ -92,7 +92,7 @@ docker run ghcr.io/hyperledger/afj-rest --help
 npx -p @aries-framework/rest afj-rest start --help
 ```
 
-It is also possible to configure the REST API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
+It is also possible to configure the REST API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
 
 ```json
 {
