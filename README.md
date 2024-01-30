@@ -51,13 +51,13 @@ If you're just getting started the [Credo repo](https://github.com/openwallet-fo
 
 All packages are placed in the [`packages/`](./packages) directory.
 
-| Package                                                                                      | Version                                                                                            | Description                                                   |
-| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ------------------------------------------------------------- |
-| [`@credo-ts/rest`](https://www.npmjs.com/package/@credo-ts/rest)                             | ![@credo-ts/rest version](https://img.shields.io/npm/v/@credo-ts/rest)                             | REST endpoint wrapper for using your agent over HTTP          |
-| [`@credo-ts/react-hooks`](https://www.npmjs.com/package/@credo-ts/react-hooks)               | ![@credo-ts/react-hooks version](https://img.shields.io/npm/v/@credo-ts/react-hooks)               | React Hooks for data handling and agent interaction           |
-| [`@credo-ts/redux-store`](https://www.npmjs.com/package/@credo-ts/redux-store)               | ![@credo-ts/redux-store version](https://img.shields.io/npm/v/@credo-ts/redux-store)               | Redux Toolkit wrapper around Credo       |
-| [`@credo-ts/push-notifications`](https://www.npmjs.com/package/@credo-ts/push-notifications) | ![@credo-ts/push-notifications version](https://img.shields.io/npm/v/@credo-ts/push-notifications) | Push notification plugin for Credo       |
-| [`@credo-ts/transport-ble`](https://www.npmjs.com/package/@credo-ts/transport-ble)           | ![@credo-ts/transport-ble version](https://img.shields.io/npm/v/@credo-ts/transport-ble)           | Bluetooth Low Energy transport for Credo |
+| Package                                                                                      | Version                                                                                            | Description                                          |
+| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [`@credo-ts/rest`](https://www.npmjs.com/package/@credo-ts/rest)                             | ![@credo-ts/rest version](https://img.shields.io/npm/v/@credo-ts/rest)                             | REST endpoint wrapper for using your agent over HTTP |
+| [`@credo-ts/react-hooks`](https://www.npmjs.com/package/@credo-ts/react-hooks)               | ![@credo-ts/react-hooks version](https://img.shields.io/npm/v/@credo-ts/react-hooks)               | React Hooks for data handling and agent interaction  |
+| [`@credo-ts/redux-store`](https://www.npmjs.com/package/@credo-ts/redux-store)               | ![@credo-ts/redux-store version](https://img.shields.io/npm/v/@credo-ts/redux-store)               | Redux Toolkit wrapper around Credo                   |
+| [`@credo-ts/push-notifications`](https://www.npmjs.com/package/@credo-ts/push-notifications) | ![@credo-ts/push-notifications version](https://img.shields.io/npm/v/@credo-ts/push-notifications) | Push notification plugin for Credo                   |
+| [`@credo-ts/transport-ble`](https://www.npmjs.com/package/@credo-ts/transport-ble)           | ![@credo-ts/transport-ble version](https://img.shields.io/npm/v/@credo-ts/transport-ble)           | Bluetooth Low Energy transport for Credo             |
 
 ## Contributing
 
