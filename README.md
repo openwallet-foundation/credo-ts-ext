@@ -69,4 +69,4 @@ The Credo call takes place every week at Thursday, 14:00 UTC via [Zoom](https://
 
 ## License
 
-Hyperledger Credo is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).
+Credo is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).
