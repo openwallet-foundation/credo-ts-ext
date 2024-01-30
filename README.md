@@ -43,9 +43,9 @@
   <a href="#license">License</a>
 </p>
 
-Aries Framework JavaScript Extensions is an extension repo to [Aries Framework JavaScript](https://github.com/hyperledger/aries-framework-javascript.git) (AFJ). It hosts libraries built on top of Aries Framework JavaScript that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
+Aries Framework JavaScript Extensions is an extension repo to [Aries Framework JavaScript](https://github.com/openwallet-foundation/credo-ts.git) (AFJ). It hosts libraries built on top of Aries Framework JavaScript that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for AFJ and a REST API wrapper.
 
-If you're just getting started the [AFJ repo](https://github.com/hyperledger/aries-framework-javascript.git) is probably the place to start.
+If you're just getting started the [AFJ repo](https://github.com/openwallet-foundation/credo-ts.git) is probably the place to start.
 
 ## Packages
 
@@ -63,7 +63,7 @@ All packages are placed in the [`packages/`](./packages) directory.
 
 If you would like to contribute to this repository, please read the [CONTRIBUTING](/CONTRIBUTING.md) guidelines. These documents will provide more information to get you started!
 
-For running tests, make sure to follow the network setup guides from the Aries Framework JavaScript [DEVREADME.md](https://github.com/hyperledger/aries-framework-javascript/blob/main/DEVREADME.md).
+For running tests, make sure to follow the network setup guides from the Aries Framework JavaScript [DEVREADME.md](https://github.com/openwallet-foundation/credo-ts/blob/main/DEVREADME.md).
 
 The Aries Framework JavaScript call takes place every week at Thursday, 14:00 UTC via [Zoom](https://zoom.us/j/99751084865?pwd=TW1rU0FDVTBqUlhnWnY2NERkd1diZz09). This meeting is for contributors to groom and plan the backlog, and discuss issues. Feel free to join!
 
