@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.5.1](https://www.github.com/openwallet-foundation/credo-ts-ext/compare/react-hooks-v0.5.0...react-hooks-v0.5.1) (2024-01-31)
+
+
+### Features
+
+* **hooks:** added proof and credential format data hooks ([#231](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/231)) ([d03be3b](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/d03be3bb5b5a448c30f3124bd6295bd678cf84ff))
+
 ## [0.5.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/react-hooks-v0.4.2...react-hooks-v0.5.0) (2023-06-29)
 
 
