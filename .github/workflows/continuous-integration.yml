@@ -15,7 +15,7 @@ env:
 # Ideally we only add this to the 'release' job so it doesn't limit PR runs, but github can't guarantee the job order in that case:
 # "When concurrency is specified at the job level, order is not guaranteed for jobs or runs that queue within 5 minutes of each other."
 concurrency:
-  group: aries-framework-${{ github.ref }}-${{ github.repository }}-${{ github.event_name }}
+  group: credo-ts-${{ github.ref }}-${{ github.repository }}-${{ github.event_name }}
   cancel-in-progress: true
 
 jobs:
@@ -44,7 +44,7 @@ jobs:
     needs: [ci-trigger]
     if: needs.ci-trigger.outputs.triggered == 'true'
     steps:
-      - name: Checkout aries-framework-javascript-ext
+      - name: Checkout credo-ts-ext
         uses: actions/checkout@v2
 
       # setup dependencies
@@ -81,7 +81,7 @@ jobs:
         node-version: [16.x, 18.x]
 
     steps:
-      - name: Checkout aries-framework-javascript-ext
+      - name: Checkout credo-ts-ext
         uses: actions/checkout@v2
 
       # setup dependencies
@@ -124,7 +124,7 @@ jobs:
     outputs:
       packages: ${{ steps.get-packages.outputs.packages }}
     steps:
-      - name: Checkout aries-framework-javascript-ext
+      - name: Checkout credo-ts-ext
         uses: actions/checkout@v2
 
       # Some packages need indy-sdk for node as part of yarn install
@@ -166,7 +166,7 @@ jobs:
           signoff: 'github-actions[bot] <41898282+github-actions[bot]@users.noreply.github.com>'
 
       # Initiate release process if release was created
-      - name: Checkout aries-framework-javascript-ext
+      - name: Checkout credo-ts-ext
         uses: actions/checkout@v4
         if: ${{ steps.release-please.outputs.release_created }}
 
