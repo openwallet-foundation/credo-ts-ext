@@ -67,6 +67,8 @@ For running tests, make sure to follow the network setup guides from the Credo [
 
 There are regular community working groups to discuss ongoing efforts within Credo, showcase items you've built with Credo, or ask questions. See [Meeting Information](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information) for up to date information on the meeting schedule. Everyone is welcome to join!
 
+We welcome you to join our mailing list and Discord channel. See the [Wiki](https://github.com/openwallet-foundation/credo-ts/wiki/Communication) for up to date information.
+
 ## License
 
 Credo is licensed under the [Apache License Version 2.0 (Apache-2.0)](/LICENSE).
