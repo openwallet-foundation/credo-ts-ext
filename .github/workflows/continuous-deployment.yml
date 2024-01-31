@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # Initiate release process if release was created
-      - name: Checkout aries-framework-javascript-ext
+      - name: Checkout credo-ts-ext
         uses: actions/checkout@v4
 
       # Some packages need indy-sdk for node as part of yarn install
