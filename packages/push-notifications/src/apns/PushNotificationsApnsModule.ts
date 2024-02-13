@@ -1,6 +1,6 @@
-import type { DependencyManager, FeatureRegistry, Module } from '@aries-framework/core'
+import type { DependencyManager, FeatureRegistry, Module } from '@credo-ts/core'
 
-import { Protocol } from '@aries-framework/core'
+import { Protocol } from '@credo-ts/core'
 
 import { PushNotificationsApnsApi } from './PushNotificationsApnsApi'
 import { PushNotificationsApnsService } from './PushNotificationsApnsService'
@@ -25,7 +25,7 @@ export class PushNotificationsApnsModule implements Module {
       new Protocol({
         id: 'https://didcomm.org/push-notifications-apns/1.0',
         roles: [PushNotificationsApnsRole.Sender, PushNotificationsApnsRole.Receiver],
-      })
+      }),
     )
 
     dependencyManager.registerMessageHandlers([

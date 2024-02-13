@@ -3,7 +3,7 @@
 
   "compilerOptions": {
     "outDir": "./build",
-    "types": []
+    "types": ["node"]
   },
 
   "include": ["src/**/*"]

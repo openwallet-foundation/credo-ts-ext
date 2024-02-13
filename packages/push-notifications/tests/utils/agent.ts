@@ -1,9 +1,9 @@
-import type { InitConfig } from '@aries-framework/core'
+import type { InitConfig } from '@credo-ts/core'
 
-import { Agent, HttpOutboundTransport, WsOutboundTransport } from '@aries-framework/core'
-import { IndySdkModule } from '@aries-framework/indy-sdk'
-import { agentDependencies } from '@aries-framework/node'
-import indySdk from 'indy-sdk'
+import { AskarModule } from '@credo-ts/askar'
+import { Agent, HttpOutboundTransport, WsOutboundTransport } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/node'
+import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 
 import { PushNotificationsApnsModule, PushNotificationsFcmModule } from '../../src'
 
@@ -21,8 +21,8 @@ export const setupAgentFcm = async ({ name }: { name: string }) => {
     config: agentConfig,
     dependencies: agentDependencies,
     modules: {
-      indySdk: new IndySdkModule({
-        indySdk,
+      askar: new AskarModule({
+        ariesAskar,
       }),
       pushNotificationsFcm: new PushNotificationsFcmModule(),
     },
@@ -49,8 +49,8 @@ export const setupAgentApns = async ({ name }: { name: string }) => {
     config: agentConfig,
     dependencies: agentDependencies,
     modules: {
-      indySdk: new IndySdkModule({
-        indySdk,
+      askar: new AskarModule({
+        ariesAskar,
       }),
       pushNotificationsApns: new PushNotificationsApnsModule(),
     },

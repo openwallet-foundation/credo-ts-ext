@@ -1,7 +1,7 @@
 import type { SerializedInstance } from '../../types'
 import type { SerializedError } from '@reduxjs/toolkit'
 
-import { MediationRecord, JsonTransformer } from '@aries-framework/core'
+import { MediationRecord, JsonTransformer } from '@credo-ts/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
@@ -52,10 +52,10 @@ const mediationSlice = createSlice({
       // record events
       .addCase(addRecord, (state, action) => addRecordInState(MediationRecord, state.mediation.records, action.payload))
       .addCase(removeRecord, (state, action) =>
-        removeRecordInState(MediationRecord, state.mediation.records, action.payload)
+        removeRecordInState(MediationRecord, state.mediation.records, action.payload),
       )
       .addCase(updateRecord, (state, action) =>
-        updateRecordInState(MediationRecord, state.mediation.records, action.payload)
+        updateRecordInState(MediationRecord, state.mediation.records, action.payload),
       )
   },
 })

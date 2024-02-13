@@ -112,7 +112,7 @@ describe('ProofController', () => {
         }),
         expect.objectContaining({
           comment: proposalRequest.comment,
-        })
+        }),
       )
       expect(response.statusCode).toBe(200)
       expect(response.body).toEqual(objectToJson(await getResult()))
@@ -262,7 +262,7 @@ describe('ProofController', () => {
         client.on('message', (data) => {
           client.terminate()
           resolve(JSON.parse(data as string))
-        })
+        }),
       )
 
       bobAgent.events.emit<ProofStateChangedEvent>({

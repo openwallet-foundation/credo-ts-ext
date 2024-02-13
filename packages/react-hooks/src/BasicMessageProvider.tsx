@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent } from '@aries-framework/core'
+import type { Agent } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { BasicMessageRecord } from '@aries-framework/core'
+import { BasicMessageRecord } from '@credo-ts/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -30,7 +30,7 @@ export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessa
 
   const messages = useMemo(
     () => basicMessages.filter((m) => m.connectionId === connectionId),
-    [basicMessages, connectionId]
+    [basicMessages, connectionId],
   )
 
   return messages
@@ -59,15 +59,15 @@ const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, child
     if (state.loading) return
 
     const basicMessageAdded$ = recordsAddedByType(agent, BasicMessageRecord).subscribe((record) =>
-      setState(addRecord(record, state))
+      setState(addRecord(record, state)),
     )
 
     const basicMessageUpdated$ = recordsUpdatedByType(agent, BasicMessageRecord).subscribe((record) =>
-      setState(updateRecord(record, state))
+      setState(updateRecord(record, state)),
     )
 
     const basicMessageRemoved$ = recordsRemovedByType(agent, BasicMessageRecord).subscribe((record) =>
-      setState(removeRecord(record, state))
+      setState(removeRecord(record, state)),
     )
 
     return () => {

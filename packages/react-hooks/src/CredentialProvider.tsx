@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, CredentialState } from '@aries-framework/core'
+import type { Agent, CredentialState } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { CredentialExchangeRecord } from '@aries-framework/core'
+import { CredentialExchangeRecord } from '@credo-ts/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -29,7 +29,7 @@ export const useCredentialsByConnectionId = (connectionId: string): CredentialEx
   const { records: credentials } = useCredentials()
   return useMemo(
     () => credentials.filter((credential: CredentialExchangeRecord) => credential.connectionId === connectionId),
-    [credentials, connectionId]
+    [credentials, connectionId],
   )
 }
 
@@ -45,7 +45,7 @@ export const useCredentialByState = (state: CredentialState | CredentialState[])
 
   const filteredCredentials = useMemo(
     () => credentials.filter((r: CredentialExchangeRecord) => states.includes(r.state)),
-    [credentials]
+    [credentials],
   )
   return filteredCredentials
 }
@@ -57,7 +57,7 @@ export const useCredentialNotInState = (state: CredentialState | CredentialState
 
   const filteredCredentials = useMemo(
     () => credentials.filter((r: CredentialExchangeRecord) => !states.includes(r.state)),
-    [credentials]
+    [credentials],
   )
 
   return filteredCredentials
@@ -86,15 +86,15 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
     if (state.loading) return
 
     const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-      setState(addRecord(record, state))
+      setState(addRecord(record, state)),
     )
 
     const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-      setState(updateRecord(record, state))
+      setState(updateRecord(record, state)),
     )
 
     const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-      setState(removeRecord(record, state))
+      setState(removeRecord(record, state)),
     )
 
     return () => {

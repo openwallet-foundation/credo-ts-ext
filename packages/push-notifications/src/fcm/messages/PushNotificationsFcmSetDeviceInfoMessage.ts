@@ -1,6 +1,6 @@
 import type { FcmDeviceInfo } from '../models'
 
-import { AgentMessage, IsValidMessageType, parseMessageType } from '@aries-framework/core'
+import { AgentMessage, IsValidMessageType, parseMessageType } from '@credo-ts/core'
 import { Expose } from 'class-transformer'
 import { IsString, ValidateIf } from 'class-validator'
 

@@ -1,7 +1,7 @@
 import type { SerializedInstance } from '../../types'
 import type { SerializedError } from '@reduxjs/toolkit'
 
-import { CredentialExchangeRecord, JsonTransformer } from '@aries-framework/core'
+import { CredentialExchangeRecord, JsonTransformer } from '@credo-ts/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
@@ -51,13 +51,13 @@ const credentialsSlice = createSlice({
       })
       // record events
       .addCase(addRecord, (state, action) =>
-        addRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+        addRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload),
       )
       .addCase(removeRecord, (state, action) =>
-        removeRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+        removeRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload),
       )
       .addCase(updateRecord, (state, action) =>
-        updateRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload)
+        updateRecordInState(CredentialExchangeRecord, state.credentials.records, action.payload),
       )
   },
 })

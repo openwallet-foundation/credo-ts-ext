@@ -1,5 +1,5 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, BaseRecord } from '@aries-framework/core'
+import type { Agent, BaseRecord } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
 import { useState, createContext, useContext, useEffect } from 'react'

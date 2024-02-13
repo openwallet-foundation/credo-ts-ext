@@ -131,7 +131,7 @@ const run = async () => {
     {
       // ... Credo Config ... //
     },
-    agentDependencies
+    agentDependencies,
   )
   await startServer(agent, { port: 3000 })
 }

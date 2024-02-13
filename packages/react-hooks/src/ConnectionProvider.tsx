@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, DidExchangeState, ConnectionType } from '@aries-framework/core'
+import type { Agent, DidExchangeState, ConnectionType } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { ConnectionRecord } from '@aries-framework/core'
+import { ConnectionRecord } from '@credo-ts/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -84,15 +84,15 @@ const ConnectionProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
     if (state.loading) return
 
     const connectionAdded$ = recordsAddedByType(agent, ConnectionRecord).subscribe((record) =>
-      setState(addRecord(record, state))
+      setState(addRecord(record, state)),
     )
 
     const connectionUpdated$ = recordsUpdatedByType(agent, ConnectionRecord).subscribe((record) =>
-      setState(updateRecord(record, state))
+      setState(updateRecord(record, state)),
     )
 
     const connectionRemoved$ = recordsRemovedByType(agent, ConnectionRecord).subscribe((record) =>
-      setState(removeRecord(record, state))
+      setState(removeRecord(record, state)),
     )
 
     return () => {

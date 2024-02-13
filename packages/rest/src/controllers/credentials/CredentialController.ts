@@ -35,7 +35,7 @@ export class CredentialController extends Controller {
   public async getAllCredentials(
     @Query('threadId') threadId?: string,
     @Query('connectionId') connectionId?: string,
-    @Query('state') state?: CredentialState
+    @Query('state') state?: CredentialState,
   ) {
     const credentialRepository = this.agent.dependencyManager.resolve(CredentialRepository)
 
@@ -59,7 +59,7 @@ export class CredentialController extends Controller {
   public async getCredentialById(
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const credential = await this.agent.credentials.getById(credentialRecordId)
@@ -83,7 +83,7 @@ export class CredentialController extends Controller {
   public async deleteCredential(
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       this.setStatus(204)
@@ -110,7 +110,7 @@ export class CredentialController extends Controller {
   public async proposeCredential(
     @Body() options: ProposeCredentialOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const credential = await this.agent.credentials.proposeCredential(options)
@@ -139,7 +139,7 @@ export class CredentialController extends Controller {
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() options?: AcceptCredentialProposalOptions
+    @Body() options?: AcceptCredentialProposalOptions,
   ) {
     try {
       const credential = await this.agent.credentials.acceptProposal({
@@ -169,7 +169,7 @@ export class CredentialController extends Controller {
   @Post('/create-offer')
   public async createOffer(
     @Body() options: CreateOfferOptions,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const offer = await this.agent.credentials.createOffer(options)
@@ -194,7 +194,7 @@ export class CredentialController extends Controller {
   public async offerCredential(
     @Body() options: OfferCredentialOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const credential = await this.agent.credentials.offerCredential(options)
@@ -223,7 +223,7 @@ export class CredentialController extends Controller {
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() options?: AcceptCredentialOfferOptions
+    @Body() options?: AcceptCredentialOfferOptions,
   ) {
     try {
       const credential = await this.agent.credentials.acceptOffer({
@@ -255,7 +255,7 @@ export class CredentialController extends Controller {
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() options?: AcceptCredentialRequestOptions
+    @Body() options?: AcceptCredentialRequestOptions,
   ) {
     try {
       const credential = await this.agent.credentials.acceptRequest({
@@ -285,7 +285,7 @@ export class CredentialController extends Controller {
   public async acceptCredential(
     @Path('credentialRecordId') credentialRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const credential = await this.agent.credentials.acceptCredential({ credentialRecordId: credentialRecordId })

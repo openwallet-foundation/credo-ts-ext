@@ -28,7 +28,7 @@ export const setupAgent = async ({
   endpoints: string[]
   port: number
 }) => {
-  const logger = new TsLogger(LogLevel.debug)
+  // const logger = new TsLogger(LogLevel.debug)
 
   const agent = new Agent(
     {
@@ -40,7 +40,7 @@ export const setupAgent = async ({
       autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
       walletConfig: { id: name, key: name },
       useLegacyDidSovPrefix: true,
-      logger: logger,
+      // logger: logger,
       indyLedgers: [
         {
           id: `TestLedger-${utils.uuid()}`,
@@ -49,7 +49,7 @@ export const setupAgent = async ({
         },
       ],
     },
-    agentDependencies
+    agentDependencies,
   )
 
   const httpInbound = new HttpInboundTransport({

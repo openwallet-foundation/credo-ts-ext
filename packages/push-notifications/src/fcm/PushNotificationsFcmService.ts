@@ -1,7 +1,7 @@
 import type { FcmDeviceInfo } from './models/FcmDeviceInfo'
-import type { InboundMessageContext } from '@aries-framework/core'
+import type { InboundMessageContext } from '@credo-ts/core'
 
-import { AriesFrameworkError } from '@aries-framework/core'
+import { CredoError } from '@credo-ts/core'
 import { Lifecycle, scoped } from 'tsyringe'
 
 import { PushNotificationsFcmProblemReportError, PushNotificationsFcmProblemReportReason } from './errors'
@@ -18,7 +18,7 @@ export class PushNotificationsFcmService {
       (deviceInfo.deviceToken === null && deviceInfo.devicePlatform !== null) ||
       (deviceInfo.deviceToken !== null && deviceInfo.devicePlatform === null)
     )
-      throw new AriesFrameworkError('Both or none of deviceToken and devicePlatform must be null')
+      throw new CredoError('Both or none of deviceToken and devicePlatform must be null')
 
     return new PushNotificationsFcmSetDeviceInfoMessage(deviceInfo)
   }
@@ -33,7 +33,7 @@ export class PushNotificationsFcmService {
       (deviceInfo.deviceToken === null && deviceInfo.devicePlatform !== null) ||
       (deviceInfo.deviceToken !== null && deviceInfo.devicePlatform === null)
     )
-      throw new AriesFrameworkError('Both or none of deviceToken and devicePlatform must be null')
+      throw new CredoError('Both or none of deviceToken and devicePlatform must be null')
 
     return new PushNotificationsFcmDeviceInfoMessage({
       threadId,
