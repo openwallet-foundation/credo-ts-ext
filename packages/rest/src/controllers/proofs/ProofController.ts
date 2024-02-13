@@ -1,9 +1,9 @@
 import type { RestAgent } from '../../utils/agent'
 import type { AnonCredsRequestProofFormatOptions, AnonCredsProofRequestRestrictionOptions } from '../types'
-import type { AnonCredsProofRequestRestriction, AnonCredsRequestProofFormat } from '@aries-framework/anoncreds'
-import type { ProofExchangeRecordProps } from '@aries-framework/core'
+import type { AnonCredsProofRequestRestriction, AnonCredsRequestProofFormat } from '@credo-ts/anoncreds'
+import type { ProofExchangeRecordProps } from '@credo-ts/core'
 
-import { Agent, RecordNotFoundError } from '@aries-framework/core'
+import { Agent, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 

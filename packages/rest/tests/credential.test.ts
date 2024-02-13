@@ -1,5 +1,5 @@
 import type { AcceptCredentialProposalOptions, ProposeCredentialOptions } from '../src/controllers/types'
-import type { Agent, CredentialStateChangedEvent, OutOfBandRecord } from '@aries-framework/core'
+import type { Agent, CredentialStateChangedEvent, OutOfBandRecord } from '@credo-ts/core'
 import type { Server } from 'net'
 
 import {
@@ -11,7 +11,7 @@ import {
   AgentMessage,
   JsonTransformer,
   CredentialRepository,
-} from '@aries-framework/core'
+} from '@credo-ts/core'
 import request from 'supertest'
 import WebSocket from 'ws'
 
@@ -447,6 +447,7 @@ describe('CredentialController', () => {
       const spy = jest.spyOn(bobAgent.oob, 'createLegacyConnectionlessInvitation').mockResolvedValueOnce({
         message: msg,
         invitationUrl: 'https://example.com/invitation',
+        outOfBandRecord,
       })
 
       const response = await request(app).post('/oob/create-legacy-connectionless-invitation').send(inputParams)

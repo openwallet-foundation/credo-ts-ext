@@ -1,5 +1,5 @@
-import type { InitConfig, WalletConfig } from '@aries-framework/core'
-import type { IndyVdrPoolConfig } from '@aries-framework/indy-vdr'
+import type { InitConfig, WalletConfig } from '@credo-ts/core'
+import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 
 import {
   HttpOutboundTransport,
@@ -8,8 +8,8 @@ import {
   Agent,
   AutoAcceptCredential,
   AutoAcceptProof,
-} from '@aries-framework/core'
-import { agentDependencies, HttpInboundTransport, WsInboundTransport } from '@aries-framework/node'
+} from '@credo-ts/core'
+import { agentDependencies, HttpInboundTransport, WsInboundTransport } from '@credo-ts/node'
 import { readFile } from 'fs/promises'
 
 import { setupServer } from './server'

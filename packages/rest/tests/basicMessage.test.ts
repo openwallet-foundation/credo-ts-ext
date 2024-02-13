@@ -1,8 +1,8 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { Agent, BasicMessageRecord, ConnectionRecord } from '@aries-framework/core'
+import type { Agent, BasicMessageRecord, ConnectionRecord } from '@credo-ts/core'
 import type { Server } from 'net'
 
-import { BasicMessageEventTypes } from '@aries-framework/core'
+import { BasicMessageEventTypes } from '@credo-ts/core'
 import request from 'supertest'
 import WebSocket from 'ws'
 

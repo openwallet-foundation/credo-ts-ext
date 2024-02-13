@@ -1,4 +1,4 @@
-import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@aries-framework/anoncreds'
+import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@credo-ts/anoncreds'
 import type {
   AutoAcceptProof,
   BasicMessageRole,
@@ -11,7 +11,7 @@ import type {
   OutOfBandRole,
   OutOfBandState,
   ProofExchangeRecordProps,
-} from '@aries-framework/core'
+} from '@credo-ts/core'
 
 /**
  * @example "821f9b26-ad04-4f56-89b6-e2ef9c72b36e"

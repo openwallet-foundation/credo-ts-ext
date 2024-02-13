@@ -4,9 +4,9 @@ import type {
   ConnectionRecordProps,
   CreateOutOfBandInvitationConfig,
   CreateLegacyInvitationConfig,
-} from '@aries-framework/core'
+} from '@credo-ts/core'
 
-import { AgentMessage, JsonTransformer, OutOfBandInvitation, Agent, RecordNotFoundError } from '@aries-framework/core'
+import { AgentMessage, JsonTransformer, OutOfBandInvitation, Agent, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 

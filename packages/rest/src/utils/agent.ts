@@ -1,5 +1,5 @@
-import type { ModulesMap } from '@aries-framework/core'
-import type { IndyVdrPoolConfig } from '@aries-framework/indy-vdr'
+import type { ModulesMap } from '@credo-ts/core'
+import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 
 import {
   AnonCredsCredentialFormatService,
@@ -9,9 +9,8 @@ import {
   LegacyIndyCredentialFormatService,
   LegacyIndyProofFormatService,
   V1ProofProtocol,
-} from '@aries-framework/anoncreds'
-import { AnonCredsRsModule } from '@aries-framework/anoncreds-rs'
-import { AskarModule } from '@aries-framework/askar'
+} from '@credo-ts/anoncreds'
+import { AskarModule } from '@credo-ts/askar'
 import {
   V2CredentialProtocol,
   V2ProofProtocol,
@@ -24,9 +23,9 @@ import {
   LogLevel,
   MediatorModule,
   ProofsModule,
-} from '@aries-framework/core'
-import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@aries-framework/indy-vdr'
-import { agentDependencies, HttpInboundTransport } from '@aries-framework/node'
+} from '@credo-ts/core'
+import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@credo-ts/indy-vdr'
+import { agentDependencies, HttpInboundTransport } from '@credo-ts/node'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
@@ -95,8 +94,6 @@ export const getAgentModules = (options: {
     }),
     anoncreds: new AnonCredsModule({
       registries: [new IndyVdrAnonCredsRegistry()],
-    }),
-    anoncredsRs: new AnonCredsRsModule({
       anoncreds,
     }),
     askar: new AskarModule({

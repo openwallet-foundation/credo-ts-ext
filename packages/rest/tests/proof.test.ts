@@ -4,10 +4,10 @@ import type {
   ProposeProofOptions,
   RequestProofOptions,
 } from '../src/controllers/types'
-import type { Agent, ProofStateChangedEvent } from '@aries-framework/core'
+import type { Agent, ProofStateChangedEvent } from '@credo-ts/core'
 import type { Server } from 'net'
 
-import { AgentMessage, ProofEventTypes, ProofExchangeRecord, ProofState } from '@aries-framework/core'
+import { AgentMessage, ProofEventTypes, ProofExchangeRecord, ProofState } from '@credo-ts/core'
 import request from 'supertest'
 import WebSocket from 'ws'
 

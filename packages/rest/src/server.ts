@@ -4,7 +4,7 @@ import type { RestAgent } from './utils/agent'
 import type { Response as ExResponse, Request as ExRequest, NextFunction } from 'express'
 import type { Exception } from 'tsoa'
 
-import { Agent } from '@aries-framework/core'
+import { Agent } from '@credo-ts/core'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'

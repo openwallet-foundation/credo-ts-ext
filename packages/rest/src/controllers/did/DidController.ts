@@ -1,6 +1,6 @@
 import type { DidCreateResult, DidResolutionResultProps } from '../types'
 
-import { Agent, AriesFrameworkError, TypedArrayEncoder } from '@aries-framework/core'
+import { Agent, CredoError, TypedArrayEncoder } from '@credo-ts/core'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -47,7 +47,7 @@ export class DidController extends Controller {
   public async importDid(
     @Body() options: ImportDidOptions,
     @Res() badRequestError: TsoaResponse<400, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const { privateKeys, ...rest } = options
@@ -60,7 +60,7 @@ export class DidController extends Controller {
       })
       return this.getDidRecordByDid(options.did)
     } catch (error) {
-      if (error instanceof AriesFrameworkError) {
+      if (error instanceof CredoError) {
         return badRequestError(400, {
           reason: `Error importing Did - ${error.message}`,
         })
@@ -79,7 +79,7 @@ export class DidController extends Controller {
   @Post('/create')
   public async createDid(
     @Body() options: DidCreateOptions,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     const { didState } = await this.agent.dids.create(options)
 

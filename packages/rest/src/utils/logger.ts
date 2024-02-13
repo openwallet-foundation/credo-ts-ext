@@ -2,7 +2,7 @@
 
 import type { ILogObject } from 'tslog'
 
-import { LogLevel, BaseLogger } from '@aries-framework/core'
+import { LogLevel, BaseLogger } from '@credo-ts/core'
 import { appendFileSync } from 'fs'
 import { Logger } from 'tslog'
 

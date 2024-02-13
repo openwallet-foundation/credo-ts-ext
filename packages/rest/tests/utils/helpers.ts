@@ -1,5 +1,5 @@
-import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@aries-framework/anoncreds'
-import type { ConnectionRecordProps, DidCreateResult } from '@aries-framework/core'
+import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@credo-ts/anoncreds'
+import type { ConnectionRecordProps, DidCreateResult } from '@credo-ts/core'
 
 import {
   AgentMessage,
@@ -13,8 +13,8 @@ import {
   OutOfBandInvitation,
   ConnectionInvitationMessage,
   DidDocument,
-} from '@aries-framework/core'
-import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
+} from '@credo-ts/core'
+import { JsonEncoder } from '@credo-ts/core/build/utils/JsonEncoder'
 import { randomUUID } from 'crypto'
 
 import { setupAgent } from '../../src/utils/agent'
@@ -473,7 +473,7 @@ export function getTestDidCreate() {
             'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
           ],
         },
-        DidDocument
+        DidDocument,
       ),
       secret: {},
     },

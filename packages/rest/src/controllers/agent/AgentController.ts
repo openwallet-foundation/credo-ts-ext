@@ -1,6 +1,6 @@
 import type { AgentInfo } from '../types'
 
-import { Agent } from '@aries-framework/core'
+import { Agent } from '@credo-ts/core'
 import { Controller, Get, Route, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 

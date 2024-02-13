@@ -1,6 +1,6 @@
-import type { BasicMessageRecord, BasicMessageStorageProps } from '@aries-framework/core'
+import type { BasicMessageRecord, BasicMessageStorageProps } from '@credo-ts/core'
 
-import { Agent, RecordNotFoundError } from '@aries-framework/core'
+import { Agent, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 

@@ -1,7 +1,7 @@
 import type { ServerConfig } from '../utils/ServerConfig'
-import type { Agent, ConnectionStateChangedEvent } from '@aries-framework/core'
+import type { Agent, ConnectionStateChangedEvent } from '@credo-ts/core'
 
-import { ConnectionEventTypes } from '@aries-framework/core'
+import { ConnectionEventTypes } from '@credo-ts/core'
 
 import { sendWebSocketEvent } from './WebSocketEvents'
 import { sendWebhookEvent } from './WebhookEvent'

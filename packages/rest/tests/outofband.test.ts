@@ -4,10 +4,10 @@ import type {
   ConnectionRecord,
   OutOfBandInvitation,
   ConnectionInvitationMessage,
-} from '@aries-framework/core'
+} from '@credo-ts/core'
 import type { Express } from 'express'
 
-import { JsonTransformer, AgentMessage } from '@aries-framework/core'
+import { JsonTransformer, AgentMessage } from '@credo-ts/core'
 import request from 'supertest'
 
 import { setupServer } from '../src/server'
@@ -182,6 +182,7 @@ describe('OutOfBandController', () => {
       const spy = jest.spyOn(bobAgent.oob, 'createLegacyConnectionlessInvitation').mockResolvedValueOnce({
         message: msg,
         invitationUrl: 'https://example.com/invitation',
+        outOfBandRecord,
       })
 
       const getResult = (): Promise<OutOfBandRecord> => spy.mock.results[0].value
@@ -195,6 +196,7 @@ describe('OutOfBandController', () => {
       const spy = jest.spyOn(bobAgent.oob, 'createLegacyConnectionlessInvitation').mockResolvedValueOnce({
         message: msg,
         invitationUrl: 'https://example.com/invitation',
+        outOfBandRecord,
       })
 
       const response = await request(app).post('/oob/create-legacy-connectionless-invitation').send(inputParams)

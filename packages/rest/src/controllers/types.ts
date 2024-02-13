@@ -13,7 +13,7 @@ import type {
   AnonCredsProofFormatService,
   LegacyIndyProofFormat,
   AnonCredsProofFormat,
-} from '@aries-framework/anoncreds'
+} from '@credo-ts/anoncreds'
 import type {
   AutoAcceptCredential,
   CredentialFormatPayload,
@@ -31,7 +31,7 @@ import type {
   ProofsProtocolVersionType,
   DidDocument,
   KeyType,
-} from '@aries-framework/core'
+} from '@credo-ts/core'
 import type { DIDDocument } from 'did-resolver'
 
 export interface AgentInfo {
@@ -59,7 +59,7 @@ export interface ProofRequestMessageResponse {
 
 type CredentialProtocols = [
   V1CredentialProtocol,
-  V2CredentialProtocol<[LegacyIndyCredentialFormatService, AnonCredsCredentialFormatService]>
+  V2CredentialProtocol<[LegacyIndyCredentialFormatService, AnonCredsCredentialFormatService]>,
 ]
 type CredentialFormats = [LegacyIndyCredentialFormat, AnonCredsCredentialFormat]
 

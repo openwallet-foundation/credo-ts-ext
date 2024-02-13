@@ -2,7 +2,7 @@ import type { RestAgent } from '../../utils/agent'
 import type { Did, Version } from '../examples'
 import type { AnonCredsSchemaResponse } from '../types'
 
-import { Agent } from '@aries-framework/core'
+import { Agent } from '@credo-ts/core'
 import { Body, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 

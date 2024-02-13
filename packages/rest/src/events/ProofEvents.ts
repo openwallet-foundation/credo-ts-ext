@@ -1,7 +1,7 @@
 import type { ServerConfig } from '../utils/ServerConfig'
-import type { Agent, ProofStateChangedEvent } from '@aries-framework/core'
+import type { Agent, ProofStateChangedEvent } from '@credo-ts/core'
 
-import { ProofEventTypes } from '@aries-framework/core'
+import { ProofEventTypes } from '@credo-ts/core'
 
 import { sendWebSocketEvent } from './WebSocketEvents'
 import { sendWebhookEvent } from './WebhookEvent'

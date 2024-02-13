@@ -1,7 +1,7 @@
 import type { ServerConfig } from '../utils/ServerConfig'
-import type { Agent, CredentialStateChangedEvent } from '@aries-framework/core'
+import type { Agent, CredentialStateChangedEvent } from '@credo-ts/core'
 
-import { CredentialEventTypes } from '@aries-framework/core'
+import { CredentialEventTypes } from '@credo-ts/core'
 
 import { sendWebSocketEvent } from './WebSocketEvents'
 import { sendWebhookEvent } from './WebhookEvent'

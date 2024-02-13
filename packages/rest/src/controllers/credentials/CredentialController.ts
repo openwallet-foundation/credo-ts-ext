@@ -1,7 +1,7 @@
 import type { RestAgent } from '../../utils/agent'
-import type { CredentialExchangeRecordProps } from '@aries-framework/core'
+import type { CredentialExchangeRecordProps } from '@credo-ts/core'
 
-import { CredentialRepository, CredentialState, Agent, RecordNotFoundError } from '@aries-framework/core'
+import { CredentialRepository, CredentialState, Agent, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example, Query } from 'tsoa'
 import { injectable } from 'tsyringe'
 

@@ -1,5 +1,5 @@
 import type { RestAgent } from '../src/utils/agent'
-import type { AnonCredsCredentialDefinition, AnonCredsSchema } from '@aries-framework/anoncreds'
+import type { AnonCredsCredentialDefinition, AnonCredsSchema } from '@credo-ts/anoncreds'
 import type { Express } from 'express'
 
 import request from 'supertest'

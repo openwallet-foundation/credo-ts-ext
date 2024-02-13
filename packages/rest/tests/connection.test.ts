@@ -1,7 +1,7 @@
-import type { Agent, ConnectionRecord } from '@aries-framework/core'
+import type { Agent, ConnectionRecord } from '@credo-ts/core'
 import type { Server } from 'net'
 
-import { ConnectionEventTypes, ConnectionRepository } from '@aries-framework/core'
+import { ConnectionEventTypes, ConnectionRepository } from '@credo-ts/core'
 import request from 'supertest'
 import WebSocket from 'ws'
 

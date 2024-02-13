@@ -2,7 +2,7 @@ import type { RestAgent } from '../../utils/agent'
 import type { Did, SchemaId } from '../examples'
 import type { AnonCredsCredentialDefinitionResponse } from '../types'
 
-import { Agent } from '@aries-framework/core'
+import { Agent } from '@credo-ts/core'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -99,7 +99,10 @@ export class CredentialDefinitionController extends Controller {
         schemaId: credentialDefinitionRequest.schemaId,
         tag: credentialDefinitionRequest.tag,
       },
-      options: {},
+      // FIXME: revocation support in API
+      options: {
+        supportRevocation: false,
+      },
     })
 
     if (state !== 'finished' || credentialDefinitionId === undefined || credentialDefinition === undefined) {

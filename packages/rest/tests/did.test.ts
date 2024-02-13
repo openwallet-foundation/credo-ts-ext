@@ -1,8 +1,8 @@
 import type { DidCreateOptions, ImportDidOptions } from '../src/controllers/types'
-import type { Agent, DidCreateResult } from '@aries-framework/core'
+import type { Agent, DidCreateResult } from '@credo-ts/core'
 import type { Server } from 'net'
 
-import { KeyType } from '@aries-framework/core'
+import { KeyType } from '@credo-ts/core'
 import request from 'supertest'
 
 import { startServer } from '../src'
