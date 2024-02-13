@@ -51,10 +51,10 @@ jobs:
       - name: Setup Libindy
         uses: ./.github/actions/setup-libindy
 
-      - name: Setup node v16
+      - name: Setup node v18
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
           registry-url: 'https://registry.npmjs.org/'
           cache: yarn
 
@@ -78,7 +78,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [16.x, 18.x]
+        node-version: [18.x]
 
     steps:
       - name: Checkout credo-ts-ext
@@ -131,10 +131,10 @@ jobs:
       - name: Setup Libindy
         uses: ./.github/actions/setup-libindy
 
-      - name: Setup node v16
+      - name: Setup node v18
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
           registry-url: 'https://registry.npmjs.org/'
           cache: yarn
 
@@ -175,10 +175,10 @@ jobs:
         uses: ./.github/actions/setup-libindy
         if: ${{ steps.release-please.outputs.release_created }}
 
-      - name: Setup node v16
+      - name: Setup node v18
         uses: actions/setup-node@v4
         with:
-          node-version: 16
+          node-version: 18
           registry-url: 'https://registry.npmjs.org/'
           cache: yarn
         if: ${{ steps.release-please.outputs.release_created }}
