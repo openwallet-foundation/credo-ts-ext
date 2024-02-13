@@ -28,7 +28,7 @@ export const setupAgent = async ({
   endpoints: string[]
   port: number
 }) => {
-  // const logger = new TsLogger(LogLevel.debug)
+  const logger = new TsLogger(LogLevel.debug)
 
   const agent = new Agent(
     {
