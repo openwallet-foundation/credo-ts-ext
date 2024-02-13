@@ -1,4 +1,4 @@
-import type { MessageHandler, MessageHandlerInboundMessage } from '@aries-framework/core'
+import type { MessageHandler, MessageHandlerInboundMessage } from '@credo-ts/core'
 
 import { PushNotificationsFcmDeviceInfoMessage } from '../messages'
 

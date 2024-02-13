@@ -166,7 +166,7 @@ describe('OutOfBandController', () => {
         '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
         '@type': 'https://didcomm.org/connections/1.0/invitation',
       },
-      AgentMessage
+      AgentMessage,
     )
 
     const inputParams = {
@@ -255,7 +255,7 @@ describe('OutOfBandController', () => {
           autoAcceptInvitation: params.autoAcceptInvitation,
           autoAcceptConnection: params.autoAcceptConnection,
           reuseConnection: params.reuseConnection,
-        })
+        }),
       )
     })
   })
@@ -305,7 +305,7 @@ describe('OutOfBandController', () => {
           autoAcceptInvitation: params.autoAcceptInvitation,
           autoAcceptConnection: params.autoAcceptConnection,
           reuseConnection: params.reuseConnection,
-        })
+        }),
       )
     })
   })

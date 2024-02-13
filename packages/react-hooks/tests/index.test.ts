@@ -1,3 +1,3 @@
-describe('@aries-framework/react-hooks', () => {
+describe('@credo-ts/react-hooks', () => {
   it.todo('React Hooks Tests')
 })

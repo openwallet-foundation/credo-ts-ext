@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, ProofState } from '@aries-framework/core'
+import type { Agent, ProofState } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { ProofExchangeRecord } from '@aries-framework/core'
+import { ProofExchangeRecord } from '@credo-ts/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -29,7 +29,7 @@ export const useProofsByConnectionId = (connectionId: string): ProofExchangeReco
   const { records: proofs } = useProofs()
   return useMemo(
     () => proofs.filter((proof: ProofExchangeRecord) => proof.connectionId === connectionId),
-    [proofs, connectionId]
+    [proofs, connectionId],
   )
 }
 
@@ -48,7 +48,7 @@ export const useProofByState = (state: ProofState | ProofState[]): ProofExchange
       proofs.filter((r: ProofExchangeRecord) => {
         if (states.includes(r.state)) return r
       }),
-    [proofs]
+    [proofs],
   )
 
   return filteredProofs
@@ -64,7 +64,7 @@ export const useProofNotInState = (state: ProofState | ProofState[]): ProofExcha
       proofs.filter((r: ProofExchangeRecord) => {
         if (!states.includes(r.state)) return r
       }),
-    [proofs]
+    [proofs],
   )
 
   return filteredProofs
@@ -81,10 +81,8 @@ const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      const records = await agent.proofs.getAll()
-      setState({ records, loading: false })
-    }
+    const records = await agent.proofs.getAll()
+    setState({ records, loading: false })
   }
 
   useEffect(() => {
@@ -92,24 +90,24 @@ const ProofProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) 
   }, [agent])
 
   useEffect(() => {
-    if (!state.loading) {
-      const proofAdded$ = recordsAddedByType(agent, ProofExchangeRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+    if (state.loading) return
 
-      const proofUpdated$ = recordsUpdatedByType(agent, ProofExchangeRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+    const proofAdded$ = recordsAddedByType(agent, ProofExchangeRecord).subscribe((record) =>
+      setState(addRecord(record, state)),
+    )
 
-      const proofRemoved$ = recordsRemovedByType(agent, ProofExchangeRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+    const proofUpdated$ = recordsUpdatedByType(agent, ProofExchangeRecord).subscribe((record) =>
+      setState(updateRecord(record, state)),
+    )
 
-      return () => {
-        proofAdded$?.unsubscribe()
-        proofUpdated$?.unsubscribe()
-        proofRemoved$?.unsubscribe()
-      }
+    const proofRemoved$ = recordsRemovedByType(agent, ProofExchangeRecord).subscribe((record) =>
+      setState(removeRecord(record, state)),
+    )
+
+    return () => {
+      proofAdded$?.unsubscribe()
+      proofUpdated$?.unsubscribe()
+      proofRemoved$?.unsubscribe()
     }
   }, [state, agent])
 

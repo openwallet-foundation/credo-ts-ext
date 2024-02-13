@@ -1,4 +1,4 @@
-import type { Agent } from '@aries-framework/core'
+import type { Agent } from '@credo-ts/core'
 import type { TypedUseSelectorHook } from 'react-redux'
 
 import { combineReducers, configureStore } from '@reduxjs/toolkit'

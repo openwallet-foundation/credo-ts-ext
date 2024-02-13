@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, CredentialState } from '@aries-framework/core'
+import type { Agent, CredentialState } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { CredentialExchangeRecord } from '@aries-framework/core'
+import { CredentialExchangeRecord } from '@credo-ts/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -29,7 +29,7 @@ export const useCredentialsByConnectionId = (connectionId: string): CredentialEx
   const { records: credentials } = useCredentials()
   return useMemo(
     () => credentials.filter((credential: CredentialExchangeRecord) => credential.connectionId === connectionId),
-    [credentials, connectionId]
+    [credentials, connectionId],
   )
 }
 
@@ -44,11 +44,8 @@ export const useCredentialByState = (state: CredentialState | CredentialState[])
   const { records: credentials } = useCredentials()
 
   const filteredCredentials = useMemo(
-    () =>
-      credentials.filter((r: CredentialExchangeRecord) => {
-        if (states.includes(r.state)) return r
-      }),
-    [credentials]
+    () => credentials.filter((r: CredentialExchangeRecord) => states.includes(r.state)),
+    [credentials],
   )
   return filteredCredentials
 }
@@ -59,12 +56,10 @@ export const useCredentialNotInState = (state: CredentialState | CredentialState
   const { records: credentials } = useCredentials()
 
   const filteredCredentials = useMemo(
-    () =>
-      credentials.filter((r: CredentialExchangeRecord) => {
-        if (!states.includes(r.state)) return r
-      }),
-    [credentials]
+    () => credentials.filter((r: CredentialExchangeRecord) => !states.includes(r.state)),
+    [credentials],
   )
+
   return filteredCredentials
 }
 
@@ -79,10 +74,8 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      const records = await agent.credentials.getAll()
-      setState({ records, loading: false })
-    }
+    const records = await agent.credentials.getAll()
+    setState({ records, loading: false })
   }
 
   useEffect(() => {
@@ -90,24 +83,24 @@ const CredentialProvider: React.FC<PropsWithChildren<Props>> = ({ agent, childre
   }, [agent])
 
   useEffect(() => {
-    if (!state.loading) {
-      const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+    if (state.loading) return
 
-      const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+    const credentialAdded$ = recordsAddedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+      setState(addRecord(record, state)),
+    )
 
-      const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+    const credentialUpdated$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+      setState(updateRecord(record, state)),
+    )
 
-      return () => {
-        credentialAdded$?.unsubscribe()
-        credentialUpdated$?.unsubscribe()
-        credentialRemoved$?.unsubscribe()
-      }
+    const credentialRemoved$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
+      setState(removeRecord(record, state)),
+    )
+
+    return () => {
+      credentialAdded$?.unsubscribe()
+      credentialUpdated$?.unsubscribe()
+      credentialRemoved$?.unsubscribe()
     }
   }, [state, agent])
 

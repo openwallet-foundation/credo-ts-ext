@@ -1,11 +1,11 @@
 import type { SerializedInstance } from '../src/types'
-import type { BaseRecord } from '@aries-framework/core'
+import type { BaseRecord } from '@credo-ts/core'
 
-import { ConnectionRecord, DidExchangeRole, DidExchangeState } from '@aries-framework/core'
+import { ConnectionRecord, DidExchangeRole, DidExchangeState } from '@credo-ts/core'
 
 import { addRecordInState, removeRecordInState, updateRecordInState } from '../src/recordListener'
 
-describe('@aries-framework/redux-store', () => {
+describe('@credo-ts/redux-store', () => {
   test('Should add record', () => {
     const records: SerializedInstance<BaseRecord>[] = []
     const record = new ConnectionRecord({

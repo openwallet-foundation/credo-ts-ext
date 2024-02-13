@@ -1,5 +1,5 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent, BaseRecord } from '@aries-framework/core'
+import type { Agent, BaseRecord } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
 import { useState, createContext, useContext, useEffect } from 'react'
@@ -38,13 +38,11 @@ const ExchangesProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children
   })
 
   const setInitialState = () => {
-    if (agent) {
-      const { records: basicMessages } = useBasicMessages()
-      const { records: proofs } = useProofs()
-      const { records: credentials } = useCredentials()
-      const records = [...basicMessages, ...proofs, ...credentials] as BaseRecord[]
-      setState({ records, loading: false })
-    }
+    const { records: basicMessages } = useBasicMessages()
+    const { records: proofs } = useProofs()
+    const { records: credentials } = useCredentials()
+    const records = [...basicMessages, ...proofs, ...credentials] as BaseRecord[]
+    setState({ records, loading: false })
   }
 
   useEffect(() => {

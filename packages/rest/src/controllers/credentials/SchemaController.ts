@@ -30,7 +30,7 @@ export class SchemaController {
     @Path('schemaId') schemaId: SchemaId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() badRequestError: TsoaResponse<400, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     const { schema, resolutionMetadata } = await this.agent.modules.anoncreds.getSchema(schemaId)
 
@@ -74,7 +74,7 @@ export class SchemaController {
       version: Version
       attrNames: string[]
     },
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     const { schemaState } = await this.agent.modules.anoncreds.registerSchema({
       schema: {

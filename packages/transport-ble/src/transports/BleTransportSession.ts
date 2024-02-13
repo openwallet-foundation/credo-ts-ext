@@ -1,7 +1,7 @@
 import type { Ble } from '@animo-id/react-native-ble-didcomm'
-import type { AgentContext, EncryptedMessage, TransportSession } from '@aries-framework/core'
+import type { AgentContext, EncryptedMessage, TransportSession } from '@credo-ts/core'
 
-import { utils } from '@aries-framework/core'
+import { utils } from '@credo-ts/core'
 
 export class BleTransportSession implements TransportSession {
   public readonly type = 'ble'

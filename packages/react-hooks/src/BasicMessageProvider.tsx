@@ -1,8 +1,8 @@
 import type { RecordsState } from './recordUtils'
-import type { Agent } from '@aries-framework/core'
+import type { Agent } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { BasicMessageRecord } from '@aries-framework/core'
+import { BasicMessageRecord } from '@credo-ts/core'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -30,7 +30,7 @@ export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessa
 
   const messages = useMemo(
     () => basicMessages.filter((m) => m.connectionId === connectionId),
-    [basicMessages, connectionId]
+    [basicMessages, connectionId],
   )
 
   return messages
@@ -47,10 +47,8 @@ const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, child
   })
 
   const setInitialState = async () => {
-    if (agent) {
-      const records = await agent.basicMessages.findAllByQuery({})
-      setState({ records, loading: false })
-    }
+    const records = await agent.basicMessages.findAllByQuery({})
+    setState({ records, loading: false })
   }
 
   useEffect(() => {
@@ -58,24 +56,24 @@ const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, child
   }, [agent])
 
   useEffect(() => {
-    if (!state.loading) {
-      const basicMessageAdded$ = recordsAddedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(addRecord(record, state))
-      )
+    if (state.loading) return
 
-      const basicMessageUpdated$ = recordsUpdatedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(updateRecord(record, state))
-      )
+    const basicMessageAdded$ = recordsAddedByType(agent, BasicMessageRecord).subscribe((record) =>
+      setState(addRecord(record, state)),
+    )
 
-      const basicMessageRemoved$ = recordsRemovedByType(agent, BasicMessageRecord).subscribe((record) =>
-        setState(removeRecord(record, state))
-      )
+    const basicMessageUpdated$ = recordsUpdatedByType(agent, BasicMessageRecord).subscribe((record) =>
+      setState(updateRecord(record, state)),
+    )
 
-      return () => {
-        basicMessageAdded$?.unsubscribe()
-        basicMessageUpdated$?.unsubscribe()
-        basicMessageRemoved$?.unsubscribe()
-      }
+    const basicMessageRemoved$ = recordsRemovedByType(agent, BasicMessageRecord).subscribe((record) =>
+      setState(removeRecord(record, state)),
+    )
+
+    return () => {
+      basicMessageAdded$?.unsubscribe()
+      basicMessageUpdated$?.unsubscribe()
+      basicMessageRemoved$?.unsubscribe()
     }
   }, [state, agent])
 

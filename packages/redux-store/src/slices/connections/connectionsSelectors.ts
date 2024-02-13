@@ -1,7 +1,7 @@
 import type { ConnectionsState } from './connectionsSlice'
-import type { ConnectionState } from '@aries-framework/core'
+import type { ConnectionState } from '@credo-ts/core'
 
-import { ConnectionInvitationMessage, ConnectionRecord, JsonTransformer } from '@aries-framework/core'
+import { ConnectionInvitationMessage, ConnectionRecord, JsonTransformer } from '@credo-ts/core'
 import { createSelector } from '@reduxjs/toolkit'
 
 interface PartialConnectionState {
@@ -23,7 +23,7 @@ const ConnectionsSelectors = {
    * Selector that retrieves all ConnectionRecords from the store.
    */
   connectionRecordsSelector: createSelector(connectionsStateSelector, (connectionsState) =>
-    connectionsState.records.map((c) => JsonTransformer.fromJSON(c, ConnectionRecord))
+    connectionsState.records.map((c) => JsonTransformer.fromJSON(c, ConnectionRecord)),
   ),
 
   /**
@@ -33,7 +33,7 @@ const ConnectionsSelectors = {
     createSelector(connectionsStateSelector, (connectionsState) =>
       connectionsState.records
         .filter((record) => record.state === state)
-        .map((c) => JsonTransformer.fromJSON(c, ConnectionRecord))
+        .map((c) => JsonTransformer.fromJSON(c, ConnectionRecord)),
     ),
 
   /**

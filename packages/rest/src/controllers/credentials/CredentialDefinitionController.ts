@@ -31,7 +31,7 @@ export class CredentialDefinitionController extends Controller {
     @Path('credentialDefinitionId') credentialDefinitionId: CredentialDefinitionId,
     @Res() badRequestError: TsoaResponse<400, { reason: string }>,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ): Promise<AnonCredsCredentialDefinitionResponse> {
     const {
       credentialDefinition,
@@ -76,7 +76,7 @@ export class CredentialDefinitionController extends Controller {
       tag: string
     },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ): Promise<AnonCredsCredentialDefinitionResponse> {
     const {
       resolutionMetadata: { error },

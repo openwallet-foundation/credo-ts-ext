@@ -1,6 +1,6 @@
-import type { Agent, AgentMessage, ConnectionRecord } from '@aries-framework/core'
+import type { Agent, AgentMessage, ConnectionRecord } from '@credo-ts/core'
 
-import { AgentContext, DependencyManager, JsonTransformer } from '@aries-framework/core'
+import { AgentContext, DependencyManager, JsonTransformer } from '@credo-ts/core'
 
 import { PushNotificationsFcmService } from '../src/fcm/PushNotificationsFcmService'
 import { PushNotificationsFcmProblemReportError } from '../src/fcm/errors'
@@ -62,14 +62,14 @@ describe('Push Notifications Fcm ', () => {
         pushNotificationsService.createSetDeviceInfo({
           deviceToken: 'something',
           devicePlatform: null,
-        })
+        }),
       ).toThrow('Both or none of deviceToken and devicePlatform must be null')
 
       expect(() =>
         pushNotificationsService.createSetDeviceInfo({
           deviceToken: null,
           devicePlatform: 'something',
-        })
+        }),
       ).toThrow('Both or none of deviceToken and devicePlatform must be null')
     })
   })
@@ -106,7 +106,7 @@ describe('Push Notifications Fcm ', () => {
           device_token: '1234-1234-1234-1234',
           device_platform: 'android',
           '~thread': expect.objectContaining({ thid: '5678-5678-5678-5678' }),
-        })
+        }),
       )
     })
 
@@ -128,7 +128,7 @@ describe('Push Notifications Fcm ', () => {
           device_token: null,
           device_platform: null,
           '~thread': expect.objectContaining({ thid: '5678-5678-5678-5678' }),
-        })
+        }),
       )
     })
 
@@ -140,7 +140,7 @@ describe('Push Notifications Fcm ', () => {
             deviceToken: 'something',
             devicePlatform: null,
           },
-        })
+        }),
       ).toThrow('Both or none of deviceToken and devicePlatform must be null')
 
       expect(() =>
@@ -150,7 +150,7 @@ describe('Push Notifications Fcm ', () => {
             deviceToken: null,
             devicePlatform: 'something',
           },
-        })
+        }),
       ).toThrow('Both or none of deviceToken and devicePlatform must be null')
     })
   })
@@ -164,17 +164,17 @@ describe('Push Notifications Fcm ', () => {
 
       message.devicePlatform = null
       expect(() => pushNotificationsService.processSetDeviceInfo(createInboundMessageContext(message))).toThrow(
-        PushNotificationsFcmProblemReportError
+        PushNotificationsFcmProblemReportError,
       )
 
       message.deviceToken = null
       expect(() => pushNotificationsService.processSetDeviceInfo(createInboundMessageContext(message))).not.toThrow(
-        PushNotificationsFcmProblemReportError
+        PushNotificationsFcmProblemReportError,
       )
 
       message.devicePlatform = 'something'
       expect(() => pushNotificationsService.processSetDeviceInfo(createInboundMessageContext(message))).toThrow(
-        PushNotificationsFcmProblemReportError
+        PushNotificationsFcmProblemReportError,
       )
     })
   })

@@ -5,7 +5,7 @@ import yargs from 'yargs'
 import { runRestAgent } from './cliAgent'
 
 const parsed = yargs
-  .command('start', 'Start AFJ Rest agent')
+  .command('start', 'Start Credo Rest agent')
   .option('label', {
     alias: 'l',
     string: true,
@@ -52,7 +52,7 @@ const parsed = yargs
       if (typeof input[0] === 'object') return input
       if (input.length % 2 !== 0) {
         throw new Error(
-          'Inbound transport should be specified as transport port pairs (e.g. --inbound-transport http 5000 ws 5001)'
+          'Inbound transport should be specified as transport port pairs (e.g. --inbound-transport http 5000 ws 5001)',
         )
       }
 
@@ -104,7 +104,7 @@ const parsed = yargs
     demandOption: true,
   })
   .config()
-  .env('AFJ_REST')
+  .env('CREDO_REST')
   .parseSync()
 
 export async function runCliServer() {

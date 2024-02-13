@@ -50,7 +50,7 @@ export type RestAgent<
     >
     credentials: CredentialsModule<[V1CredentialProtocol, V2CredentialProtocol]>
     anoncreds: AnonCredsModule
-  }
+  },
 > = Agent<modules>
 
 export const genesisPath = process.env.GENESIS_TXN_PATH

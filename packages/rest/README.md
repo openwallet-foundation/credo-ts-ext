@@ -1,15 +1,15 @@
 <p align="center">
   <br />
   <img
-    alt="Hyperledger Aries logo"
-    src="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript/aa31131825e3331dc93694bc58414d955dcb1129/images/aries-logo.png"
+    alt="Credo logo"
+    src="https://github.com/openwallet-foundation/credo-ts/blob/c7886cb8377ceb8ee4efe8d264211e561a75072d/images/credo-logo.png"
     height="250px"
   />
 </p>
-<h1 align="center"><b>Aries Framework JavaScript REST API</b></h1>
+<h1 align="center"><b>Credo REST API</b></h1>
 <p align="center">
   <a
-    href="https://raw.githubusercontent.com/hyperledger/aries-framework-javascript-ext/main/LICENSE"
+    href="https://raw.githubusercontent.com/openwallet-foundation/credo-ts-ext/main/LICENSE"
     ><img
       alt="License"
       src="https://img.shields.io/badge/License-Apache%202.0-blue.svg"
@@ -19,16 +19,16 @@
       alt="typescript"
       src="https://img.shields.io/badge/%3C%2F%3E-TypeScript-%230074c1.svg"
   /></a>
-    <a href="https://www.npmjs.com/package/@aries-framework/rest"
+    <a href="https://www.npmjs.com/package/@credo-ts/rest"
     ><img
-      alt="@aries-framework/rest version"
-      src="https://img.shields.io/npm/v/@aries-framework/rest"
+      alt="@credo-ts/rest version"
+      src="https://img.shields.io/npm/v/@credo-ts/rest"
   /></a>
 
 </p>
 <br />
 
-The Aries Framework JavaScript REST API is the most convenient way for self-sovereign identity (SSI) developers to interact with SSI agents.
+The Credo REST API is the most convenient way for self-sovereign identity (SSI) developers to interact with SSI agents.
 
 - ⭐ **Endpoints** to create connections, issue credentials, and request proofs.
 - 💻 **CLI** that makes it super easy to start an instance of the REST API.
@@ -38,7 +38,7 @@ The Aries Framework JavaScript REST API is the most convenient way for self-sove
 
 The REST API provides an OpenAPI schema that can easily be viewed using the SwaggerUI that is provided with the server. The docs can be viewed on the `/docs` endpoint (e.g. http://localhost:3000/docs).
 
-> The OpenAPI spec is generated from the model classes used by Aries Framework JavaScript. Due to limitations in the inspection of these classes, the generated schema does not always exactly match the expected format. Keep this in mind when using this package. If you encounter any issues, feel free to open an issue.
+> The OpenAPI spec is generated from the model classes used by Credo. Due to limitations in the inspection of these classes, the generated schema does not always exactly match the expected format. Keep this in mind when using this package. If you encounter any issues, feel free to open an issue.
 
 #### Using the CLI
 
@@ -49,8 +49,8 @@ Using the CLI is the easiest way to get started with the REST API.
 Make sure you have [Docker](https://docs.docker.com/get-docker/) installed. To get a minimal version of the agent running the following command is sufficient:
 
 ```sh
-docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/afj-rest \
-  --label "AFJ Rest" \
+docker run -p 5000:5000 -p 3000:3000 ghcr.io/openwallet-foundation/credo-rest \
+  --label "Credo Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
   --endpoint http://localhost:5000 \
@@ -59,19 +59,19 @@ docker run -p 5000:5000 -p 3000:3000 ghcr.io/hyperledger/afj-rest \
   --inbound-transport http 5000
 ```
 
-See the [docker-compose.yml](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/docker-compose.yml) file for an example of using the afj-rest image with Docker Compose.
+See the [docker-compose.yml](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/docker-compose.yml) file for an example of using the credo-rest image with Docker Compose.
 
 > ⚠️ The Docker image is not optimized for ARM architectures and won't work on Apple Silicon Macs. See the **Directly on Computer** below on how to run it directly on your computer without Docker.
 
 **Directly on Computer**
 
-To run AFJ REST API directly on your computer you need to have the indy-sdk installed. Follow the Indy [installation steps](https://github.com/hyperledger/aries-framework-javascript/tree/main/docs/libindy) for your platform and verify Indy is installed.
+To run Credo REST API directly on your computer you need to have the indy-sdk installed. Follow the Indy [installation steps](https://github.com/openwallet-foundation/credo-ts/tree/main/docs/libindy) for your platform and verify Indy is installed.
 
 Once you have installed Indy, you can start the REST server using the following command:
 
 ```sh
-npx -p @aries-framework/rest afj-rest start \
-  --label "AFJ Rest" \
+npx -p @credo-ts/rest credo-rest start \
+  --label "Credo Rest" \
   --wallet-id "walletId" \
   --wallet-key "walletKey" \
   --endpoint http://localhost:5000 \
@@ -86,31 +86,31 @@ To find out all available configuration options from the CLI, you can run the CL
 
 ```sh
 # With docker
-docker run ghcr.io/hyperledger/afj-rest --help
+docker run ghcr.io/openwallet-foundation/credo-rest --help
 
 # Directly on computer
-npx -p @aries-framework/rest afj-rest start --help
+npx -p @credo-ts/rest credo-rest start --help
 ```
 
-It is also possible to configure the REST API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
+It is also possible to configure the REST API using a json config. When providing a lot of configuration options, this is definitely the easiest way to use configure the agent. All properties should use camelCase for the key names. See the example [CLI Config](https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/rest/samples/cliConfig.json) for an detailed example.
 
 ```json
 {
-  "label": "AFJ Rest Agent",
+  "label": "Credo Rest Agent",
   "walletId": "walletId",
   "walletKey": "walletKey"
   // ... other config options ... //
 }
 ```
 
-As a final option it is possible to configure the agent using environment variables. All properties are prefixed by `AFJ_REST` transformed to UPPER_SNAKE_CASE.
+As a final option it is possible to configure the agent using environment variables. All properties are prefixed by `CREDO_REST` transformed to UPPER_SNAKE_CASE.
 
 ```sh
 # With docker
-docker run -e AFJ_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/afj-rest ...
+docker run -e CREDO_REST_WALLET_KEY=my-secret-key ghcr.io/hyperledger/credo-rest ...
 
 # Directly on computer
-AFJ_REST_WALLET_KEY="my-secret-key" npx -p @aries-framework/rest afj-rest start ...
+CREDO_REST_WALLET_KEY="my-secret-key" npx -p @credo-ts/rest credo-rest start ...
 ```
 
 #### Starting Own Server
@@ -120,7 +120,7 @@ Starting your own server is more involved than using the CLI, but allows more fi
 You can create an agent instance and import the `startServer` method from the `rest` package. That's all you have to do.
 
 ```ts
-import { startServer } from '@aries-framework/rest'
+import { startServer } from '@credo-ts/rest'
 import { Agent } from '@aries-framework/core'
 import { agentDependencies } from '@aries-framework/node'
 
@@ -129,9 +129,9 @@ import { agentDependencies } from '@aries-framework/node'
 const run = async () => {
   const agent = new Agent(
     {
-      // ... AFJ Config ... //
+      // ... Credo Config ... //
     },
-    agentDependencies
+    agentDependencies,
   )
   await startServer(agent, { port: 3000 })
 }

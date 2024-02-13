@@ -72,13 +72,13 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     autoAcceptCredentials = AutoAcceptCredential.ContentApproved,
     autoAcceptMediationRequests = true,
     autoAcceptProofs = AutoAcceptProof.ContentApproved,
-    ...afjConfig
+    ...credoConfig
   } = restConfig
 
   const logger = new TsLogger(logLevel ?? LogLevel.error)
 
   const agentConfig: InitConfig = {
-    ...afjConfig,
+    ...credoConfig,
     logger,
   }
 

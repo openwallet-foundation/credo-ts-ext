@@ -322,7 +322,7 @@ describe('ProofController', () => {
         client.on('message', (data) => {
           client.terminate()
           resolve(JSON.parse(data as string))
-        })
+        }),
       )
 
       bobAgent.events.emit<ProofStateChangedEvent>(bobAgent.context, {

@@ -27,7 +27,7 @@ const transformAttributeMarkers = (attributes?: { [key: string]: boolean }) => {
       [`attr::${attr}::marker`]: val ? '1' : '0',
       ...acc,
     }),
-    {}
+    {},
   )
 }
 
@@ -41,7 +41,7 @@ const transformAttributeValues = (attributeValues?: { [key in string]: string })
       [`attr::${attr}::value`]: val,
       ...acc,
     }),
-    {}
+    {},
   )
 }
 
@@ -56,7 +56,7 @@ const transformRestriction = ({
 })
 
 const transformProofFormat = (
-  proofFormat?: AnonCredsRequestProofFormatOptions
+  proofFormat?: AnonCredsRequestProofFormatOptions,
 ): AnonCredsRequestProofFormat | undefined => {
   if (!proofFormat) {
     return undefined
@@ -71,14 +71,14 @@ const transformProofFormat = (
         restrictions: restrictions?.map(transformRestriction),
         ...other,
       }),
-      requested_attributes
+      requested_attributes,
     ),
     requested_predicates: maybeMapValues(
       ({ restrictions, ...other }) => ({
         restrictions: restrictions?.map(transformRestriction),
         ...other,
       }),
-      requested_predicates
+      requested_predicates,
     ),
   }
 }
@@ -121,7 +121,7 @@ export class ProofController extends Controller {
   public async getProofById(
     @Path('proofRecordId') proofRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const proof = await this.agent.proofs.getById(proofRecordId)
@@ -146,7 +146,7 @@ export class ProofController extends Controller {
   public async deleteProof(
     @Path('proofRecordId') proofRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       this.setStatus(204)
@@ -173,7 +173,7 @@ export class ProofController extends Controller {
   public async proposeProof(
     @Body() proposal: ProposeProofOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const proof = await this.agent.proofs.proposeProof(proposal)
@@ -204,7 +204,7 @@ export class ProofController extends Controller {
     @Body()
     proposal: AcceptProofProposalOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const proof = await this.agent.proofs.acceptProposal({
@@ -261,7 +261,7 @@ export class ProofController extends Controller {
   public async requestProof(
     @Body() request: RequestProofOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     const { connectionId, proofFormats, ...rest } = request
     try {
@@ -300,7 +300,7 @@ export class ProofController extends Controller {
     @Body()
     request: AcceptProofRequestOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const retrievedCredentials = await this.agent.proofs.selectCredentialsForRequest({
@@ -336,7 +336,7 @@ export class ProofController extends Controller {
   public async acceptPresentation(
     @Path('proofRecordId') proofRecordId: string,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const proof = await this.agent.proofs.acceptPresentation({ proofRecordId })

@@ -35,7 +35,7 @@ export const setupServer = async (agent: RestAgent, config: ServerConfig) => {
   app.use(
     bodyParser.urlencoded({
       extended: true,
-    })
+    }),
   )
   app.use(bodyParser.json())
   app.use('/docs', serve, async (_req: ExRequest, res: ExResponse) => {

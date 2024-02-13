@@ -1,8 +1,8 @@
 import type { SerializedInstance } from '../../types'
-import type { ConnectionInvitationMessage } from '@aries-framework/core'
+import type { ConnectionInvitationMessage } from '@credo-ts/core'
 import type { SerializedError } from '@reduxjs/toolkit'
 
-import { ConnectionRecord, JsonTransformer } from '@aries-framework/core'
+import { ConnectionRecord, JsonTransformer } from '@credo-ts/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
@@ -65,13 +65,13 @@ const connectionsSlice = createSlice({
 
       // record event
       .addCase(addRecord, (state, action) =>
-        addRecordInState(ConnectionRecord, state.connections.records, action.payload)
+        addRecordInState(ConnectionRecord, state.connections.records, action.payload),
       )
       .addCase(removeRecord, (state, action) =>
-        removeRecordInState(ConnectionRecord, state.connections.records, action.payload)
+        removeRecordInState(ConnectionRecord, state.connections.records, action.payload),
       )
       .addCase(updateRecord, (state, action) =>
-        updateRecordInState(ConnectionRecord, state.connections.records, action.payload)
+        updateRecordInState(ConnectionRecord, state.connections.records, action.payload),
       )
   },
 })

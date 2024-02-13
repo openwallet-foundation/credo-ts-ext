@@ -1,5 +1,5 @@
 {
-  "name": "@aries-framework/react-hooks",
+  "name": "@credo-ts/react-hooks",
   "main": "build/index",
   "types": "build/index",
   "version": "0.5.0",
@@ -10,11 +10,11 @@
     "access": "public"
   },
   "license": "Apache-2.0",
-  "description": "Exposes useful React hooks that allow easy interaction with AFJ.",
-  "homepage": "https://github.com/hyperledger/aries-framework-javascript-ext/tree/main/packages/react-hooks",
+  "description": "Exposes useful React hooks that allow easy interaction with Credo.",
+  "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/react-hooks",
   "repository": {
     "type": "git",
-    "url": "https://github.com/hyperledger/aries-framework-javascript-ext",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "directory": "packages/react-hooks"
   },
   "scripts": {
@@ -25,17 +25,16 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aries-framework/question-answer": "^0.4.0",
-    "@types/node-fetch": "^2",
     "rxjs": "^7.2.0"
   },
   "devDependencies": {
-    "@aries-framework/core": "0.4.0",
-    "react": "^18.0.0",
+    "@credo-ts/core": "^0.5.0-alpha.127",
+    "@credo-ts/question-answer": "^0.5.0-alpha.127",
     "@types/react": "^18.2.14"
   },
   "peerDependencies": {
-    "@aries-framework/core": "^0.4.0",
+    "@credo-ts/question-answer": "^0.5.0-alpha.127",
+    "@credo-ts/core": "^0.5.0-alpha.127",
     "react": ">=17.0.0 <19.0.0"
   }
 }

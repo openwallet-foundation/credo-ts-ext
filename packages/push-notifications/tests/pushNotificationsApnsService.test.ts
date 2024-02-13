@@ -1,6 +1,6 @@
-import type { Agent } from '@aries-framework/core'
+import type { Agent } from '@credo-ts/core'
 
-import { JsonTransformer } from '@aries-framework/core'
+import { JsonTransformer } from '@credo-ts/core'
 
 import { PushNotificationsApnsService } from '../src/apns/PushNotificationsApnsService'
 
@@ -39,7 +39,7 @@ describe('Push Notifications apns', () => {
           '@type': 'https://didcomm.org/push-notifications-apns/1.0/device-info',
           device_token: '1234-1234-1234-1234',
           '~thread': expect.objectContaining({ thid: '5678-5678-5678-5678' }),
-        })
+        }),
       )
     })
   })
