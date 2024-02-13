@@ -34,12 +34,6 @@ import type {
 } from '@credo-ts/core'
 import type { DIDDocument } from 'did-resolver'
 
-export interface AgentInfo {
-  label: string
-  endpoints: string[]
-  isInitialized: boolean
-}
-
 export interface AgentMessageType {
   '@id': string
   '@type': string
@@ -112,8 +106,6 @@ export interface DidOperationStateActionBase {
   secret?: { [x: string]: unknown }
   didDocument?: { [x: string]: unknown }
 }
-
-export type DidCreateResult = DidOperationStateWait | DidOperationStateActionBase | DidOperationStateFinished
 
 export interface ProposeCredentialOptions {
   protocolVersion: CredentialProtocolVersionType<CredentialProtocols>

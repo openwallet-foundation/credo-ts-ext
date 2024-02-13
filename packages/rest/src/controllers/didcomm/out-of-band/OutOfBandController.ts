@@ -1,27 +1,30 @@
-import type { OutOfBandInvitationProps, OutOfBandRecordWithInvitationProps } from '../examples'
+import type { ApiOutOfBandRecord, ConnectionInvitationJson, OutOfBandInvitationJson } from './OutOfBandControllerTypes'
 import type { AgentMessageType } from '../types'
-import type {
-  ConnectionRecordProps,
-  CreateOutOfBandInvitationConfig,
-  CreateLegacyInvitationConfig,
-} from '@credo-ts/core'
+import type { ConnectionRecordProps } from '@credo-ts/core'
 
 import { AgentMessage, JsonTransformer, OutOfBandInvitation, Agent, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { ConnectionRecordExample, outOfBandInvitationExample, outOfBandRecordExample, RecordId } from '../examples'
+import { toApiModel } from '../../utils/serialize'
+import {
+  ConnectionRecordExample,
+  RecordId,
+  outOfBandInvitationExample,
+  outOfBandRecordExample,
+  type OutOfBandInvitationProps,
+  type OutOfBandRecordWithInvitationProps,
+} from '../examples'
 import { AcceptInvitationConfig, ReceiveInvitationByUrlProps, ReceiveInvitationProps } from '../types'
 
-@Tags('Out Of Band')
-@Route('/oob')
+import { CreateOutOfBandInvitationBody, CreateLegacyConnectionInvitationBody } from './OutOfBandControllerTypes'
+
+@Tags('DIDComm Out Of Band')
+@Route('/didcomm/oob')
 @injectable()
 export class OutOfBandController extends Controller {
-  private agent: Agent
-
-  public constructor(agent: Agent) {
+  public constructor(private agent: Agent) {
     super()
-    this.agent = agent
   }
 
   /**
@@ -29,14 +32,14 @@ export class OutOfBandController extends Controller {
    * @param invitationId invitation identifier
    * @returns OutOfBandRecord[]
    */
-  @Example<OutOfBandRecordWithInvitationProps[]>([outOfBandRecordExample])
+  @Example([outOfBandRecordExample])
   @Get()
-  public async getAllOutOfBandRecords(@Query('invitationId') invitationId?: RecordId) {
+  public async getAllOutOfBandRecords(@Query('invitationId') invitationId?: RecordId): Promise<ApiOutOfBandRecord[]> {
     let outOfBandRecords = await this.agent.oob.getAll()
 
     if (invitationId) outOfBandRecords = outOfBandRecords.filter((o) => o.outOfBandInvitation.id === invitationId)
 
-    return outOfBandRecords.map((c) => c.toJSON())
+    return outOfBandRecords.map((r) => toApiModel<ApiOutOfBandRecord>(r))
   }
 
   /**
@@ -44,18 +47,19 @@ export class OutOfBandController extends Controller {
    * @param recordId record identifier
    * @returns OutOfBandRecord
    */
-  @Example<OutOfBandRecordWithInvitationProps>(outOfBandRecordExample)
+  @Example(outOfBandRecordExample)
   @Get('/:outOfBandId')
   public async getOutOfBandRecordById(
     @Path('outOfBandId') outOfBandId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-  ) {
+  ): Promise<ApiOutOfBandRecord> {
     const outOfBandRecord = await this.agent.oob.findById(outOfBandId)
 
-    if (!outOfBandRecord)
+    if (!outOfBandRecord) {
       return notFoundError(404, { reason: `Out of band record with id "${outOfBandId}" not found.` })
+    }
 
-    return outOfBandRecord.toJSON()
+    return toApiModel<ApiOutOfBandRecord>(outOfBandRecord)
   }
 
   /**
@@ -64,30 +68,29 @@ export class OutOfBandController extends Controller {
    * @param config configuration of how out-of-band invitation should be created
    * @returns Out of band record
    */
-  @Example<{
-    invitationUrl: string
-    invitation: OutOfBandInvitationProps
-    outOfBandRecord: OutOfBandRecordWithInvitationProps
-  }>({
-    invitationUrl: 'string',
+  @Example({
+    invitationUrl: 'https://example.com/?',
     invitation: outOfBandInvitationExample,
     outOfBandRecord: outOfBandRecordExample,
   })
   @Post('/create-invitation')
   public async createInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() config?: Omit<CreateOutOfBandInvitationConfig, 'routing' | 'appendedAttachments' | 'messages'>, // props removed because of issues with serialization
+    @Body() body?: CreateOutOfBandInvitationBody,
   ) {
     try {
-      const outOfBandRecord = await this.agent.oob.createInvitation(config)
+      const outOfBandRecord = await this.agent.oob.createInvitation({
+        ...body,
+        messages: body?.messages?.map((m) => JsonTransformer.fromJSON(m, AgentMessage)),
+      })
       return {
         invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({
           domain: this.agent.config.endpoints[0],
         }),
         invitation: outOfBandRecord.outOfBandInvitation.toJSON({
           useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
-        }),
-        outOfBandRecord: outOfBandRecord.toJSON(),
+        }) as OutOfBandInvitationJson,
+        outOfBandRecord: toApiModel<ApiOutOfBandRecord>(outOfBandRecord),
       }
     } catch (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })
@@ -109,10 +112,10 @@ export class OutOfBandController extends Controller {
   @Post('/create-legacy-invitation')
   public async createLegacyInvitation(
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() config?: Omit<CreateLegacyInvitationConfig, 'routing'>, // routing prop removed because of issues with public key serialization
+    @Body() body?: CreateLegacyConnectionInvitationBody,
   ) {
     try {
-      const { outOfBandRecord, invitation } = await this.agent.oob.createLegacyInvitation(config)
+      const { outOfBandRecord, invitation } = await this.agent.oob.createLegacyInvitation(body)
 
       return {
         invitationUrl: invitation.toUrl({
@@ -121,8 +124,8 @@ export class OutOfBandController extends Controller {
         }),
         invitation: invitation.toJSON({
           useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
-        }),
-        outOfBandRecord: outOfBandRecord.toJSON(),
+        }) as ConnectionInvitationJson,
+        outOfBandRecord: toApiModel<ApiOutOfBandRecord>(outOfBandRecord),
       }
     } catch (error) {
       return internalServerError(500, { message: `something went wrong: ${error}` })

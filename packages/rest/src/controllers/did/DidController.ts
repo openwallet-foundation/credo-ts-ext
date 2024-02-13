@@ -1,11 +1,14 @@
-import type { DidCreateResult, DidResolutionResultProps } from '../types'
+import type { DidResolutionResultProps } from '../types'
+import type { DidCreateResult } from '@credo-ts/core'
 
 import { Agent, CredoError, TypedArrayEncoder } from '@credo-ts/core'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { Did, DidRecordExample, DidStateExample } from '../examples'
-import { DidCreateOptions, ImportDidOptions } from '../types'
+import { DidRecordExample } from '../examples'
+import { ImportDidOptions, DidCreateOptions } from '../types'
+
+import { registerDidExample } from './examples'
 
 @Tags('Dids')
 @Route('/dids')
@@ -25,7 +28,7 @@ export class DidController extends Controller {
    */
   @Example<DidResolutionResultProps>(DidRecordExample)
   @Get('/:did')
-  public async getDidRecordByDid(@Path('did') did: Did) {
+  public async getDidRecordByDid(@Path('did') did: string) {
     const resolveResult = await this.agent.dids.resolve(did)
 
     if (!resolveResult.didDocument) {
@@ -73,22 +76,20 @@ export class DidController extends Controller {
    * Create a Did and return the did resolution result
    *
    * @param options
-   * @returns DidResolutionResultProps
+   * @returns DidCreateResult
    */
-  @Example<DidCreateResult>(DidStateExample)
+  @Example<DidCreateResult>(registerDidExample as unknown as DidCreateResult)
   @Post('/create')
   public async createDid(
     @Body() options: DidCreateOptions,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
-  ) {
-    const { didState } = await this.agent.dids.create(options)
+    @Res() internalServerError: TsoaResponse<500, DidCreateResult>,
+  ): Promise<DidCreateResult> {
+    const didResult = await this.agent.dids.create(options)
 
-    if (didState.state === 'failed') {
-      return internalServerError(500, {
-        message: `Error creating Did - ${didState.reason}`,
-      })
+    if (didResult.didState.state === 'failed') {
+      return internalServerError(500, didResult)
     }
 
-    return didState
+    return didResult
   }
 }

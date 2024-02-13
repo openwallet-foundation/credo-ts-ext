@@ -1,4 +1,4 @@
-import type { AgentInfo } from '../types'
+import type { AgentInfo } from './AgentControllerTypes'
 
 import { Agent } from '@credo-ts/core'
 import { Controller, Get, Route, Tags } from 'tsoa'
@@ -8,11 +8,8 @@ import { injectable } from 'tsyringe'
 @Route('/agent')
 @injectable()
 export class AgentController extends Controller {
-  private agent: Agent
-
-  public constructor(agent: Agent) {
+  public constructor(private agent: Agent) {
     super()
-    this.agent = agent
   }
 
   /**

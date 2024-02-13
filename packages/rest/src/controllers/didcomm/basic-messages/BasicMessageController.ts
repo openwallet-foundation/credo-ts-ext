@@ -1,20 +1,20 @@
-import type { BasicMessageRecord, BasicMessageStorageProps } from '@credo-ts/core'
+import type { BasicMessageStorageProps } from '@credo-ts/core'
 
 import { Agent, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { BasicMessageRecordExample, RecordId } from '../examples'
+import { toApiModel } from '../../utils/serialize'
+import { RecordId } from '../examples'
 
-@Tags('Basic Messages')
-@Route('/basic-messages')
+import { BasicMessageRecordExample } from './examples'
+
+@Tags('DIDComm Basic Messages')
+@Route('/didcomm/basic-messages')
 @injectable()
-export class BasicMessageController extends Controller {
-  private agent: Agent
-
-  public constructor(agent: Agent) {
+export class DidCommBasicMessageController extends Controller {
+  public constructor(private agent: Agent) {
     super()
-    this.agent = agent
   }
 
   /**
@@ -25,8 +25,9 @@ export class BasicMessageController extends Controller {
    */
   @Example<BasicMessageStorageProps[]>([BasicMessageRecordExample])
   @Get('/:connectionId')
-  public async getBasicMessages(@Path('connectionId') connectionId: RecordId): Promise<BasicMessageRecord[]> {
-    return await this.agent.basicMessages.findAllByQuery({ connectionId })
+  public async getBasicMessagesByConnectionId(@Path('connectionId') connectionId: RecordId) {
+    const basicMessageRecords = await this.agent.basicMessages.findAllByQuery({ connectionId })
+    return basicMessageRecords.map(toApiModel)
   }
 
   /**
@@ -34,7 +35,9 @@ export class BasicMessageController extends Controller {
    *
    * @param connectionId Connection identifier
    * @param content The content of the message
+   * @returns BasicMessageRecord
    */
+  @Example<BasicMessageStorageProps>(BasicMessageRecordExample)
   @Post('/:connectionId')
   public async sendMessage(
     @Path('connectionId') connectionId: RecordId,
@@ -42,13 +45,16 @@ export class BasicMessageController extends Controller {
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
+    this.setStatus(204)
+
     try {
-      this.setStatus(204)
-      await this.agent.basicMessages.sendMessage(connectionId, request.content)
+      const basicMessageRecord = await this.agent.basicMessages.sendMessage(connectionId, request.content)
+      return toApiModel(basicMessageRecord)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        return notFoundError(404, { reason: `connection with connection id "${connectionId}" not found.` })
+        return notFoundError(404, { reason: `connection with id '${connectionId}' not found.` })
       }
+
       return internalServerError(500, { message: `something went wrong: ${error}` })
     }
   }

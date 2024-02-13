@@ -1,8 +1,5 @@
-import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@credo-ts/anoncreds'
 import type {
   AutoAcceptProof,
-  BasicMessageRole,
-  CredentialState,
   DidExchangeRole,
   DidExchangeState,
   OutOfBandInvitationOptions,
@@ -17,40 +14,6 @@ import type {
  * @example "821f9b26-ad04-4f56-89b6-e2ef9c72b36e"
  */
 export type RecordId = string
-
-/**
- * @example "did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL"
- */
-export type Did = string
-
-/**
- * @example "1.0.0"
- */
-export type Version = string
-
-/**
- * @example "WgWxqztrNooG92RXvxSTWv:3:CL:20:tag"
- */
-export type CredentialDefinitionId = string
-
-/**
- * @example "WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0"
- */
-export type SchemaId = string
-
-export const BasicMessageRecordExample = {
-  _tags: {
-    role: 'sender',
-    connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
-  },
-  metadata: {},
-  id: '74bcf865-1fdc-45b4-b517-9def02dfd25f',
-  createdAt: new Date('2022-08-18T08:38:40.216Z'),
-  content: 'string',
-  sentTime: '2022-08-18T08:38:40.216Z',
-  connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
-  role: 'sender' as BasicMessageRole,
-}
 
 export const ConnectionRecordExample = {
   _tags: {
@@ -205,28 +168,6 @@ export const outOfBandRecordExample = {
   reusable: false,
 }
 
-export const CredentialExchangeRecordExample = {
-  _tags: {
-    state: 'offer-sent',
-    threadId: '82701488-b43c-4d7b-9244-4bb204a7ae26',
-    connectionId: 'ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b',
-  },
-  metadata: {
-    '_internal/indyCredential': {
-      credentialDefinitionId: 'q7ATwTYbQDgiigVijUAej:3:CL:318187:latest',
-      schemaId: 'q7ATwTYbQDgiigVijUAej:2:Employee Badge:1.0',
-    },
-  },
-  credentials: [],
-  id: '821f9b26-ad04-4f56-89b6-e2ef9c72b36e',
-  createdAt: new Date('2022-01-01T00:00:00.000Z'),
-  state: 'offer-sent' as CredentialState,
-  connectionId: 'ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b',
-  threadId: '82701488-b43c-4d7b-9244-4bb204a7ae26',
-  credentialAttributes: [],
-  protocolVersion: 'v1',
-}
-
 export const ProofRecordExample: ProofExchangeRecordProps = {
   id: '821f9b26-ad04-4f56-89b6-e2ef9c72b36e',
   protocolVersion: 'v2',
@@ -235,45 +176,4 @@ export const ProofRecordExample: ProofExchangeRecordProps = {
   connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
   createdAt: new Date('2022-01-01T00:00:00.000Z'),
   autoAcceptProof: 'always' as AutoAcceptProof,
-}
-
-export const SchemaExample: AnonCredsSchema & { id: string } = {
-  id: 'WgWxqztrNooG92RXvxSTWv:2:schema_name:1.0',
-  issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
-  name: 'schema',
-  version: '1.0',
-  attrNames: ['string'],
-}
-
-export const CredentialDefinitionExample: AnonCredsCredentialDefinition & { id: string } = {
-  id: 'WgWxqztrNooG92RXvxSTWv:3:CL:20:tag',
-  issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
-  schemaId: '351936',
-  type: 'CL',
-  tag: 'definition',
-  value: {
-    primary: {
-      n: 'string',
-      s: 'string',
-      r: {
-        master_secret: 'string',
-        string: 'string',
-      },
-      rctxt: 'string',
-      z: 'string',
-    },
-    revocation: {
-      g: '1 string',
-      g_dash: 'string',
-      h: 'string',
-      h0: 'string',
-      h1: 'string',
-      h2: 'string',
-      htilde: 'string',
-      h_cap: 'string',
-      u: 'string',
-      pk: 'string',
-      y: 'string',
-    },
-  },
 }

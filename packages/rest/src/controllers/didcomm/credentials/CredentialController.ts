@@ -1,11 +1,14 @@
 import type { RestAgent } from '../../utils/agent'
 import type { CredentialExchangeRecordProps } from '@credo-ts/core'
 
-import { CredentialRepository, CredentialState, Agent, RecordNotFoundError } from '@credo-ts/core'
+import { CredentialState, Agent, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Delete, Get, Path, Post, Res, Route, Tags, TsoaResponse, Example, Query } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { CredentialExchangeRecordExample, RecordId } from '../examples'
+import { toApiModel } from '../../utils/serialize'
+import { RecordId } from '../examples'
+
+import { CredentialExchangeRecordExample } from './CredentialControllerExamples'
 import {
   AcceptCredentialRequestOptions,
   OfferCredentialOptions,
@@ -13,10 +16,10 @@ import {
   AcceptCredentialProposalOptions,
   AcceptCredentialOfferOptions,
   CreateOfferOptions,
-} from '../types'
+} from './CredentialControllerTypes'
 
-@Tags('Credentials')
-@Route('/credentials')
+@Tags('DIDComm Credentials')
+@Route('/didcomm/credentials')
 @injectable()
 export class CredentialController extends Controller {
   private agent: RestAgent
@@ -38,15 +41,13 @@ export class CredentialController extends Controller {
     @Query('connectionId') connectionId?: string,
     @Query('state') state?: CredentialState,
   ) {
-    const credentialRepository = this.agent.dependencyManager.resolve(CredentialRepository)
-
-    const credentials = await credentialRepository.findByQuery(this.agent.context, {
+    const credentials = await this.agent.credentials.findAllByQuery({
       connectionId,
       threadId,
       state,
     })
 
-    return credentials.map((c) => c.toJSON())
+    return credentials.map(toApiModel)
   }
 
   /**
@@ -64,7 +65,7 @@ export class CredentialController extends Controller {
   ) {
     try {
       const credential = await this.agent.credentials.getById(credentialRecordId)
-      return credential.toJSON()
+      return toApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
@@ -115,7 +116,7 @@ export class CredentialController extends Controller {
   ) {
     try {
       const credential = await this.agent.credentials.proposeCredential(options)
-      return credential.toJSON()
+      return toApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
@@ -145,10 +146,10 @@ export class CredentialController extends Controller {
     try {
       const credential = await this.agent.credentials.acceptProposal({
         ...options,
-        credentialRecordId: credentialRecordId,
+        credentialRecordId,
       })
 
-      return credential.toJSON()
+      return toApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
@@ -199,7 +200,7 @@ export class CredentialController extends Controller {
   ) {
     try {
       const credential = await this.agent.credentials.offerCredential(options)
-      return credential.toJSON()
+      return toApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
@@ -229,9 +230,9 @@ export class CredentialController extends Controller {
     try {
       const credential = await this.agent.credentials.acceptOffer({
         ...options,
-        credentialRecordId: credentialRecordId,
+        credentialRecordId,
       })
-      return credential.toJSON()
+      return toApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
@@ -261,9 +262,9 @@ export class CredentialController extends Controller {
     try {
       const credential = await this.agent.credentials.acceptRequest({
         ...options,
-        credentialRecordId: credentialRecordId,
+        credentialRecordId,
       })
-      return credential.toJSON()
+      return toApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {
@@ -289,8 +290,8 @@ export class CredentialController extends Controller {
     @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
-      const credential = await this.agent.credentials.acceptCredential({ credentialRecordId: credentialRecordId })
-      return credential.toJSON()
+      const credential = await this.agent.credentials.acceptCredential({ credentialRecordId })
+      return toApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         return notFoundError(404, {

@@ -1,29 +1,28 @@
 import type { ConnectionRecordProps } from '@credo-ts/core'
 
-import { ConnectionRepository, DidExchangeState, Agent, CredoError, RecordNotFoundError } from '@credo-ts/core'
+import { DidExchangeState, Agent, CredoError, RecordNotFoundError } from '@credo-ts/core'
 import { Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
 import { injectable } from 'tsyringe'
 
 import { ConnectionRecordExample, RecordId } from '../examples'
 
-@Tags('Connections')
-@Route('/connections')
+@Tags('DIDComm Connections')
+@Route('/didcomm/connections')
 @injectable()
 export class ConnectionController extends Controller {
-  private agent: Agent
-
-  public constructor(agent: Agent) {
+  public constructor(private agent: Agent) {
     super()
-    this.agent = agent
   }
 
   /**
    * Retrieve all connections records
-   * @param alias Alias
-   * @param state Connection state
-   * @param myDid My DID
-   * @param theirDid Their DID
-   * @param theirLabel Their label
+   *
+   * @param alias alias
+   * @param state did exchange state
+   * @param did our did
+   * @param theirDid their did
+   * @param theirLabel their label
+   * @param outOfBandId out of band id
    * @returns ConnectionRecord[]
    */
   @Example<ConnectionRecordProps[]>([ConnectionRecordExample])
@@ -32,33 +31,18 @@ export class ConnectionController extends Controller {
     @Query('outOfBandId') outOfBandId?: string,
     @Query('alias') alias?: string,
     @Query('state') state?: DidExchangeState,
-    @Query('myDid') myDid?: string,
+    @Query('ourDid') ourDid?: string,
     @Query('theirDid') theirDid?: string,
     @Query('theirLabel') theirLabel?: string,
   ) {
-    let connections
-
-    if (outOfBandId) {
-      connections = await this.agent.connections.findAllByOutOfBandId(outOfBandId)
-    } else {
-      const connectionRepository = this.agent.dependencyManager.resolve(ConnectionRepository)
-
-      const connections = await connectionRepository.findByQuery(this.agent.context, {
-        alias,
-        myDid,
-        theirDid,
-        theirLabel,
-        state,
-      })
-
-      return connections.map((c) => c.toJSON())
-    }
-
-    // if (alias) connections = connections.filter((c) => c.alias === alias)
-    // if (state) connections = connections.filter((c) => c.state === state)
-    // if (myDid) connections = connections.filter((c) => c.did === myDid)
-    // if (theirDid) connections = connections.filter((c) => c.theirDid === theirDid)
-    // if (theirLabel) connections = connections.filter((c) => c.theirLabel === theirLabel)
+    const connections = await this.agent.connections.findAllByQuery({
+      alias,
+      did: ourDid,
+      theirDid,
+      theirLabel,
+      state,
+      outOfBandId,
+    })
 
     return connections.map((c) => c.toJSON())
   }
