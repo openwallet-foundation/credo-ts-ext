@@ -45,11 +45,7 @@ jobs:
     if: needs.ci-trigger.outputs.triggered == 'true'
     steps:
       - name: Checkout credo-ts-ext
-        uses: actions/checkout@v2
-
-      # setup dependencies
-      - name: Setup Libindy
-        uses: ./.github/actions/setup-libindy
+        uses: actions/checkout@v4
 
       - name: Setup node v18
         uses: actions/setup-node@v4
@@ -58,8 +54,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           cache: yarn
 
+      # Ignore scripts so we don't need libindy setup
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --ignore-scripts
 
       - name: Linting
         run: yarn lint
@@ -82,11 +79,8 @@ jobs:
 
     steps:
       - name: Checkout credo-ts-ext
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
-      # setup dependencies
-      - name: Setup Libindy
-        uses: ./.github/actions/setup-libindy
       - name: Setup Indy Pool
         uses: ./.github/actions/setup-indy-pool
         with:
@@ -125,7 +119,7 @@ jobs:
       packages: ${{ steps.get-packages.outputs.packages }}
     steps:
       - name: Checkout credo-ts-ext
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Setup node v18
         uses: actions/setup-node@v4
@@ -134,8 +128,9 @@ jobs:
           registry-url: 'https://registry.npmjs.org/'
           cache: yarn
 
+      # Ignore scripts so we don't need libindy setup
       - name: Install dependencies
-        run: yarn install
+        run: yarn install --ignore-scripts
 
       - id: get-packages
         name: Get all NPM packages
@@ -174,8 +169,9 @@ jobs:
           cache: yarn
         if: ${{ steps.release-please.outputs.release_created }}
 
+      # Ignore scripts so we don't need libindy setup
       - name: Install dependencies
-        run: yarn install --frozen-lockfile
+        run: yarn install --frozen-lockfile --ignore-scripts
         if: ${{ steps.release-please.outputs.release_created }}
 
       - name: Release to NPM
