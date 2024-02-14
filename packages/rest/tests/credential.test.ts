@@ -243,7 +243,7 @@ describe('CredentialController', () => {
         client.on('message', (data) => {
           client.terminate()
           resolve(JSON.parse(data as string))
-        })
+        }),
       )
 
       // Emit event
@@ -433,7 +433,7 @@ describe('CredentialController', () => {
           '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
           '@type': 'https://didcomm.org/connections/1.0/invitation',
         },
-        AgentMessage
+        AgentMessage,
       )
 
       const inputParams = {

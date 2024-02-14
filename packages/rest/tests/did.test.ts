@@ -12,7 +12,7 @@ describe('DidController', () => {
   let aliceAgent: Agent
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Connection REST Agent Test Alice', 3999)
+    aliceAgent = await getTestAgent('Did REST Agent Test Alice', 3999)
     app = await startServer(aliceAgent, { port: 3000 })
   })
 

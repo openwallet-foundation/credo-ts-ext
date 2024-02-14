@@ -1,9 +1,9 @@
 import type { SerializedInstance } from './types'
 import type { RecordConstructor } from './utils'
-import type { Agent, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent, BaseRecord } from '@aries-framework/core'
+import type { Agent, RecordDeletedEvent, RecordSavedEvent, RecordUpdatedEvent, BaseRecord } from '@credo-ts/core'
 import type { Store } from '@reduxjs/toolkit'
 
-import { JsonTransformer, RepositoryEventTypes } from '@aries-framework/core'
+import { JsonTransformer, RepositoryEventTypes } from '@credo-ts/core'
 import { createAction } from '@reduxjs/toolkit'
 
 import { isRecordType } from './utils'
@@ -50,7 +50,7 @@ export const startRecordListeners = (agent: Agent, store: Store) => {
 export const removeRecordInState = (
   recordType: RecordConstructor,
   records: SerializedInstance<BaseRecordAny>[],
-  record: BaseRecordAny | { id: string; type: string }
+  record: BaseRecordAny | { id: string; type: string },
 ) => {
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return
@@ -66,7 +66,7 @@ export const removeRecordInState = (
 export const addRecordInState = (
   recordType: RecordConstructor,
   records: SerializedInstance<BaseRecordAny>[],
-  record: BaseRecordAny
+  record: BaseRecordAny,
 ) => {
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return
@@ -77,7 +77,7 @@ export const addRecordInState = (
 export const updateRecordInState = (
   recordType: RecordConstructor,
   records: SerializedInstance<BaseRecordAny>[],
-  record: BaseRecordAny
+  record: BaseRecordAny,
 ) => {
   // We're only interested in events for the recordType
   if (!isRecordType(record, recordType)) return

@@ -1,7 +1,7 @@
 import type { ProofsState } from './proofsSlice'
-import type { ProofState } from '@aries-framework/core'
+import type { ProofState } from '@credo-ts/core'
 
-import { JsonTransformer, ProofExchangeRecord } from '@aries-framework/core'
+import { JsonTransformer, ProofExchangeRecord } from '@credo-ts/core'
 import { createSelector } from '@reduxjs/toolkit'
 
 interface PartialProofsState {
@@ -23,7 +23,7 @@ const ProofsSelectors = {
    * Selector that retrieves all ProofRecords from the state.
    */
   proofRecordsSelector: createSelector(proofsStateSelector, (proofsState) =>
-    proofsState.records.map((r) => JsonTransformer.fromJSON(r, ProofExchangeRecord))
+    proofsState.records.map((r) => JsonTransformer.fromJSON(r, ProofExchangeRecord)),
   ),
 
   /**
@@ -31,7 +31,7 @@ const ProofsSelectors = {
    */
   proofRecordsByStateSelector: (state: ProofState) =>
     createSelector(proofsStateSelector, (proofsState) =>
-      proofsState.records.filter((r) => r.state === state).map((r) => JsonTransformer.fromJSON(r, ProofExchangeRecord))
+      proofsState.records.filter((r) => r.state === state).map((r) => JsonTransformer.fromJSON(r, ProofExchangeRecord)),
     ),
 
   /**

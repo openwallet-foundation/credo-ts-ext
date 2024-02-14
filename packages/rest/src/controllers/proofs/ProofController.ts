@@ -46,7 +46,7 @@ export class ProofController extends Controller {
   public async getProofById(
     @Path('proofRecordId') proofRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const proof = await this.agent.proofs.getById(proofRecordId)
@@ -71,7 +71,7 @@ export class ProofController extends Controller {
   public async deleteProof(
     @Path('proofRecordId') proofRecordId: RecordId,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       this.setStatus(204)
@@ -98,7 +98,7 @@ export class ProofController extends Controller {
   public async proposeProof(
     @Body() proposal: RequestProofProposalOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     const { attributes, predicates, connectionId, ...proposalOptions } = proposal
 
@@ -136,7 +136,7 @@ export class ProofController extends Controller {
       comment?: string
     },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const proof = await this.agent.proofs.acceptProposal(proofRecordId, proposal)
@@ -169,7 +169,7 @@ export class ProofController extends Controller {
 
     return {
       proofUrl: `${this.agent.config.endpoints[0]}/?d_m=${JsonEncoder.toBase64URL(
-        proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix })
+        proof.requestMessage.toJSON({ useLegacyDidSovPrefix: this.agent.config.useLegacyDidSovPrefix }),
       )}`,
       proofRecord: proof.proofRecord,
     }
@@ -186,7 +186,7 @@ export class ProofController extends Controller {
   public async requestProof(
     @Body() request: RequestProofOptions,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     const { connectionId, proofRequestOptions, ...config } = request
 
@@ -223,7 +223,7 @@ export class ProofController extends Controller {
       comment?: string
     },
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const { filterByPresentationPreview, filterByNonRevocationRequirements, comment } = request
@@ -262,7 +262,7 @@ export class ProofController extends Controller {
   public async acceptPresentation(
     @Path('proofRecordId') proofRecordId: string,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       const proof = await this.agent.proofs.acceptPresentation(proofRecordId)

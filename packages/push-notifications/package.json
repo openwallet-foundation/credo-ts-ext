@@ -26,20 +26,18 @@
     "test": "jest"
   },
   "devDependencies": {
-    "@aries-framework/core": "^0.4.0",
-    "@aries-framework/indy-sdk": "^0.4.0",
-    "@aries-framework/node": "^0.4.0",
-    "@types/node-fetch": "^2.6.3",
-    "indy-sdk": "^1.16.0-dev-1655",
+    "@hyperledger/aries-askar-nodejs": "^0.2.0",
+    "@credo-ts/askar": "^0.5.0-alpha.127",
+    "@credo-ts/core": "^0.5.0-alpha.127",
+    "@credo-ts/node": "^0.5.0-alpha.127",
     "ts-node-dev": "^1.1.8"
   },
   "peerDependencies": {
-    "@aries-framework/core": "^0.4.0"
+    "@credo-ts/core": "^0.5.0-alpha.127"
   },
   "dependencies": {
     "class-transformer": "0.5.1",
-    "class-validator": "0.14.0",
-    "reflect-metadata": "^0.1.13",
+    "class-validator": "0.14.1",
     "tsyringe": "^4.6.0"
   }
 }

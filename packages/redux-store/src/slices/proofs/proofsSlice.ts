@@ -1,7 +1,7 @@
 import type { SerializedInstance } from '../../types'
 import type { SerializedError } from '@reduxjs/toolkit'
 
-import { ProofExchangeRecord, JsonTransformer } from '@aries-framework/core'
+import { ProofExchangeRecord, JsonTransformer } from '@credo-ts/core'
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
@@ -51,13 +51,13 @@ const proofsSlice = createSlice({
       })
       // record events
       .addCase(addRecord, (state, action) =>
-        addRecordInState(ProofExchangeRecord, state.proofs.records, action.payload)
+        addRecordInState(ProofExchangeRecord, state.proofs.records, action.payload),
       )
       .addCase(removeRecord, (state, action) =>
-        removeRecordInState(ProofExchangeRecord, state.proofs.records, action.payload)
+        removeRecordInState(ProofExchangeRecord, state.proofs.records, action.payload),
       )
       .addCase(updateRecord, (state, action) =>
-        updateRecordInState(ProofExchangeRecord, state.proofs.records, action.payload)
+        updateRecordInState(ProofExchangeRecord, state.proofs.records, action.payload),
       )
   },
 })

@@ -1,7 +1,7 @@
 import type { MediationState } from './mediationSlice'
-import type { MediationState as MediationRecordState } from '@aries-framework/core'
+import type { MediationState as MediationRecordState } from '@credo-ts/core'
 
-import { JsonTransformer, MediationRecord } from '@aries-framework/core'
+import { JsonTransformer, MediationRecord } from '@credo-ts/core'
 import { createSelector } from '@reduxjs/toolkit'
 
 interface PartialMediationState {
@@ -23,7 +23,7 @@ const MediationSelectors = {
    * Selector that retrieves all MediationRecord from the state.
    */
   mediationRecordsSelector: createSelector(mediationStateSelector, (mediationState) =>
-    mediationState.records.map((r) => JsonTransformer.fromJSON(r, MediationRecord))
+    mediationState.records.map((r) => JsonTransformer.fromJSON(r, MediationRecord)),
   ),
 
   /**

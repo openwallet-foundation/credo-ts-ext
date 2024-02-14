@@ -1,8 +1,8 @@
-import type { Agent } from '@aries-framework/core'
-import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@aries-framework/question-answer'
+import type { Agent } from '@credo-ts/core'
+import type { QuestionAnswerRecord, QuestionAnswerStateChangedEvent } from '@credo-ts/question-answer'
 import type { PropsWithChildren } from 'react'
 
-import { QuestionAnswerApi, QuestionAnswerEventTypes } from '@aries-framework/question-answer'
+import { QuestionAnswerApi, QuestionAnswerEventTypes } from '@credo-ts/question-answer'
 import { createContext, useState, useEffect, useContext, useMemo } from 'react'
 import * as React from 'react'
 
@@ -25,7 +25,7 @@ export const useQuestionAnswerByConnectionId = (connectionId: string): QuestionA
   const { questionAnswerMessages } = useQuestionAnswer()
   const messages = useMemo(
     () => questionAnswerMessages.filter((m) => m.connectionId === connectionId),
-    [questionAnswerMessages, connectionId]
+    [questionAnswerMessages, connectionId],
   )
   return messages
 }
@@ -62,7 +62,7 @@ const QuestionAnswerProvider: React.FC<PropsWithChildren<Props>> = ({ agent, chi
     const listener = (event: QuestionAnswerStateChangedEvent) => {
       const newQuestionAnswerState = [...questionAnswerState.questionAnswerMessages]
       const index = newQuestionAnswerState.findIndex(
-        (questionAnswerMessage) => questionAnswerMessage.id === event.payload.questionAnswerRecord.id
+        (questionAnswerMessage) => questionAnswerMessage.id === event.payload.questionAnswerRecord.id,
       )
       if (index > -1) {
         newQuestionAnswerState[index] = event.payload.questionAnswerRecord

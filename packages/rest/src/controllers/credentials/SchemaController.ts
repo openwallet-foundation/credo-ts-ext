@@ -32,7 +32,7 @@ export class SchemaController {
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
     @Res() forbiddenError: TsoaResponse<403, { reason: string }>,
     @Res() badRequestError: TsoaResponse<400, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       return await this.agent.ledger.getSchema(schemaId)
@@ -74,7 +74,7 @@ export class SchemaController {
       attributes: string[]
     },
     @Res() forbiddenError: TsoaResponse<400, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       return await this.agent.ledger.registerSchema({

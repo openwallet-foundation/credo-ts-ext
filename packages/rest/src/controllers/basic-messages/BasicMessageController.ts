@@ -40,7 +40,7 @@ export class BasicMessageController extends Controller {
     @Path('connectionId') connectionId: RecordId,
     @Body() request: Record<'content', string>,
     @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>
+    @Res() internalServerError: TsoaResponse<500, { message: string }>,
   ) {
     try {
       this.setStatus(204)

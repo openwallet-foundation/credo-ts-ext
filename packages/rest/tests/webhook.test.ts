@@ -62,7 +62,7 @@ describe('WebhookTests', () => {
 
     const webhook = webhooks.find(
       (webhook) =>
-        webhook.topic === 'connections' && webhook.body.id === connection.id && webhook.body.state === connection.state
+        webhook.topic === 'connections' && webhook.body.id === connection.id && webhook.body.state === connection.state,
     )
 
     expect(JSON.parse(JSON.stringify(connection.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)
@@ -95,11 +95,11 @@ describe('WebhookTests', () => {
       (webhook) =>
         webhook.topic === 'credentials' &&
         webhook.body.id === credentialRecord.id &&
-        webhook.body.state === credentialRecord.state
+        webhook.body.state === credentialRecord.state,
     )
 
     expect(JSON.parse(JSON.stringify(credentialRecord.toJSON()))).toMatchObject(
-      webhook?.body as Record<string, unknown>
+      webhook?.body as Record<string, unknown>,
     )
   })
 
@@ -127,7 +127,7 @@ describe('WebhookTests', () => {
 
     const webhook = webhooks.find(
       (webhook) =>
-        webhook.topic === 'proofs' && webhook.body.id === proofRecord.id && webhook.body.state === proofRecord.state
+        webhook.topic === 'proofs' && webhook.body.id === proofRecord.id && webhook.body.state === proofRecord.state,
     )
 
     expect(JSON.parse(JSON.stringify(proofRecord.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)

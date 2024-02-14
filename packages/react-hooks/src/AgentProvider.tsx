@@ -1,7 +1,7 @@
-import type { Agent } from '@aries-framework/core'
+import type { Agent } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { QuestionAnswerModule } from '@aries-framework/question-answer'
+import { QuestionAnswerModule } from '@credo-ts/question-answer'
 import * as React from 'react'
 import { createContext, useState, useContext } from 'react'
 

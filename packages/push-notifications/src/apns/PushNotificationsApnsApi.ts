@@ -1,12 +1,6 @@
 import type { ApnsDeviceInfo } from './models'
 
-import {
-  OutboundMessageContext,
-  AgentContext,
-  ConnectionService,
-  injectable,
-  MessageSender,
-} from '@aries-framework/core'
+import { OutboundMessageContext, AgentContext, ConnectionService, injectable, MessageSender } from '@credo-ts/core'
 
 import { PushNotificationsApnsService } from './PushNotificationsApnsService'
 
@@ -21,7 +15,7 @@ export class PushNotificationsApnsApi {
     messageSender: MessageSender,
     pushNotificationsService: PushNotificationsApnsService,
     connectionService: ConnectionService,
-    agentContext: AgentContext
+    agentContext: AgentContext,
   ) {
     this.messageSender = messageSender
     this.pushNotificationsService = pushNotificationsService

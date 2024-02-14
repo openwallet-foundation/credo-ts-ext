@@ -1,8 +1,8 @@
-import type { Agent } from '@aries-framework/core'
-import type { Awaited } from '@aries-framework/core/build/types'
+import type { Agent } from '@credo-ts/core'
+import type { Awaited } from '@credo-ts/core/build/types'
 import type { PropsWithChildren } from 'react'
 
-import { CredentialExchangeRecord } from '@aries-framework/core'
+import { CredentialExchangeRecord } from '@credo-ts/core'
 import React, { useState, createContext, useContext, useEffect } from 'react'
 
 import { recordsAddedByType, recordsRemovedByType, recordsUpdatedByType } from './recordUtils'
@@ -107,18 +107,18 @@ const CredentialFormatDataProvider: React.FC<PropsWithChildren<Props>> = ({ agen
       async (record: CredentialExchangeRecord) => {
         const formatData = await fetchCredentialInformation(agent, record)
         setState(addRecord(formatData, state))
-      }
+      },
     )
 
     const credentialUpdate$ = recordsUpdatedByType(agent, CredentialExchangeRecord).subscribe(
       async (record: CredentialExchangeRecord) => {
         const formatData = await fetchCredentialInformation(agent, record)
         setState(updateRecord(formatData, state))
-      }
+      },
     )
 
     const credentialRemove$ = recordsRemovedByType(agent, CredentialExchangeRecord).subscribe((record) =>
-      setState(removeRecord(record.id, state))
+      setState(removeRecord(record.id, state)),
     )
 
     return () => {

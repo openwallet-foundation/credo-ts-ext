@@ -22,14 +22,14 @@
     <a href="https://www.npmjs.com/package/@credo-ts/transport-ble"
     ><img
       alt="@credo-ts/transport-ble version"
-      src="https://img.shield.io/npm/v/@aries-framework/transport-ble"
+      src="https://img.shield.io/npm/v/@credo-ts/transport-ble"
   /></a>
   <br />
 </p>
 
 The Credo BLE Transport package provides a simple way to add Bluetooth Low Energy (BLE) data transport into Credo React Native mobile agents.
 
-It implements the same transport interface as the outbound transports in [@aries-framework/core](https://www.npmjs.com/package/@aries-framework/core), and the inbound transports in [@aries-framework/node](https://www.npmjs.com/package/@aries-framework/node).
+It implements the same transport interface as the outbound transports in [@credo-ts/core](https://www.npmjs.com/package/@credo-ts/core), and the inbound transports in [@credo-ts/node](https://www.npmjs.com/package/@credo-ts/node).
 
 With this transport enabled, Credo React Native mobile agents gain the ability to do offline DIDComm exchanges using Bluetooth Low Energy (BLE).
 
@@ -44,7 +44,7 @@ We're this discussing if this is the best approach to use in future versions. If
 ## Installing the required dependencies
 
 ```sh
-yarn add @credo-ts/transport-ble @aries-framework/core @aries-framework/react-native @animo-id/react-native-ble-didcomm
+yarn add @credo-ts/transport-ble @credo-ts/core @credo-ts/react-native @animo-id/react-native-ble-didcomm
 ```
 
 ## Configuration
@@ -61,8 +61,8 @@ This means that the agent acting as the connection initiator should use the `Cen
 // If you want to register the transports only after initializing the agent, you can do this anywhere else in your app, and just leave out the agent config and initialization
 
 import { BleOutboundTransport, BleInboundTransport } from '@credo-ts/transport-ble'
-import { Agent } from '@aries-framework/core'
-import { agentDependencies } from '@aries-framework/react-native'
+import { Agent } from '@credo-ts/core'
+import { agentDependencies } from '@credo-ts/react-native'
 import {
   Central,
   Peripheral,

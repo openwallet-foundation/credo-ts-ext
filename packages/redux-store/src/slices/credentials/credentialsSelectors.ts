@@ -1,7 +1,7 @@
 import type { CredentialsState } from './credentialsSlice'
-import type { CredentialState } from '@aries-framework/core'
+import type { CredentialState } from '@credo-ts/core'
 
-import { CredentialExchangeRecord, JsonTransformer } from '@aries-framework/core'
+import { CredentialExchangeRecord, JsonTransformer } from '@credo-ts/core'
 import { createSelector } from '@reduxjs/toolkit'
 
 interface PartialCredentialState {
@@ -23,7 +23,7 @@ const CredentialsSelectors = {
    * Selector that retrieves all CredentialRecords from the store.
    */
   credentialRecordsSelector: createSelector(credentialsStateSelector, (credentialsState) =>
-    credentialsState.records.map((r) => JsonTransformer.fromJSON(r, CredentialExchangeRecord))
+    credentialsState.records.map((r) => JsonTransformer.fromJSON(r, CredentialExchangeRecord)),
   ),
 
   /**
@@ -33,7 +33,7 @@ const CredentialsSelectors = {
     createSelector(credentialsStateSelector, (credentialsState) =>
       credentialsState.records
         .filter((r) => r.state === state)
-        .map((c) => JsonTransformer.fromJSON(c, CredentialExchangeRecord))
+        .map((c) => JsonTransformer.fromJSON(c, CredentialExchangeRecord)),
     ),
 
   /**

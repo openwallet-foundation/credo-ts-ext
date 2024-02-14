@@ -1,6 +1,6 @@
-import type { DependencyManager, FeatureRegistry, Module } from '@aries-framework/core'
+import type { DependencyManager, FeatureRegistry, Module } from '@credo-ts/core'
 
-import { Protocol } from '@aries-framework/core'
+import { Protocol } from '@credo-ts/core'
 
 import { PushNotificationsFcmApi } from './PushNotificationsFcmApi'
 import { PushNotificationsFcmService } from './PushNotificationsFcmService'
@@ -27,7 +27,7 @@ export class PushNotificationsFcmModule implements Module {
       new Protocol({
         id: 'https://didcomm.org/push-notifications-fcm/1.0',
         roles: [PushNotificationsFcmRole.Sender, PushNotificationsFcmRole.Receiver],
-      })
+      }),
     )
 
     dependencyManager.registerMessageHandlers([

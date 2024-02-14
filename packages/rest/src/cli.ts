@@ -51,7 +51,7 @@ const parsed = yargs
       if (typeof input[0] === 'object') return input
       if (input.length % 2 !== 0) {
         throw new Error(
-          'Inbound transport should be specified as transport port pairs (e.g. --inbound-transport http 5000 ws 5001)'
+          'Inbound transport should be specified as transport port pairs (e.g. --inbound-transport http 5000 ws 5001)',
         )
       }
 

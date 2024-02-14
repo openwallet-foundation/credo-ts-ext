@@ -5,10 +5,10 @@ import type {
   RecordUpdatedEvent,
   Agent,
   BaseEvent,
-} from '@aries-framework/core'
-import type { Constructor } from '@aries-framework/core/build/utils/mixins'
+} from '@credo-ts/core'
+import type { Constructor } from '@credo-ts/core/build/utils/mixins'
 
-import { RepositoryEventTypes } from '@aries-framework/core'
+import { RepositoryEventTypes } from '@credo-ts/core'
 import { useMemo } from 'react'
 import { map, filter, pipe } from 'rxjs'
 
@@ -47,7 +47,7 @@ export const updateRecord = <R extends BaseRecordAny>(record: R, state: RecordsS
 
 export const removeRecord = <R extends BaseRecordAny>(
   record: R | { id: string; type: R['type'] },
-  state: RecordsState<R>
+  state: RecordsState<R>,
 ): RecordsState<R> => {
   const newRecordsState = state.records.filter((r) => r.id !== record.id)
   return {
@@ -59,7 +59,7 @@ export const removeRecord = <R extends BaseRecordAny>(
 const filterByType = <R extends BaseRecordAny>(recordClass: RecordClass<R>) => {
   return pipe(
     map((event: BaseEvent) => (event.payload as Record<string, R>).record),
-    filter((record: R) => record.type === recordClass.type)
+    filter((record: R) => record.type === recordClass.type),
   )
 }
 
@@ -77,7 +77,7 @@ export const recordsAddedByType = <R extends BaseRecordAny>(agent: Agent | undef
 
 export const recordsUpdatedByType = <R extends BaseRecordAny>(
   agent: Agent | undefined,
-  recordClass: RecordClass<R>
+  recordClass: RecordClass<R>,
 ) => {
   if (!agent) {
     throw new Error('Agent is required to update record type')
@@ -94,7 +94,7 @@ export const recordsUpdatedByType = <R extends BaseRecordAny>(
 
 export const recordsRemovedByType = <R extends BaseRecordAny>(
   agent: Agent | undefined,
-  recordClass: RecordClass<R>
+  recordClass: RecordClass<R>,
 ) => {
   if (!agent) {
     throw new Error('Agent is required to remove records by type')
@@ -115,7 +115,7 @@ export const isModuleRegistered = (agent: Agent, ModuleClass: Constructor) => {
   }
 
   const foundModule = Object.values(agent.dependencyManager.registeredModules).find(
-    (module: unknown) => module instanceof ModuleClass
+    (module: unknown) => module instanceof ModuleClass,
   )
 
   return foundModule !== undefined

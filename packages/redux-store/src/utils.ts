@@ -1,4 +1,4 @@
-import type { Agent, BaseRecord } from '@aries-framework/core'
+import type { Agent, BaseRecord } from '@credo-ts/core'
 import type { AsyncThunkPayloadCreator } from '@reduxjs/toolkit'
 
 import { createAsyncThunk } from '@reduxjs/toolkit'
@@ -12,8 +12,8 @@ type ClassMethodParameters<T, M> = T extends Constructor
     ? Parameters<Method<InstanceType<T>[M]>>
     : never
   : M extends keyof T
-  ? Parameters<Method<T[M]>>
-  : never
+    ? Parameters<Method<T[M]>>
+    : never
 interface AgentThunkApiConfig {
   extra: {
     agent: Agent
@@ -22,9 +22,9 @@ interface AgentThunkApiConfig {
 
 function createAsyncAgentThunk<Returned, ThunkArg = void>(
   typePrefix: string,
-  payloadCreator: AsyncThunkPayloadCreator<Returned, ThunkArg, AgentThunkApiConfig>
+  payloadCreator: AsyncThunkPayloadCreator<Returned, ThunkArg, AgentThunkApiConfig>,
 ) {
-  return createAsyncThunk<Returned, ThunkArg, AgentThunkApiConfig>(typePrefix, async (thunkArg, thunkApi) => {
+  return createAsyncThunk<Returned, ThunkArg, AgentThunkApiConfig>(typePrefix, (thunkArg, thunkApi) => {
     if (!thunkApi.extra.agent) return thunkApi.rejectWithValue('Agent not set')
     if (!thunkApi.extra.agent.isInitialized) return thunkApi.rejectWithValue('Agent not initialized, call agent.init()')
     return payloadCreator(thunkArg, thunkApi)
@@ -42,7 +42,7 @@ type RecordConstructor<RecordType extends BaseRecordAny = BaseRecordAny> = Const
 
 const isRecordType = <RecordType extends BaseRecordAny>(
   record: BaseRecord | { id: string; type: string },
-  expectedRecordType: RecordConstructor<RecordType>
+  expectedRecordType: RecordConstructor<RecordType>,
 ): record is RecordType => {
   return record.type === expectedRecordType.type
 }

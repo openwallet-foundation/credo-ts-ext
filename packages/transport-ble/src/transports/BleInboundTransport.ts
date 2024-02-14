@@ -1,8 +1,8 @@
 import type { Ble } from '@animo-id/react-native-ble-didcomm'
-import type { Agent, InboundTransport, Logger } from '@aries-framework/core'
+import type { Agent, InboundTransport, Logger } from '@credo-ts/core'
 import type { EmitterSubscription } from 'react-native'
 
-import { TransportService, utils, MessageReceiver } from '@aries-framework/core'
+import { TransportService, utils, MessageReceiver } from '@credo-ts/core'
 
 import { BleTransportSession } from './BleTransportSession'
 

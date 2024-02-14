@@ -49,7 +49,7 @@ export const setupAgent = async ({
         },
       ],
     },
-    agentDependencies
+    agentDependencies,
   )
 
   const httpInbound = new HttpInboundTransport({

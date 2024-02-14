@@ -1,7 +1,7 @@
 import type { Ble } from '@animo-id/react-native-ble-didcomm'
-import type { Agent, Logger, OutboundPackage, OutboundTransport } from '@aries-framework/core'
+import type { Agent, Logger, OutboundPackage, OutboundTransport } from '@credo-ts/core'
 
-import { AriesFrameworkError } from '@aries-framework/core'
+import { CredoError } from '@credo-ts/core'
 
 export class BleOutboundTransport implements OutboundTransport {
   public supportedSchemes: string[] = ['ble']
@@ -21,7 +21,7 @@ export class BleOutboundTransport implements OutboundTransport {
   public async sendMessage(outboundPackage: OutboundPackage): Promise<void> {
     const { payload, endpoint } = outboundPackage
     if (!endpoint) {
-      throw new AriesFrameworkError(`Missing endpoint. I don't know how and where to send the message.`)
+      throw new CredoError(`Missing endpoint. I don't know how and where to send the message.`)
     }
 
     this.logger?.debug(`Sending outbound message to endpoint '${endpoint}'`, {

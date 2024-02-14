@@ -1,8 +1,8 @@
-import type { Agent } from '@aries-framework/core'
-import type { Awaited } from '@aries-framework/core/build/types'
+import type { Agent } from '@credo-ts/core'
+import type { Awaited } from '@credo-ts/core/build/types'
 import type { PropsWithChildren } from 'react'
 
-import { ProofExchangeRecord } from '@aries-framework/core'
+import { ProofExchangeRecord } from '@credo-ts/core'
 import { useState, createContext, useContext, useEffect } from 'react'
 import * as React from 'react'
 
@@ -108,7 +108,7 @@ const ProofFormatDataProvider: React.FC<PropsWithChildren<Props>> = ({ agent, ch
     })
 
     const proofRemove$ = recordsRemovedByType(agent, ProofExchangeRecord).subscribe((record) =>
-      setState(removeRecord(record, state))
+      setState(removeRecord(record, state)),
     )
 
     return () => {
