@@ -40,7 +40,7 @@ export const setupAgent = async ({
       autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
       walletConfig: { id: name, key: name },
       useLegacyDidSovPrefix: true,
-      // logger: logger,
+      logger: logger,
       indyLedgers: [
         {
           id: `TestLedger-${utils.uuid()}`,
