@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.5.0](https://www.github.com/openwallet-foundation/credo-ts-ext/compare/redux-store-v0.4.0...redux-store-v0.5.0) (2024-03-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* update to credo 0.5 stable (#250)
+* update to credo 0.5 (#239)
+
+### Miscellaneous Chores
+
+* update to credo 0.5 ([#239](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/239)) ([16e44ec](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/16e44ec3134bf401bc98e89918a3cc5d223f90d6))
+* update to credo 0.5 stable ([#250](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/250)) ([2e1fda8](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/2e1fda896d166306dc051284e7c8016cd8111f1d))
+
 ## [0.4.0](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/redux-store-v0.3.2...redux-store-v0.4.0) (2023-06-29)
 
 
