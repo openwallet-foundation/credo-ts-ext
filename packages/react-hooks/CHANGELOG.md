@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.6.1](https://www.github.com/openwallet-foundation/credo-ts-ext/compare/react-hooks-v0.6.0...react-hooks-v0.6.1) (2024-03-14)
+
+
+### Bug Fixes
+
+* link in readme ([#251](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/251)) ([1e9da29](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/1e9da29a1e77b53945c7b9b1ea669a91c16dc56c))
+
 ## [0.6.0](https://www.github.com/openwallet-foundation/credo-ts-ext/compare/react-hooks-v0.5.0...react-hooks-v0.6.0) (2024-03-14)
 
 
