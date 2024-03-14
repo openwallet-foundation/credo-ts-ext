@@ -2,7 +2,7 @@
   "name": "@credo-ts/push-notifications",
   "main": "build/index",
   "types": "build/index",
-  "version": "0.7.0",
+  "version": "0.7.1",
   "files": [
     "build"
   ],
