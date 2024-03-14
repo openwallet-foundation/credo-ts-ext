@@ -30,4 +30,4 @@
 
 Credo Redux Store is a wrapper around [Credo](https://github.com/openwallet-foundation/credo-ts.git), built with [Redux Toolkit](https://redux-toolkit.js.org/). It can be used to build mobile applications in React Native.
 
-For documentation on installation and usage of the Redux Store package, refer to the [Docs](https://aries.js.org/guides/0.4/extensions/redux-store).
+For documentation on installation and usage of the Redux Store package, refer to the [Docs](https://credo.js.org/guides/extensions/redux-store).
