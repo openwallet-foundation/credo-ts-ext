@@ -1,5 +1,12 @@
 # Changelog
 
+### [0.5.1](https://www.github.com/openwallet-foundation/credo-ts-ext/compare/redux-store-v0.5.0...redux-store-v0.5.1) (2024-03-14)
+
+
+### Bug Fixes
+
+* link in readme ([#251](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/251)) ([1e9da29](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/1e9da29a1e77b53945c7b9b1ea669a91c16dc56c))
+
 ## [0.5.0](https://www.github.com/openwallet-foundation/credo-ts-ext/compare/redux-store-v0.4.0...redux-store-v0.5.0) (2024-03-14)
 
 
