@@ -2,7 +2,7 @@
   "name": "@credo-ts/transport-ble",
   "main": "build/index",
   "types": "build/index",
-  "version": "0.2.1",
+  "version": "0.3.0",
   "files": [
     "build"
   ],
