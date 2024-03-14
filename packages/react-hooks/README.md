@@ -21,4 +21,4 @@
   /></a>
 </p>
 
-For documentation on installation and usage of the React Hooks package, refer to the [Docs](https://aries.js.org/guides/0.4/extensions/react-hooks).
+For documentation on installation and usage of the React Hooks package, refer to the [Docs](https://credo.js.org/guides/extensions/react-hooks).
