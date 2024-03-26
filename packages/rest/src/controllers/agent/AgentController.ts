@@ -1,8 +1,10 @@
 import type { AgentInfo } from './AgentControllerTypes'
 
 import { Agent } from '@credo-ts/core'
-import { Controller, Get, Route, Tags } from 'tsoa'
+import { Controller, Example, Get, Route, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
+
+import { agentInfoExample } from './AgentControllerExamples'
 
 @Tags('Agent')
 @Route('/agent')
@@ -16,10 +18,13 @@ export class AgentController extends Controller {
    * Retrieve basic agent information
    */
   @Get('/')
+  @Example(agentInfoExample)
   public async getAgentInfo(): Promise<AgentInfo> {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { agentDependencies, walletConfig, logger, ...config } = this.agent.config.toJSON()
+
     return {
-      label: this.agent.config.label,
-      endpoints: this.agent.config.endpoints,
+      config,
       isInitialized: this.agent.isInitialized,
     }
   }

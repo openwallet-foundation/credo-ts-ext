@@ -3,28 +3,30 @@ import type { Agent, BasicMessageStateChangedEvent } from '@credo-ts/core'
 
 import { BasicMessageEventTypes } from '@credo-ts/core'
 
+import { basicMessageRecordToApiModel } from '../controllers/didcomm/basic-messages/BasicMessagesControllerTypes'
+
 import { sendWebSocketEvent } from './WebSocketEvents'
 import { sendWebhookEvent } from './WebhookEvent'
 
 export const basicMessageEvents = async (agent: Agent, config: ServerConfig) => {
   agent.events.on(BasicMessageEventTypes.BasicMessageStateChanged, async (event: BasicMessageStateChangedEvent) => {
-    const record = event.payload.basicMessageRecord
-    const body = record.toJSON()
+    const { basicMessageRecord, ...payload } = event.payload
+    const webhookPayload = {
+      ...event,
+      payload: {
+        ...payload,
+        basicMessageRecord: basicMessageRecordToApiModel(basicMessageRecord),
+      },
+    }
 
     // Only send webhook if webhook url is configured
     if (config.webhookUrl) {
-      await sendWebhookEvent(config.webhookUrl + '/basic-messages', body, agent.config.logger)
+      await sendWebhookEvent(config.webhookUrl, webhookPayload, agent.config.logger)
     }
 
     if (config.socketServer) {
       // Always emit websocket event to clients (could be 0)
-      sendWebSocketEvent(config.socketServer, {
-        ...event,
-        payload: {
-          message: event.payload.message.toJSON(),
-          basicMessageRecord: body,
-        },
-      })
+      await sendWebSocketEvent(config.socketServer, webhookPayload)
     }
   })
 }

@@ -1,26 +1,39 @@
-import type { ApiOutOfBandRecord, ConnectionInvitationJson, OutOfBandInvitationJson } from './OutOfBandControllerTypes'
-import type { AgentMessageType } from '../types'
-import type { ConnectionRecordProps } from '@credo-ts/core'
+import type { DidCommOutOfBandRecord } from './OutOfBandControllerTypes'
+import type { PlaintextMessage } from '@credo-ts/core/build/types'
 
-import { AgentMessage, JsonTransformer, OutOfBandInvitation, Agent, RecordNotFoundError } from '@credo-ts/core'
-import { Body, Controller, Delete, Example, Get, Path, Post, Query, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import {
+  AgentMessage,
+  JsonTransformer,
+  OutOfBandInvitation,
+  Agent,
+  RecordNotFoundError,
+  ConnectionInvitationMessage,
+} from '@credo-ts/core'
+import { parseMessageType, supportsIncomingMessageType } from '@credo-ts/core/build/utils/messageType'
+import { Body, Controller, Delete, Example, Get, Path, Post, Query, Route, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { toApiModel } from '../../utils/serialize'
+import { apiErrorResponse } from '../../../utils/response'
+import { RecordId } from '../../types'
+import { connectionsRecordExample } from '../connections/ConnectionsControllerExamples'
+import { connectionRecordToApiModel, type DidCommConnectionsRecord } from '../connections/ConnectionsControllerTypes'
+
 import {
-  ConnectionRecordExample,
-  RecordId,
+  legacyInvitationExample,
   outOfBandInvitationExample,
   outOfBandRecordExample,
-  type OutOfBandInvitationProps,
-  type OutOfBandRecordWithInvitationProps,
-} from '../examples'
-import { AcceptInvitationConfig, ReceiveInvitationByUrlProps, ReceiveInvitationProps } from '../types'
-
-import { CreateOutOfBandInvitationBody, CreateLegacyConnectionInvitationBody } from './OutOfBandControllerTypes'
+} from './OutOfBandControllerExamples'
+import {
+  outOfBandRecordToApiModel,
+  DidCommOutOfBandCreateInvitationOptions,
+  DidCommOutOfBandCreateLegacyConnectionInvitationOptions,
+  DidCommOutOfBandCreateLegacyConnectionlessInvitationOptions,
+  DidCommOutOfBandReceiveInvitationOptions,
+  DidCommOutOfBandAcceptInvitationOptions,
+} from './OutOfBandControllerTypes'
 
 @Tags('DIDComm Out Of Band')
-@Route('/didcomm/oob')
+@Route('/didcomm/out-of-band')
 @injectable()
 export class OutOfBandController extends Controller {
   public constructor(private agent: Agent) {
@@ -28,45 +41,38 @@ export class OutOfBandController extends Controller {
   }
 
   /**
-   * Retrieve all out of band records
-   * @param invitationId invitation identifier
-   * @returns OutOfBandRecord[]
+   * Retrieve all out of band records by query
    */
   @Example([outOfBandRecordExample])
   @Get()
-  public async getAllOutOfBandRecords(@Query('invitationId') invitationId?: RecordId): Promise<ApiOutOfBandRecord[]> {
-    let outOfBandRecords = await this.agent.oob.getAll()
+  public async findOutOfBandRecordsByQuery(
+    @Query('invitationId') invitationId?: string,
+  ): Promise<DidCommOutOfBandRecord[]> {
+    const outOfBandRecords = await this.agent.oob.findAllByQuery({
+      invitationId,
+    })
 
-    if (invitationId) outOfBandRecords = outOfBandRecords.filter((o) => o.outOfBandInvitation.id === invitationId)
-
-    return outOfBandRecords.map((r) => toApiModel<ApiOutOfBandRecord>(r))
+    return outOfBandRecords.map(outOfBandRecordToApiModel)
   }
 
   /**
    * Retrieve an out of band record by id
-   * @param recordId record identifier
-   * @returns OutOfBandRecord
    */
   @Example(outOfBandRecordExample)
   @Get('/:outOfBandId')
-  public async getOutOfBandRecordById(
-    @Path('outOfBandId') outOfBandId: RecordId,
-    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-  ): Promise<ApiOutOfBandRecord> {
+  public async getOutOfBandRecordById(@Path('outOfBandId') outOfBandId: RecordId): Promise<DidCommOutOfBandRecord> {
     const outOfBandRecord = await this.agent.oob.findById(outOfBandId)
 
     if (!outOfBandRecord) {
-      return notFoundError(404, { reason: `Out of band record with id "${outOfBandId}" not found.` })
+      this.setStatus(404)
+      return apiErrorResponse(`Out of band record with id "${outOfBandId}" not found.`)
     }
-
-    return toApiModel<ApiOutOfBandRecord>(outOfBandRecord)
+    return outOfBandRecordToApiModel(outOfBandRecord)
   }
 
   /**
    * Creates an outbound out-of-band record containing out-of-band invitation message defined in
    * Aries RFC 0434: Out-of-Band Protocol 1.1.
-   * @param config configuration of how out-of-band invitation should be created
-   * @returns Out of band record
    */
   @Example({
     invitationUrl: 'https://example.com/?',
@@ -74,10 +80,7 @@ export class OutOfBandController extends Controller {
     outOfBandRecord: outOfBandRecordExample,
   })
   @Post('/create-invitation')
-  public async createInvitation(
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() body?: CreateOutOfBandInvitationBody,
-  ) {
+  public async createInvitation(@Body() body?: DidCommOutOfBandCreateInvitationOptions) {
     try {
       const outOfBandRecord = await this.agent.oob.createInvitation({
         ...body,
@@ -89,11 +92,12 @@ export class OutOfBandController extends Controller {
         }),
         invitation: outOfBandRecord.outOfBandInvitation.toJSON({
           useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
-        }) as OutOfBandInvitationJson,
-        outOfBandRecord: toApiModel<ApiOutOfBandRecord>(outOfBandRecord),
+        }),
+        outOfBandRecord: outOfBandRecordToApiModel(outOfBandRecord),
       }
     } catch (error) {
-      return internalServerError(500, { message: `something went wrong: ${error}` })
+      this.setStatus(500)
+      return apiErrorResponse(error)
     }
   }
 
@@ -105,15 +109,12 @@ export class OutOfBandController extends Controller {
    * @param config configuration of how a invitation should be created
    * @returns out-of-band record and invitation
    */
-  @Example<{ invitation: OutOfBandInvitationProps; outOfBandRecord: OutOfBandRecordWithInvitationProps }>({
-    invitation: outOfBandInvitationExample,
+  @Example<{ invitation: PlaintextMessage; outOfBandRecord: DidCommOutOfBandRecord }>({
+    invitation: legacyInvitationExample,
     outOfBandRecord: outOfBandRecordExample,
   })
   @Post('/create-legacy-invitation')
-  public async createLegacyInvitation(
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
-    @Body() body?: CreateLegacyConnectionInvitationBody,
-  ) {
+  public async createLegacyInvitation(@Body() body?: DidCommOutOfBandCreateLegacyConnectionInvitationOptions) {
     try {
       const { outOfBandRecord, invitation } = await this.agent.oob.createLegacyInvitation(body)
 
@@ -124,37 +125,32 @@ export class OutOfBandController extends Controller {
         }),
         invitation: invitation.toJSON({
           useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
-        }) as ConnectionInvitationJson,
-        outOfBandRecord: toApiModel<ApiOutOfBandRecord>(outOfBandRecord),
+        }),
+        outOfBandRecord: outOfBandRecordToApiModel(outOfBandRecord),
       }
     } catch (error) {
-      return internalServerError(500, { message: `something went wrong: ${error}` })
+      this.setStatus(500)
+      return apiErrorResponse(error)
     }
   }
 
   /**
    * Creates a new connectionless legacy invitation.
    *
-   * @param config configuration of how a connection invitation should be created
-   * @returns a message and a invitationUrl
+   * Only works with messages created from:
+   * - /didcomm/credentials/create-offer
+   * - /didcomm/poofs/create-request
    */
-  @Example<{ message: AgentMessageType; invitationUrl: string }>({
+  @Example<{ message: PlaintextMessage; invitationUrl: string }>({
     message: {
       '@id': 'eac4ff4e-b4fb-4c1d-aef3-b29c89d1cc00',
-      '@type': 'https://didcomm.org/connections/1.0/invitation',
+      '@type': 'https://didcomm.org/issue-credential/1.0/offer-credential',
     },
     invitationUrl: 'http://example.com/invitation_url',
   })
   @Post('/create-legacy-connectionless-invitation')
   public async createLegacyConnectionlessInvitation(
-    @Body()
-    config: {
-      recordId: string
-      message: AgentMessageType
-      domain: string
-    },
-    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() config: DidCommOutOfBandCreateLegacyConnectionlessInvitationOptions,
   ) {
     try {
       const agentMessage = JsonTransformer.fromJSON(config.message, AgentMessage)
@@ -164,72 +160,44 @@ export class OutOfBandController extends Controller {
         message: agentMessage,
       })
     } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        return notFoundError(404, { reason: `connection with connection id "${config.recordId}" not found.` })
-      }
-      return internalServerError(500, { message: `something went wrong: ${error}` })
+      this.setStatus(500)
+      return apiErrorResponse(error)
     }
   }
 
   /**
-   * Creates inbound out-of-band record and assigns out-of-band invitation message to it if the
-   * message is valid.
-   *
-   * @param invitation either OutOfBandInvitation or ConnectionInvitationMessage
-   * @param config config for handling of invitation
-   * @returns out-of-band record and connection record if one has been created.
+   * Receive an out of band invitation. Supports urls as well as JSON messages. Also supports legacy
+   * connection invitations
    */
-  @Example<{ outOfBandRecord: OutOfBandRecordWithInvitationProps; connectionRecord: ConnectionRecordProps }>({
+  @Example<{ outOfBandRecord: DidCommOutOfBandRecord; connectionRecord?: DidCommConnectionsRecord }>({
     outOfBandRecord: outOfBandRecordExample,
-    connectionRecord: ConnectionRecordExample,
+    connectionRecord: connectionsRecordExample,
   })
   @Post('/receive-invitation')
-  public async receiveInvitation(
-    @Body() invitationRequest: ReceiveInvitationProps,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
-  ) {
-    const { invitation, ...config } = invitationRequest
+  public async receiveInvitation(@Body() body: DidCommOutOfBandReceiveInvitationOptions) {
+    const { invitation, ...config } = body
 
     try {
-      const invite = new OutOfBandInvitation({ ...invitation, handshakeProtocols: invitation.handshake_protocols })
-      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(invite, config)
+      let invitationMessage: OutOfBandInvitation | ConnectionInvitationMessage
+      if (typeof invitation === 'string') {
+        invitationMessage = await this.agent.oob.parseInvitation(invitation)
+      } else if (supportsIncomingMessageType(parseMessageType(invitation['@type']), ConnectionInvitationMessage.type)) {
+        invitationMessage = JsonTransformer.fromJSON(invitation, ConnectionInvitationMessage)
+      } else if (supportsIncomingMessageType(parseMessageType(invitation['@type']), OutOfBandInvitation.type)) {
+        invitationMessage = JsonTransformer.fromJSON(invitation, OutOfBandInvitation)
+      } else {
+        return apiErrorResponse(`Invalid invitation message type ${invitation['@type']}`)
+      }
+
+      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(invitationMessage, config)
 
       return {
-        outOfBandRecord: outOfBandRecord.toJSON(),
-        connectionRecord: connectionRecord?.toJSON(),
+        outOfBandRecord: outOfBandRecordToApiModel(outOfBandRecord),
+        connectionRecord: connectionRecord ? connectionRecordToApiModel(connectionRecord) : undefined,
       }
     } catch (error) {
-      return internalServerError(500, { message: `something went wrong: ${error}` })
-    }
-  }
-
-  /**
-   * Creates inbound out-of-band record and assigns out-of-band invitation message to it if the
-   * message is valid.
-   *
-   * @param invitationUrl invitation url
-   * @param config config for handling of invitation
-   * @returns out-of-band record and connection record if one has been created.
-   */
-  @Example<{ outOfBandRecord: OutOfBandRecordWithInvitationProps; connectionRecord: ConnectionRecordProps }>({
-    outOfBandRecord: outOfBandRecordExample,
-    connectionRecord: ConnectionRecordExample,
-  })
-  @Post('/receive-invitation-url')
-  public async receiveInvitationFromUrl(
-    @Body() invitationRequest: ReceiveInvitationByUrlProps,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
-  ) {
-    const { invitationUrl, ...config } = invitationRequest
-
-    try {
-      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitationFromUrl(invitationUrl, config)
-      return {
-        outOfBandRecord: outOfBandRecord.toJSON(),
-        connectionRecord: connectionRecord?.toJSON(),
-      }
-    } catch (error) {
-      return internalServerError(500, { message: `something went wrong: ${error}` })
+      this.setStatus(500)
+      return apiErrorResponse(error)
     }
   }
 
@@ -237,16 +205,14 @@ export class OutOfBandController extends Controller {
    * Accept a connection invitation as invitee (by sending a connection request message) for the connection with the specified connection id.
    * This is not needed when auto accepting of connections is enabled.
    */
-  @Example<{ outOfBandRecord: OutOfBandRecordWithInvitationProps; connectionRecord: ConnectionRecordProps }>({
+  @Example<{ outOfBandRecord: DidCommOutOfBandRecord; connectionRecord?: DidCommConnectionsRecord }>({
     outOfBandRecord: outOfBandRecordExample,
-    connectionRecord: ConnectionRecordExample,
+    connectionRecord: connectionsRecordExample,
   })
   @Post('/:outOfBandId/accept-invitation')
   public async acceptInvitation(
     @Path('outOfBandId') outOfBandId: RecordId,
-    @Body() acceptInvitationConfig: AcceptInvitationConfig,
-    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
+    @Body() acceptInvitationConfig: DidCommOutOfBandAcceptInvitationOptions,
   ) {
     try {
       const { outOfBandRecord, connectionRecord } = await this.agent.oob.acceptInvitation(
@@ -255,38 +221,31 @@ export class OutOfBandController extends Controller {
       )
 
       return {
-        outOfBandRecord: outOfBandRecord.toJSON(),
-        connectionRecord: connectionRecord?.toJSON(),
+        outOfBandRecord: outOfBandRecordToApiModel(outOfBandRecord),
+        connectionRecord: connectionRecord ? connectionRecordToApiModel(connectionRecord) : undefined,
       }
     } catch (error) {
-      if (error instanceof RecordNotFoundError) {
-        return notFoundError(404, {
-          reason: `mediator with mediatorId ${acceptInvitationConfig?.mediatorId} not found`,
-        })
-      }
-      return internalServerError(500, { message: `something went wrong: ${error}` })
+      this.setStatus(500)
+      return apiErrorResponse(error)
     }
   }
 
   /**
    * Deletes an out of band record from the repository.
-   *
-   * @param outOfBandId Record identifier
    */
   @Delete('/:outOfBandId')
-  public async deleteOutOfBandRecord(
-    @Path('outOfBandId') outOfBandId: RecordId,
-    @Res() notFoundError: TsoaResponse<404, { reason: string }>,
-    @Res() internalServerError: TsoaResponse<500, { message: string }>,
-  ) {
+  public async deleteOutOfBandRecord(@Path('outOfBandId') outOfBandId: RecordId) {
     try {
       this.setStatus(204)
       await this.agent.oob.deleteById(outOfBandId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
-        return notFoundError(404, { reason: `Out of band record with id "${outOfBandId}" not found.` })
+        this.setStatus(404)
+        return apiErrorResponse(`Out of band record with id ${outOfBandId} not found.`)
       }
-      return internalServerError(500, { message: `something went wrong: ${error}` })
+
+      this.setStatus(500)
+      return apiErrorResponse(error)
     }
   }
 }

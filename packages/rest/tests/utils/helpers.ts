@@ -1,4 +1,3 @@
-import type { AnonCredsSchema, AnonCredsCredentialDefinition } from '@credo-ts/anoncreds'
 import type { ConnectionRecordProps, DidCreateResult } from '@credo-ts/core'
 
 import {
@@ -17,15 +16,40 @@ import {
 import { JsonEncoder } from '@credo-ts/core/build/utils/JsonEncoder'
 import { randomUUID } from 'crypto'
 
+import { InMemoryAnonCredsRegistry } from '../../src/controllers/anoncreds/__tests__/InMemoryAnonCredsRegistry'
+import {
+  testAnonCredsCredentialDefinition,
+  testAnonCredsSchema,
+} from '../../src/controllers/anoncreds/__tests__/fixtures'
 import { setupAgent } from '../../src/utils/agent'
+import { InternalOutboundTransport } from '../InternalOutboundTransport'
 
-export async function getTestAgent(name: string, port: number) {
-  return await setupAgent({
-    port: port,
-    endpoints: [`http://localhost:${port}`],
+export async function getTestAgent(name: string, port?: number) {
+  const agent = await setupAgent({
+    endpoints: [port ? `http://localhost:${port}` : 'internal'],
     // add some randomness to ensure test isolation
     name: `${name} (${randomUUID()})`,
+    httpInboundTransportPort: port,
+    extraAnonCredsRegistries: [
+      new InMemoryAnonCredsRegistry({
+        schemas: {
+          [testAnonCredsSchema.schemaId]: testAnonCredsSchema.schema,
+        },
+        credentialDefinitions: {
+          [testAnonCredsCredentialDefinition.credentialDefinitionId]:
+            testAnonCredsCredentialDefinition.credentialDefinition,
+        },
+      }),
+    ],
   })
+
+  if (!port) {
+    const internalOutboundTransport = new InternalOutboundTransport()
+    await internalOutboundTransport.start(agent)
+    agent.registerOutboundTransport(internalOutboundTransport)
+  }
+
+  return agent
 }
 
 export function objectToJson<T>(result: T) {
@@ -284,37 +308,6 @@ export function getTestOffer() {
   return {
     message: JsonTransformer.fromJSON(json.message, AgentMessage),
     credentialRecord: JsonTransformer.fromJSON(json.credentialRecord, CredentialExchangeRecord),
-  }
-}
-
-export function getTestSchema(): AnonCredsSchema {
-  return {
-    issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
-    name: 'test',
-    version: '1.0',
-    attrNames: ['prop1', 'prop2'],
-  }
-}
-
-export function getTestCredDef(): AnonCredsCredentialDefinition {
-  return {
-    issuerId: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
-    schemaId: '9999',
-    type: 'CL',
-    tag: 'latest',
-    value: {
-      primary: {
-        n: 'x',
-        s: 'x',
-        r: {
-          master_secret: 'x',
-          name: 'x',
-          title: 'x',
-        },
-        rctxt: 'x',
-        z: 'x',
-      },
-    },
   }
 }
 

@@ -10,8 +10,16 @@ import {
   ProofExchangeRecord,
   CredentialState,
   CredentialEventTypes,
+  CredentialRole,
+  ProofRole,
+  ConnectionEventTypes,
+  BasicMessageEventTypes,
+  BasicMessageRole,
 } from '@credo-ts/core'
 
+import { connectionRecordToApiModel } from '../src/controllers/didcomm/connections/ConnectionsControllerTypes'
+import { credentialExchangeRecordToApiModel } from '../src/controllers/didcomm/credentials/CredentialsControllerTypes'
+import { proofExchangeRecordToApiModel } from '../src/controllers/didcomm/proofs/ProofsControllerTypes'
 import { setupServer } from '../src/server'
 import { waitForHook, webhookListener } from '../src/utils/webhook'
 
@@ -35,11 +43,21 @@ describe('WebhookTests', () => {
     const { connectionRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
     const connection = await bobAgent.connections.returnWhenIsConnected(connectionRecord!.id)
 
-    await bobAgent.basicMessages.sendMessage(connection.id, 'Hello')
+    const senderBasicMessage = await bobAgent.basicMessages.sendMessage(connection.id, 'Hello')
 
-    const webhook = await waitForHook(webhooks, (webhook) => webhook.topic !== 'connections')
+    const webhook = await waitForHook(
+      webhooks,
+      (webhook) => webhook.body.type === BasicMessageEventTypes.BasicMessageStateChanged,
+    )
 
-    expect(webhook).toBeDefined()
+    expect(webhook).toMatchObject({
+      payload: {
+        basicMessageRecord: {
+          threadId: senderBasicMessage.threadId,
+          role: BasicMessageRole.Sender,
+        },
+      },
+    })
   })
 
   test('should return a webhook event when connection state changed', async () => {
@@ -50,10 +68,14 @@ describe('WebhookTests', () => {
     const webhook = await waitForHook(
       webhooks,
       (webhook) =>
-        webhook.topic === 'connections' && webhook.body.id === connection.id && webhook.body.state === connection.state,
+        webhook.body.type === ConnectionEventTypes.ConnectionStateChanged &&
+        webhook.body.payload.connectionRecord.id === connection.id &&
+        webhook.body.payload.connectionRecord.state === connection.state,
     )
 
-    expect(JSON.parse(JSON.stringify(connection.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)
+    expect(webhook?.body).toMatchObject({
+      payload: { connectionRecord: JSON.parse(JSON.stringify(connectionRecordToApiModel(connection))) },
+    })
   })
 
   test('should return a webhook event when credential state changed', async () => {
@@ -62,6 +84,7 @@ describe('WebhookTests', () => {
       state: CredentialState.OfferSent,
       threadId: 'random',
       protocolVersion: 'v1',
+      role: CredentialRole.Holder,
     })
 
     bobAgent.events.emit<CredentialStateChangedEvent>(bobAgent.context, {
@@ -75,14 +98,14 @@ describe('WebhookTests', () => {
     const webhook = await waitForHook(
       webhooks,
       (webhook) =>
-        webhook.topic === 'credentials' &&
-        webhook.body.id === credentialRecord.id &&
-        webhook.body.state === credentialRecord.state,
+        webhook.body.type === CredentialEventTypes.CredentialStateChanged &&
+        webhook.body.payload.credentialExchange.id === credentialRecord.id &&
+        webhook.body.payload.credentialExchange.state === credentialRecord.state,
     )
 
-    expect(JSON.parse(JSON.stringify(credentialRecord.toJSON()))).toMatchObject(
-      webhook?.body as Record<string, unknown>,
-    )
+    expect(webhook?.body).toMatchObject({
+      payload: { credentialExchange: JSON.parse(JSON.stringify(credentialExchangeRecordToApiModel(credentialRecord))) },
+    })
   })
 
   test('should return a webhook event when proof state changed', async () => {
@@ -91,6 +114,7 @@ describe('WebhookTests', () => {
       protocolVersion: 'v2',
       state: ProofState.ProposalSent,
       threadId: 'random',
+      role: ProofRole.Prover,
     })
 
     bobAgent.events.emit<ProofStateChangedEvent>(bobAgent.context, {
@@ -104,10 +128,14 @@ describe('WebhookTests', () => {
     const webhook = await waitForHook(
       webhooks,
       (webhook) =>
-        webhook.topic === 'proofs' && webhook.body.id === proofRecord.id && webhook.body.state === proofRecord.state,
+        webhook.body.type === ProofEventTypes.ProofStateChanged &&
+        webhook.body.payload.proofExchange.id === proofRecord.id &&
+        webhook.body.payload.proofExchange.state === proofRecord.state,
     )
 
-    expect(JSON.parse(JSON.stringify(proofRecord.toJSON()))).toMatchObject(webhook?.body as Record<string, unknown>)
+    expect(webhook?.body).toMatchObject({
+      payload: { proofExchange: JSON.parse(JSON.stringify(proofExchangeRecordToApiModel(proofRecord))) },
+    })
   })
 
   afterAll(async () => {

@@ -1,4 +1,5 @@
 import 'reflect-metadata'
+import type { ApiError } from './types'
 import type { ServerConfig } from './utils/ServerConfig'
 import type { RestAgent } from './utils/agent'
 import type { Response as ExResponse, Request as ExRequest, NextFunction } from 'express'
@@ -58,7 +59,7 @@ export const setupServer = async (agent: RestAgent, config: ServerConfig) => {
       return res.status(422).json({
         message: 'Validation Failed',
         details: err?.fields,
-      })
+      } satisfies ApiError)
     }
 
     if (err instanceof Error) {
@@ -67,13 +68,13 @@ export const setupServer = async (agent: RestAgent, config: ServerConfig) => {
         return res.status(400).json({
           message: `Bad Request`,
           details: err.message,
-        })
+        } satisfies ApiError)
       }
 
       agent.config.logger.error('Internal Server Error.', err)
       return res.status(500).json({
         message: 'Internal Server Error. Check server logging.',
-      })
+      } satisfies ApiError)
     }
     next()
   })

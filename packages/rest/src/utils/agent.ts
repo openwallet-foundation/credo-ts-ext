@@ -1,3 +1,4 @@
+import type { AnonCredsRegistry } from '@credo-ts/anoncreds'
 import type { ModulesMap } from '@credo-ts/core'
 import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 
@@ -23,8 +24,22 @@ import {
   LogLevel,
   MediatorModule,
   ProofsModule,
+  DidsModule,
+  KeyDidRegistrar,
+  JwkDidRegistrar,
+  PeerDidRegistrar,
+  WebDidResolver,
+  KeyDidResolver,
+  JwkDidResolver,
+  PeerDidResolver,
 } from '@credo-ts/core'
-import { IndyVdrAnonCredsRegistry, IndyVdrModule } from '@credo-ts/indy-vdr'
+import {
+  IndyVdrAnonCredsRegistry,
+  IndyVdrModule,
+  IndyVdrIndyDidResolver,
+  IndyVdrSovDidResolver,
+  IndyVdrIndyDidRegistrar,
+} from '@credo-ts/indy-vdr'
 import { agentDependencies, HttpInboundTransport } from '@credo-ts/node'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
@@ -47,7 +62,12 @@ export type RestAgent<
     proofs: ProofsModule<
       [V1ProofProtocol, V2ProofProtocol<[LegacyIndyProofFormatService, AnonCredsProofFormatService]>]
     >
-    credentials: CredentialsModule<[V1CredentialProtocol, V2CredentialProtocol]>
+    credentials: CredentialsModule<
+      [
+        V1CredentialProtocol,
+        V2CredentialProtocol<[LegacyIndyCredentialFormatService, AnonCredsCredentialFormatService]>,
+      ]
+    >
     anoncreds: AnonCredsModule
   },
 > = Agent<modules>
@@ -62,6 +82,7 @@ export const getAgentModules = (options: {
   autoAcceptCredentials: AutoAcceptCredential
   autoAcceptMediationRequests: boolean
   indyLedgers?: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
+  extraAnonCredsRegistries?: AnonCredsRegistry[]
 }): RestAgentModules => {
   const legacyIndyCredentialFormatService = new LegacyIndyCredentialFormatService()
   const legacyIndyProofFormatService = new LegacyIndyProofFormatService()
@@ -93,7 +114,7 @@ export const getAgentModules = (options: {
       ],
     }),
     anoncreds: new AnonCredsModule({
-      registries: [new IndyVdrAnonCredsRegistry()],
+      registries: [new IndyVdrAnonCredsRegistry(), ...(options.extraAnonCredsRegistries ?? [])],
       anoncreds,
     }),
     askar: new AskarModule({
@@ -101,6 +122,17 @@ export const getAgentModules = (options: {
     }),
     mediator: new MediatorModule({
       autoAcceptMediationRequests: options.autoAcceptMediationRequests,
+    }),
+    dids: new DidsModule({
+      registrars: [new KeyDidRegistrar(), new JwkDidRegistrar(), new PeerDidRegistrar(), new IndyVdrIndyDidRegistrar()],
+      resolvers: [
+        new WebDidResolver(),
+        new KeyDidResolver(),
+        new JwkDidResolver(),
+        new PeerDidResolver(),
+        new IndyVdrIndyDidResolver(),
+        new IndyVdrSovDidResolver(),
+      ],
     }),
   }
 
@@ -117,7 +149,18 @@ export const getAgentModules = (options: {
   }
 }
 
-export const setupAgent = async ({ name, endpoints, port }: { name: string; endpoints: string[]; port: number }) => {
+export const setupAgent = async ({
+  name,
+  endpoints,
+  extraAnonCredsRegistries,
+  httpInboundTransportPort,
+}: {
+  name: string
+  endpoints: string[]
+  extraAnonCredsRegistries?: AnonCredsRegistry[]
+  httpInboundTransportPort?: number
+}) => {
+  // FIXME: logger should not be enabled by default
   const logger = new TsLogger(LogLevel.debug)
 
   const modules = getAgentModules({
@@ -133,6 +176,7 @@ export const setupAgent = async ({ name, endpoints, port }: { name: string; endp
         connectOnStartup: true,
       },
     ],
+    extraAnonCredsRegistries,
   })
 
   const agent = new Agent({
@@ -148,12 +192,14 @@ export const setupAgent = async ({ name, endpoints, port }: { name: string; endp
     modules,
   })
 
-  const httpInbound = new HttpInboundTransport({
-    port: port,
-  })
-
-  agent.registerInboundTransport(httpInbound)
   agent.registerOutboundTransport(new HttpOutboundTransport())
+  if (httpInboundTransportPort) {
+    const httpInbound = new HttpInboundTransport({
+      port: httpInboundTransportPort,
+    })
+
+    agent.registerInboundTransport(httpInbound)
+  }
 
   await agent.initialize()
 

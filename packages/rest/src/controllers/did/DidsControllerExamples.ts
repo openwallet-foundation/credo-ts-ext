@@ -1,4 +1,10 @@
-export const didRecordExample = {
+import type {
+  DidCreateFinishedResponse,
+  DidResolveFailedResponse,
+  DidResolveSuccessResponse,
+} from './DidsControllerTypes'
+
+export const didResolveSuccessResponseExample: DidResolveSuccessResponse = {
   didDocument: {
     '@context': [
       'https://w3id.org/did/v1',
@@ -44,7 +50,16 @@ export const didRecordExample = {
   },
 }
 
-export const registerDidExample = {
+export const didResolveFailedResponseExample: DidResolveFailedResponse = {
+  didDocument: null,
+  didDocumentMetadata: {},
+  didResolutionMetadata: {
+    error: 'notFound',
+    message: 'DID not found',
+  },
+}
+
+export const didCreateFinishedResponseExample: DidCreateFinishedResponse = {
   didState: {
     did: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
     state: 'finished',
@@ -88,5 +103,4 @@ export const registerDidExample = {
 
   didDocumentMetadata: {},
   didRegistrationMetadata: {},
-  secret: {},
 }

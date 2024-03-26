@@ -1,48 +1,47 @@
-import type { RecordId } from '../examples'
-import type { CreateOutOfBandInvitationConfig, OutOfBandRole, OutOfBandState } from '@credo-ts/core'
+import type { Did } from '../../did/DidsControllerTypes'
+import type { CredoBaseRecord, RecordId } from '../../types'
+import type {
+  CreateLegacyInvitationConfig,
+  CreateOutOfBandInvitationConfig,
+  OutOfBandRecord as CredoOutOfBandRecord,
+  OutOfBandRole,
+  OutOfBandState,
+  ReceiveOutOfBandInvitationConfig,
+} from '@credo-ts/core'
+import type { PlaintextMessage } from '@credo-ts/core/build/types'
 
-// type OutOfBandRecordProperties = Omit<OutOfBandRecordProps, 'outOfBandInvitation'>
-// export type OutOfBandInvitationProps = Omit<
-//   OutOfBandInvitationOptions,
-//   'handshakeProtocols' | 'services' | 'appendedAttachments'
-// >
-
-// export interface OutOfBandRecordWithInvitationProps extends OutOfBandRecordProperties {
-//   outOfBandInvitation: OutOfBandInvitationProps
-// }
-
-export interface CreateOutOfBandInvitationBody
+export interface DidCommOutOfBandCreateInvitationOptions
   extends Omit<CreateOutOfBandInvitationConfig, 'routing' | 'appendedAttachments' | 'messages'> {
-  messages?: Array<AgentMessageType>
+  messages?: Array<PlaintextMessage>
 }
 
-export type CreateLegacyConnectionInvitationBody = Omit<CreateOutOfBandInvitationConfig, 'routing'>
+export interface DidCommOutOfBandCreateLegacyConnectionInvitationOptions
+  extends Omit<CreateLegacyInvitationConfig, 'routing'> {}
 
-// TODO: move to other file
-interface ApiBaseRecord {
-  id: RecordId
-
-  /**
-   * Metadata associated with the record
-   */
-  metadata: Record<string, Record<string, unknown>>
-
-  /**
-   * Date at which the record was created
-   */
-  createdAt: string
-
-  /**
-   * Date at which the record was last updated
-   */
-  updatedAt?: string
+export interface DidCommOutOfBandCreateLegacyConnectionlessInvitationOptions {
+  message: PlaintextMessage
+  domain: string
 }
 
-export interface ApiOutOfBandRecord extends ApiBaseRecord {
+export interface DidCommOutOfBandReceiveInvitationOptions extends Omit<ReceiveOutOfBandInvitationConfig, 'routing'> {
+  invitation: PlaintextMessage | string
+}
+
+export interface DidCommOutOfBandAcceptInvitationOptions {
+  autoAcceptConnection?: boolean
+  reuseConnection?: boolean
+  label?: string
+  alias?: string
+  imageUrl?: string
+  timeoutMs?: number
+  ourDid?: Did
+}
+
+export interface DidCommOutOfBandRecord extends CredoBaseRecord {
   /**
    * The out of band invitation
    */
-  outOfBandInvitation: OutOfBandInvitationJson
+  outOfBandInvitation: PlaintextMessage
 
   /**
    * Our role in the out of band exchange
@@ -91,43 +90,22 @@ export interface ApiOutOfBandRecord extends ApiBaseRecord {
   reuseConnectionId?: RecordId
 }
 
-export interface AgentMessageType {
-  /**
-   * @example 4b7f3cc0-b92a-4868-aaba-abfb04c637c5
-   */
-  '@id': string
+export function outOfBandRecordToApiModel(record: CredoOutOfBandRecord): DidCommOutOfBandRecord {
+  return {
+    // Base Record
+    id: record.id,
+    createdAt: record.createdAt,
+    updatedAt: record.updatedAt,
+    type: record.type,
 
-  '@type': string
-  [key: string]: unknown
-}
-
-export interface DidCommServiceJson {
-  id: string
-  serviceEndpoint: string
-  type: string
-  [key: string]: unknown
-}
-
-export interface OutOfBandInvitationJson extends AgentMessageType {
-  '@id': string
-  '@type': string
-  label: string
-  goal_code?: string
-  goal?: string
-  accept?: string[]
-  'requests~attach'?: AgentMessageType[]
-  handshake_protocols?: string[]
-  services: Array<string | DidCommServiceJson>
-  imageUrl?: string
-}
-
-export interface ConnectionInvitationJson extends AgentMessageType {
-  id: string
-  '@type': string
-  label: string
-  did?: string
-  recipientKeys?: string[]
-  serviceEndpoint?: string
-  routingKeys?: string[]
-  imageUrl?: string
+    // OOB
+    outOfBandInvitation: record.outOfBandInvitation.toJSON(),
+    reusable: record.reusable,
+    role: record.role,
+    state: record.state,
+    alias: record.alias,
+    autoAcceptConnection: record.autoAcceptConnection,
+    mediatorId: record.mediatorId,
+    reuseConnectionId: record.reuseConnectionId,
+  }
 }

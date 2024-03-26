@@ -3,28 +3,30 @@ import type { Agent, CredentialStateChangedEvent } from '@credo-ts/core'
 
 import { CredentialEventTypes } from '@credo-ts/core'
 
+import { credentialExchangeRecordToApiModel } from '../controllers/didcomm/credentials/CredentialsControllerTypes'
+
 import { sendWebSocketEvent } from './WebSocketEvents'
 import { sendWebhookEvent } from './WebhookEvent'
 
 export const credentialEvents = async (agent: Agent, config: ServerConfig) => {
   agent.events.on(CredentialEventTypes.CredentialStateChanged, async (event: CredentialStateChangedEvent) => {
-    const record = event.payload.credentialRecord
-    const body = record.toJSON()
+    const { credentialRecord, ...payload } = event.payload
+    const webhookPayload = {
+      ...event,
+      payload: {
+        ...payload,
+        credentialExchange: credentialExchangeRecordToApiModel(credentialRecord),
+      },
+    }
 
     // Only send webhook if webhook url is configured
     if (config.webhookUrl) {
-      await sendWebhookEvent(config.webhookUrl + '/credentials', body, agent.config.logger)
+      await sendWebhookEvent(config.webhookUrl, webhookPayload, agent.config.logger)
     }
 
     if (config.socketServer) {
       // Always emit websocket event to clients (could be 0)
-      sendWebSocketEvent(config.socketServer, {
-        ...event,
-        payload: {
-          ...event.payload,
-          credentialRecord: body,
-        },
-      })
+      await sendWebSocketEvent(config.socketServer, webhookPayload)
     }
   })
 }

@@ -1,36 +1,41 @@
-import type { RestAgent } from '../../utils/agent'
 import type {
-  AnonCredsRegisterCredentialDefinitionOptions,
-  AnonCredsSchema,
-  // GetCredentialDefinitionReturn,
-  // GetSchemaReturn,
-  // RegisterCredentialDefinitionReturn,
-  // RegisterSchemaReturn,
-} from '@credo-ts/anoncreds'
-import type { AnonCredsRegisterCredentialDefinitionApiOptions } from '@credo-ts/anoncreds/build/AnonCredsApi'
+  AnonCredsGetCredentialDefinitionFailedResponse,
+  AnonCredsGetCredentialDefinitionSuccessResponse,
+  AnonCredsGetSchemaFailedResponse,
+  AnonCredsGetSchemaSuccessResponse,
+  AnonCredsRegisterCredentialDefinitionActionResponse,
+  AnonCredsRegisterCredentialDefinitionFailedResponse,
+  AnonCredsRegisterCredentialDefinitionSuccessResponse,
+  AnonCredsRegisterCredentialDefinitionWaitResponse,
+  AnonCredsRegisterSchemaActionResponse,
+  AnonCredsRegisterSchemaFailedResponse,
+  AnonCredsRegisterSchemaSuccessResponse,
+  AnonCredsRegisterSchemaWaitResponse,
+} from './AnonCredsControllerTypes'
+import type { RestAgent } from '../../utils/agent'
 
 import { Agent } from '@credo-ts/core'
-import { Body, Controller, Example, Get, Path, Post, Res, Route, Tags, TsoaResponse } from 'tsoa'
+import { Body, Controller, Example, Response, Get, Path, Post, Route, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { alternativeResponse } from '../../utils/response'
+
 import {
-  anonCredsGetCredentialDefinitionExample,
-  anonCredsGetSchemaExample,
-  anonCredsRegisterCredentialDefinitionExample,
-  anonCredsRegisterSchemaExample,
-} from './examples'
-
-// FIXME: export in credo
-interface AnonCredsRegisterCredentialDefinition {
-  credentialDefinition: AnonCredsRegisterCredentialDefinitionOptions
-  options: AnonCredsRegisterCredentialDefinitionApiOptions & Record<string, unknown>
-}
-
-// FIXME: export in credo
-interface AnonCredsRegisterSchema {
-  schema: AnonCredsSchema
-  options: Record<string, unknown>
-}
+  anonCredsGetCredentialDefinitionFailedExample,
+  anonCredsGetCredentialDefinitionSuccessExample,
+  anonCredsGetSchemaFailedExample,
+  anonCredsGetSchemaSuccessExample,
+  anonCredsRegisterCredentialDefinitionFailedExample,
+  anonCredsRegisterCredentialDefinitionSuccessExample,
+  anonCredsRegisterSchemaFailedExample,
+  anonCredsRegisterSchemaSuccessExample,
+} from './AnonCredsControllerExamples'
+import {
+  AnonCredsRegisterSchemaBody,
+  AnonCredsSchemaId,
+  AnonCredsCredentialDefinitionId,
+  AnonCredsRegisterCredentialDefinitionBody,
+} from './AnonCredsControllerTypes'
 
 @Tags('AnonCreds')
 @Route('/anoncreds')
@@ -45,110 +50,183 @@ export class AnonCredsController extends Controller {
 
   /**
    * Retrieve schema by schema id
-   *
-   * @param schemaId
-   * @returns FIXME
    */
-  @Example<Record<string, unknown>>(anonCredsGetSchemaExample as unknown as Record<string, unknown>)
+  @Example<AnonCredsGetSchemaSuccessResponse>(anonCredsGetSchemaSuccessExample)
+  @Response<AnonCredsGetSchemaFailedResponse>(404, 'Schema not found', anonCredsGetSchemaFailedExample)
+  @Response<AnonCredsGetSchemaFailedResponse>(
+    400,
+    'Invalid schemaId or unknown AnonCreds method provided',
+    anonCredsGetSchemaFailedExample,
+  )
+  @Response<AnonCredsGetSchemaFailedResponse>(500, 'Unknown error retrieving schema', anonCredsGetSchemaFailedExample)
   @Get('/schemas/:schemaId')
   public async getSchemaById(
-    @Path('schemaId') schemaId: string,
-    @Res() notFoundError: TsoaResponse<404, Record<string, unknown>>,
-    @Res() badRequestError: TsoaResponse<400, Record<string, unknown>>,
-    @Res() internalServerError: TsoaResponse<500, Record<string, unknown>>,
-  ) {
+    @Path('schemaId') schemaId: AnonCredsSchemaId,
+  ): Promise<AnonCredsGetSchemaSuccessResponse> {
     const schemaResult = await this.agent.modules.anoncreds.getSchema(schemaId)
-
     const error = schemaResult.resolutionMetadata?.error
 
-    if (error === 'notFound') {
-      return notFoundError(404, schemaResult as unknown as Record<string, unknown>)
+    if (schemaResult.resolutionMetadata.error === 'notFound') {
+      this.setStatus(404)
+      return alternativeResponse<AnonCredsGetSchemaFailedResponse>(schemaResult as AnonCredsGetSchemaFailedResponse)
     }
 
     if (error === 'invalid' || error === 'unsupportedAnonCredsMethod') {
-      return badRequestError(400, schemaResult as unknown as Record<string, unknown>)
+      this.setStatus(400)
+      return alternativeResponse<AnonCredsGetSchemaFailedResponse>(schemaResult as AnonCredsGetSchemaFailedResponse)
     }
 
     if (error !== undefined || schemaResult.schema === undefined) {
-      return internalServerError(500, schemaResult as unknown as Record<string, unknown>)
+      this.setStatus(500)
+      return alternativeResponse<AnonCredsGetSchemaFailedResponse>(schemaResult as AnonCredsGetSchemaFailedResponse)
     }
 
-    return schemaResult
+    return schemaResult as AnonCredsGetSchemaSuccessResponse
   }
 
   /**
    * Creates a new AnonCreds schema and registers the schema in the AnonCreds registry
-   *
-   * @param body
-   * @returns RegisterSchemaReturn
    */
-  @Example<Record<string, unknown>>(anonCredsRegisterSchemaExample as unknown as Record<string, unknown>)
+  @Example<AnonCredsRegisterSchemaSuccessResponse>(anonCredsRegisterSchemaSuccessExample)
+  @Response<AnonCredsRegisterSchemaFailedResponse>(
+    500,
+    'Unknown error registering schema',
+    anonCredsRegisterSchemaFailedExample,
+  )
+  @Response<AnonCredsRegisterSchemaActionResponse>(200, 'Action required')
+  @Response<AnonCredsRegisterSchemaWaitResponse>(202, 'Wait for action to complete')
   @Post('/schemas')
-  public async createSchema(
-    @Body() body: AnonCredsRegisterSchema,
-    @Res() internalServerError: TsoaResponse<500, Record<string, unknown>>,
-  ) {
-    const registerSchemaResult = await this.agent.modules.anoncreds.registerSchema(body)
+  public async registerSchema(
+    @Body() body: AnonCredsRegisterSchemaBody,
+  ): Promise<AnonCredsRegisterSchemaSuccessResponse> {
+    const registerSchemaResult = await this.agent.modules.anoncreds.registerSchema({
+      schema: body.schema,
+      options: body.options ?? {},
+    })
 
     if (registerSchemaResult.schemaState.state === 'failed') {
-      return internalServerError(500, registerSchemaResult as unknown as Record<string, unknown>)
+      this.setStatus(500)
+      return alternativeResponse<AnonCredsRegisterSchemaFailedResponse>({
+        // NOTE: destructuring the result so ts will correctly infer that 'failed' state
+        ...registerSchemaResult,
+        schemaState: registerSchemaResult.schemaState,
+      })
     }
 
-    return registerSchemaResult
-  }
+    if (registerSchemaResult.schemaState.state === 'wait') {
+      // The request has been accepted for processing, but the processing has not been completed.
+      this.setStatus(202)
+      return alternativeResponse<AnonCredsRegisterSchemaWaitResponse>({
+        ...registerSchemaResult,
+        schemaState: registerSchemaResult.schemaState,
+      })
+    }
 
+    if (registerSchemaResult.schemaState.state === 'action') {
+      return alternativeResponse<AnonCredsRegisterSchemaActionResponse>({
+        ...registerSchemaResult,
+        schemaState: registerSchemaResult.schemaState,
+      })
+    }
+
+    return {
+      ...registerSchemaResult,
+      schemaState: registerSchemaResult.schemaState,
+    }
+  }
   /**
-   * Retrieve credential definition by credential definition id
-   *
-   * @param credentialDefinitionId
-   * @returns GetCredentialDefinitionReturn
+   * Retrieve credentialDefinition by credentialDefinition id
    */
-  @Example<Record<string, unknown>>(anonCredsGetCredentialDefinitionExample as unknown as Record<string, unknown>)
+  @Example<AnonCredsGetCredentialDefinitionSuccessResponse>(anonCredsGetCredentialDefinitionSuccessExample)
+  @Response<AnonCredsGetCredentialDefinitionFailedResponse>(
+    404,
+    'CredentialDefinition not found',
+    anonCredsGetCredentialDefinitionFailedExample,
+  )
+  @Response<AnonCredsGetCredentialDefinitionFailedResponse>(
+    400,
+    'Invalid credentialDefinitionId or unknown AnonCreds method provided',
+    anonCredsGetCredentialDefinitionFailedExample,
+  )
+  @Response<AnonCredsGetCredentialDefinitionFailedResponse>(
+    500,
+    'Unknown error retrieving credentialDefinition',
+    anonCredsGetCredentialDefinitionFailedExample,
+  )
   @Get('/credential-definitions/:credentialDefinitionId')
   public async getCredentialDefinitionById(
-    @Path('credentialDefinitionId') credentialDefinitionId: string,
-    @Res() notFoundError: TsoaResponse<404, Record<string, unknown>>,
-    @Res() badRequestError: TsoaResponse<400, Record<string, unknown>>,
-    @Res() internalServerError: TsoaResponse<500, Record<string, unknown>>,
-  ) {
+    @Path('credentialDefinitionId') credentialDefinitionId: AnonCredsCredentialDefinitionId,
+  ): Promise<AnonCredsGetCredentialDefinitionSuccessResponse> {
     const credentialDefinitionResult =
       await this.agent.modules.anoncreds.getCredentialDefinition(credentialDefinitionId)
-
     const error = credentialDefinitionResult.resolutionMetadata?.error
 
-    if (error === 'notFound') {
-      return notFoundError(404, credentialDefinitionResult as unknown as Record<string, unknown>)
+    if (credentialDefinitionResult.resolutionMetadata?.error === 'notFound') {
+      this.setStatus(404)
+      return alternativeResponse(credentialDefinitionResult)
     }
 
     if (error === 'invalid' || error === 'unsupportedAnonCredsMethod') {
-      return badRequestError(400, credentialDefinitionResult as unknown as Record<string, unknown>)
+      this.setStatus(400)
+      return alternativeResponse(credentialDefinitionResult)
     }
 
     if (error !== undefined || credentialDefinitionResult.credentialDefinition === undefined) {
-      return internalServerError(500, credentialDefinitionResult as unknown as Record<string, unknown>)
+      this.setStatus(500)
+      return alternativeResponse(credentialDefinitionResult)
     }
 
-    return credentialDefinitionResult
+    return credentialDefinitionResult as AnonCredsGetCredentialDefinitionSuccessResponse
   }
 
   /**
-   * Creates a new AnonCreds credential definition and registers the credential definition in the AnonCreds registry
-   *
-   * @param body
-   * @returns RegisterCredentialDefinitionReturn
+   * Creates a new AnonCreds credentialDefinition and registers the credentialDefinition in the AnonCreds registry
    */
-  @Example<Record<string, unknown>>(anonCredsRegisterCredentialDefinitionExample as unknown as Record<string, unknown>)
+  @Example<AnonCredsRegisterCredentialDefinitionSuccessResponse>(anonCredsRegisterCredentialDefinitionSuccessExample)
+  @Response<AnonCredsRegisterCredentialDefinitionFailedResponse>(
+    500,
+    'Unknown error registering credentialDefinition',
+    anonCredsRegisterCredentialDefinitionFailedExample,
+  )
+  @Response<AnonCredsRegisterCredentialDefinitionActionResponse>(200, 'Action required')
+  @Response<AnonCredsRegisterCredentialDefinitionWaitResponse>(202, 'Wait for action to complete')
   @Post('/credential-definitions')
-  public async createCredentialDefinition(
-    @Body() body: AnonCredsRegisterCredentialDefinition,
-    @Res() internalServerError: TsoaResponse<500, Record<string, unknown>>,
-  ): Promise<Record<string, unknown>> {
-    const registerCredentialDefinitionResult = await this.agent.modules.anoncreds.registerCredentialDefinition(body)
+  public async registerCredentialDefinition(
+    @Body() body: AnonCredsRegisterCredentialDefinitionBody,
+  ): Promise<AnonCredsRegisterCredentialDefinitionSuccessResponse> {
+    const registerCredentialDefinitionResult = await this.agent.modules.anoncreds.registerCredentialDefinition({
+      credentialDefinition: body.credentialDefinition,
+      options: body.options ?? {},
+    })
 
     if (registerCredentialDefinitionResult.credentialDefinitionState.state === 'failed') {
-      return internalServerError(500, registerCredentialDefinitionResult as unknown as Record<string, unknown>)
+      this.setStatus(500)
+      return alternativeResponse<AnonCredsRegisterCredentialDefinitionFailedResponse>({
+        // NOTE: destructuring the result so ts will correctly infer that 'failed' state
+        ...registerCredentialDefinitionResult,
+        credentialDefinitionState: registerCredentialDefinitionResult.credentialDefinitionState,
+      })
     }
 
-    return registerCredentialDefinitionResult as unknown as Record<string, unknown>
+    if (registerCredentialDefinitionResult.credentialDefinitionState.state === 'wait') {
+      // The request has been accepted for processing, but the processing has not been completed.
+      this.setStatus(202)
+      return alternativeResponse<AnonCredsRegisterCredentialDefinitionWaitResponse>({
+        ...registerCredentialDefinitionResult,
+        credentialDefinitionState: registerCredentialDefinitionResult.credentialDefinitionState,
+      })
+    }
+
+    if (registerCredentialDefinitionResult.credentialDefinitionState.state === 'action') {
+      return alternativeResponse<AnonCredsRegisterCredentialDefinitionActionResponse>({
+        ...registerCredentialDefinitionResult,
+        credentialDefinitionState: registerCredentialDefinitionResult.credentialDefinitionState,
+      })
+    }
+
+    return {
+      ...registerCredentialDefinitionResult,
+      credentialDefinitionState: registerCredentialDefinitionResult.credentialDefinitionState,
+    }
   }
 }

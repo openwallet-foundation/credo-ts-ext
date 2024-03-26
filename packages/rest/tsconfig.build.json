@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.build.json",
   "compilerOptions": {
     "outDir": "./build",
-    "types": []
+    "types": [],
+    "skipLibCheck": true
   },
   "include": ["src/**/*", "src/routes"]
 }

@@ -1,9 +1,9 @@
-import type { ApiOutOfBandRecord, OutOfBandInvitationJson } from './OutOfBandControllerTypes'
+import type { DidCommOutOfBandRecord } from './OutOfBandControllerTypes'
 
-import { OutOfBandRole, OutOfBandState } from '@credo-ts/core'
+import { OutOfBandRecord, OutOfBandRole, OutOfBandState } from '@credo-ts/core'
 
 export const outOfBandInvitationExample = {
-  '@type': 'did:sov:BzCbsNYhMrjHiqZDTUASHg;spec/out-of-band/1.1/invitation',
+  '@type': 'https://didcomm.org/out-of-band/1.1/invitation',
   '@id': 'd6472943-e5d0-4d95-8b48-790ed5a41931',
   label: 'Aries Test Agent',
   accept: ['didcomm/aip1', 'didcomm/aip2;env=rfc19'],
@@ -17,14 +17,19 @@ export const outOfBandInvitationExample = {
       routingKeys: [],
     },
   ],
-} satisfies OutOfBandInvitationJson
+}
 
-export const outOfBandRecordExample = {
+export const legacyInvitationExample = {
+  '@type': 'https://didcomm.org/connections/1./invitation',
+  '@id': 'd6b23733-be49-408b-98ab-ba9460384087',
+}
+
+export const outOfBandRecordExample: DidCommOutOfBandRecord = {
   outOfBandInvitation: outOfBandInvitationExample,
-  metadata: {},
   id: '42a95528-0e30-4f86-a462-0efb02178b53',
-  createdAt: '2022-01-01T00:00:00.000Z',
+  createdAt: new Date('2022-01-01T00:00:00.000Z'),
   role: OutOfBandRole.Sender,
   state: OutOfBandState.PrepareResponse,
   reusable: false,
-} satisfies ApiOutOfBandRecord
+  type: OutOfBandRecord.type,
+}
