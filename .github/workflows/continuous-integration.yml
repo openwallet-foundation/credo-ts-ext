@@ -7,10 +7,6 @@ on:
   push:
     branches: [main, 'credo-**']
 
-env:
-  TEST_AGENT_PUBLIC_DID_SEED: 000000000000000000000000Trustee9
-  GENESIS_TXN_PATH: network/genesis/local-genesis.txn
-
 # Make sure we're not running multiple release steps at the same time as this can give issues with determining the next npm version to release.
 # Ideally we only add this to the 'release' job so it doesn't limit PR runs, but github can't guarantee the job order in that case:
 # "When concurrency is specified at the job level, order is not guaranteed for jobs or runs that queue within 5 minutes of each other."
@@ -81,14 +77,6 @@ jobs:
       - name: Checkout credo-ts-ext
         uses: actions/checkout@v4
 
-      # setup dependencies
-      - name: Setup Libindy
-        uses: ./.github/actions/setup-libindy
-      - name: Setup Indy Pool
-        uses: ./.github/actions/setup-indy-pool
-        with:
-          seed: ${TEST_AGENT_PUBLIC_DID_SEED}
-
       - name: Setup node ${{ matrix.node-version }}
         uses: actions/setup-node@v4
         with:
@@ -99,17 +87,8 @@ jobs:
       - name: Install dependencies
         run: yarn install
 
-      - name: Run tests for Push notifications
-        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test push-notifications --coverage
-
-      - name: Run tests for React hooks
-        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test react-hooks --coverage
-
-      - name: Run tests for Redux store
-        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test redux-store --coverage
-
-      - name: Run tests for Rest
-        run: TEST_AGENT_PUBLIC_DID_SEED=${TEST_AGENT_PUBLIC_DID_SEED} GENESIS_TXN_PATH=${GENESIS_TXN_PATH} yarn test rest --coverage
+      - name: Run tests
+        run: yarn test --coverage
 
       - uses: codecov/codecov-action@v1
         if: always()

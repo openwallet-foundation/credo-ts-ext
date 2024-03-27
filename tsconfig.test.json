@@ -1,13 +1,14 @@
 {
   "extends": "./tsconfig.build.json",
   "compilerOptions": {
+    "lib": ["ES2021.Promise"],
     "baseUrl": ".",
     "paths": {
       "@credo-ts/react-hooks": ["packages/react-hooks/src"],
       "@credo-ts/rest": ["packages/rest/src"],
       "@credo-ts/redux-store": ["packages/redux-store/src"],
       "@credo-ts/transport-ble": ["packages/transport-ble/src"],
-      "@credo-tstions": ["packages/push-notifications/src"]
+      "@credo-ts/push-notifications": ["packages/push-notifications/src"]
     },
     "types": ["jest", "node"]
   },

@@ -1,30 +1,30 @@
-import type { AgentInfo } from '../types'
+import type { AgentInfo } from './AgentControllerTypes'
 
-import { Agent } from '@aries-framework/core'
-import { Controller, Get, Route, Tags } from 'tsoa'
+import { Controller, Example, Get, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
+
+import { RequestWithRootAgent } from '../../authentication'
+
+import { agentInfoExample } from './AgentControllerExamples'
 
 @Tags('Agent')
 @Route('/agent')
+@Security('tenants', ['default'])
 @injectable()
 export class AgentController extends Controller {
-  private agent: Agent
-
-  public constructor(agent: Agent) {
-    super()
-    this.agent = agent
-  }
-
   /**
    * Retrieve basic agent information
    */
   @Get('/')
-  public async getAgentInfo(): Promise<AgentInfo> {
+  @Example(agentInfoExample)
+  public async getAgentInfo(@Request() request: RequestWithRootAgent): Promise<AgentInfo> {
+    // We want to strip some properties from the config
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { agentDependencies, walletConfig, logger, ...config } = request.user.agent.config.toJSON()
+
     return {
-      label: this.agent.config.label,
-      endpoints: this.agent.config.endpoints,
-      isInitialized: this.agent.isInitialized,
-      publicDid: this.agent.publicDid,
+      config,
+      isInitialized: request.user.agent.isInitialized,
     }
   }
 }

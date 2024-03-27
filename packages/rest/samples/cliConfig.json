@@ -9,13 +9,13 @@
       "isProduction": false
     }
   ],
-  "publicDidSeed": "testtesttesttesttesttesttesttest",
   "endpoint": ["http://localhost:5000", "ws://localhost:5001"],
   "autoAcceptConnections": false,
   "autoAcceptCredentials": "never",
   "autoAcceptProofs": "never",
-  "useLegacyDidSovPrefix": true,
-  "logLevel": 5,
+  "useDidSovPrefixWhereAllowed": false,
+  "autoUpdateStorageOnStartup": true,
+  "logLevel": 1,
   "inboundTransport": [
     {
       "transport": "http",
@@ -30,5 +30,6 @@
   "autoAcceptMediationRequests": false,
   "connectionImageUrl": "https://image.com/image.png",
   "webhookUrl": "https://my-webhook-server",
-  "adminPort": 3000
+  "adminPort": 3000,
+  "multiTenant": true
 }

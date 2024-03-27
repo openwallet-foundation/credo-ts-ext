@@ -1,27 +1,61 @@
-import type { ConnectionRecordProps } from '@aries-framework/core'
+import type { RestRootAgent, RestRootAgentWithTenants } from '../../src/utils/agent'
+import type { ConnectionRecordProps, DidCreateResult } from '@credo-ts/core'
 
 import {
   AgentMessage,
-  OutOfBandInvitation,
   OutOfBandRecord,
   ConnectionRecord,
   CredentialExchangeRecord,
   DidExchangeRole,
   DidExchangeState,
   JsonTransformer,
-  ProofRecord,
-} from '@aries-framework/core'
-import { JsonEncoder } from '@aries-framework/core/build/utils/JsonEncoder'
+  ProofExchangeRecord,
+  OutOfBandInvitation,
+  ConnectionInvitationMessage,
+  DidDocument,
+} from '@credo-ts/core'
+import { JsonEncoder } from '@credo-ts/core/build/utils/JsonEncoder'
+import { randomUUID } from 'crypto'
 
+import { InMemoryAnonCredsRegistry } from '../../src/controllers/anoncreds/__tests__/InMemoryAnonCredsRegistry'
+import {
+  testAnonCredsCredentialDefinition,
+  testAnonCredsSchema,
+} from '../../src/controllers/anoncreds/__tests__/fixtures'
 import { setupAgent } from '../../src/utils/agent'
+import { InternalOutboundTransport } from '../InternalOutboundTransport'
 
-export async function getTestAgent(name: string, port: number) {
-  return await setupAgent({
-    port: port,
-    publicDidSeed: '00000000000000000000000000000000',
-    endpoints: [`http://localhost:${port}`],
-    name: name,
+export async function getTestAgent<Multitenant extends boolean = false>(
+  name: string,
+  port?: number,
+  multiTenant?: Multitenant,
+) {
+  const agent = await setupAgent({
+    endpoints: [port ? `http://localhost:${port}` : 'internal'],
+    // add some randomness to ensure test isolation
+    name: `${name} (${randomUUID()})`,
+    httpInboundTransportPort: port,
+    multiTenant,
+    extraAnonCredsRegistries: [
+      new InMemoryAnonCredsRegistry({
+        schemas: {
+          [testAnonCredsSchema.schemaId]: testAnonCredsSchema.schema,
+        },
+        credentialDefinitions: {
+          [testAnonCredsCredentialDefinition.credentialDefinitionId]:
+            testAnonCredsCredentialDefinition.credentialDefinition,
+        },
+      }),
+    ],
   })
+
+  if (!port) {
+    const internalOutboundTransport = new InternalOutboundTransport()
+    await internalOutboundTransport.start(agent)
+    agent.registerOutboundTransport(internalOutboundTransport)
+  }
+
+  return agent as Multitenant extends true ? RestRootAgentWithTenants : RestRootAgent
 }
 
 export function objectToJson<T>(result: T) {
@@ -99,6 +133,19 @@ export function getTestOutOfBandInvitation() {
     ],
   }
   return JsonTransformer.fromJSON(json, OutOfBandInvitation)
+}
+
+export function getTestOutOfBandLegacyInvitation() {
+  const json = {
+    id: '42a95528-0e30-4f86-a462-0efb02178b53',
+    label: 'Aries Test Agent',
+    did: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    recipientKeys: ['did:key:z6MkmTBHTWrvLPN8pBmUj7Ye5ww9GiacXCYMNVvpScSpf1DM'],
+    serviceEndpoint: 'https://6b77-89-20-162-146.ngrok.io',
+    routingKeys: [],
+    imageUrl: 'https://example.com/image-url',
+  }
+  return JsonTransformer.fromJSON(json, ConnectionInvitationMessage)
 }
 
 export function getTestOutOfBandRecord() {
@@ -270,29 +317,6 @@ export function getTestOffer() {
   }
 }
 
-export function getTestCredDef() {
-  return {
-    ver: '1.0',
-    id: 'WgWxqztrNooG92RXvxSTWv:3:CL:20:tag',
-    schemaId: '9999',
-    type: 'CL',
-    tag: 'latest',
-    value: {
-      primary: {
-        n: 'x',
-        s: 'x',
-        r: {
-          master_secret: 'x',
-          name: 'x',
-          title: 'x',
-        },
-        rctxt: 'x',
-        z: 'x',
-      },
-    },
-  }
-}
-
 export function getTestProof() {
   const json = {
     _tags: {
@@ -340,7 +364,7 @@ export function getTestProof() {
       },
     },
   }
-  return JsonTransformer.fromJSON(json, ProofRecord)
+  return JsonTransformer.fromJSON(json, ProofExchangeRecord)
 }
 
 export function getTestConnection({
@@ -363,4 +387,94 @@ export function getTestConnection({
     tags,
     theirLabel,
   })
+}
+
+export function getTestDidDocument() {
+  return {
+    '@context': [
+      'https://w3id.org/did/v1',
+      'https://w3id.org/security/suites/ed25519-2018/v1',
+      'https://w3id.org/security/suites/x25519-2019/v1',
+    ],
+    id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    verificationMethod: [
+      {
+        id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        type: 'Ed25519VerificationKey2018',
+        controller: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        publicKeyBase58: '6fioC1zcDPyPEL19pXRS2E4iJ46zH7xP6uSgAaPdwDrx',
+      },
+    ],
+    authentication: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    assertionMethod: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    keyAgreement: [
+      {
+        id: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6LSrdqo4M24WRDJj1h2hXxgtDTyzjjKCiyapYVgrhwZAySn',
+        type: 'X25519KeyAgreementKey2019',
+        controller: 'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+        publicKeyBase58: 'FxfdY3DCQxVZddKGAtSjZdFW9bCCW7oRwZn1NFJ2Tbg2',
+      },
+    ],
+    capabilityInvocation: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+    capabilityDelegation: [
+      'did:key:z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL#z6Mkk7yqnGF3YwTrLpqrW6PGsKci7dNqh1CjnvMbzrMerSeL',
+    ],
+  } as { [x: string]: unknown }
+}
+
+export function getTestDidCreate() {
+  return {
+    didDocumentMetadata: {},
+    didRegistrationMetadata: {},
+    didState: {
+      state: 'finished',
+      did: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+      didDocument: JsonTransformer.fromJSON(
+        {
+          '@context': [
+            'https://w3id.org/did/v1',
+            'https://w3id.org/security/suites/ed25519-2018/v1',
+            'https://w3id.org/security/suites/x25519-2019/v1',
+          ],
+          id: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          verificationMethod: [
+            {
+              id: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+              type: 'Ed25519VerificationKey2018',
+              controller: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+              publicKeyBase58: 'ApexJxnhZHC6Ctq4fCoNHKYgu87HuRTZ7oSyfehG57zE',
+            },
+          ],
+          authentication: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+          assertionMethod: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+          keyAgreement: [
+            {
+              id: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6LSm5B4fB9NA55xB7PSeMYTMS9sf8uboJvyZBaDLLSZ7Ryd',
+              type: 'X25519KeyAgreementKey2019',
+              controller: 'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+              publicKeyBase58: 'APzu8sLW4cND5j1g7i2W2qwPozNV6hkpgCrXqso2Q4Cs',
+            },
+          ],
+          capabilityInvocation: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+          capabilityDelegation: [
+            'did:key:z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc#z6MkpGuzuD38tpgZKPfmLmmD8R6gihP9KJhuopMuVvfGzLmc',
+          ],
+        },
+        DidDocument,
+      ),
+      secret: {},
+    },
+  } as DidCreateResult
 }

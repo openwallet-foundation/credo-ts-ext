@@ -4,6 +4,9 @@ on:
   push:
     tags:
       - rest-v*
+    branches:
+      - main
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: ghcr.io/openwallet-foundation/credo-rest
@@ -11,27 +14,19 @@ env:
 jobs:
   release-rest-docker-image:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     steps:
-      # Initiate release process if release was created
       - name: Checkout credo-ts-ext
         uses: actions/checkout@v4
 
-      # Some packages need indy-sdk for node as part of yarn install
-      - name: Setup Libindy
-        uses: ./.github/actions/setup-libindy
-
-      - name: Setup node v18
-        uses: actions/setup-node@v4
+      - name: Log in to the Container registry
+        uses: docker/login-action@f054a8b539a109f9f41c372932f1ae047eff08c9
         with:
-          node-version: 18
-          registry-url: 'https://registry.npmjs.org/'
-          cache: yarn
-
-      - name: Install dependencies
-        run: yarn install --frozen-lockfile
-
-      - name: Build rest package
-        run: yarn workspace @credo-ts/rest build
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
         id: meta
@@ -42,7 +37,7 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc
         with:
-          context: ./packages/rest
+          context: .
           file: ./packages/rest/Dockerfile
           push: true
           tags: ${{ steps.meta.outputs.tags }}

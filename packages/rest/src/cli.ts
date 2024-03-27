@@ -1,10 +1,12 @@
-import type { InboundTransport, Transports, AriesRestConfig } from './cliAgent'
+import type { InboundTransport, Transports, CredoRestConfig } from './cliAgent'
+import type { AskarWalletPostgresStorageConfig } from '@credo-ts/askar'
 
 import yargs from 'yargs'
 
 import { runRestAgent } from './cliAgent'
 
 const parsed = yargs
+  .scriptName('credo-rest')
   .command('start', 'Start Credo Rest agent')
   .option('label', {
     alias: 'l',
@@ -24,9 +26,6 @@ const parsed = yargs
     default: [],
     coerce: (items: unknown[]) => items.map((i) => (typeof i === 'string' ? JSON.parse(i) : i)),
   })
-  .option('public-did-seed', {
-    string: true,
-  })
   .option('endpoint', {
     array: true,
   })
@@ -34,14 +33,24 @@ const parsed = yargs
     number: true,
     default: 3,
   })
-  .option('use-legacy-did-sov-prefix', {
+  .option('use-did-sov-prefix-where-allowed', {
     boolean: true,
     default: false,
+  })
+  .option('use-did-key-in-protocols', {
+    boolean: true,
+    default: true,
   })
   .option('outbound-transport', {
     default: [],
     choices: ['http', 'ws'],
     array: true,
+  })
+  .option('--multi-tenant', {
+    boolean: true,
+    default: false,
+    describe:
+      'Start the agent as a multi-tenant agent. Once enabled, all operations (except tenant management) must be performed under a specific tenant. Tenants can be created in the tenants controller (POST /tenants, see swagger UI), and the scope for a specific tenant can be set using the x-tenant-id header.',
   })
   .option('inbound-transport', {
     array: true,
@@ -88,6 +97,10 @@ const parsed = yargs
     choices: ['always', 'never', 'contentApproved'],
     default: 'never',
   })
+  .option('auto-update-storage-on-startup', {
+    boolean: true,
+    default: true,
+  })
   .option('connection-image-url', {
     string: true,
   })
@@ -98,30 +111,72 @@ const parsed = yargs
     number: true,
     demandOption: true,
   })
+  .option('storage-type', {
+    choices: ['sqlite', 'postgres'],
+    default: 'sqlite',
+  })
+  .option('postgres-host', {
+    string: true,
+  })
+  .option('postgres-username', {
+    string: true,
+  })
+  .option('postgres-password', {
+    string: true,
+  })
+  .check((argv) => {
+    if (
+      argv['storage-type'] === 'postgres' &&
+      (!argv['postgres-host'] || !argv['postgres-username'] || !argv['postgres-password'])
+    ) {
+      throw new Error(
+        "--postgres-host, --postgres-username, and postgres-password are required when setting --storage-type to 'postgres'",
+      )
+    }
+
+    return true
+  })
   .config()
   .env('CREDO_REST')
   .parseSync()
 
 export async function runCliServer() {
-  await runRestAgent({
+  return runRestAgent({
     label: parsed.label,
     walletConfig: {
       id: parsed['wallet-id'],
       key: parsed['wallet-key'],
+      storage:
+        parsed['storage-type'] === 'sqlite'
+          ? {
+              type: 'sqlite',
+            }
+          : ({
+              type: 'postgres',
+              config: {
+                host: parsed['postgres-host'] as string,
+              },
+              credentials: {
+                account: parsed['postgres-username'] as string,
+                password: parsed['postgres-password'] as string,
+              },
+            } satisfies AskarWalletPostgresStorageConfig),
     },
     indyLedgers: parsed['indy-ledger'],
-    publicDidSeed: parsed['public-did-seed'],
     endpoints: parsed.endpoint,
     autoAcceptConnections: parsed['auto-accept-connections'],
     autoAcceptCredentials: parsed['auto-accept-credentials'],
     autoAcceptProofs: parsed['auto-accept-proofs'],
+    autoUpdateStorageOnStartup: parsed['auto-update-storage-on-startup'],
     autoAcceptMediationRequests: parsed['auto-accept-mediation-requests'],
-    useLegacyDidSovPrefix: parsed['use-legacy-did-sov-prefix'],
+    useDidKeyInProtocols: parsed['use-did-key-in-protocols'],
+    useDidSovPrefixWhereAllowed: parsed['use-legacy-did-sov-prefix'],
     logLevel: parsed['log-level'],
     inboundTransports: parsed['inbound-transport'],
     outboundTransports: parsed['outbound-transport'],
     connectionImageUrl: parsed['connection-image-url'],
     webhookUrl: parsed['webhook-url'],
     adminPort: parsed['admin-port'],
-  } as AriesRestConfig)
+    multiTenant: parsed['multi-tenant'],
+  } as CredoRestConfig)
 }

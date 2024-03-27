@@ -3,11 +3,20 @@
   "noImplicitAdditionalProperties": "throw-on-extras",
   "controllerPathGlobs": ["src/**/*Controller.ts"],
   "spec": {
-    "outputDirectory": "src/routes",
-    "specVersion": 3
+    "outputDirectory": "src/generated",
+    "specVersion": 3,
+    "securityDefinitions": {
+      "tenants": {
+        "type": "apiKey",
+        "name": "x-tenant-id",
+        "in": "header"
+      }
+    }
   },
   "routes": {
-    "routesDir": "src/routes",
-    "iocModule": "./src/utils/tsyringeTsoaIocContainer"
+    "middlewareTemplate": "src/middlewareTemplate.ts.hbs",
+    "routesDir": "src/generated",
+    "iocModule": "./src/utils/tsyringeTsoaIocContainer",
+    "authenticationModule": "./src/authentication.ts"
   }
 }

@@ -1,11 +1,19 @@
-import type { IndyPoolConfig, InitConfig, AutoAcceptCredential, AutoAcceptProof } from '@aries-framework/core'
-import type { WalletConfig } from '@aries-framework/core/build/types'
+import type { InitConfig, WalletConfig } from '@credo-ts/core'
+import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 
-import { HttpOutboundTransport, WsOutboundTransport, LogLevel, Agent } from '@aries-framework/core'
-import { agentDependencies, HttpInboundTransport, WsInboundTransport } from '@aries-framework/node'
+import {
+  HttpOutboundTransport,
+  WsOutboundTransport,
+  LogLevel,
+  Agent,
+  AutoAcceptCredential,
+  AutoAcceptProof,
+} from '@credo-ts/core'
+import { agentDependencies, HttpInboundTransport, WsInboundTransport } from '@credo-ts/node'
 import { readFile } from 'fs/promises'
 
 import { setupServer } from './server'
+import { getAgentModules } from './utils/agent'
 import { TsLogger } from './utils/logger'
 
 export type Transports = 'ws' | 'http'
@@ -24,16 +32,18 @@ const outboundTransportMapping = {
   ws: WsOutboundTransport,
 } as const
 
-export interface AriesRestConfig {
+export interface CredoRestConfig {
   label: string
+  multiTenant: boolean
   walletConfig: WalletConfig
-  indyLedgers?: IndyPoolConfig[]
-  publicDidSeed?: string
+  indyLedgers: IndyVdrPoolConfig[]
   endpoints?: string[]
   autoAcceptConnections?: boolean
   autoAcceptCredentials?: AutoAcceptCredential
   autoAcceptProofs?: AutoAcceptProof
-  useLegacyDidSovPrefix?: boolean
+  autoUpdateStorageOnStartup?: boolean
+  useDidKeyInProtocols?: boolean
+  useDidSovPrefixWhereAllowed?: boolean
   logLevel?: LogLevel
   inboundTransports?: InboundTransport[]
   outboundTransports?: Transports[]
@@ -51,13 +61,19 @@ export async function readRestConfig(path: string) {
   return config
 }
 
-export async function runRestAgent(restConfig: AriesRestConfig) {
+export async function runRestAgent(restConfig: CredoRestConfig) {
   const {
     logLevel,
     inboundTransports = [],
     outboundTransports = [],
     webhookUrl,
     adminPort,
+    indyLedgers,
+    autoAcceptConnections = true,
+    autoAcceptCredentials = AutoAcceptCredential.ContentApproved,
+    autoAcceptMediationRequests = true,
+    autoAcceptProofs = AutoAcceptProof.ContentApproved,
+    multiTenant,
     ...credoConfig
   } = restConfig
 
@@ -68,7 +84,21 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     logger,
   }
 
-  const agent = new Agent(agentConfig, agentDependencies)
+  const maybeLedgers = indyLedgers.length > 0 ? (indyLedgers as [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]) : undefined
+  const modules = getAgentModules({
+    autoAcceptConnections,
+    autoAcceptProofs,
+    autoAcceptCredentials,
+    autoAcceptMediationRequests,
+    indyLedgers: maybeLedgers,
+    multiTenant,
+  })
+
+  const agent = new Agent({
+    config: agentConfig,
+    dependencies: agentDependencies,
+    modules,
+  })
 
   // Register outbound transports
   for (const outboundTransport of outboundTransports) {
@@ -88,7 +118,16 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     port: adminPort,
   })
 
-  app.listen(adminPort, () => {
+  const server = app.listen(adminPort, () => {
     logger.info(`Successfully started server on port ${adminPort}`)
   })
+
+  return {
+    shutdown: async () => {
+      agent.config.logger.info('Agent shutdown initiated')
+      server.close()
+      await agent.shutdown()
+      agent.config.logger.info('Agent shutdown complete')
+    },
+  }
 }

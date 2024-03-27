@@ -1,4 +1,4 @@
-import type { Logger } from '@aries-framework/core'
+import type { Logger } from '@credo-ts/core'
 
 import fetch from 'node-fetch'
 

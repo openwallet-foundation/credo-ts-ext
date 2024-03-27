@@ -3,45 +3,9 @@
   "private": true,
   "license": "Apache-2.0",
   "description": "Monorepo containing extensions for Credo",
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "@credo-ts/*",
-      "**/@credo-ts/*",
-      "**/@credo-ts/*/**",
-      "@credo-ts/*/**",
-      "@aries-framework/*",
-      "**/@aries-framework/*",
-      "**/@aries-framework/*/**",
-      "@aries-framework/*/**",
-      "@hyperledger/*",
-      "**/@hyperledger/*",
-      "**/@hyperledger/*/**",
-      "@hyperledger/*/**",
-      "tsyringe",
-      "**/tsyringe",
-      "**/tsyringe/**",
-      "tsyringe/**",
-      "node-fetch",
-      "**/node-fetch",
-      "**/node-fetch/**",
-      "node-fetch/**",
-      "reflect-metadata",
-      "**/reflect-metadata",
-      "**/reflect-metadata/**",
-      "reflect-metadata/**",
-      "class-validator",
-      "**/class-validator",
-      "**/class-validator/**",
-      "class-validator/**",
-      "class-transformer",
-      "**/class-transformer",
-      "**/class-transformer/**",
-      "class-transformer/**"
-    ]
-  },
+  "workspaces": [
+    "packages/*"
+  ],
   "repository": {
     "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "type": "git"
@@ -78,10 +42,9 @@
     "rimraf": "^5.0.5"
   },
   "engines": {
-    "node": ">= 16"
+    "node": ">= 18"
   },
   "resolutions": {
-    "@types/indy-sdk": "1.16.9",
     "@jest/types": "^29.5.0",
     "@types/node": "^18.0.0"
   }

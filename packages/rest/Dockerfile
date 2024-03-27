@@ -1,40 +1,49 @@
-FROM ubuntu:18.04 as base
+FROM node:20 as all-dependencies
 
-ENV DEBIAN_FRONTEND noninteractive
+WORKDIR /all-dependencies
 
-RUN apt-get update -y && apt-get install -y \
-    software-properties-common \
-    apt-transport-https \
-    curl \
-    # Only needed to build indy-sdk
-    build-essential 
-
-# libindy
-RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys CE7709D068DB5E88
-RUN add-apt-repository "deb https://repo.sovrin.org/sdk/deb bionic stable"
-
-# nodejs
-RUN curl -sL https://deb.nodesource.com/setup_16.x | bash
-
-# yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - && \
-    echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
-# install depdencies
-RUN apt-get update -y && apt-get install -y --allow-unauthenticated \
-    libindy \
-    nodejs
-
-# Install yarn seperately due to `no-install-recommends` to skip nodejs install 
-RUN apt-get install -y --no-install-recommends yarn
-
-# Credo specifc setup
-WORKDIR /www
-
-COPY bin ./bin
+# Copy files required for yarn install
 COPY package.json package.json
+COPY yarn.lock yarn.lock
+COPY packages/rest/package.json packages/rest/package.json
+
+# Install dependencies
+RUN yarn install
+
+# The build stage installs all node_modules (also dev)
+# and build the JS files to run the REST server
+FROM all-dependencies as build
+
+# Copy remaining files for rest package and build the JS files
+COPY tsconfig.build.json tsconfig.build.json
+COPY packages/rest packages/rest
+WORKDIR /all-dependencies/packages/rest
+RUN yarn build
+
+# The production-dependencies stage installs only the production node_modules
+# It is based on the all-dependencies so it can use the yarn-cache and doesn't
+# have to re-fetch all deps (as prod deps are a subset of all deps)
+FROM all-dependencies as production-dependencies
+
+WORKDIR /production-dependencies
+
+COPY packages/rest/package.json package.json
+COPY yarn.lock yarn.lock
+
 RUN yarn install --production
 
-COPY build ./build
+FROM node:20 as final
+
+WORKDIR /app
+
+# Copy build files
+COPY --from=build /all-dependencies/packages/rest/build build
+
+# Copy dependencies
+COPY --from=production-dependencies /production-dependencies/node_modules node_modules
+
+# Copy source files
+COPY packages/rest/bin bin
+COPY packages/rest/package.json package.json
 
 ENTRYPOINT [ "./bin/credo-rest.js", "start" ]
