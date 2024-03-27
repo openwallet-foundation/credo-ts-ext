@@ -6,6 +6,7 @@ import yargs from 'yargs'
 import { runRestAgent } from './cliAgent'
 
 const parsed = yargs
+  .scriptName('credo-rest')
   .command('start', 'Start Credo Rest agent')
   .option('label', {
     alias: 'l',
@@ -132,20 +133,24 @@ const parsed = yargs
         "--postgres-host, --postgres-username, and postgres-password are required when setting --storage-type to 'postgres'",
       )
     }
+
+    return true
   })
   .config()
   .env('CREDO_REST')
   .parseSync()
 
 export async function runCliServer() {
-  await runRestAgent({
+  return runRestAgent({
     label: parsed.label,
     walletConfig: {
       id: parsed['wallet-id'],
       key: parsed['wallet-key'],
       storage:
         parsed['storage-type'] === 'sqlite'
-          ? {}
+          ? {
+              type: 'sqlite',
+            }
           : ({
               type: 'postgres',
               config: {

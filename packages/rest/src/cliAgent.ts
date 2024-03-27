@@ -118,7 +118,16 @@ export async function runRestAgent(restConfig: CredoRestConfig) {
     port: adminPort,
   })
 
-  app.listen(adminPort, () => {
+  const server = app.listen(adminPort, () => {
     logger.info(`Successfully started server on port ${adminPort}`)
   })
+
+  return {
+    shutdown: async () => {
+      agent.config.logger.info('Agent shutdown initiated')
+      server.close()
+      await agent.shutdown()
+      agent.config.logger.info('Agent shutdown complete')
+    },
+  }
 }
