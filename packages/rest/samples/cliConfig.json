@@ -9,13 +9,13 @@
       "isProduction": false
     }
   ],
-  "publicDidSeed": "testtesttesttesttesttesttesttest",
   "endpoint": ["http://localhost:5000", "ws://localhost:5001"],
   "autoAcceptConnections": false,
   "autoAcceptCredentials": "never",
   "autoAcceptProofs": "never",
-  "useLegacyDidSovPrefix": true,
-  "logLevel": 5,
+  "useDidSovPrefixWhereAllowed": false,
+  "autoUpdateStorageOnStartup": true,
+  "logLevel": 1,
   "inboundTransport": [
     {
       "transport": "http",
