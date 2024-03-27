@@ -4,8 +4,9 @@ on:
   push:
     tags:
       - rest-v*
+  pull_request:
     branches:
-      - chore/docker-image
+      - main
 
 env:
   IMAGE_NAME: ghcr.io/openwallet-foundation/credo-rest
