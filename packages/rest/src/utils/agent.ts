@@ -45,7 +45,6 @@ import { TenantsModule } from '@credo-ts/tenants'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-import path from 'path'
 
 import { TsLogger } from './logger'
 import { BCOVRIN_TEST_GENESIS } from './util'
@@ -56,10 +55,6 @@ export type RestRootAgent = Agent<ModulesWithoutTenants>
 export type RestRootAgentWithTenants = Agent<ModulesWithoutTenants & { tenants: TenantsModule<ModulesWithoutTenants> }>
 export type RestTenantAgent = TenantAgent<ModulesWithoutTenants>
 export type RestAgent = RestRootAgent | RestTenantAgent | RestRootAgentWithTenants
-
-export const genesisPath = process.env.GENESIS_TXN_PATH
-  ? path.resolve(process.env.GENESIS_TXN_PATH)
-  : path.join(__dirname, '../../../../network/genesis/local-genesis.txn')
 
 export const getAgentModules = (options: {
   autoAcceptConnections: boolean

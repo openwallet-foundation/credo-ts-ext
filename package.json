@@ -3,7 +3,9 @@
   "private": true,
   "license": "Apache-2.0",
   "description": "Monorepo containing extensions for Credo",
-  "workspaces": ["packages/*"],
+  "workspaces": [
+    "packages/*"
+  ],
   "repository": {
     "url": "https://github.com/openwallet-foundation/credo-ts-ext",
     "type": "git"
