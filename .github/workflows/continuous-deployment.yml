@@ -4,9 +4,9 @@ on:
   push:
     tags:
       - rest-v*
-  pull_request:
     branches:
       - main
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: ghcr.io/openwallet-foundation/credo-rest
