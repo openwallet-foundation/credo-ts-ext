@@ -1,36 +1,44 @@
-import type { ServerConfig } from '../src/utils/ServerConfig'
-
+import { LogLevel } from '@credo-ts/core'
 import bodyParser from 'body-parser'
 import express from 'express'
 
-import { startServer } from '../src/index'
-import { setupAgent } from '../src/utils/agent'
+import { createRestAgent, setupApp } from '../src/index'
 
 const run = async () => {
-  const endpoint = process.env.AGENT_ENDPOINT ?? 'http://localhost:3001'
-
-  const agent = await setupAgent({
-    httpInboundTransportPort: 3001,
-    endpoints: [endpoint],
-    name: 'Aries Test Agent',
+  const agent = await createRestAgent({
+    label: 'Aries Test Agent',
+    inboundTransports: [
+      {
+        transport: 'http',
+        port: 3001,
+      },
+    ],
+    logLevel: LogLevel.debug,
+    endpoints: ['http://localhost:3001'],
+    walletConfig: {
+      id: 'test-agent',
+      key: 'test-agent',
+    },
   })
 
   const app = express()
   const jsonParser = bodyParser.json()
 
-  app.post('/greeting', jsonParser, (req, res) => {
+  app.get('/greeting', jsonParser, (_, res) => {
     const config = agent.config
 
     res.send(`Hello, ${config.label}!`)
   })
 
-  const conf: ServerConfig = {
-    port: 3000,
-    webhookUrl: 'http://localhost:5000/agent-events',
-    app: app,
-  }
+  const { start } = await setupApp({
+    baseApp: app,
+    adminPort: 3000,
+    enableCors: true,
 
-  await startServer(agent, conf)
+    agent,
+  })
+
+  start()
 }
 
 run()

@@ -1,9 +1,11 @@
-import type { InboundTransport, Transports, CredoRestConfig } from './cliAgent'
+import type { InboundTransport, Transports } from './setup/CredoRestConfig'
 import type { AskarWalletPostgresStorageConfig } from '@credo-ts/askar'
 
+import { AutoAcceptCredential, AutoAcceptProof } from '@credo-ts/core'
+import process from 'process'
 import yargs from 'yargs'
 
-import { runRestAgent } from './cliAgent'
+import { setupApp } from './setup/setupApp'
 
 const parsed = yargs
   .scriptName('credo-rest')
@@ -28,6 +30,7 @@ const parsed = yargs
   })
   .option('endpoint', {
     array: true,
+    string: true,
   })
   .option('log-level', {
     number: true,
@@ -43,10 +46,10 @@ const parsed = yargs
   })
   .option('outbound-transport', {
     default: [],
-    choices: ['http', 'ws'],
+    choices: ['http', 'ws'] as const,
     array: true,
   })
-  .option('--multi-tenant', {
+  .option('multi-tenant', {
     boolean: true,
     default: false,
     describe:
@@ -57,7 +60,7 @@ const parsed = yargs
     default: [],
     coerce: (input: string[]) => {
       // Configured using config object
-      if (typeof input[0] === 'object') return input
+      if (typeof input[0] === 'object') return input as unknown as InboundTransport[]
       if (input.length % 2 !== 0) {
         throw new Error(
           'Inbound transport should be specified as transport port pairs (e.g. --inbound-transport http 5000 ws 5001)',
@@ -86,16 +89,16 @@ const parsed = yargs
     default: false,
   })
   .option('auto-accept-credentials', {
-    choices: ['always', 'never', 'contentApproved'],
-    default: 'never',
+    choices: [AutoAcceptCredential.Always, AutoAcceptCredential.Never, AutoAcceptCredential.ContentApproved] as const,
+    default: AutoAcceptCredential.ContentApproved,
   })
   .option('auto-accept-mediation-requests', {
     boolean: true,
     default: false,
   })
   .option('auto-accept-proofs', {
-    choices: ['always', 'never', 'contentApproved'],
-    default: 'never',
+    choices: [AutoAcceptProof.Always, AutoAcceptProof.Never, AutoAcceptProof.ContentApproved] as const,
+    default: AutoAcceptProof.ContentApproved,
   })
   .option('auto-update-storage-on-startup', {
     boolean: true,
@@ -107,12 +110,18 @@ const parsed = yargs
   .option('webhook-url', {
     string: true,
   })
+  .option('websocket-events', {
+    boolean: true,
+    default: false,
+    describe:
+      'Enable websocket events on the admin API server. When a client connects, it will receive events from the agent.',
+  })
   .option('admin-port', {
     number: true,
     demandOption: true,
   })
   .option('storage-type', {
-    choices: ['sqlite', 'postgres'],
+    choices: ['sqlite', 'postgres'] as const,
     default: 'sqlite',
   })
   .option('postgres-host', {
@@ -141,42 +150,59 @@ const parsed = yargs
   .parseSync()
 
 export async function runCliServer() {
-  return runRestAgent({
-    label: parsed.label,
-    walletConfig: {
-      id: parsed['wallet-id'],
-      key: parsed['wallet-key'],
-      storage:
-        parsed['storage-type'] === 'sqlite'
-          ? {
-              type: 'sqlite',
-            }
-          : ({
-              type: 'postgres',
-              config: {
-                host: parsed['postgres-host'] as string,
-              },
-              credentials: {
-                account: parsed['postgres-username'] as string,
-                password: parsed['postgres-password'] as string,
-              },
-            } satisfies AskarWalletPostgresStorageConfig),
-    },
-    indyLedgers: parsed['indy-ledger'],
-    endpoints: parsed.endpoint,
-    autoAcceptConnections: parsed['auto-accept-connections'],
-    autoAcceptCredentials: parsed['auto-accept-credentials'],
-    autoAcceptProofs: parsed['auto-accept-proofs'],
-    autoUpdateStorageOnStartup: parsed['auto-update-storage-on-startup'],
-    autoAcceptMediationRequests: parsed['auto-accept-mediation-requests'],
-    useDidKeyInProtocols: parsed['use-did-key-in-protocols'],
-    useDidSovPrefixWhereAllowed: parsed['use-legacy-did-sov-prefix'],
-    logLevel: parsed['log-level'],
-    inboundTransports: parsed['inbound-transport'],
-    outboundTransports: parsed['outbound-transport'],
-    connectionImageUrl: parsed['connection-image-url'],
+  const { start, shutdown } = await setupApp({
     webhookUrl: parsed['webhook-url'],
     adminPort: parsed['admin-port'],
-    multiTenant: parsed['multi-tenant'],
-  } as CredoRestConfig)
+    enableWebsocketEvents: true,
+    enableCors: true,
+
+    agent: {
+      label: parsed.label,
+      walletConfig: {
+        id: parsed['wallet-id'],
+        key: parsed['wallet-key'],
+        storage:
+          parsed['storage-type'] === 'sqlite'
+            ? {
+                type: 'sqlite',
+              }
+            : ({
+                type: 'postgres',
+                config: {
+                  host: parsed['postgres-host'] as string,
+                },
+                credentials: {
+                  account: parsed['postgres-username'] as string,
+                  password: parsed['postgres-password'] as string,
+                },
+              } satisfies AskarWalletPostgresStorageConfig),
+      },
+      indyLedgers: parsed['indy-ledger'],
+      endpoints: parsed.endpoint,
+      autoAcceptConnections: parsed['auto-accept-connections'],
+      autoAcceptCredentials: parsed['auto-accept-credentials'],
+      autoAcceptProofs: parsed['auto-accept-proofs'],
+      autoUpdateStorageOnStartup: parsed['auto-update-storage-on-startup'],
+      autoAcceptMediationRequests: parsed['auto-accept-mediation-requests'],
+      useDidKeyInProtocols: parsed['use-did-key-in-protocols'],
+      useDidSovPrefixWhereAllowed: parsed['use-did-sov-prefix-where-allowed'],
+      logLevel: parsed['log-level'],
+      inboundTransports: parsed['inbound-transport'],
+      outboundTransports: parsed['outbound-transport'],
+      connectionImageUrl: parsed['connection-image-url'],
+      multiTenant: parsed['multi-tenant'],
+    },
+  })
+
+  start()
+
+  process.on('SIGINT', async () => {
+    try {
+      await shutdown()
+    } finally {
+      process.exit(0)
+    }
+  })
 }
+
+runCliServer()

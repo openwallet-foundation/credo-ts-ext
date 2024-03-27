@@ -1,4 +1,5 @@
 import type { AnonCredsRegistry } from '@credo-ts/anoncreds'
+import type { Agent, AutoAcceptCredential, AutoAcceptProof } from '@credo-ts/core'
 import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 import type { TenantAgent } from '@credo-ts/tenants/build/TenantAgent'
 
@@ -15,13 +16,8 @@ import { AskarModule, AskarMultiWalletDatabaseScheme } from '@credo-ts/askar'
 import {
   V2CredentialProtocol,
   V2ProofProtocol,
-  Agent,
-  AutoAcceptCredential,
-  AutoAcceptProof,
   ConnectionsModule,
   CredentialsModule,
-  HttpOutboundTransport,
-  LogLevel,
   MediatorModule,
   ProofsModule,
   DidsModule,
@@ -40,14 +36,11 @@ import {
   IndyVdrSovDidResolver,
   IndyVdrIndyDidRegistrar,
 } from '@credo-ts/indy-vdr'
-import { agentDependencies, HttpInboundTransport } from '@credo-ts/node'
+import { OpenId4VcIssuerModule, OpenId4VcHolderModule, OpenId4VcVerifierModule } from '@credo-ts/openid4vc'
 import { TenantsModule } from '@credo-ts/tenants'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
-
-import { TsLogger } from './logger'
-import { BCOVRIN_TEST_GENESIS } from './util'
 
 type ModulesWithoutTenants = Omit<ReturnType<typeof getAgentModules>, 'tenants'>
 
@@ -56,7 +49,7 @@ export type RestRootAgentWithTenants = Agent<ModulesWithoutTenants & { tenants: 
 export type RestTenantAgent = TenantAgent<ModulesWithoutTenants>
 export type RestAgent = RestRootAgent | RestTenantAgent | RestRootAgentWithTenants
 
-export const getAgentModules = (options: {
+export function getAgentModules(options: {
   autoAcceptConnections: boolean
   autoAcceptProofs: AutoAcceptProof
   autoAcceptCredentials: AutoAcceptCredential
@@ -64,9 +57,12 @@ export const getAgentModules = (options: {
   indyLedgers?: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
   extraAnonCredsRegistries?: AnonCredsRegistry[]
   multiTenant: boolean
-}) => {
+  baseUrl: string
+}) {
   const legacyIndyCredentialFormatService = new LegacyIndyCredentialFormatService()
   const legacyIndyProofFormatService = new LegacyIndyProofFormatService()
+
+  const baseUrlWithoutSlash = options.baseUrl.endsWith('/') ? options.baseUrl.slice(0, -1) : options.baseUrl
 
   const baseModules = {
     connections: new ConnectionsModule({
@@ -116,6 +112,20 @@ export const getAgentModules = (options: {
         new IndyVdrSovDidResolver(),
       ],
     }),
+    openId4VcIssuer: new OpenId4VcIssuerModule({
+      baseUrl: `${baseUrlWithoutSlash}/oid4vci`,
+      endpoints: {
+        credential: {
+          credentialRequestToCredentialMapper: () => {
+            throw new Error('Not implemented')
+          },
+        },
+      },
+    }),
+    openId4VcHolder: new OpenId4VcHolderModule(),
+    openId4VcVerifier: new OpenId4VcVerifierModule({
+      baseUrl: `${baseUrlWithoutSlash}/siop`,
+    }),
   } as const
 
   const modules: typeof baseModules & { tenants?: TenantsModule<typeof baseModules>; indyVdr?: IndyVdrModule } =
@@ -135,64 +145,4 @@ export const getAgentModules = (options: {
   }
 
   return modules
-}
-
-export const setupAgent = async ({
-  name,
-  endpoints,
-  extraAnonCredsRegistries,
-  httpInboundTransportPort,
-  multiTenant = false,
-}: {
-  name: string
-  endpoints: string[]
-  extraAnonCredsRegistries?: AnonCredsRegistry[]
-  httpInboundTransportPort?: number
-  multiTenant?: boolean
-}): Promise<RestRootAgent | RestRootAgentWithTenants> => {
-  // FIXME: logger should not be enabled by default
-  const logger = new TsLogger(LogLevel.off)
-
-  const modules = getAgentModules({
-    autoAcceptConnections: true,
-    autoAcceptProofs: AutoAcceptProof.ContentApproved,
-    autoAcceptCredentials: AutoAcceptCredential.ContentApproved,
-    autoAcceptMediationRequests: true,
-    indyLedgers: [
-      {
-        isProduction: false,
-        indyNamespace: 'bcovrin:test',
-        genesisTransactions: BCOVRIN_TEST_GENESIS,
-        connectOnStartup: true,
-      },
-    ],
-    extraAnonCredsRegistries,
-    multiTenant,
-  })
-
-  const agent = new Agent({
-    config: {
-      label: name,
-      endpoints,
-      walletConfig: { id: name, key: name },
-      useDidSovPrefixWhereAllowed: true,
-      logger: logger,
-      autoUpdateStorageOnStartup: true,
-    },
-    dependencies: agentDependencies,
-    modules,
-  })
-
-  agent.registerOutboundTransport(new HttpOutboundTransport())
-  if (httpInboundTransportPort) {
-    const httpInbound = new HttpInboundTransport({
-      port: httpInboundTransportPort,
-    })
-
-    agent.registerInboundTransport(httpInbound)
-  }
-
-  await agent.initialize()
-
-  return agent
 }

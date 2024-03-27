@@ -20,7 +20,7 @@ import type {
 } from '@credo-ts/core'
 import type { PlaintextMessage } from '@credo-ts/core/build/types'
 
-import { maybeMapValues } from '../../../utils/helpers'
+import { maybeMapValues } from '../../../utils/maybeMapValues'
 
 type ProofProtocolVersion = 'v1' | 'v2'
 

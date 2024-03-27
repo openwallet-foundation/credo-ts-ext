@@ -28,9 +28,7 @@ describe('AgentController', () => {
         isInitialized: true,
         config: {
           label: agent.config.label,
-          endpoints: ['internal'],
-          useDidSovPrefixWhereAllowed: true,
-          autoUpdateStorageOnStartup: true,
+          endpoints: ['internal', 'http://localhost:random'],
         },
       })
       expect(response.statusCode).toBe(200)

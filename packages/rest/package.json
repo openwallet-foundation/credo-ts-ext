@@ -23,6 +23,9 @@
   "scripts": {
     "tsoa": "tsoa spec-and-routes",
     "dev": "yarn tsoa && tsnd --respawn samples/sampleWithApp.ts",
+    "sample": "yarn tsoa && tsnd --respawn samples/sample.ts",
+    "sample:with-app": "yarn tsoa && tsnd --respawn samples/sampleWithApp.ts",
+    "sample:cli": "yarn tsoa && tsnd --respawn src/cli.ts --config ./samples/cliConfig.json",
     "build": "yarn run clean && yarn run compile",
     "clean": "rimraf -rf ./build",
     "compile": "yarn tsoa && tsc -p tsconfig.build.json",
@@ -35,6 +38,7 @@
     "@credo-ts/core": "^0.5.0",
     "@credo-ts/indy-vdr": "^0.5.0",
     "@credo-ts/node": "^0.5.0",
+    "@credo-ts/openid4vc": "^0.5.0",
     "@credo-ts/tenants": "^0.5.0",
     "@hyperledger/anoncreds-nodejs": "^0.2.1",
     "@hyperledger/aries-askar-nodejs": "^0.2.0",

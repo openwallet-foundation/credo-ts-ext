@@ -7,6 +7,10 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag to give to the docker image'
+        required: true
 
 env:
   IMAGE_NAME: ghcr.io/openwallet-foundation/credo-rest
@@ -33,6 +37,11 @@ jobs:
         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
         with:
           images: ${{ env.IMAGE_NAME }}
+          tags: |
+            type=ref,event=branch
+            type=ref,event=tag,enable=${GITHUB_REF#refs/tags/rest-v*}
+            type=raw,value=${GITHUB_REF#refs/tags/rest-v},enable=${GITHUB_REF#refs/tags/rest-v*}
+            type=raw,value=${{ inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
 
       - name: Build and push Docker image
         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc

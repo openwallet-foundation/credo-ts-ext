@@ -15,10 +15,10 @@ import { serve, generateHTML } from 'swagger-ui-express'
 import { ValidateError } from 'tsoa'
 import { container } from 'tsyringe'
 
-import { basicMessageEvents } from './events/BasicMessageEvents'
-import { connectionEvents } from './events/ConnectionEvents'
-import { credentialEvents } from './events/CredentialEvents'
-import { proofEvents } from './events/ProofEvents'
+import { basicMessageEvents } from './events/basicMessageEvents'
+import { connectionEvents } from './events/connectionEvents'
+import { credentialEvents } from './events/credentialEvents'
+import { proofEvents } from './events/proofEvents'
 import { RegisterRoutes } from './generated/routes'
 
 export const setupServer = async (agent: RestRootAgent | RestRootAgentWithTenants, config: ServerConfig) => {

@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
-import type { WebhookData } from '../src/utils/webhook'
+import type { WebhookData } from './utils/webhook'
 import type { Agent, CredentialStateChangedEvent, ProofStateChangedEvent } from '@credo-ts/core'
 import type { Server } from 'net'
 
@@ -21,9 +21,9 @@ import { connectionRecordToApiModel } from '../src/controllers/didcomm/connectio
 import { credentialExchangeRecordToApiModel } from '../src/controllers/didcomm/credentials/CredentialsControllerTypes'
 import { proofExchangeRecordToApiModel } from '../src/controllers/didcomm/proofs/ProofsControllerTypes'
 import { setupServer } from '../src/server'
-import { waitForHook, webhookListener } from '../src/utils/webhook'
 
 import { getTestAgent } from './utils/helpers'
+import { waitForHook, webhookListener } from './utils/webhook'
 
 describe('WebhookTests', () => {
   let aliceAgent: Agent
