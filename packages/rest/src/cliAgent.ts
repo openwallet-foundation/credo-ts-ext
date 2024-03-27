@@ -32,7 +32,7 @@ const outboundTransportMapping = {
   ws: WsOutboundTransport,
 } as const
 
-export interface AriesRestConfig {
+export interface CredoRestConfig {
   label: string
   multiTenant: boolean
   walletConfig: WalletConfig
@@ -61,7 +61,7 @@ export async function readRestConfig(path: string) {
   return config
 }
 
-export async function runRestAgent(restConfig: AriesRestConfig) {
+export async function runRestAgent(restConfig: CredoRestConfig) {
   const {
     logLevel,
     inboundTransports = [],

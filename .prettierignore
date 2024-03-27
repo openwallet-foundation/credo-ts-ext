@@ -4,4 +4,4 @@ build
 .idea
 coverage
 CHANGELOG.md
-routes
+generated

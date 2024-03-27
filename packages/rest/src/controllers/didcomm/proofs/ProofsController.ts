@@ -183,7 +183,7 @@ export class ProofsController extends Controller {
   @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
   public async requestProof(@Request() request: RequestWithAgent, @Body() body: DidCommProofsSendRequestOptions) {
     try {
-      // NOTE: Credo does not work well if 'undefined' is passed. We should fix this in credo
+      // NOTE: Credo does not work well if 'undefined' is passed as a proofFormat key. We should fix this in credo
       const proofFormats: Parameters<typeof request.user.agent.proofs.requestProof>[0]['proofFormats'] = {}
       if (body.proofFormats.anoncreds) {
         proofFormats.anoncreds = transformApiProofFormatToCredo(body.proofFormats.anoncreds)

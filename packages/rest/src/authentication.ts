@@ -1,5 +1,3 @@
-// authentication.ts
-
 import type { RestAgent, RestRootAgent, RestRootAgentWithTenants, RestTenantAgent } from './utils/agent'
 import type { Request } from 'express'
 

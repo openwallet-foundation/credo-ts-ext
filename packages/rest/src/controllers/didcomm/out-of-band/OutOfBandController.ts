@@ -1,4 +1,4 @@
-import type { DidCommOutOfBandRecord } from './OutOfBandControllerTypes'
+import type { DidCommOutOfBandCreateInvitationResponse, DidCommOutOfBandRecord } from './OutOfBandControllerTypes'
 import type { PlaintextMessage } from '@credo-ts/core/build/types'
 
 import {
@@ -7,6 +7,8 @@ import {
   OutOfBandInvitation,
   RecordNotFoundError,
   ConnectionInvitationMessage,
+  OutOfBandState,
+  OutOfBandRole,
 } from '@credo-ts/core'
 import { parseMessageType, supportsIncomingMessageType } from '@credo-ts/core/build/utils/messageType'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
@@ -20,7 +22,7 @@ import { connectionRecordToApiModel, type DidCommConnectionsRecord } from '../co
 
 import {
   legacyInvitationExample,
-  outOfBandInvitationExample,
+  outOfBandCreateInvitationResponseExample,
   outOfBandRecordExample,
 } from './OutOfBandControllerExamples'
 import {
@@ -45,9 +47,15 @@ export class OutOfBandController extends Controller {
   public async findOutOfBandRecordsByQuery(
     @Request() request: RequestWithAgent,
     @Query('invitationId') invitationId?: string,
+    @Query('role') role?: OutOfBandRole,
+    @Query('state') state?: OutOfBandState,
+    @Query('threadId') threadId?: string,
   ): Promise<DidCommOutOfBandRecord[]> {
     const outOfBandRecords = await request.user.agent.oob.findAllByQuery({
       invitationId,
+      role,
+      state,
+      threadId,
     })
 
     return outOfBandRecords.map(outOfBandRecordToApiModel)
@@ -75,16 +83,12 @@ export class OutOfBandController extends Controller {
    * Creates an outbound out-of-band record containing out-of-band invitation message defined in
    * Aries RFC 0434: Out-of-Band Protocol 1.1.
    */
-  @Example({
-    invitationUrl: 'https://example.com/?',
-    invitation: outOfBandInvitationExample,
-    outOfBandRecord: outOfBandRecordExample,
-  })
+  @Example<DidCommOutOfBandCreateInvitationResponse>(outOfBandCreateInvitationResponseExample)
   @Post('/create-invitation')
   public async createInvitation(
     @Request() request: RequestWithAgent,
     @Body() body?: DidCommOutOfBandCreateInvitationOptions,
-  ) {
+  ): Promise<DidCommOutOfBandCreateInvitationResponse> {
     try {
       const outOfBandRecord = await request.user.agent.oob.createInvitation({
         ...body,

@@ -32,7 +32,7 @@ The Credo REST API is the most convenient way for self-sovereign identity (SSI) 
 
 - ⭐ **Endpoints** to create connections, issue credentials, and request proofs.
 - 💻 **CLI** that makes it super easy to start an instance of the REST API.
-- 🌐 **Interoperable** with all major Aries implementations and support for OpenID4VC.
+- 🌐 **Interoperable** with all major Aries implementations.
 
 ### Quick start
 

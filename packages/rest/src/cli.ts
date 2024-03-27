@@ -1,4 +1,4 @@
-import type { InboundTransport, Transports, AriesRestConfig } from './cliAgent'
+import type { InboundTransport, Transports, CredoRestConfig } from './cliAgent'
 import type { AskarWalletPostgresStorageConfig } from '@credo-ts/askar'
 
 import yargs from 'yargs'
@@ -49,7 +49,7 @@ const parsed = yargs
     boolean: true,
     default: false,
     describe:
-      'Start the agent as a multi-tenant agent. Once enabled, all operations (except tenant management) must be performed under a specific tenant.',
+      'Start the agent as a multi-tenant agent. Once enabled, all operations (except tenant management) must be performed under a specific tenant. Tenants can be created in the tenants controller (POST /tenants, see swagger UI), and the scope for a specific tenant can be set using the x-tenant-id header.',
   })
   .option('inbound-transport', {
     array: true,
@@ -173,5 +173,5 @@ export async function runCliServer() {
     webhookUrl: parsed['webhook-url'],
     adminPort: parsed['admin-port'],
     multiTenant: parsed['multi-tenant'],
-  } as AriesRestConfig)
+  } as CredoRestConfig)
 }

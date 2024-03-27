@@ -1,4 +1,4 @@
-import type { DidCommOutOfBandRecord } from './OutOfBandControllerTypes'
+import type { DidCommOutOfBandCreateInvitationResponse, DidCommOutOfBandRecord } from './OutOfBandControllerTypes'
 
 import { OutOfBandRecord, OutOfBandRole, OutOfBandState } from '@credo-ts/core'
 
@@ -32,4 +32,10 @@ export const outOfBandRecordExample: DidCommOutOfBandRecord = {
   state: OutOfBandState.PrepareResponse,
   reusable: false,
   type: OutOfBandRecord.type,
+}
+
+export const outOfBandCreateInvitationResponseExample: DidCommOutOfBandCreateInvitationResponse = {
+  invitationUrl: 'https://example.com/?',
+  invitation: outOfBandInvitationExample,
+  outOfBandRecord: outOfBandRecordExample,
 }

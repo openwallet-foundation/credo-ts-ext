@@ -1,6 +1,6 @@
 import 'reflect-metadata'
 import type { RequestWithAgent } from './authentication'
-import type { ApiError } from './types'
+import type { ApiError } from './error'
 import type { ServerConfig } from './utils/ServerConfig'
 import type { RestRootAgent, RestRootAgentWithTenants } from './utils/agent'
 import type { Response as ExResponse, Request as ExRequest, NextFunction } from 'express'
@@ -19,7 +19,7 @@ import { basicMessageEvents } from './events/BasicMessageEvents'
 import { connectionEvents } from './events/ConnectionEvents'
 import { credentialEvents } from './events/CredentialEvents'
 import { proofEvents } from './events/ProofEvents'
-import { RegisterRoutes } from './routes/routes'
+import { RegisterRoutes } from './generated/routes'
 
 export const setupServer = async (agent: RestRootAgent | RestRootAgentWithTenants, config: ServerConfig) => {
   container.registerInstance(Agent, agent as Agent)
@@ -42,7 +42,7 @@ export const setupServer = async (agent: RestRootAgent | RestRootAgentWithTenant
   )
   app.use(bodyParser.json())
   app.use('/docs', serve, async (_req: ExRequest, res: ExResponse, next: NextFunction) => {
-    res.send(generateHTML(await import('./routes/swagger.json')))
+    res.send(generateHTML(await import('./generated/swagger.json')))
     next()
   })
 

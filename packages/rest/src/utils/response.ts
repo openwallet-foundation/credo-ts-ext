@@ -1,4 +1,4 @@
-import type { ApiError } from '../types'
+import type { ApiError } from '../error'
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function alternativeResponse<T>(input: T): any {

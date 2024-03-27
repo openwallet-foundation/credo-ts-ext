@@ -972,6 +972,26 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"DidCommOutOfBandCreateInvitationResponse": {
+				"properties": {
+					"invitation": {
+						"$ref": "#/components/schemas/PlaintextMessage"
+					},
+					"outOfBandRecord": {
+						"$ref": "#/components/schemas/DidCommOutOfBandRecord"
+					},
+					"invitationUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"invitation",
+					"outOfBandRecord",
+					"invitationUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
 			"HandshakeProtocol": {
 				"description": "Enum values should be sorted based on order of preference. Values will be\nincluded in this order when creating out of band invitations.",
 				"enum": [
@@ -4376,6 +4396,30 @@
 						"schema": {
 							"type": "string"
 						}
+					},
+					{
+						"in": "query",
+						"name": "role",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/OutOfBandRole"
+						}
+					},
+					{
+						"in": "query",
+						"name": "state",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/OutOfBandState"
+						}
+					},
+					{
+						"in": "query",
+						"name": "threadId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
 					}
 				]
 			}
@@ -4496,7 +4540,9 @@
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {},
+								"schema": {
+									"$ref": "#/components/schemas/DidCommOutOfBandCreateInvitationResponse"
+								},
 								"examples": {
 									"Example 1": {
 										"value": {
@@ -5839,7 +5885,9 @@
 						}
 					}
 				]
-			},
+			}
+		},
+		"/didcomm/basic-messages/send": {
 			"post": {
 				"operationId": "SendMessage",
 				"responses": {

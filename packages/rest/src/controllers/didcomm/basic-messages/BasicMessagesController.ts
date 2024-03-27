@@ -50,7 +50,7 @@ export class DidCommBasicMessagesController extends Controller {
    * @returns BasicMessageRecord
    */
   @Example<DidCommBasicMessagesRecord>(basicMessageRecordExample)
-  @Post('/')
+  @Post('/send')
   public async sendMessage(@Request() request: RequestWithAgent, @Body() body: DidCommBasicMessagesSendOptions) {
     try {
       const basicMessageRecord = await request.user.agent.basicMessages.sendMessage(

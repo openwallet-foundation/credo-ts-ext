@@ -436,6 +436,16 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DidCommOutOfBandCreateInvitationResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "invitation": {"ref":"PlaintextMessage","required":true},
+            "outOfBandRecord": {"ref":"DidCommOutOfBandRecord","required":true},
+            "invitationUrl": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "HandshakeProtocol": {
         "dataType": "refEnum",
         "enums": ["https://didcomm.org/didexchange/1.x","https://didcomm.org/connections/1.x"],
@@ -1899,6 +1909,9 @@ export function RegisterRoutes(app: Router) {
             const args: Record<string, TsoaRoute.ParameterSchema> = {
                     request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     invitationId: {"in":"query","name":"invitationId","dataType":"string"},
+                    role: {"in":"query","name":"role","ref":"OutOfBandRole"},
+                    state: {"in":"query","name":"state","ref":"OutOfBandState"},
+                    threadId: {"in":"query","name":"threadId","dataType":"string"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -2818,7 +2831,7 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/didcomm/basic-messages',
+        app.post('/didcomm/basic-messages/send',
             authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(DidCommBasicMessagesController)),
             ...(fetchMiddlewares<RequestHandler>(DidCommBasicMessagesController.prototype.sendMessage)),

@@ -18,6 +18,7 @@ export class AgentController extends Controller {
   @Get('/')
   @Example(agentInfoExample)
   public async getAgentInfo(@Request() request: RequestWithRootAgent): Promise<AgentInfo> {
+    // We want to strip some properties from the config
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { agentDependencies, walletConfig, logger, ...config } = request.user.agent.config.toJSON()
 

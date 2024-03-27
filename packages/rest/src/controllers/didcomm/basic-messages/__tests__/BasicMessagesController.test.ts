@@ -51,7 +51,7 @@ describe('BasicMessagesController', () => {
       )
 
       const response = await request(app)
-        .post(`/didcomm/basic-messages`)
+        .post(`/didcomm/basic-messages/send`)
         .send({ content: 'Hello!', connectionId: inviterConnectionId })
 
       expect(response.statusCode).toBe(200)

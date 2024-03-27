@@ -15,6 +15,12 @@ export interface DidCommOutOfBandCreateInvitationOptions
   messages?: Array<PlaintextMessage>
 }
 
+export interface DidCommOutOfBandCreateInvitationResponse {
+  invitation: PlaintextMessage
+  outOfBandRecord: DidCommOutOfBandRecord
+  invitationUrl: string
+}
+
 export interface DidCommOutOfBandCreateLegacyConnectionInvitationOptions
   extends Omit<CreateLegacyInvitationConfig, 'routing'> {}
 
