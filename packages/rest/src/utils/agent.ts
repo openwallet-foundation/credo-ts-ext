@@ -1,6 +1,6 @@
 import type { AnonCredsRegistry } from '@credo-ts/anoncreds'
-import type { ModulesMap } from '@credo-ts/core'
 import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
+import type { TenantAgent } from '@credo-ts/tenants/build/TenantAgent'
 
 import {
   AnonCredsCredentialFormatService,
@@ -11,7 +11,7 @@ import {
   LegacyIndyProofFormatService,
   V1ProofProtocol,
 } from '@credo-ts/anoncreds'
-import { AskarModule } from '@credo-ts/askar'
+import { AskarModule, AskarMultiWalletDatabaseScheme } from '@credo-ts/askar'
 import {
   V2CredentialProtocol,
   V2ProofProtocol,
@@ -41,6 +41,7 @@ import {
   IndyVdrIndyDidRegistrar,
 } from '@credo-ts/indy-vdr'
 import { agentDependencies, HttpInboundTransport } from '@credo-ts/node'
+import { TenantsModule } from '@credo-ts/tenants'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
 import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
@@ -49,28 +50,12 @@ import path from 'path'
 import { TsLogger } from './logger'
 import { BCOVRIN_TEST_GENESIS } from './util'
 
-export interface RestAgentModules extends ModulesMap {
-  connections: ConnectionsModule
-  proofs: ProofsModule<[V1ProofProtocol, V2ProofProtocol<[LegacyIndyProofFormatService, AnonCredsProofFormatService]>]>
-  credentials: CredentialsModule<[V1CredentialProtocol, V2CredentialProtocol]>
-  anoncreds: AnonCredsModule
-}
+type ModulesWithoutTenants = Omit<ReturnType<typeof getAgentModules>, 'tenants'>
 
-export type RestAgent<
-  modules extends RestAgentModules = {
-    connections: ConnectionsModule
-    proofs: ProofsModule<
-      [V1ProofProtocol, V2ProofProtocol<[LegacyIndyProofFormatService, AnonCredsProofFormatService]>]
-    >
-    credentials: CredentialsModule<
-      [
-        V1CredentialProtocol,
-        V2CredentialProtocol<[LegacyIndyCredentialFormatService, AnonCredsCredentialFormatService]>,
-      ]
-    >
-    anoncreds: AnonCredsModule
-  },
-> = Agent<modules>
+export type RestRootAgent = Agent<ModulesWithoutTenants>
+export type RestRootAgentWithTenants = Agent<ModulesWithoutTenants & { tenants: TenantsModule<ModulesWithoutTenants> }>
+export type RestTenantAgent = TenantAgent<ModulesWithoutTenants>
+export type RestAgent = RestRootAgent | RestTenantAgent | RestRootAgentWithTenants
 
 export const genesisPath = process.env.GENESIS_TXN_PATH
   ? path.resolve(process.env.GENESIS_TXN_PATH)
@@ -83,11 +68,12 @@ export const getAgentModules = (options: {
   autoAcceptMediationRequests: boolean
   indyLedgers?: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
   extraAnonCredsRegistries?: AnonCredsRegistry[]
-}): RestAgentModules => {
+  multiTenant: boolean
+}) => {
   const legacyIndyCredentialFormatService = new LegacyIndyCredentialFormatService()
   const legacyIndyProofFormatService = new LegacyIndyProofFormatService()
 
-  const modules: RestAgentModules = {
+  const baseModules = {
     connections: new ConnectionsModule({
       autoAcceptConnections: options.autoAcceptConnections,
     }),
@@ -119,6 +105,7 @@ export const getAgentModules = (options: {
     }),
     askar: new AskarModule({
       ariesAskar,
+      multiWalletDatabaseScheme: AskarMultiWalletDatabaseScheme.ProfilePerWallet,
     }),
     mediator: new MediatorModule({
       autoAcceptMediationRequests: options.autoAcceptMediationRequests,
@@ -134,19 +121,25 @@ export const getAgentModules = (options: {
         new IndyVdrSovDidResolver(),
       ],
     }),
+  } as const
+
+  const modules: typeof baseModules & { tenants?: TenantsModule<typeof baseModules>; indyVdr?: IndyVdrModule } =
+    baseModules
+
+  if (options.multiTenant) {
+    modules.tenants = new TenantsModule({
+      sessionLimit: Infinity,
+    })
   }
 
-  if (!options.indyLedgers) {
-    return modules
-  }
-
-  return {
-    ...modules,
-    indyVdr: new IndyVdrModule({
+  if (options.indyLedgers) {
+    modules.indyVdr = new IndyVdrModule({
       indyVdr,
       networks: options.indyLedgers,
-    }),
+    })
   }
+
+  return modules
 }
 
 export const setupAgent = async ({
@@ -154,14 +147,16 @@ export const setupAgent = async ({
   endpoints,
   extraAnonCredsRegistries,
   httpInboundTransportPort,
+  multiTenant = false,
 }: {
   name: string
   endpoints: string[]
   extraAnonCredsRegistries?: AnonCredsRegistry[]
   httpInboundTransportPort?: number
-}) => {
+  multiTenant?: boolean
+}): Promise<RestRootAgent | RestRootAgentWithTenants> => {
   // FIXME: logger should not be enabled by default
-  const logger = new TsLogger(LogLevel.debug)
+  // const logger = new TsLogger(LogLevel.off)
 
   const modules = getAgentModules({
     autoAcceptConnections: true,
@@ -177,6 +172,7 @@ export const setupAgent = async ({
       },
     ],
     extraAnonCredsRegistries,
+    multiTenant,
   })
 
   const agent = new Agent({
@@ -185,7 +181,7 @@ export const setupAgent = async ({
       endpoints,
       walletConfig: { id: name, key: name },
       useDidSovPrefixWhereAllowed: true,
-      logger: logger,
+      // logger: logger,
       autoUpdateStorageOnStartup: true,
     },
     dependencies: agentDependencies,

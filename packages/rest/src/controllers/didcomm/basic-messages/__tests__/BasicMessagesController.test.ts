@@ -1,4 +1,4 @@
-import type { RestAgent } from '../../../../utils/agent'
+import type { RestRootAgent } from '../../../../utils/agent'
 import type { BasicMessageStateChangedEvent } from '@credo-ts/core'
 import type { Express } from 'express'
 
@@ -11,7 +11,7 @@ import { setupServer } from '../../../../server'
 
 describe('BasicMessagesController', () => {
   let app: Express
-  let agent: RestAgent
+  let agent: RestRootAgent
   let inviterConnectionId: string
   let receiverConnectionId: string
 

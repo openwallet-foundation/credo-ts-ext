@@ -1,9 +1,10 @@
 import type { DidCommConnectionsRecord } from './ConnectionsControllerTypes'
 
 import { DidExchangeState, Agent, RecordNotFoundError } from '@credo-ts/core'
-import { Controller, Delete, Example, Get, Path, Post, Query, Route, Tags } from 'tsoa'
+import { Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 import { Did } from '../../did/DidsControllerTypes'
 import { RecordId } from '../../types'
@@ -13,6 +14,7 @@ import { connectionRecordToApiModel } from './ConnectionsControllerTypes'
 
 @Tags('DIDComm Connections')
 @Route('/didcomm/connections')
+@Security('tenants', ['tenant'])
 @injectable()
 export class ConnectionsController extends Controller {
   public constructor(private agent: Agent) {
@@ -25,6 +27,7 @@ export class ConnectionsController extends Controller {
   @Example<DidCommConnectionsRecord[]>([connectionsRecordExample])
   @Get('/')
   public async findConnectionsByQuery(
+    @Request() request: RequestWithAgent,
     @Query('outOfBandId') outOfBandId?: RecordId,
     @Query('alias') alias?: string,
     @Query('state') state?: DidExchangeState,
@@ -32,7 +35,7 @@ export class ConnectionsController extends Controller {
     @Query('theirDid') theirDid?: Did,
     @Query('theirLabel') theirLabel?: string,
   ) {
-    const connections = await this.agent.connections.findAllByQuery({
+    const connections = await request.user.agent.connections.findAllByQuery({
       alias,
       did,
       theirDid,
@@ -51,8 +54,8 @@ export class ConnectionsController extends Controller {
    */
   @Example<DidCommConnectionsRecord>(connectionsRecordExample)
   @Get('/:connectionId')
-  public async getConnectionById(@Path('connectionId') connectionId: RecordId) {
-    const connection = await this.agent.connections.findById(connectionId)
+  public async getConnectionById(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
+    const connection = await request.user.agent.connections.findById(connectionId)
 
     if (!connection) {
       this.setStatus(404)
@@ -68,10 +71,10 @@ export class ConnectionsController extends Controller {
    * @param connectionId Connection identifier
    */
   @Delete('/:connectionId')
-  public async deleteConnection(@Path('connectionId') connectionId: RecordId) {
+  public async deleteConnection(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {
       this.setStatus(204)
-      await this.agent.connections.deleteById(connectionId)
+      await request.user.agent.connections.deleteById(connectionId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         this.setStatus(404)
@@ -91,9 +94,9 @@ export class ConnectionsController extends Controller {
    */
   @Example<DidCommConnectionsRecord>(connectionsRecordExample)
   @Post('/:connectionId/accept-request')
-  public async acceptRequest(@Path('connectionId') connectionId: RecordId) {
+  public async acceptRequest(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {
-      const connection = await this.agent.connections.acceptRequest(connectionId)
+      const connection = await request.user.agent.connections.acceptRequest(connectionId)
       return connectionRecordToApiModel(connection)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -117,9 +120,9 @@ export class ConnectionsController extends Controller {
    */
   @Example<DidCommConnectionsRecord>(connectionsRecordExample)
   @Post('/:connectionId/accept-response')
-  public async acceptResponse(@Path('connectionId') connectionId: RecordId) {
+  public async acceptResponse(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {
-      const connection = await this.agent.connections.acceptResponse(connectionId)
+      const connection = await request.user.agent.connections.acceptResponse(connectionId)
       return connectionRecordToApiModel(connection)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {

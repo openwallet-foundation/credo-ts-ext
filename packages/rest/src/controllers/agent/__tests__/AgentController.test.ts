@@ -28,7 +28,7 @@ describe('AgentController', () => {
         isInitialized: true,
         config: {
           label: agent.config.label,
-          endpoints: ['http://localhost:3001'],
+          endpoints: ['internal'],
           useDidSovPrefixWhereAllowed: true,
           autoUpdateStorageOnStartup: true,
         },

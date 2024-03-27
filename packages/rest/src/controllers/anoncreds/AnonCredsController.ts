@@ -12,12 +12,11 @@ import type {
   AnonCredsRegisterSchemaSuccessResponse,
   AnonCredsRegisterSchemaWaitResponse,
 } from './AnonCredsControllerTypes'
-import type { RestAgent } from '../../utils/agent'
 
-import { Agent } from '@credo-ts/core'
-import { Body, Controller, Example, Response, Get, Path, Post, Route, Tags } from 'tsoa'
+import { Body, Controller, Example, Response, Get, Path, Post, Route, Tags, Security, Request } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { RequestWithAgent } from '../../authentication'
 import { alternativeResponse } from '../../utils/response'
 
 import {
@@ -39,15 +38,9 @@ import {
 
 @Tags('AnonCreds')
 @Route('/anoncreds')
+@Security('tenants', ['tenant'])
 @injectable()
 export class AnonCredsController extends Controller {
-  private agent: RestAgent
-
-  public constructor(agent: Agent) {
-    super()
-    this.agent = agent
-  }
-
   /**
    * Retrieve schema by schema id
    */
@@ -61,9 +54,10 @@ export class AnonCredsController extends Controller {
   @Response<AnonCredsGetSchemaFailedResponse>(500, 'Unknown error retrieving schema', anonCredsGetSchemaFailedExample)
   @Get('/schemas/:schemaId')
   public async getSchemaById(
+    @Request() request: RequestWithAgent,
     @Path('schemaId') schemaId: AnonCredsSchemaId,
   ): Promise<AnonCredsGetSchemaSuccessResponse> {
-    const schemaResult = await this.agent.modules.anoncreds.getSchema(schemaId)
+    const schemaResult = await request.user.agent.modules.anoncreds.getSchema(schemaId)
     const error = schemaResult.resolutionMetadata?.error
 
     if (schemaResult.resolutionMetadata.error === 'notFound') {
@@ -97,9 +91,10 @@ export class AnonCredsController extends Controller {
   @Response<AnonCredsRegisterSchemaWaitResponse>(202, 'Wait for action to complete')
   @Post('/schemas')
   public async registerSchema(
+    @Request() request: RequestWithAgent,
     @Body() body: AnonCredsRegisterSchemaBody,
   ): Promise<AnonCredsRegisterSchemaSuccessResponse> {
-    const registerSchemaResult = await this.agent.modules.anoncreds.registerSchema({
+    const registerSchemaResult = await request.user.agent.modules.anoncreds.registerSchema({
       schema: body.schema,
       options: body.options ?? {},
     })
@@ -155,10 +150,11 @@ export class AnonCredsController extends Controller {
   )
   @Get('/credential-definitions/:credentialDefinitionId')
   public async getCredentialDefinitionById(
+    @Request() request: RequestWithAgent,
     @Path('credentialDefinitionId') credentialDefinitionId: AnonCredsCredentialDefinitionId,
   ): Promise<AnonCredsGetCredentialDefinitionSuccessResponse> {
     const credentialDefinitionResult =
-      await this.agent.modules.anoncreds.getCredentialDefinition(credentialDefinitionId)
+      await request.user.agent.modules.anoncreds.getCredentialDefinition(credentialDefinitionId)
     const error = credentialDefinitionResult.resolutionMetadata?.error
 
     if (credentialDefinitionResult.resolutionMetadata?.error === 'notFound') {
@@ -192,9 +188,10 @@ export class AnonCredsController extends Controller {
   @Response<AnonCredsRegisterCredentialDefinitionWaitResponse>(202, 'Wait for action to complete')
   @Post('/credential-definitions')
   public async registerCredentialDefinition(
+    @Request() request: RequestWithAgent,
     @Body() body: AnonCredsRegisterCredentialDefinitionBody,
   ): Promise<AnonCredsRegisterCredentialDefinitionSuccessResponse> {
-    const registerCredentialDefinitionResult = await this.agent.modules.anoncreds.registerCredentialDefinition({
+    const registerCredentialDefinitionResult = await request.user.agent.modules.anoncreds.registerCredentialDefinition({
       credentialDefinition: body.credentialDefinition,
       options: body.options ?? {},
     })

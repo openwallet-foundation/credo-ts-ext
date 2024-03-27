@@ -1,4 +1,4 @@
-import type { RestAgent } from '../../../../utils/agent'
+import type { RestRootAgent } from '../../../../utils/agent'
 import type { CredentialStateChangedEvent } from '@credo-ts/core'
 import type { Express } from 'express'
 
@@ -12,7 +12,7 @@ import { testAnonCredsSchema } from '../../../anoncreds/__tests__/fixtures'
 
 describe('BasicMessagesController', () => {
   let app: Express
-  let agent: RestAgent
+  let agent: RestRootAgent
   let inviterConnectionId: string
   let receiverConnectionId: string
 

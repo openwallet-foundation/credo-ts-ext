@@ -10,7 +10,7 @@ const run = async () => {
   const endpoint = process.env.AGENT_ENDPOINT ?? 'http://localhost:3001'
 
   const agent = await setupAgent({
-    port: 3001,
+    httpInboundTransportPort: 3001,
     endpoints: [endpoint],
     name: 'Aries Test Agent',
   })

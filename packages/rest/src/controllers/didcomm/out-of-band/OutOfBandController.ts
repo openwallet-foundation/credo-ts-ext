@@ -5,14 +5,14 @@ import {
   AgentMessage,
   JsonTransformer,
   OutOfBandInvitation,
-  Agent,
   RecordNotFoundError,
   ConnectionInvitationMessage,
 } from '@credo-ts/core'
 import { parseMessageType, supportsIncomingMessageType } from '@credo-ts/core/build/utils/messageType'
-import { Body, Controller, Delete, Example, Get, Path, Post, Query, Route, Tags } from 'tsoa'
+import { Body, Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId } from '../../types'
 import { connectionsRecordExample } from '../connections/ConnectionsControllerExamples'
@@ -34,21 +34,19 @@ import {
 
 @Tags('DIDComm Out Of Band')
 @Route('/didcomm/out-of-band')
+@Security('tenants', ['tenant'])
 @injectable()
 export class OutOfBandController extends Controller {
-  public constructor(private agent: Agent) {
-    super()
-  }
-
   /**
    * Retrieve all out of band records by query
    */
   @Example([outOfBandRecordExample])
   @Get()
   public async findOutOfBandRecordsByQuery(
+    @Request() request: RequestWithAgent,
     @Query('invitationId') invitationId?: string,
   ): Promise<DidCommOutOfBandRecord[]> {
-    const outOfBandRecords = await this.agent.oob.findAllByQuery({
+    const outOfBandRecords = await request.user.agent.oob.findAllByQuery({
       invitationId,
     })
 
@@ -60,8 +58,11 @@ export class OutOfBandController extends Controller {
    */
   @Example(outOfBandRecordExample)
   @Get('/:outOfBandId')
-  public async getOutOfBandRecordById(@Path('outOfBandId') outOfBandId: RecordId): Promise<DidCommOutOfBandRecord> {
-    const outOfBandRecord = await this.agent.oob.findById(outOfBandId)
+  public async getOutOfBandRecordById(
+    @Request() request: RequestWithAgent,
+    @Path('outOfBandId') outOfBandId: RecordId,
+  ): Promise<DidCommOutOfBandRecord> {
+    const outOfBandRecord = await request.user.agent.oob.findById(outOfBandId)
 
     if (!outOfBandRecord) {
       this.setStatus(404)
@@ -80,18 +81,21 @@ export class OutOfBandController extends Controller {
     outOfBandRecord: outOfBandRecordExample,
   })
   @Post('/create-invitation')
-  public async createInvitation(@Body() body?: DidCommOutOfBandCreateInvitationOptions) {
+  public async createInvitation(
+    @Request() request: RequestWithAgent,
+    @Body() body?: DidCommOutOfBandCreateInvitationOptions,
+  ) {
     try {
-      const outOfBandRecord = await this.agent.oob.createInvitation({
+      const outOfBandRecord = await request.user.agent.oob.createInvitation({
         ...body,
         messages: body?.messages?.map((m) => JsonTransformer.fromJSON(m, AgentMessage)),
       })
       return {
         invitationUrl: outOfBandRecord.outOfBandInvitation.toUrl({
-          domain: this.agent.config.endpoints[0],
+          domain: request.user.agent.config.endpoints[0],
         }),
         invitation: outOfBandRecord.outOfBandInvitation.toJSON({
-          useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
+          useDidSovPrefixWhereAllowed: request.user.agent.config.useDidSovPrefixWhereAllowed,
         }),
         outOfBandRecord: outOfBandRecordToApiModel(outOfBandRecord),
       }
@@ -114,17 +118,20 @@ export class OutOfBandController extends Controller {
     outOfBandRecord: outOfBandRecordExample,
   })
   @Post('/create-legacy-invitation')
-  public async createLegacyInvitation(@Body() body?: DidCommOutOfBandCreateLegacyConnectionInvitationOptions) {
+  public async createLegacyInvitation(
+    @Request() request: RequestWithAgent,
+    @Body() body?: DidCommOutOfBandCreateLegacyConnectionInvitationOptions,
+  ) {
     try {
-      const { outOfBandRecord, invitation } = await this.agent.oob.createLegacyInvitation(body)
+      const { outOfBandRecord, invitation } = await request.user.agent.oob.createLegacyInvitation(body)
 
       return {
         invitationUrl: invitation.toUrl({
-          domain: this.agent.config.endpoints[0],
-          useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
+          domain: request.user.agent.config.endpoints[0],
+          useDidSovPrefixWhereAllowed: request.user.agent.config.useDidSovPrefixWhereAllowed,
         }),
         invitation: invitation.toJSON({
-          useDidSovPrefixWhereAllowed: this.agent.config.useDidSovPrefixWhereAllowed,
+          useDidSovPrefixWhereAllowed: request.user.agent.config.useDidSovPrefixWhereAllowed,
         }),
         outOfBandRecord: outOfBandRecordToApiModel(outOfBandRecord),
       }
@@ -150,12 +157,13 @@ export class OutOfBandController extends Controller {
   })
   @Post('/create-legacy-connectionless-invitation')
   public async createLegacyConnectionlessInvitation(
+    @Request() request: RequestWithAgent,
     @Body() config: DidCommOutOfBandCreateLegacyConnectionlessInvitationOptions,
   ) {
     try {
       const agentMessage = JsonTransformer.fromJSON(config.message, AgentMessage)
 
-      return await this.agent.oob.createLegacyConnectionlessInvitation({
+      return await request.user.agent.oob.createLegacyConnectionlessInvitation({
         ...config,
         message: agentMessage,
       })
@@ -174,13 +182,16 @@ export class OutOfBandController extends Controller {
     connectionRecord: connectionsRecordExample,
   })
   @Post('/receive-invitation')
-  public async receiveInvitation(@Body() body: DidCommOutOfBandReceiveInvitationOptions) {
+  public async receiveInvitation(
+    @Request() request: RequestWithAgent,
+    @Body() body: DidCommOutOfBandReceiveInvitationOptions,
+  ) {
     const { invitation, ...config } = body
 
     try {
       let invitationMessage: OutOfBandInvitation | ConnectionInvitationMessage
       if (typeof invitation === 'string') {
-        invitationMessage = await this.agent.oob.parseInvitation(invitation)
+        invitationMessage = await request.user.agent.oob.parseInvitation(invitation)
       } else if (supportsIncomingMessageType(parseMessageType(invitation['@type']), ConnectionInvitationMessage.type)) {
         invitationMessage = JsonTransformer.fromJSON(invitation, ConnectionInvitationMessage)
       } else if (supportsIncomingMessageType(parseMessageType(invitation['@type']), OutOfBandInvitation.type)) {
@@ -189,7 +200,10 @@ export class OutOfBandController extends Controller {
         return apiErrorResponse(`Invalid invitation message type ${invitation['@type']}`)
       }
 
-      const { outOfBandRecord, connectionRecord } = await this.agent.oob.receiveInvitation(invitationMessage, config)
+      const { outOfBandRecord, connectionRecord } = await request.user.agent.oob.receiveInvitation(
+        invitationMessage,
+        config,
+      )
 
       return {
         outOfBandRecord: outOfBandRecordToApiModel(outOfBandRecord),
@@ -211,11 +225,12 @@ export class OutOfBandController extends Controller {
   })
   @Post('/:outOfBandId/accept-invitation')
   public async acceptInvitation(
+    @Request() request: RequestWithAgent,
     @Path('outOfBandId') outOfBandId: RecordId,
     @Body() acceptInvitationConfig: DidCommOutOfBandAcceptInvitationOptions,
   ) {
     try {
-      const { outOfBandRecord, connectionRecord } = await this.agent.oob.acceptInvitation(
+      const { outOfBandRecord, connectionRecord } = await request.user.agent.oob.acceptInvitation(
         outOfBandId,
         acceptInvitationConfig,
       )
@@ -234,10 +249,10 @@ export class OutOfBandController extends Controller {
    * Deletes an out of band record from the repository.
    */
   @Delete('/:outOfBandId')
-  public async deleteOutOfBandRecord(@Path('outOfBandId') outOfBandId: RecordId) {
+  public async deleteOutOfBandRecord(@Request() request: RequestWithAgent, @Path('outOfBandId') outOfBandId: RecordId) {
     try {
       this.setStatus(204)
-      await this.agent.oob.deleteById(outOfBandId)
+      await request.user.agent.oob.deleteById(outOfBandId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         this.setStatus(404)

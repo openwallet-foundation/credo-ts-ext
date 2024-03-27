@@ -1,4 +1,5 @@
 import type { InboundTransport, Transports, AriesRestConfig } from './cliAgent'
+import type { AskarWalletPostgresStorageConfig } from '@credo-ts/askar'
 
 import yargs from 'yargs'
 
@@ -43,6 +44,12 @@ const parsed = yargs
     default: [],
     choices: ['http', 'ws'],
     array: true,
+  })
+  .option('--multi-tenant', {
+    boolean: true,
+    default: false,
+    describe:
+      'Start the agent as a multi-tenant agent. Once enabled, all operations (except tenant management) must be performed under a specific tenant.',
   })
   .option('inbound-transport', {
     array: true,
@@ -103,6 +110,29 @@ const parsed = yargs
     number: true,
     demandOption: true,
   })
+  .option('storage-type', {
+    choices: ['sqlite', 'postgres'],
+    default: 'sqlite',
+  })
+  .option('postgres-host', {
+    string: true,
+  })
+  .option('postgres-username', {
+    string: true,
+  })
+  .option('postgres-password', {
+    string: true,
+  })
+  .check((argv) => {
+    if (
+      argv['storage-type'] === 'postgres' &&
+      (!argv['postgres-host'] || !argv['postgres-username'] || !argv['postgres-password'])
+    ) {
+      throw new Error(
+        "--postgres-host, --postgres-username, and postgres-password are required when setting --storage-type to 'postgres'",
+      )
+    }
+  })
   .config()
   .env('CREDO_REST')
   .parseSync()
@@ -113,6 +143,19 @@ export async function runCliServer() {
     walletConfig: {
       id: parsed['wallet-id'],
       key: parsed['wallet-key'],
+      storage:
+        parsed['storage-type'] === 'sqlite'
+          ? {}
+          : ({
+              type: 'postgres',
+              config: {
+                host: parsed['postgres-host'] as string,
+              },
+              credentials: {
+                account: parsed['postgres-username'] as string,
+                password: parsed['postgres-password'] as string,
+              },
+            } satisfies AskarWalletPostgresStorageConfig),
     },
     indyLedgers: parsed['indy-ledger'],
     endpoints: parsed.endpoint,
@@ -129,5 +172,6 @@ export async function runCliServer() {
     connectionImageUrl: parsed['connection-image-url'],
     webhookUrl: parsed['webhook-url'],
     adminPort: parsed['admin-port'],
+    multiTenant: parsed['multi-tenant'],
   } as AriesRestConfig)
 }

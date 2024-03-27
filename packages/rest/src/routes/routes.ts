@@ -1,7 +1,9 @@
 /* tslint:disable */
 /* eslint-disable */
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse, fetchMiddlewares } from '@tsoa/runtime';
+import { TsoaRoute, fetchMiddlewares, ExpressTemplateService } from '@tsoa/runtime';
+// WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+import { TenantsController } from './../controllers/tenants/TenantsController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { ProofsController } from './../controllers/didcomm/proofs/ProofsController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -18,16 +20,57 @@ import { DidController } from './../controllers/did/DidsController';
 import { AnonCredsController } from './../controllers/anoncreds/AnonCredsController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AgentController } from './../controllers/agent/AgentController';
+import { expressAuthentication } from './../authentication';
+// @ts-ignore - no great way to install types from subpackage
 import { iocContainer } from './../utils/tsyringeTsoaIocContainer';
 import type { IocContainer, IocContainerFactory } from '@tsoa/runtime';
-import type { RequestHandler, Router } from 'express';
+import type { Request as ExRequest, Response as ExResponse, RequestHandler, Router } from 'express';
+
+const expressAuthenticationRecasted = expressAuthentication as (req: ExRequest, securityName: string, scopes?: string[], res?: ExResponse) => Promise<any>;
+
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
 const models: TsoaRoute.Models = {
+    "Pick_TenantConfig.Exclude_keyofTenantConfig.walletConfig__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string","required":true},"connectionImageUrl":{"dataType":"string"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Omit_TenantConfig.walletConfig_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_TenantConfig.Exclude_keyofTenantConfig.walletConfig__","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TenantApiConfig": {
+        "dataType": "refAlias",
+        "type": {"ref":"Omit_TenantConfig.walletConfig_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "RecordId": {
         "dataType": "refAlias",
         "type": {"dataType":"string","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "TenantsRecord": {
+        "dataType": "refObject",
+        "properties": {
+            "id": {"ref":"RecordId","required":true},
+            "createdAt": {"dataType":"datetime","required":true},
+            "updatedAt": {"dataType":"datetime"},
+            "type": {"dataType":"string","required":true},
+            "storageVersion": {"dataType":"string","required":true},
+            "config": {"ref":"TenantApiConfig","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CreateTenantOptions": {
+        "dataType": "refObject",
+        "properties": {
+            "config": {"ref":"Omit_TenantConfig.walletConfig_","required":true},
+        },
+        "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ThreadId": {
@@ -400,14 +443,14 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments-or-messages__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"goalCode":{"dataType":"string"},"label":{"dataType":"string"},"alias":{"dataType":"string"},"imageUrl":{"dataType":"string"},"goal":{"dataType":"string"},"handshake":{"dataType":"boolean"},"handshakeProtocols":{"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},"multiUseInvitation":{"dataType":"boolean"},"autoAcceptConnection":{"dataType":"boolean"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string"},"goalCode":{"dataType":"string"},"alias":{"dataType":"string"},"imageUrl":{"dataType":"string"},"goal":{"dataType":"string"},"handshake":{"dataType":"boolean"},"handshakeProtocols":{"dataType":"array","array":{"dataType":"refEnum","ref":"HandshakeProtocol"}},"multiUseInvitation":{"dataType":"boolean"},"autoAcceptConnection":{"dataType":"boolean"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "DidCommOutOfBandCreateInvitationOptions": {
         "dataType": "refObject",
         "properties": {
-            "goalCode": {"dataType":"string"},
             "label": {"dataType":"string"},
+            "goalCode": {"dataType":"string"},
             "alias": {"dataType":"string"},
             "imageUrl": {"dataType":"string"},
             "goal": {"dataType":"string"},
@@ -1424,18 +1467,18 @@ const models: TsoaRoute.Models = {
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "Pick_ReturnType_AgentConfig-at-toJSON_.Exclude_keyofReturnType_AgentConfig-at-toJSON_.walletConfig-or-logger-or-agentDependencies__": {
         "dataType": "refAlias",
-        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string","required":true},"endpoints":{"dataType":"array","array":{"dataType":"string"}},"didCommMimeType":{"ref":"DidCommMimeType"},"useDidKeyInProtocols":{"dataType":"boolean"},"useDidSovPrefixWhereAllowed":{"dataType":"boolean"},"connectionImageUrl":{"dataType":"string"},"autoUpdateStorageOnStartup":{"dataType":"boolean"},"backupBeforeStorageUpdate":{"dataType":"boolean"}},"validators":{}},
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"label":{"dataType":"string","required":true},"connectionImageUrl":{"dataType":"string"},"endpoints":{"dataType":"array","array":{"dataType":"string"}},"didCommMimeType":{"ref":"DidCommMimeType"},"useDidKeyInProtocols":{"dataType":"boolean"},"useDidSovPrefixWhereAllowed":{"dataType":"boolean"},"autoUpdateStorageOnStartup":{"dataType":"boolean"},"backupBeforeStorageUpdate":{"dataType":"boolean"}},"validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ApiAgentConfig": {
         "dataType": "refObject",
         "properties": {
             "label": {"dataType":"string","required":true},
+            "connectionImageUrl": {"dataType":"string"},
             "endpoints": {"dataType":"array","array":{"dataType":"string"}},
             "didCommMimeType": {"ref":"DidCommMimeType"},
             "useDidKeyInProtocols": {"dataType":"boolean"},
             "useDidSovPrefixWhereAllowed": {"dataType":"boolean"},
-            "connectionImageUrl": {"dataType":"string"},
             "autoUpdateStorageOnStartup": {"dataType":"boolean"},
             "backupBeforeStorageUpdate": {"dataType":"boolean"},
         },
@@ -1452,7 +1495,7 @@ const models: TsoaRoute.Models = {
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 };
-const validationService = new ValidationService(models);
+const templateService = new ExpressTemplateService(models, {"noImplicitAdditionalProperties":"throw-on-extras","bodyCoercion":true});
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
@@ -1461,12 +1504,52 @@ export function RegisterRoutes(app: Router) {
     //  NOTE: If you do not see routes for all of your controllers in this file, then you might not have informed tsoa of where to look
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
+        app.post('/tenants',
+            authenticateMiddleware([{"tenants":["admin"]}]),
+            ...(fetchMiddlewares<RequestHandler>(TenantsController)),
+            ...(fetchMiddlewares<RequestHandler>(TenantsController.prototype.createTenant)),
+
+            async function TenantsController_createTenant(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                    body: {"in":"body","name":"body","required":true,"ref":"CreateTenantOptions"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<TenantsController>(TenantsController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+              await templateService.apiHandler({
+                methodName: 'createTenant',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/proofs',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.findProofsByQuery)),
 
-            async function ProofsController_findProofsByQuery(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_findProofsByQuery(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     threadId: {"in":"query","name":"threadId","ref":"ThreadId"},
                     connectionId: {"in":"query","name":"connectionId","ref":"RecordId"},
                     state: {"in":"query","name":"state","ref":"ProofState"},
@@ -1478,7 +1561,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1487,20 +1570,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.findProofsByQuery.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'findProofsByQuery',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/proofs/:proofExchangeId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.getProofExchangeById)),
 
-            async function ProofsController_getProofExchangeById(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_getProofExchangeById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     proofExchangeId: {"in":"path","name":"proofExchangeId","required":true,"ref":"RecordId"},
             };
 
@@ -1508,7 +1599,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1517,20 +1608,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.getProofExchangeById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'getProofExchangeById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/didcomm/proofs/:proofExchangeId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.deleteProof)),
 
-            async function ProofsController_deleteProof(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_deleteProof(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     proofExchangeId: {"in":"path","name":"proofExchangeId","required":true,"ref":"RecordId"},
             };
 
@@ -1538,7 +1637,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1547,20 +1646,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.deleteProof.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'deleteProof',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/proofs/propose-proof',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.proposeProof)),
 
-            async function ProofsController_proposeProof(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_proposeProof(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","required":true,"ref":"DidCommProofsProposeProofOptions"},
             };
 
@@ -1568,7 +1675,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1577,20 +1684,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.proposeProof.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'proposeProof',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/proofs/:proofExchangeId/accept-proposal',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.acceptProposal)),
 
-            async function ProofsController_acceptProposal(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_acceptProposal(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     proofExchangeId: {"in":"path","name":"proofExchangeId","required":true,"ref":"RecordId"},
                     body: {"in":"body","name":"body","required":true,"ref":"DidCommProofsAcceptProposalOptions"},
             };
@@ -1599,7 +1714,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1608,20 +1723,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptProposal.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptProposal',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/proofs/create-request',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.createRequest)),
 
-            async function ProofsController_createRequest(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_createRequest(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","required":true,"ref":"DidCommProofsCreateRequestOptions"},
             };
 
@@ -1629,7 +1752,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1638,20 +1761,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.createRequest.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'createRequest',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/proofs/request-proof',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.requestProof)),
 
-            async function ProofsController_requestProof(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_requestProof(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","required":true,"ref":"DidCommProofsSendRequestOptions"},
             };
 
@@ -1659,7 +1790,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1668,20 +1799,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.requestProof.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'requestProof',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/proofs/:proofExchangeId/accept-request',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.acceptRequest)),
 
-            async function ProofsController_acceptRequest(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_acceptRequest(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     proofExchangeId: {"in":"path","name":"proofExchangeId","required":true,"ref":"RecordId"},
                     body: {"in":"body","name":"body","required":true,"ref":"DidCommProofsAcceptRequestOptions"},
             };
@@ -1690,7 +1829,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1699,20 +1838,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptRequest.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptRequest',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/proofs/:proofExchangeId/accept-presentation',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
             ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.acceptPresentation)),
 
-            async function ProofsController_acceptPresentation(request: any, response: any, next: any) {
-            const args = {
+            async function ProofsController_acceptPresentation(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     proofExchangeId: {"in":"path","name":"proofExchangeId","required":true,"ref":"RecordId"},
             };
 
@@ -1720,7 +1867,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1729,20 +1876,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptPresentation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptPresentation',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/out-of-band',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.findOutOfBandRecordsByQuery)),
 
-            async function OutOfBandController_findOutOfBandRecordsByQuery(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_findOutOfBandRecordsByQuery(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     invitationId: {"in":"query","name":"invitationId","dataType":"string"},
             };
 
@@ -1750,7 +1905,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1759,20 +1914,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.findOutOfBandRecordsByQuery.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'findOutOfBandRecordsByQuery',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/out-of-band/:outOfBandId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.getOutOfBandRecordById)),
 
-            async function OutOfBandController_getOutOfBandRecordById(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_getOutOfBandRecordById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     outOfBandId: {"in":"path","name":"outOfBandId","required":true,"ref":"RecordId"},
             };
 
@@ -1780,7 +1943,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1789,20 +1952,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.getOutOfBandRecordById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'getOutOfBandRecordById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/out-of-band/create-invitation',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.createInvitation)),
 
-            async function OutOfBandController_createInvitation(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_createInvitation(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","ref":"DidCommOutOfBandCreateInvitationOptions"},
             };
 
@@ -1810,7 +1981,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1819,20 +1990,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.createInvitation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'createInvitation',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/out-of-band/create-legacy-invitation',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.createLegacyInvitation)),
 
-            async function OutOfBandController_createLegacyInvitation(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_createLegacyInvitation(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","ref":"DidCommOutOfBandCreateLegacyConnectionInvitationOptions"},
             };
 
@@ -1840,7 +2019,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1849,20 +2028,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.createLegacyInvitation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'createLegacyInvitation',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/out-of-band/create-legacy-connectionless-invitation',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.createLegacyConnectionlessInvitation)),
 
-            async function OutOfBandController_createLegacyConnectionlessInvitation(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_createLegacyConnectionlessInvitation(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     config: {"in":"body","name":"config","required":true,"ref":"DidCommOutOfBandCreateLegacyConnectionlessInvitationOptions"},
             };
 
@@ -1870,7 +2057,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1879,20 +2066,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.createLegacyConnectionlessInvitation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'createLegacyConnectionlessInvitation',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/out-of-band/receive-invitation',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.receiveInvitation)),
 
-            async function OutOfBandController_receiveInvitation(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_receiveInvitation(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","required":true,"ref":"DidCommOutOfBandReceiveInvitationOptions"},
             };
 
@@ -1900,7 +2095,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1909,20 +2104,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.receiveInvitation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'receiveInvitation',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/out-of-band/:outOfBandId/accept-invitation',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.acceptInvitation)),
 
-            async function OutOfBandController_acceptInvitation(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_acceptInvitation(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     outOfBandId: {"in":"path","name":"outOfBandId","required":true,"ref":"RecordId"},
                     acceptInvitationConfig: {"in":"body","name":"acceptInvitationConfig","required":true,"ref":"DidCommOutOfBandAcceptInvitationOptions"},
             };
@@ -1931,7 +2134,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1940,20 +2143,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptInvitation.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptInvitation',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/didcomm/out-of-band/:outOfBandId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController)),
             ...(fetchMiddlewares<RequestHandler>(OutOfBandController.prototype.deleteOutOfBandRecord)),
 
-            async function OutOfBandController_deleteOutOfBandRecord(request: any, response: any, next: any) {
-            const args = {
+            async function OutOfBandController_deleteOutOfBandRecord(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     outOfBandId: {"in":"path","name":"outOfBandId","required":true,"ref":"RecordId"},
             };
 
@@ -1961,7 +2172,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -1970,20 +2181,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.deleteOutOfBandRecord.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'deleteOutOfBandRecord',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/credentials',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.findCredentialsByQuery)),
 
-            async function CredentialsController_findCredentialsByQuery(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_findCredentialsByQuery(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     threadId: {"in":"query","name":"threadId","ref":"ThreadId"},
                     parentThreadId: {"in":"query","name":"parentThreadId","ref":"ThreadId"},
                     connectionId: {"in":"query","name":"connectionId","ref":"RecordId"},
@@ -1995,7 +2214,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2004,20 +2223,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.findCredentialsByQuery.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'findCredentialsByQuery',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/credentials/:credentialExchangeId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.getCredentialById)),
 
-            async function CredentialsController_getCredentialById(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_getCredentialById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     credentialExchangeId: {"in":"path","name":"credentialExchangeId","required":true,"ref":"RecordId"},
             };
 
@@ -2025,7 +2252,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2034,20 +2261,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.getCredentialById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'getCredentialById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/didcomm/credentials/:credentialExchangeId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.deleteCredential)),
 
-            async function CredentialsController_deleteCredential(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_deleteCredential(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     credentialExchangeId: {"in":"path","name":"credentialExchangeId","required":true,"ref":"RecordId"},
             };
 
@@ -2055,7 +2290,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2064,20 +2299,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.deleteCredential.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'deleteCredential',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/credentials/propose-credential',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.proposeCredential)),
 
-            async function CredentialsController_proposeCredential(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_proposeCredential(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     options: {"in":"body","name":"options","required":true,"ref":"ProposeCredentialOptions"},
             };
 
@@ -2085,7 +2328,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2094,20 +2337,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.proposeCredential.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'proposeCredential',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/credentials/:credentialExchangeId/accept-proposal',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.acceptProposal)),
 
-            async function CredentialsController_acceptProposal(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_acceptProposal(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     credentialExchangeId: {"in":"path","name":"credentialExchangeId","required":true,"ref":"RecordId"},
                     options: {"in":"body","name":"options","ref":"AcceptCredentialProposalOptions"},
             };
@@ -2116,7 +2367,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2125,20 +2376,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptProposal.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptProposal',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/credentials/create-offer',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.createOffer)),
 
-            async function CredentialsController_createOffer(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_createOffer(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     options: {"in":"body","name":"options","required":true,"ref":"CreateOfferOptions"},
             };
 
@@ -2146,7 +2405,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2155,20 +2414,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.createOffer.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'createOffer',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/credentials/offer-credential',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.offerCredential)),
 
-            async function CredentialsController_offerCredential(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_offerCredential(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     options: {"in":"body","name":"options","required":true,"ref":"OfferCredentialOptions"},
             };
 
@@ -2176,7 +2443,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2185,20 +2452,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.offerCredential.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'offerCredential',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/credentials/:credentialExchangeId/accept-offer',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.acceptOffer)),
 
-            async function CredentialsController_acceptOffer(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_acceptOffer(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     credentialExchangeId: {"in":"path","name":"credentialExchangeId","required":true,"ref":"RecordId"},
                     options: {"in":"body","name":"options","ref":"AcceptCredentialOfferOptions"},
             };
@@ -2207,7 +2482,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2216,20 +2491,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptOffer.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptOffer',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/credentials/:credentialExchangeId/accept-request',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.acceptRequest)),
 
-            async function CredentialsController_acceptRequest(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_acceptRequest(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     credentialExchangeId: {"in":"path","name":"credentialExchangeId","required":true,"ref":"RecordId"},
                     options: {"in":"body","name":"options","ref":"AcceptCredentialRequestOptions"},
             };
@@ -2238,7 +2521,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2247,20 +2530,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptRequest.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptRequest',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/credentials/:credentialExchangeId/accept-credential',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
             ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.acceptCredential)),
 
-            async function CredentialsController_acceptCredential(request: any, response: any, next: any) {
-            const args = {
+            async function CredentialsController_acceptCredential(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     credentialExchangeId: {"in":"path","name":"credentialExchangeId","required":true,"ref":"RecordId"},
             };
 
@@ -2268,7 +2559,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2277,20 +2568,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptCredential.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptCredential',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/connections',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController)),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController.prototype.findConnectionsByQuery)),
 
-            async function ConnectionsController_findConnectionsByQuery(request: any, response: any, next: any) {
-            const args = {
+            async function ConnectionsController_findConnectionsByQuery(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     outOfBandId: {"in":"query","name":"outOfBandId","ref":"RecordId"},
                     alias: {"in":"query","name":"alias","dataType":"string"},
                     state: {"in":"query","name":"state","ref":"DidExchangeState"},
@@ -2303,7 +2602,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2312,20 +2611,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.findConnectionsByQuery.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'findConnectionsByQuery',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/connections/:connectionId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController)),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController.prototype.getConnectionById)),
 
-            async function ConnectionsController_getConnectionById(request: any, response: any, next: any) {
-            const args = {
+            async function ConnectionsController_getConnectionById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     connectionId: {"in":"path","name":"connectionId","required":true,"ref":"RecordId"},
             };
 
@@ -2333,7 +2640,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2342,20 +2649,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.getConnectionById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'getConnectionById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/didcomm/connections/:connectionId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController)),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController.prototype.deleteConnection)),
 
-            async function ConnectionsController_deleteConnection(request: any, response: any, next: any) {
-            const args = {
+            async function ConnectionsController_deleteConnection(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     connectionId: {"in":"path","name":"connectionId","required":true,"ref":"RecordId"},
             };
 
@@ -2363,7 +2678,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2372,20 +2687,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.deleteConnection.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'deleteConnection',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/connections/:connectionId/accept-request',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController)),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController.prototype.acceptRequest)),
 
-            async function ConnectionsController_acceptRequest(request: any, response: any, next: any) {
-            const args = {
+            async function ConnectionsController_acceptRequest(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     connectionId: {"in":"path","name":"connectionId","required":true,"ref":"RecordId"},
             };
 
@@ -2393,7 +2716,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2402,20 +2725,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptRequest.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptRequest',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/connections/:connectionId/accept-response',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController)),
             ...(fetchMiddlewares<RequestHandler>(ConnectionsController.prototype.acceptResponse)),
 
-            async function ConnectionsController_acceptResponse(request: any, response: any, next: any) {
-            const args = {
+            async function ConnectionsController_acceptResponse(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     connectionId: {"in":"path","name":"connectionId","required":true,"ref":"RecordId"},
             };
 
@@ -2423,7 +2754,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2432,20 +2763,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.acceptResponse.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'acceptResponse',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/basic-messages',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(DidCommBasicMessagesController)),
             ...(fetchMiddlewares<RequestHandler>(DidCommBasicMessagesController.prototype.findBasicMessagesByQuery)),
 
-            async function DidCommBasicMessagesController_findBasicMessagesByQuery(request: any, response: any, next: any) {
-            const args = {
+            async function DidCommBasicMessagesController_findBasicMessagesByQuery(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     connectionId: {"in":"query","name":"connectionId","ref":"RecordId"},
                     role: {"in":"query","name":"role","ref":"BasicMessageRole"},
                     threadId: {"in":"query","name":"threadId","ref":"ThreadId"},
@@ -2456,7 +2795,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2465,20 +2804,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.findBasicMessagesByQuery.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'findBasicMessagesByQuery',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/didcomm/basic-messages',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(DidCommBasicMessagesController)),
             ...(fetchMiddlewares<RequestHandler>(DidCommBasicMessagesController.prototype.sendMessage)),
 
-            async function DidCommBasicMessagesController_sendMessage(request: any, response: any, next: any) {
-            const args = {
+            async function DidCommBasicMessagesController_sendMessage(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","required":true,"ref":"DidCommBasicMessagesSendOptions"},
             };
 
@@ -2486,7 +2833,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2495,20 +2842,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.sendMessage.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'sendMessage',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/dids/:did',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(DidController)),
             ...(fetchMiddlewares<RequestHandler>(DidController.prototype.resolveDid)),
 
-            async function DidController_resolveDid(request: any, response: any, next: any) {
-            const args = {
+            async function DidController_resolveDid(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     did: {"in":"path","name":"did","required":true,"dataType":"string"},
             };
 
@@ -2516,7 +2871,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2525,20 +2880,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.resolveDid.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'resolveDid',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/dids/import',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(DidController)),
             ...(fetchMiddlewares<RequestHandler>(DidController.prototype.importDid)),
 
-            async function DidController_importDid(request: any, response: any, next: any) {
-            const args = {
+            async function DidController_importDid(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     options: {"in":"body","name":"options","required":true,"ref":"DidImportOptions"},
             };
 
@@ -2546,7 +2909,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2555,20 +2918,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.importDid.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, 201, next);
+              await templateService.apiHandler({
+                methodName: 'importDid',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: 201,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/dids/create',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(DidController)),
             ...(fetchMiddlewares<RequestHandler>(DidController.prototype.createDid)),
 
-            async function DidController_createDid(request: any, response: any, next: any) {
-            const args = {
+            async function DidController_createDid(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     options: {"in":"body","name":"options","required":true,"ref":"DidCreateOptions"},
             };
 
@@ -2576,7 +2947,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2585,20 +2956,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.createDid.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'createDid',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/anoncreds/schemas/:schemaId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController)),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController.prototype.getSchemaById)),
 
-            async function AnonCredsController_getSchemaById(request: any, response: any, next: any) {
-            const args = {
+            async function AnonCredsController_getSchemaById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     schemaId: {"in":"path","name":"schemaId","required":true,"ref":"AnonCredsSchemaId"},
             };
 
@@ -2606,7 +2985,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2615,20 +2994,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.getSchemaById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'getSchemaById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/anoncreds/schemas',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController)),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController.prototype.registerSchema)),
 
-            async function AnonCredsController_registerSchema(request: any, response: any, next: any) {
-            const args = {
+            async function AnonCredsController_registerSchema(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","required":true,"ref":"AnonCredsRegisterSchemaBody"},
             };
 
@@ -2636,7 +3023,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2645,20 +3032,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.registerSchema.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'registerSchema',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/anoncreds/credential-definitions/:credentialDefinitionId',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController)),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController.prototype.getCredentialDefinitionById)),
 
-            async function AnonCredsController_getCredentialDefinitionById(request: any, response: any, next: any) {
-            const args = {
+            async function AnonCredsController_getCredentialDefinitionById(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     credentialDefinitionId: {"in":"path","name":"credentialDefinitionId","required":true,"ref":"AnonCredsCredentialDefinitionId"},
             };
 
@@ -2666,7 +3061,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2675,20 +3070,28 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.getCredentialDefinitionById.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'getCredentialDefinitionById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/anoncreds/credential-definitions',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController)),
             ...(fetchMiddlewares<RequestHandler>(AnonCredsController.prototype.registerCredentialDefinition)),
 
-            async function AnonCredsController_registerCredentialDefinition(request: any, response: any, next: any) {
-            const args = {
+            async function AnonCredsController_registerCredentialDefinition(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
                     body: {"in":"body","name":"body","required":true,"ref":"AnonCredsRegisterCredentialDefinitionBody"},
             };
 
@@ -2696,7 +3099,7 @@ export function RegisterRoutes(app: Router) {
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2705,27 +3108,35 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.registerCredentialDefinition.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'registerCredentialDefinition',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/agent',
+            authenticateMiddleware([{"tenants":["default"]}]),
             ...(fetchMiddlewares<RequestHandler>(AgentController)),
             ...(fetchMiddlewares<RequestHandler>(AgentController.prototype.getAgentInfo)),
 
-            async function AgentController_getAgentInfo(request: any, response: any, next: any) {
-            const args = {
+            async function AgentController_getAgentInfo(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
             let validatedArgs: any[] = [];
             try {
-                validatedArgs = getValidatedArgs(args, request, response);
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
 
                 const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
 
@@ -2734,9 +3145,15 @@ export function RegisterRoutes(app: Router) {
                 controller.setStatus(undefined);
                 }
 
-
-              const promise = controller.getAgentInfo.apply(controller, validatedArgs as any);
-              promiseHandler(controller, promise, response, undefined, next);
+              await templateService.apiHandler({
+                methodName: 'getAgentInfo',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
             } catch (err) {
                 return next(err);
             }
@@ -2748,92 +3165,72 @@ export function RegisterRoutes(app: Router) {
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 
-    function isController(object: any): object is Controller {
-        return 'getHeaders' in object && 'getStatus' in object && 'setStatus' in object;
-    }
+    function authenticateMiddleware(security: TsoaRoute.Security[] = []) {
+        return async function runAuthenticationMiddleware(request: any, response: any, next: any) {
 
-    function promiseHandler(controllerObj: any, promise: any, response: any, successStatus: any, next: any) {
-        return Promise.resolve(promise)
-            .then((data: any) => {
-                let statusCode = successStatus;
-                let headers;
-                if (isController(controllerObj)) {
-                    headers = controllerObj.getHeaders();
-                    statusCode = controllerObj.getStatus() || statusCode;
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            // keep track of failed auth attempts so we can hand back the most
+            // recent one.  This behavior was previously existing so preserving it
+            // here
+            const failedAttempts: any[] = [];
+            const pushAndRethrow = (error: any) => {
+                failedAttempts.push(error);
+                throw error;
+            };
+
+            const secMethodOrPromises: Promise<any>[] = [];
+            for (const secMethod of security) {
+                if (Object.keys(secMethod).length > 1) {
+                    const secMethodAndPromises: Promise<any>[] = [];
+
+                    for (const name in secMethod) {
+                        secMethodAndPromises.push(
+                            expressAuthenticationRecasted(request, name, secMethod[name], response)
+                                .catch(pushAndRethrow)
+                        );
+                    }
+
+                    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+                    secMethodOrPromises.push(Promise.all(secMethodAndPromises)
+                        .then(users => { return users[0]; }));
+                } else {
+                    for (const name in secMethod) {
+                        secMethodOrPromises.push(
+                            expressAuthenticationRecasted(request, name, secMethod[name], response)
+                                .catch(pushAndRethrow)
+                        );
+                    }
+                }
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            try {
+                request['user'] = await Promise.any(secMethodOrPromises);
+
+                // Response was sent in middleware, abort
+                if (response.writableEnded) {
+                    return;
                 }
 
-                // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-                returnHandler(response, statusCode, data, headers)
-            })
-            .catch((error: any) => next(error));
-    }
-
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-    function returnHandler(response: any, statusCode?: number, data?: any, headers: any = {}) {
-        if (response.headersSent) {
-            return;
-        }
-        Object.keys(headers).forEach((name: string) => {
-            response.set(name, headers[name]);
-        });
-        if (data && typeof data.pipe === 'function' && data.readable && typeof data._read === 'function') {
-            response.status(statusCode || 200)
-            data.pipe(response);
-        } else if (data !== null && data !== undefined) {
-            response.status(statusCode || 200).json(data);
-        } else {
-            response.status(statusCode || 204).end();
-        }
-    }
-
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-    function responder(response: any): TsoaResponse<HttpStatusCodeLiteral, unknown>  {
-        return function(status, data, headers) {
-            returnHandler(response, status, data, headers);
-        };
-    };
-
-    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-
-    function getValidatedArgs(args: any, request: any, response: any): any[] {
-        const fieldErrors: FieldErrors  = {};
-        const values = Object.keys(args).map((key) => {
-            const name = args[key].name;
-            switch (args[key].in) {
-                case 'request':
-                    return request;
-                case 'query':
-                    return validationService.ValidateParam(args[key], request.query[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                case 'queries':
-                    return validationService.ValidateParam(args[key], request.query, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                case 'path':
-                    return validationService.ValidateParam(args[key], request.params[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                case 'header':
-                    return validationService.ValidateParam(args[key], request.header(name), name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                case 'body':
-                    return validationService.ValidateParam(args[key], request.body, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                case 'body-prop':
-                    return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, 'body.', {"noImplicitAdditionalProperties":"throw-on-extras"});
-                case 'formData':
-                    if (args[key].dataType === 'file') {
-                        return validationService.ValidateParam(args[key], request.file, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                    } else if (args[key].dataType === 'array' && args[key].array.dataType === 'file') {
-                        return validationService.ValidateParam(args[key], request.files, name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                    } else {
-                        return validationService.ValidateParam(args[key], request.body[name], name, fieldErrors, undefined, {"noImplicitAdditionalProperties":"throw-on-extras"});
-                    }
-                case 'res':
-                    return responder(response);
+                next();
             }
-        });
+            catch(err) {
+                // Show most recent error as response
+                const error = failedAttempts.pop();
+                error.status = error.status || 401;
 
-        if (Object.keys(fieldErrors).length > 0) {
-            throw new ValidateError(fieldErrors, '');
+                // Response was sent in middleware, abort
+                if (response.writableEnded) {
+                    return;
+                }
+                next(error);
+            }
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         }
-        return values;
     }
 
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

@@ -4,10 +4,19 @@
   "controllerPathGlobs": ["src/**/*Controller.ts"],
   "spec": {
     "outputDirectory": "src/routes",
-    "specVersion": 3
+    "specVersion": 3,
+    "securityDefinitions": {
+      "tenants": {
+        "type": "apiKey",
+        "name": "x-tenant-id",
+        "in": "header"
+      }
+    }
   },
   "routes": {
+    "middlewareTemplate": "src/middlewareTemplate.ts.hbs",
     "routesDir": "src/routes",
-    "iocModule": "./src/utils/tsyringeTsoaIocContainer"
+    "iocModule": "./src/utils/tsyringeTsoaIocContainer",
+    "authenticationModule": "./src/authentication.ts"
   }
 }

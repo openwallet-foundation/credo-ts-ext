@@ -1,10 +1,10 @@
 import type { DidCommProofsCreateRequestResponse, DidCommProofsExchangeRecord } from './ProofsControllerTypes'
-import type { RestAgent } from '../../../utils/agent'
 
-import { Agent, ProofRole, ProofState, RecordNotFoundError } from '@credo-ts/core'
-import { Body, Controller, Delete, Example, Get, Path, Post, Query, Route, Tags } from 'tsoa'
+import { ProofRole, ProofState, RecordNotFoundError } from '@credo-ts/core'
+import { Body, Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId, ThreadId } from '../../types'
 
@@ -21,28 +21,23 @@ import {
 
 @Tags('DIDComm Proofs')
 @Route('/didcomm/proofs')
+@Security('tenants', ['tenant'])
 @injectable()
 export class ProofsController extends Controller {
-  private agent: RestAgent
-
-  public constructor(agent: Agent) {
-    super()
-    this.agent = agent
-  }
-
   /**
    * Find proof exchanges by query
    */
   @Example<DidCommProofsExchangeRecord[]>([proofExchangeRecordExample])
   @Get('/')
   public async findProofsByQuery(
+    @Request() request: RequestWithAgent,
     @Query('threadId') threadId?: ThreadId,
     @Query('connectionId') connectionId?: RecordId,
     @Query('state') state?: ProofState,
     @Query('parentThreadId') parentThreadId?: ThreadId,
     @Query('role') role?: ProofRole,
   ): Promise<DidCommProofsExchangeRecord[]> {
-    const proofs = await this.agent.proofs.findAllByQuery({
+    const proofs = await request.user.agent.proofs.findAllByQuery({
       threadId,
       connectionId,
       state,
@@ -59,9 +54,10 @@ export class ProofsController extends Controller {
   @Get('/:proofExchangeId')
   @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
   public async getProofExchangeById(
+    @Request() request: RequestWithAgent,
     @Path('proofExchangeId') proofExchangeId: RecordId,
   ): Promise<DidCommProofsExchangeRecord> {
-    const proofExchange = await this.agent.proofs.findById(proofExchangeId)
+    const proofExchange = await request.user.agent.proofs.findById(proofExchangeId)
 
     if (!proofExchange) {
       this.setStatus(404)
@@ -75,10 +71,13 @@ export class ProofsController extends Controller {
    * Deletes a proof exchange record.
    */
   @Delete('/:proofExchangeId')
-  public async deleteProof(@Path('proofExchangeId') proofExchangeId: RecordId): Promise<void> {
+  public async deleteProof(
+    @Request() request: RequestWithAgent,
+    @Path('proofExchangeId') proofExchangeId: RecordId,
+  ): Promise<void> {
     try {
       this.setStatus(204)
-      await this.agent.proofs.deleteById(proofExchangeId)
+      await request.user.agent.proofs.deleteById(proofExchangeId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         this.setStatus(404)
@@ -96,9 +95,12 @@ export class ProofsController extends Controller {
    */
   @Post('/propose-proof')
   @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
-  public async proposeProof(@Body() body: DidCommProofsProposeProofOptions): Promise<DidCommProofsExchangeRecord> {
+  public async proposeProof(
+    @Request() request: RequestWithAgent,
+    @Body() body: DidCommProofsProposeProofOptions,
+  ): Promise<DidCommProofsExchangeRecord> {
     try {
-      const proofExchange = await this.agent.proofs.proposeProof(body)
+      const proofExchange = await request.user.agent.proofs.proposeProof(body)
       return proofExchangeRecordToApiModel(proofExchange)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -118,11 +120,12 @@ export class ProofsController extends Controller {
   @Post('/:proofExchangeId/accept-proposal')
   @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
   public async acceptProposal(
+    @Request() request: RequestWithAgent,
     @Path('proofExchangeId') proofExchangeId: RecordId,
     @Body() body: DidCommProofsAcceptProposalOptions,
   ): Promise<DidCommProofsExchangeRecord> {
     try {
-      const proof = await this.agent.proofs.acceptProposal({
+      const proof = await request.user.agent.proofs.acceptProposal({
         proofRecordId: proofExchangeId,
         ...body,
       })
@@ -145,11 +148,12 @@ export class ProofsController extends Controller {
   @Post('/create-request')
   @Example<DidCommProofsCreateRequestResponse>(didCommProofsCreateRequestResponse)
   public async createRequest(
+    @Request() request: RequestWithAgent,
     @Body() body: DidCommProofsCreateRequestOptions,
   ): Promise<DidCommProofsCreateRequestResponse> {
     try {
       // NOTE: Credo does not work well if 'undefined' is passed. We should fix this in credo
-      const proofFormats: Parameters<typeof this.agent.proofs.createRequest>[0]['proofFormats'] = {}
+      const proofFormats: Parameters<typeof request.user.agent.proofs.createRequest>[0]['proofFormats'] = {}
       if (body.proofFormats.anoncreds) {
         proofFormats.anoncreds = transformApiProofFormatToCredo(body.proofFormats.anoncreds)
       }
@@ -157,7 +161,7 @@ export class ProofsController extends Controller {
         proofFormats.indy = transformApiProofFormatToCredo(body.proofFormats.indy)
       }
 
-      const { message, proofRecord: proofExchange } = await this.agent.proofs.createRequest({
+      const { message, proofRecord: proofExchange } = await request.user.agent.proofs.createRequest({
         ...body,
         proofFormats,
       })
@@ -177,10 +181,10 @@ export class ProofsController extends Controller {
    */
   @Post('/request-proof')
   @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
-  public async requestProof(@Body() body: DidCommProofsSendRequestOptions) {
+  public async requestProof(@Request() request: RequestWithAgent, @Body() body: DidCommProofsSendRequestOptions) {
     try {
       // NOTE: Credo does not work well if 'undefined' is passed. We should fix this in credo
-      const proofFormats: Parameters<typeof this.agent.proofs.requestProof>[0]['proofFormats'] = {}
+      const proofFormats: Parameters<typeof request.user.agent.proofs.requestProof>[0]['proofFormats'] = {}
       if (body.proofFormats.anoncreds) {
         proofFormats.anoncreds = transformApiProofFormatToCredo(body.proofFormats.anoncreds)
       }
@@ -188,7 +192,7 @@ export class ProofsController extends Controller {
         proofFormats.indy = transformApiProofFormatToCredo(body.proofFormats.indy)
       }
 
-      const proof = await this.agent.proofs.requestProof({
+      const proof = await request.user.agent.proofs.requestProof({
         ...body,
         proofFormats,
       })
@@ -212,11 +216,12 @@ export class ProofsController extends Controller {
   @Post('/:proofExchangeId/accept-request')
   @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
   public async acceptRequest(
+    @Request() request: RequestWithAgent,
     @Path('proofExchangeId') proofExchangeId: RecordId,
     @Body() body: DidCommProofsAcceptRequestOptions,
   ) {
     try {
-      const proof = await this.agent.proofs.acceptRequest({
+      const proof = await request.user.agent.proofs.acceptRequest({
         ...body,
         proofRecordId: proofExchangeId,
         proofFormats: body.proofFormats,
@@ -240,9 +245,12 @@ export class ProofsController extends Controller {
    */
   @Post('/:proofExchangeId/accept-presentation')
   @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
-  public async acceptPresentation(@Path('proofExchangeId') proofExchangeId: RecordId) {
+  public async acceptPresentation(
+    @Request() request: RequestWithAgent,
+    @Path('proofExchangeId') proofExchangeId: RecordId,
+  ) {
     try {
-      const proof = await this.agent.proofs.acceptPresentation({ proofRecordId: proofExchangeId })
+      const proof = await request.user.agent.proofs.acceptPresentation({ proofRecordId: proofExchangeId })
 
       return proofExchangeRecordToApiModel(proof)
     } catch (error) {

@@ -1,7 +1,8 @@
-import { Agent, RecordNotFoundError, BasicMessageRole } from '@credo-ts/core'
-import { Body, Controller, Example, Get, Post, Query, Route, Tags } from 'tsoa'
+import { RecordNotFoundError, BasicMessageRole } from '@credo-ts/core'
+import { Body, Controller, Example, Get, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId, ThreadId } from '../../types'
 
@@ -14,12 +15,9 @@ import {
 
 @Tags('DIDComm Basic Messages')
 @Route('/didcomm/basic-messages')
+@Security('tenants', ['tenant'])
 @injectable()
 export class DidCommBasicMessagesController extends Controller {
-  public constructor(private agent: Agent) {
-    super()
-  }
-
   /**
    * Retrieve basic messages by connection id
    *
@@ -29,12 +27,13 @@ export class DidCommBasicMessagesController extends Controller {
   @Example<DidCommBasicMessagesRecord[]>([basicMessageRecordExample])
   @Get('/')
   public async findBasicMessagesByQuery(
+    @Request() request: RequestWithAgent,
     @Query('connectionId') connectionId?: RecordId,
     @Query('role') role?: BasicMessageRole,
     @Query('threadId') threadId?: ThreadId,
     @Query('parentThreadId') parentThreadId?: ThreadId,
   ): Promise<DidCommBasicMessagesRecord[]> {
-    const basicMessageRecords = await this.agent.basicMessages.findAllByQuery({
+    const basicMessageRecords = await request.user.agent.basicMessages.findAllByQuery({
       connectionId,
       role,
       threadId,
@@ -52,9 +51,9 @@ export class DidCommBasicMessagesController extends Controller {
    */
   @Example<DidCommBasicMessagesRecord>(basicMessageRecordExample)
   @Post('/')
-  public async sendMessage(@Body() body: DidCommBasicMessagesSendOptions) {
+  public async sendMessage(@Request() request: RequestWithAgent, @Body() body: DidCommBasicMessagesSendOptions) {
     try {
-      const basicMessageRecord = await this.agent.basicMessages.sendMessage(
+      const basicMessageRecord = await request.user.agent.basicMessages.sendMessage(
         body.connectionId,
         body.content,
         body.parentThreadId,

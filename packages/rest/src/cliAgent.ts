@@ -34,6 +34,7 @@ const outboundTransportMapping = {
 
 export interface AriesRestConfig {
   label: string
+  multiTenant: boolean
   walletConfig: WalletConfig
   indyLedgers: IndyVdrPoolConfig[]
   endpoints?: string[]
@@ -72,6 +73,7 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     autoAcceptCredentials = AutoAcceptCredential.ContentApproved,
     autoAcceptMediationRequests = true,
     autoAcceptProofs = AutoAcceptProof.ContentApproved,
+    multiTenant,
     ...credoConfig
   } = restConfig
 
@@ -89,6 +91,7 @@ export async function runRestAgent(restConfig: AriesRestConfig) {
     autoAcceptCredentials,
     autoAcceptMediationRequests,
     indyLedgers: maybeLedgers,
+    multiTenant,
   })
 
   const agent = new Agent({

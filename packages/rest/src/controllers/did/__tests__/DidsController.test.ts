@@ -1,4 +1,4 @@
-import type { RestAgent } from '../../../utils/agent'
+import type { RestRootAgent } from '../../../utils/agent'
 import type { Express } from 'express'
 
 import request from 'supertest'
@@ -8,7 +8,7 @@ import { setupServer } from '../../../server'
 
 describe('DidsController', () => {
   let app: Express
-  let agent: RestAgent
+  let agent: RestRootAgent
 
   beforeAll(async () => {
     agent = await getTestAgent('DidsController REST Agent Test')

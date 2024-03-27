@@ -7,9 +7,76 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"Pick_TenantConfig.Exclude_keyofTenantConfig.walletConfig__": {
+				"properties": {
+					"label": {
+						"type": "string"
+					},
+					"connectionImageUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"label"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_TenantConfig.walletConfig_": {
+				"$ref": "#/components/schemas/Pick_TenantConfig.Exclude_keyofTenantConfig.walletConfig__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"TenantApiConfig": {
+				"$ref": "#/components/schemas/Omit_TenantConfig.walletConfig_"
+			},
 			"RecordId": {
 				"type": "string",
 				"example": "821f9b26-ad04-4f56-89b6-e2ef9c72b36e"
+			},
+			"TenantsRecord": {
+				"properties": {
+					"id": {
+						"$ref": "#/components/schemas/RecordId"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"type": {
+						"type": "string"
+					},
+					"storageVersion": {
+						"type": "string"
+					},
+					"config": {
+						"$ref": "#/components/schemas/TenantApiConfig"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"type",
+					"storageVersion",
+					"config"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CreateTenantOptions": {
+				"properties": {
+					"config": {
+						"$ref": "#/components/schemas/Omit_TenantConfig.walletConfig_"
+					}
+				},
+				"required": [
+					"config"
+				],
+				"type": "object",
+				"additionalProperties": false
 			},
 			"ThreadId": {
 				"type": "string",
@@ -915,10 +982,10 @@
 			},
 			"Pick_CreateOutOfBandInvitationConfig.Exclude_keyofCreateOutOfBandInvitationConfig.routing-or-appendedAttachments-or-messages__": {
 				"properties": {
-					"goalCode": {
+					"label": {
 						"type": "string"
 					},
-					"label": {
+					"goalCode": {
 						"type": "string"
 					},
 					"alias": {
@@ -951,10 +1018,10 @@
 			},
 			"DidCommOutOfBandCreateInvitationOptions": {
 				"properties": {
-					"goalCode": {
+					"label": {
 						"type": "string"
 					},
-					"label": {
+					"goalCode": {
 						"type": "string"
 					},
 					"alias": {
@@ -3578,6 +3645,9 @@
 					"label": {
 						"type": "string"
 					},
+					"connectionImageUrl": {
+						"type": "string"
+					},
 					"endpoints": {
 						"items": {
 							"type": "string"
@@ -3592,9 +3662,6 @@
 					},
 					"useDidSovPrefixWhereAllowed": {
 						"type": "boolean"
-					},
-					"connectionImageUrl": {
-						"type": "string"
 					},
 					"autoUpdateStorageOnStartup": {
 						"type": "boolean"
@@ -3614,6 +3681,9 @@
 					"label": {
 						"type": "string"
 					},
+					"connectionImageUrl": {
+						"type": "string"
+					},
 					"endpoints": {
 						"items": {
 							"type": "string"
@@ -3628,9 +3698,6 @@
 					},
 					"useDidSovPrefixWhereAllowed": {
 						"type": "boolean"
-					},
-					"connectionImageUrl": {
-						"type": "string"
 					},
 					"autoUpdateStorageOnStartup": {
 						"type": "boolean"
@@ -3664,7 +3731,13 @@
 				"additionalProperties": false
 			}
 		},
-		"securitySchemes": {}
+		"securitySchemes": {
+			"tenants": {
+				"type": "apiKey",
+				"name": "x-tenant-id",
+				"in": "header"
+			}
+		}
 	},
 	"info": {
 		"title": "@credo-ts/rest",
@@ -3676,6 +3749,45 @@
 		"contact": {}
 	},
 	"paths": {
+		"/tenants": {
+			"post": {
+				"operationId": "CreateTenant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TenantsRecord"
+								}
+							}
+						}
+					}
+				},
+				"description": "create new tenant",
+				"tags": [
+					"Tenants"
+				],
+				"security": [
+					{
+						"tenants": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/CreateTenantOptions"
+							}
+						}
+					}
+				}
+			}
+		},
 		"/didcomm/proofs": {
 			"get": {
 				"operationId": "FindProofsByQuery",
@@ -3715,7 +3827,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -3794,7 +3912,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3817,7 +3941,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3864,7 +3994,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -3912,7 +4048,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -3975,7 +4117,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -4021,7 +4169,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -4067,7 +4221,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4122,7 +4282,13 @@
 				"tags": [
 					"DIDComm Proofs"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4195,7 +4361,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -4263,7 +4435,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4291,7 +4469,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4384,7 +4568,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": false,
@@ -4457,7 +4647,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": false,
@@ -4499,7 +4695,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -4578,7 +4780,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -4657,7 +4865,13 @@
 				"tags": [
 					"DIDComm Out Of Band"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4720,7 +4934,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -4798,7 +5018,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4826,7 +5052,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4872,7 +5104,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -4919,7 +5157,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -4983,7 +5227,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -5030,7 +5280,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -5077,7 +5333,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -5133,7 +5395,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -5189,7 +5457,13 @@
 				"tags": [
 					"DIDComm Credentials"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -5240,7 +5514,13 @@
 				"tags": [
 					"DIDComm Connections"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "query",
@@ -5324,7 +5604,13 @@
 				"tags": [
 					"DIDComm Connections"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Connection identifier",
@@ -5353,7 +5639,13 @@
 				"tags": [
 					"DIDComm Connections"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Connection identifier",
@@ -5398,7 +5690,13 @@
 				"tags": [
 					"DIDComm Connections"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -5442,7 +5740,13 @@
 				"tags": [
 					"DIDComm Connections"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Connection identifier",
@@ -5493,7 +5797,13 @@
 				"tags": [
 					"DIDComm Basic Messages"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"description": "Connection identifier",
@@ -5559,7 +5869,13 @@
 				"tags": [
 					"DIDComm Basic Messages"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -5682,7 +5998,13 @@
 				"tags": [
 					"Dids"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -5707,7 +6029,13 @@
 				"tags": [
 					"Dids"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -5789,6 +6117,9 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/DidCreateWaitResponse"
+								},
+								"examples": {
+									"Example 1": {}
 								}
 							}
 						}
@@ -5799,6 +6130,9 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/DidCreateFailedResponse"
+								},
+								"examples": {
+									"Example 1": {}
 								}
 							}
 						}
@@ -5808,7 +6142,13 @@
 				"tags": [
 					"Dids"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -5924,7 +6264,13 @@
 				"tags": [
 					"AnonCreds"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -5977,6 +6323,9 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/AnonCredsRegisterSchemaWaitResponse"
+								},
+								"examples": {
+									"Example 1": {}
 								}
 							}
 						}
@@ -6009,7 +6358,13 @@
 				"tags": [
 					"AnonCreds"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -6148,7 +6503,13 @@
 				"tags": [
 					"AnonCreds"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [
 					{
 						"in": "path",
@@ -6224,6 +6585,9 @@
 							"application/json": {
 								"schema": {
 									"$ref": "#/components/schemas/AnonCredsRegisterCredentialDefinitionWaitResponse"
+								},
+								"examples": {
+									"Example 1": {}
 								}
 							}
 						}
@@ -6256,7 +6620,13 @@
 				"tags": [
 					"AnonCreds"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
 				"parameters": [],
 				"requestBody": {
 					"required": true,
@@ -6302,7 +6672,13 @@
 				"tags": [
 					"Agent"
 				],
-				"security": [],
+				"security": [
+					{
+						"tenants": [
+							"default"
+						]
+					}
+				],
 				"parameters": []
 			}
 		}

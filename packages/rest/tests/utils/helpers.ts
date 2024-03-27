@@ -1,3 +1,4 @@
+import type { RestRootAgent, RestRootAgentWithTenants } from '../../src/utils/agent'
 import type { ConnectionRecordProps, DidCreateResult } from '@credo-ts/core'
 
 import {
@@ -24,12 +25,17 @@ import {
 import { setupAgent } from '../../src/utils/agent'
 import { InternalOutboundTransport } from '../InternalOutboundTransport'
 
-export async function getTestAgent(name: string, port?: number) {
+export async function getTestAgent<Multitenant extends boolean = false>(
+  name: string,
+  port?: number,
+  multiTenant?: Multitenant,
+) {
   const agent = await setupAgent({
     endpoints: [port ? `http://localhost:${port}` : 'internal'],
     // add some randomness to ensure test isolation
     name: `${name} (${randomUUID()})`,
     httpInboundTransportPort: port,
+    multiTenant,
     extraAnonCredsRegistries: [
       new InMemoryAnonCredsRegistry({
         schemas: {
@@ -49,7 +55,7 @@ export async function getTestAgent(name: string, port?: number) {
     agent.registerOutboundTransport(internalOutboundTransport)
   }
 
-  return agent
+  return agent as Multitenant extends true ? RestRootAgentWithTenants : RestRootAgent
 }
 
 export function objectToJson<T>(result: T) {

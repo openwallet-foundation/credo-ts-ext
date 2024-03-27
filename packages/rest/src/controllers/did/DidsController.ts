@@ -9,10 +9,24 @@ import type {
   DidDocumentJson,
 } from './DidsControllerTypes'
 
-import { Agent, DidDocument, JsonTransformer, TypedArrayEncoder } from '@credo-ts/core'
-import { Body, Controller, Example, Get, Path, Post, Route, Tags, Response, SuccessResponse } from 'tsoa'
+import { DidDocument, JsonTransformer, TypedArrayEncoder } from '@credo-ts/core'
+import {
+  Body,
+  Controller,
+  Example,
+  Get,
+  Path,
+  Post,
+  Route,
+  Tags,
+  Response,
+  SuccessResponse,
+  Security,
+  Request,
+} from 'tsoa'
 import { injectable } from 'tsyringe'
 
+import { RequestWithAgent } from '../../authentication'
 import { alternativeResponse } from '../../utils/response'
 
 import {
@@ -25,14 +39,8 @@ import { DidImportOptions, DidCreateOptions } from './DidsControllerTypes'
 @Tags('Dids')
 @Route('/dids')
 @injectable()
+@Security('tenants', ['tenant'])
 export class DidController extends Controller {
-  private agent: Agent
-
-  public constructor(agent: Agent) {
-    super()
-    this.agent = agent
-  }
-
   /**
    * Resolves did and returns did resolution result
    */
@@ -40,8 +48,11 @@ export class DidController extends Controller {
   @Response<DidResolveFailedResponse>(404, 'Did not found', didResolveFailedResponseExample)
   @Response<DidResolveFailedResponse>(500, 'Error resolving did', didResolveFailedResponseExample)
   @Get('/:did')
-  public async resolveDid(@Path('did') did: string): Promise<DidResolveSuccessResponse> {
-    const resolveResult = await this.agent.dids.resolve(did)
+  public async resolveDid(
+    @Request() request: RequestWithAgent,
+    @Path('did') did: string,
+  ): Promise<DidResolveSuccessResponse> {
+    const resolveResult = await request.user.agent.dids.resolve(did)
 
     const response = { ...resolveResult, didDocument: resolveResult.didDocument?.toJSON() }
 
@@ -65,9 +76,9 @@ export class DidController extends Controller {
    */
   @Post('/import')
   @SuccessResponse(201, 'Did imported successfully')
-  public async importDid(@Body() options: DidImportOptions): Promise<void> {
+  public async importDid(@Request() request: RequestWithAgent, @Body() options: DidImportOptions): Promise<void> {
     try {
-      await this.agent.dids.import({
+      await request.user.agent.dids.import({
         did: options.did,
         didDocument: options.didDocument ? JsonTransformer.fromJSON(options.didDocument, DidDocument) : undefined,
         overwrite: options.overwrite,
@@ -92,8 +103,11 @@ export class DidController extends Controller {
   @Response<DidCreateActionResponse>(200, 'Action required')
   @Response<DidCreateWaitResponse>(202, 'Wait for action to complete')
   @Post('/create')
-  public async createDid(@Body() options: DidCreateOptions): Promise<DidCreateFinishedResponse> {
-    const didResult = await this.agent.dids.create({
+  public async createDid(
+    @Request() request: RequestWithAgent,
+    @Body() options: DidCreateOptions,
+  ): Promise<DidCreateFinishedResponse> {
+    const didResult = await request.user.agent.dids.create({
       ...options,
       didDocument:
         'didDocument' in options && options.didDocument

@@ -50,7 +50,7 @@ describe('WebhookTests', () => {
       (webhook) => webhook.body.type === BasicMessageEventTypes.BasicMessageStateChanged,
     )
 
-    expect(webhook).toMatchObject({
+    expect(webhook?.body).toMatchObject({
       payload: {
         basicMessageRecord: {
           threadId: senderBasicMessage.threadId,

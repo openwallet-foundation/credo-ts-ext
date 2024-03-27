@@ -1,31 +1,29 @@
 import type { AgentInfo } from './AgentControllerTypes'
 
-import { Agent } from '@credo-ts/core'
-import { Controller, Example, Get, Route, Tags } from 'tsoa'
+import { Controller, Example, Get, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
+
+import { RequestWithRootAgent } from '../../authentication'
 
 import { agentInfoExample } from './AgentControllerExamples'
 
 @Tags('Agent')
 @Route('/agent')
+@Security('tenants', ['default'])
 @injectable()
 export class AgentController extends Controller {
-  public constructor(private agent: Agent) {
-    super()
-  }
-
   /**
    * Retrieve basic agent information
    */
   @Get('/')
   @Example(agentInfoExample)
-  public async getAgentInfo(): Promise<AgentInfo> {
+  public async getAgentInfo(@Request() request: RequestWithRootAgent): Promise<AgentInfo> {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { agentDependencies, walletConfig, logger, ...config } = this.agent.config.toJSON()
+    const { agentDependencies, walletConfig, logger, ...config } = request.user.agent.config.toJSON()
 
     return {
       config,
-      isInitialized: this.agent.isInitialized,
+      isInitialized: request.user.agent.isInitialized,
     }
   }
 }

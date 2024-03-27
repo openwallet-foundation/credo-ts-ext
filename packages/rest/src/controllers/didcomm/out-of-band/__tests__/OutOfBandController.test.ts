@@ -1,4 +1,4 @@
-import type { RestAgent } from '../../../../utils/agent'
+import type { RestRootAgent } from '../../../../utils/agent'
 import type { ConnectionStateChangedEvent } from '@credo-ts/core'
 
 import { ConnectionEventTypes, DidExchangeState } from '@credo-ts/core'
@@ -12,7 +12,7 @@ import { setupServer } from '../../../../server'
 
 describe('OutOfBandController', () => {
   let app: Express
-  let agent: RestAgent
+  let agent: RestRootAgent
 
   beforeAll(async () => {
     agent = await getTestAgent('DIDComm Out Of Band REST Agent Test')
