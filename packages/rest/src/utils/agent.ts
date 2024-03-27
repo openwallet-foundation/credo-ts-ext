@@ -156,7 +156,7 @@ export const setupAgent = async ({
   multiTenant?: boolean
 }): Promise<RestRootAgent | RestRootAgentWithTenants> => {
   // FIXME: logger should not be enabled by default
-  // const logger = new TsLogger(LogLevel.off)
+  const logger = new TsLogger(LogLevel.off)
 
   const modules = getAgentModules({
     autoAcceptConnections: true,
@@ -181,7 +181,7 @@ export const setupAgent = async ({
       endpoints,
       walletConfig: { id: name, key: name },
       useDidSovPrefixWhereAllowed: true,
-      // logger: logger,
+      logger: logger,
       autoUpdateStorageOnStartup: true,
     },
     dependencies: agentDependencies,

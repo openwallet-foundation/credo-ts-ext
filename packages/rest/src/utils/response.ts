@@ -12,5 +12,5 @@ export function apiErrorResponse(error: string | Error | unknown, details?: unkn
   return {
     message,
     details,
-  }
+  } satisfies ApiError
 }
