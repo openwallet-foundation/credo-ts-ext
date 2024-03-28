@@ -20,7 +20,7 @@ describe('BasicMessagesController', () => {
 
   beforeAll(async () => {
     agent = await getTestAgent('DIDComm Credentials REST Agent Test')
-    app = await setupServer(agent, { port: 3000 })
+    await setupApp({ agent, adminPort: 3000, baseApp: app })
 
     const inviterOutOfBandRecord = await agent.oob.createInvitation()
     let { connectionRecord: receiverConnection } = await agent.oob.receiveInvitation(

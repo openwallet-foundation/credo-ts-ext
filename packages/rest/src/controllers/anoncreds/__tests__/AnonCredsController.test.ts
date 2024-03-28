@@ -1,20 +1,22 @@
+import type { RestAgent } from '../../../../build/utils/agent'
 import type { RestRootAgent } from '../../../utils/agent'
 import type { Express } from 'express'
 
+import express from 'express'
 import request from 'supertest'
 
 import { getTestAgent } from '../../../../tests/utils/helpers'
-import { setupServer } from '../../../server'
+import { setupApp } from '../../../setup/setupApp'
 
 import { testAnonCredsCredentialDefinition, testAnonCredsSchema } from './fixtures'
 
 describe('AnonCredsController', () => {
-  let app: Express
-  let agent: RestRootAgent
+  const app = express()
+  let agent: RestAgent
 
   beforeAll(async () => {
     agent = await getTestAgent('AnonCredsController REST Agent Test')
-    app = await setupServer(agent, { port: 3000 })
+    await setupApp({ agent, adminPort: 3000, baseApp: app })
   })
 
   afterEach(() => {

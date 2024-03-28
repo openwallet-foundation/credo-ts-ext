@@ -1,5 +1,7 @@
 import type { CredoRestAgentConfig } from '../src'
 
+import { LogLevel } from '@credo-ts/core'
+
 import { setupApp } from '../src'
 
 const run = async () => {
@@ -15,6 +17,7 @@ const run = async () => {
           port: 3001,
         },
       ],
+      logLevel: LogLevel.debug,
       endpoints: ['http://localhost:3001'],
       walletConfig: {
         id: 'test-agent',

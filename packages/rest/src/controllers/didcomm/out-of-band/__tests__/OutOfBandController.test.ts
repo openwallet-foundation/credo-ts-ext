@@ -16,7 +16,7 @@ describe('OutOfBandController', () => {
 
   beforeAll(async () => {
     agent = await getTestAgent('DIDComm Out Of Band REST Agent Test')
-    app = await setupServer(agent, { port: 3000 })
+    await setupApp({ agent, adminPort: 3000, baseApp: app })
   })
 
   afterAll(async () => {

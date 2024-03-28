@@ -12,7 +12,7 @@ describe('DidsController', () => {
 
   beforeAll(async () => {
     agent = await getTestAgent('DidsController REST Agent Test')
-    app = await setupServer(agent, { port: 3000 })
+    await setupApp({ agent, adminPort: 3000, baseApp: app })
   })
 
   afterEach(() => {

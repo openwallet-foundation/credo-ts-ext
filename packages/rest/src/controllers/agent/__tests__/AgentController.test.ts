@@ -1,18 +1,18 @@
 import type { Agent } from '@credo-ts/core'
-import type { Express } from 'express'
 
+import express from 'express'
 import request from 'supertest'
 
 import { getTestAgent } from '../../../../tests/utils/helpers'
-import { setupServer } from '../../../server'
+import { setupApp } from '../../../setup/setupApp'
 
 describe('AgentController', () => {
-  let app: Express
+  const app = express()
   let agent: Agent
 
   beforeAll(async () => {
     agent = await getTestAgent('Agent REST Agent Test')
-    app = await setupServer(agent, { port: 3000 })
+    await setupApp({ agent, adminPort: 3000, baseApp: app })
   })
 
   afterAll(async () => {
