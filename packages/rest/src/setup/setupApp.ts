@@ -21,6 +21,7 @@ import { openId4VcVerificationSessionEvents } from '../events/OpenId4VcVerificat
 import { basicMessageEvents } from '../events/basicMessageEvents'
 import { connectionEvents } from '../events/connectionEvents'
 import { credentialEvents } from '../events/credentialEvents'
+import { outOfBandEvents } from '../events/outOfBandEvents'
 import { proofEvents } from '../events/proofEvents'
 import { RegisterRoutes } from '../generated/routes'
 
@@ -50,6 +51,7 @@ export async function setupApp(config: CredoRestSetupAppConfig) {
     connectionEvents(agent, emitEventConfig)
     credentialEvents(agent, emitEventConfig)
     proofEvents(agent, emitEventConfig)
+    outOfBandEvents(agent, emitEventConfig)
     openId4VcIssuanceSessionEvents(agent, emitEventConfig)
     openId4VcVerificationSessionEvents(agent, emitEventConfig)
   }
