@@ -16,6 +16,8 @@ import { ValidateError } from 'tsoa'
 import { container } from 'tsyringe'
 import { Server as WsServer } from 'ws'
 
+import { openId4VcIssuanceSessionEvents } from '../events/OpenId4VcIssuanceSessionEvents'
+import { openId4VcVerificationSessionEvents } from '../events/OpenId4VcVerificationSessionEvents'
 import { basicMessageEvents } from '../events/basicMessageEvents'
 import { connectionEvents } from '../events/connectionEvents'
 import { credentialEvents } from '../events/credentialEvents'
@@ -48,6 +50,8 @@ export async function setupApp(config: CredoRestSetupAppConfig) {
     connectionEvents(agent, emitEventConfig)
     credentialEvents(agent, emitEventConfig)
     proofEvents(agent, emitEventConfig)
+    openId4VcIssuanceSessionEvents(agent, emitEventConfig)
+    openId4VcVerificationSessionEvents(agent, emitEventConfig)
   }
 
   // Use body parser to read sent json payloads

@@ -1,16 +1,16 @@
 import type { RestRootAgent } from '../../../../utils/agent'
 import type { BasicMessageStateChangedEvent } from '@credo-ts/core'
-import type { Express } from 'express'
 
 import { BasicMessageEventTypes, BasicMessageRole } from '@credo-ts/core'
+import express from 'express'
 import { filter, first, firstValueFrom, timeout } from 'rxjs'
 import request from 'supertest'
 
 import { getTestAgent } from '../../../../../tests/utils/helpers'
-import { setupServer } from '../../../../server'
+import { setupApp } from '../../../../setup/setupApp'
 
 describe('BasicMessagesController', () => {
-  let app: Express
+  const app = express()
   let agent: RestRootAgent
   let inviterConnectionId: string
   let receiverConnectionId: string

@@ -1,13 +1,13 @@
 import type { RestRootAgentWithTenants } from '../../../utils/agent'
-import type { Express } from 'express'
 
+import express from 'express'
 import request from 'supertest'
 
 import { getTestAgent } from '../../../../tests/utils/helpers'
-import { setupServer } from '../../../server'
+import { setupApp } from '../../../setup/setupApp'
 
 describe('TenantsController', () => {
-  let app: Express
+  const app = express()
   let agent: RestRootAgentWithTenants
 
   beforeAll(async () => {

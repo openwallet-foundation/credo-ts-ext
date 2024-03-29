@@ -1,6 +1,4 @@
-import type { RestAgent } from '../../../../build/utils/agent'
 import type { RestRootAgent } from '../../../utils/agent'
-import type { Express } from 'express'
 
 import express from 'express'
 import request from 'supertest'
@@ -12,7 +10,7 @@ import { testAnonCredsCredentialDefinition, testAnonCredsSchema } from './fixtur
 
 describe('AnonCredsController', () => {
   const app = express()
-  let agent: RestAgent
+  let agent: RestRootAgent
 
   beforeAll(async () => {
     agent = await getTestAgent('AnonCredsController REST Agent Test')

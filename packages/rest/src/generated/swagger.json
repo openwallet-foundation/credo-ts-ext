@@ -66,10 +66,21 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"CreateTenantOptions": {
+			"TenantsCreateOptions": {
 				"properties": {
 					"config": {
-						"$ref": "#/components/schemas/Omit_TenantConfig.walletConfig_"
+						"properties": {
+							"connectionImageUrl": {
+								"type": "string"
+							},
+							"label": {
+								"type": "string"
+							}
+						},
+						"required": [
+							"label"
+						],
+						"type": "object"
 					}
 				},
 				"required": [
@@ -77,6 +88,1998 @@
 				],
 				"type": "object",
 				"additionalProperties": false
+			},
+			"TenantsUpdateOptions": {
+				"properties": {
+					"config": {
+						"properties": {
+							"connectionImageUrl": {
+								"type": "string",
+								"nullable": true
+							},
+							"label": {
+								"type": "string"
+							}
+						},
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicVerifierId": {
+				"type": "string",
+				"description": "The public verifier id, used for hosting SIOP / OAuth2 endpoints and metadata"
+			},
+			"OpenId4VcVerifiersRecord": {
+				"properties": {
+					"id": {
+						"$ref": "#/components/schemas/RecordId"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"type": {
+						"type": "string"
+					},
+					"publicVerifierId": {
+						"$ref": "#/components/schemas/PublicVerifierId"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"type",
+					"publicVerifierId"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VcVerifiersCreateOptions": {
+				"properties": {
+					"publicVerifierId": {
+						"$ref": "#/components/schemas/PublicVerifierId"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false,
+				"example": {}
+			},
+			"OpenId4VcVerificationSessionState": {
+				"enum": [
+					"RequestCreated",
+					"RequestUriRetrieved",
+					"ResponseVerified",
+					"Error"
+				],
+				"type": "string"
+			},
+			"ICredentialContext": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"did": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.any_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"AdditionalClaims": {
+				"$ref": "#/components/schemas/Record_string.any_"
+			},
+			"ICredentialContextType": {
+				"anyOf": [
+					{
+						"allOf": [
+							{
+								"$ref": "#/components/schemas/ICredentialContext"
+							},
+							{
+								"$ref": "#/components/schemas/AdditionalClaims"
+							}
+						]
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"ICredentialSchema": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ICredentialSchemaType": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/ICredentialSchema"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"IIssuerId": {
+				"type": "string"
+			},
+			"IIssuer": {
+				"properties": {
+					"id": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"ICredentialSubject": {
+				"properties": {
+					"id": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ICredentialStatus": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"id",
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ICredential": {
+				"properties": {
+					"@context": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/ICredentialContextType"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/ICredentialContextType"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"credentialSchema": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/ICredentialSchemaType"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/ICredentialSchemaType"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"issuer": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/IIssuerId"
+							},
+							{
+								"$ref": "#/components/schemas/IIssuer"
+							}
+						]
+					},
+					"issuanceDate": {
+						"type": "string"
+					},
+					"credentialSubject": {
+						"anyOf": [
+							{
+								"allOf": [
+									{
+										"$ref": "#/components/schemas/ICredentialSubject"
+									},
+									{
+										"$ref": "#/components/schemas/AdditionalClaims"
+									}
+								]
+							},
+							{
+								"items": {
+									"allOf": [
+										{
+											"$ref": "#/components/schemas/ICredentialSubject"
+										},
+										{
+											"$ref": "#/components/schemas/AdditionalClaims"
+										}
+									]
+								},
+								"type": "array"
+							}
+						]
+					},
+					"expirationDate": {
+						"type": "string"
+					},
+					"id": {
+						"type": "string"
+					},
+					"credentialStatus": {
+						"$ref": "#/components/schemas/ICredentialStatus"
+					},
+					"description": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"issuer",
+					"issuanceDate",
+					"credentialSubject"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"IProofType": {
+				"enum": [
+					"Ed25519Signature2018",
+					"Ed25519Signature2020",
+					"EcdsaSecp256k1Signature2019",
+					"EcdsaSecp256k1RecoverySignature2020",
+					"JsonWebSignature2020",
+					"RsaSignature2018",
+					"GpgSignature2020",
+					"JcsEd25519Signature2020",
+					"BbsBlsSignatureProof2020",
+					"BbsBlsBoundSignatureProof2020",
+					"JwtProof2020"
+				],
+				"type": "string"
+			},
+			"IProofPurpose": {
+				"enum": [
+					"verificationMethod",
+					"assertionMethod",
+					"authentication",
+					"keyAgreement",
+					"contactAgreement",
+					"capabilityInvocation",
+					"capabilityDelegation"
+				],
+				"type": "string"
+			},
+			"IProof": {
+				"properties": {
+					"type": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/IProofType"
+							},
+							{
+								"type": "string"
+							}
+						]
+					},
+					"created": {
+						"type": "string"
+					},
+					"proofPurpose": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/IProofPurpose"
+							},
+							{
+								"type": "string"
+							}
+						]
+					},
+					"verificationMethod": {
+						"type": "string"
+					},
+					"challenge": {
+						"type": "string"
+					},
+					"domain": {
+						"type": "string"
+					},
+					"proofValue": {
+						"type": "string"
+					},
+					"jws": {
+						"type": "string"
+					},
+					"jwt": {
+						"type": "string"
+					},
+					"nonce": {
+						"type": "string"
+					},
+					"requiredRevealStatements": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"type",
+					"created",
+					"proofPurpose",
+					"verificationMethod"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"IHasProof": {
+				"properties": {
+					"proof": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/IProof"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/IProof"
+								},
+								"type": "array"
+							}
+						]
+					}
+				},
+				"required": [
+					"proof"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IVerifiableCredential": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/ICredential"
+					},
+					{
+						"$ref": "#/components/schemas/IHasProof"
+					}
+				]
+			},
+			"CompactJWT": {
+				"type": "string",
+				"description": "Represents a Json Web Token in compact form."
+			},
+			"W3CVerifiableCredential": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/IVerifiableCredential"
+					},
+					{
+						"$ref": "#/components/schemas/CompactJWT"
+					}
+				],
+				"description": "Represents a signed Verifiable Credential (includes proof), in either JSON, compact JWT or compact SD-JWT VC format.\nSee {@link https://www.w3.org/TR/vc-data-model/#credentials VC data model}\nSee {@link https://www.w3.org/TR/vc-data-model/#proof-formats proof formats}"
+			},
+			"Descriptor": {
+				"description": "descriptor map laying out the structure of the presentation submission.",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "ID to identify the descriptor from Presentation Definition Input Descriptor it coresponds to."
+					},
+					"path": {
+						"type": "string",
+						"description": "The path where the verifiable credential is located in the presentation submission json"
+					},
+					"path_nested": {
+						"$ref": "#/components/schemas/Descriptor"
+					},
+					"format": {
+						"type": "string",
+						"description": "The Proof or JWT algorith that the proof is in"
+					}
+				},
+				"required": [
+					"id",
+					"path",
+					"format"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PresentationSubmission": {
+				"description": "It expresses how the inputs are presented as proofs to a Verifier.",
+				"properties": {
+					"id": {
+						"type": "string",
+						"description": "A UUID or some other unique ID to identify this Presentation Submission"
+					},
+					"definition_id": {
+						"type": "string",
+						"description": "A UUID or some other unique ID to identify this Presentation Definition"
+					},
+					"descriptor_map": {
+						"items": {
+							"$ref": "#/components/schemas/Descriptor"
+						},
+						"type": "array",
+						"description": "List of descriptors of how the claims are being mapped to presentation definition"
+					}
+				},
+				"required": [
+					"id",
+					"definition_id",
+					"descriptor_map"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"IPresentation": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"@context": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/ICredentialContextType"
+							},
+							{
+								"items": {
+									"$ref": "#/components/schemas/ICredentialContextType"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"type": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"verifiableCredential": {
+						"items": {
+							"$ref": "#/components/schemas/W3CVerifiableCredential"
+						},
+						"type": "array"
+					},
+					"presentation_submission": {
+						"$ref": "#/components/schemas/PresentationSubmission"
+					},
+					"holder": {
+						"type": "string"
+					},
+					"verifier": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"@context"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"IVerifiablePresentation": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/IPresentation"
+					},
+					{
+						"$ref": "#/components/schemas/IHasProof"
+					}
+				]
+			},
+			"W3CVerifiablePresentation": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/IVerifiablePresentation"
+					},
+					{
+						"$ref": "#/components/schemas/CompactJWT"
+					}
+				],
+				"description": "Represents a signed Verifiable Presentation (includes proof), in either JSON or compact JWT format.\nSee {@link https://www.w3.org/TR/vc-data-model/#presentations VC data model}\nSee {@link https://www.w3.org/TR/vc-data-model/#proof-formats proof formats}"
+			},
+			"CompactSdJwtVc": {
+				"type": "string",
+				"description": "Represents a selective disclosure JWT vc in compact form."
+			},
+			"AuthorizationResponsePayload": {
+				"properties": {
+					"access_token": {
+						"type": "string"
+					},
+					"token_type": {
+						"type": "string"
+					},
+					"refresh_token": {
+						"type": "string"
+					},
+					"expires_in": {
+						"type": "number",
+						"format": "double"
+					},
+					"state": {
+						"type": "string"
+					},
+					"id_token": {
+						"type": "string"
+					},
+					"vp_token": {
+						"anyOf": [
+							{
+								"items": {
+									"anyOf": [
+										{
+											"$ref": "#/components/schemas/W3CVerifiablePresentation"
+										},
+										{
+											"$ref": "#/components/schemas/CompactSdJwtVc"
+										}
+									]
+								},
+								"type": "array"
+							},
+							{
+								"$ref": "#/components/schemas/W3CVerifiablePresentation"
+							},
+							{
+								"$ref": "#/components/schemas/CompactSdJwtVc"
+							}
+						]
+					},
+					"presentation_submission": {
+						"$ref": "#/components/schemas/PresentationSubmission"
+					},
+					"verifiedData": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/IPresentation"
+							},
+							{
+								"$ref": "#/components/schemas/AdditionalClaims"
+							}
+						]
+					}
+				},
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"OpenId4VcSiopAuthorizationResponsePayload": {
+				"$ref": "#/components/schemas/AuthorizationResponsePayload"
+			},
+			"OpenId4VcVerificationSessionsRecord": {
+				"properties": {
+					"id": {
+						"$ref": "#/components/schemas/RecordId"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"type": {
+						"type": "string"
+					},
+					"publicVerifierId": {
+						"$ref": "#/components/schemas/PublicVerifierId"
+					},
+					"state": {
+						"$ref": "#/components/schemas/OpenId4VcVerificationSessionState",
+						"description": "The state of the verification session."
+					},
+					"errorMessage": {
+						"type": "string",
+						"description": "Optional error message of the error that occurred during the verification session. Will be set when state is {@link OpenId4VcVerificationSessionState.Error}"
+					},
+					"authorizationRequestJwt": {
+						"type": "string",
+						"description": "The signed JWT containing the authorization request"
+					},
+					"authorizationRequestUri": {
+						"type": "string",
+						"description": "URI of the authorization request. This is the url that can be used to\nretrieve the authorization request"
+					},
+					"authorizationResponsePayload": {
+						"$ref": "#/components/schemas/OpenId4VcSiopAuthorizationResponsePayload",
+						"description": "The payload of the received authorization response"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"type",
+					"publicVerifierId",
+					"state",
+					"authorizationRequestJwt",
+					"authorizationRequestUri"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VcVerificationSessionsCreateRequestResponse": {
+				"properties": {
+					"verificationSession": {
+						"$ref": "#/components/schemas/OpenId4VcVerificationSessionsRecord"
+					},
+					"authorizationRequest": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"verificationSession",
+					"authorizationRequest"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VcJwtIssuerDid": {
+				"properties": {
+					"method": {
+						"type": "string",
+						"enum": [
+							"did"
+						],
+						"nullable": false
+					},
+					"didUrl": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"method",
+					"didUrl"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VcJwtIssuer": {
+				"$ref": "#/components/schemas/OpenId4VcJwtIssuerDid"
+			},
+			"JwtObject": {
+				"properties": {
+					"alg": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"alg"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"LdpObject": {
+				"properties": {
+					"proof_type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"proof_type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DiObject": {
+				"properties": {
+					"proof_type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"cryptosuite": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"proof_type",
+					"cryptosuite"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"SdJwtObject": {
+				"properties": {
+					"undefined": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Format": {
+				"properties": {
+					"jwt": {
+						"$ref": "#/components/schemas/JwtObject"
+					},
+					"jwt_vc": {
+						"$ref": "#/components/schemas/JwtObject"
+					},
+					"jwt_vc_json": {
+						"$ref": "#/components/schemas/JwtObject"
+					},
+					"jwt_vp": {
+						"$ref": "#/components/schemas/JwtObject"
+					},
+					"jwt_vp_json": {
+						"$ref": "#/components/schemas/JwtObject"
+					},
+					"ldp": {
+						"$ref": "#/components/schemas/LdpObject"
+					},
+					"ldp_vc": {
+						"$ref": "#/components/schemas/LdpObject"
+					},
+					"ldp_vp": {
+						"$ref": "#/components/schemas/LdpObject"
+					},
+					"di": {
+						"$ref": "#/components/schemas/DiObject"
+					},
+					"di_vc": {
+						"$ref": "#/components/schemas/DiObject"
+					},
+					"di_vp": {
+						"$ref": "#/components/schemas/DiObject"
+					},
+					"undefined": {
+						"$ref": "#/components/schemas/SdJwtObject"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Rules": {
+				"type": "string",
+				"enum": [
+					"all",
+					"pick"
+				]
+			},
+			"SubmissionRequirement": {
+				"properties": {
+					"name": {
+						"type": "string"
+					},
+					"purpose": {
+						"type": "string"
+					},
+					"rule": {
+						"$ref": "#/components/schemas/Rules"
+					},
+					"count": {
+						"type": "number",
+						"format": "double"
+					},
+					"min": {
+						"type": "number",
+						"format": "double"
+					},
+					"max": {
+						"type": "number",
+						"format": "double"
+					},
+					"from": {
+						"type": "string"
+					},
+					"from_nested": {
+						"items": {
+							"$ref": "#/components/schemas/SubmissionRequirement"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"rule"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Issuance": {
+				"properties": {
+					"manifest": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"Optionality": {
+				"type": "string",
+				"enum": [
+					"required",
+					"preferred"
+				]
+			},
+			"Directives": {
+				"type": "string",
+				"enum": [
+					"required",
+					"allowed",
+					"disallowed"
+				]
+			},
+			"PdStatus": {
+				"properties": {
+					"directive": {
+						"$ref": "#/components/schemas/Directives"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Statuses": {
+				"properties": {
+					"active": {
+						"$ref": "#/components/schemas/PdStatus"
+					},
+					"suspended": {
+						"$ref": "#/components/schemas/PdStatus"
+					},
+					"revoked": {
+						"$ref": "#/components/schemas/PdStatus"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OneOfNumberString": {
+				"anyOf": [
+					{
+						"type": "number",
+						"format": "double"
+					},
+					{
+						"type": "string"
+					}
+				]
+			},
+			"FilterV2Base": {
+				"properties": {
+					"const": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"enum": {
+						"items": {
+							"$ref": "#/components/schemas/OneOfNumberString"
+						},
+						"type": "array"
+					},
+					"exclusiveMinimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"exclusiveMaximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"format": {
+						"type": "string"
+					},
+					"formatMaximum": {
+						"type": "string"
+					},
+					"formatMinimum": {
+						"type": "string"
+					},
+					"formatExclusiveMaximum": {
+						"type": "string"
+					},
+					"formatExclusiveMinimum": {
+						"type": "string"
+					},
+					"minLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"minimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"maximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"not": {
+						"additionalProperties": false,
+						"type": "object"
+					},
+					"pattern": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"contains": {
+						"$ref": "#/components/schemas/FilterV2Base"
+					},
+					"items": {
+						"$ref": "#/components/schemas/FilterV2BaseItems"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FilterV2BaseItems": {
+				"properties": {
+					"const": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"enum": {
+						"items": {
+							"$ref": "#/components/schemas/OneOfNumberString"
+						},
+						"type": "array"
+					},
+					"exclusiveMinimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"exclusiveMaximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"format": {
+						"type": "string"
+					},
+					"formatMaximum": {
+						"type": "string"
+					},
+					"formatMinimum": {
+						"type": "string"
+					},
+					"formatExclusiveMaximum": {
+						"type": "string"
+					},
+					"formatExclusiveMinimum": {
+						"type": "string"
+					},
+					"minLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"minimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"maximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"not": {
+						"additionalProperties": false,
+						"type": "object"
+					},
+					"pattern": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"contains": {
+						"$ref": "#/components/schemas/FilterV2Base"
+					},
+					"items": {
+						"$ref": "#/components/schemas/FilterV2BaseItems"
+					}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FilterV2": {
+				"properties": {
+					"const": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"enum": {
+						"items": {
+							"$ref": "#/components/schemas/OneOfNumberString"
+						},
+						"type": "array"
+					},
+					"exclusiveMinimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"exclusiveMaximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"format": {
+						"type": "string"
+					},
+					"formatMaximum": {
+						"type": "string"
+					},
+					"formatMinimum": {
+						"type": "string"
+					},
+					"formatExclusiveMaximum": {
+						"type": "string"
+					},
+					"formatExclusiveMinimum": {
+						"type": "string"
+					},
+					"minLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"minimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"maximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"not": {
+						"additionalProperties": false,
+						"type": "object"
+					},
+					"pattern": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					},
+					"contains": {
+						"$ref": "#/components/schemas/FilterV2Base"
+					},
+					"items": {
+						"$ref": "#/components/schemas/FilterV2BaseItems"
+					}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FieldV2": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"path": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"purpose": {
+						"type": "string"
+					},
+					"filter": {
+						"$ref": "#/components/schemas/FilterV2"
+					},
+					"predicate": {
+						"$ref": "#/components/schemas/Optionality"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"path"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"HolderSubject": {
+				"properties": {
+					"field_id": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"directive": {
+						"$ref": "#/components/schemas/Optionality"
+					}
+				},
+				"required": [
+					"field_id",
+					"directive"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConstraintsV2": {
+				"properties": {
+					"limit_disclosure": {
+						"$ref": "#/components/schemas/Optionality"
+					},
+					"statuses": {
+						"$ref": "#/components/schemas/Statuses"
+					},
+					"fields": {
+						"items": {
+							"$ref": "#/components/schemas/FieldV2"
+						},
+						"type": "array"
+					},
+					"subject_is_issuer": {
+						"$ref": "#/components/schemas/Optionality"
+					},
+					"is_holder": {
+						"items": {
+							"$ref": "#/components/schemas/HolderSubject"
+						},
+						"type": "array"
+					},
+					"same_subject": {
+						"items": {
+							"$ref": "#/components/schemas/HolderSubject"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InputDescriptorV2": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"purpose": {
+						"type": "string"
+					},
+					"format": {
+						"$ref": "#/components/schemas/Format"
+					},
+					"group": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"issuance": {
+						"items": {
+							"$ref": "#/components/schemas/Issuance"
+						},
+						"type": "array"
+					},
+					"constraints": {
+						"$ref": "#/components/schemas/ConstraintsV2"
+					}
+				},
+				"required": [
+					"id",
+					"constraints"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PresentationDefinitionV2": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"purpose": {
+						"type": "string"
+					},
+					"format": {
+						"$ref": "#/components/schemas/Format"
+					},
+					"submission_requirements": {
+						"items": {
+							"$ref": "#/components/schemas/SubmissionRequirement"
+						},
+						"type": "array"
+					},
+					"input_descriptors": {
+						"items": {
+							"$ref": "#/components/schemas/InputDescriptorV2"
+						},
+						"type": "array"
+					},
+					"frame": {
+						"additionalProperties": false,
+						"type": "object"
+					}
+				},
+				"required": [
+					"id",
+					"input_descriptors"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DifPresentationExchangeDefinitionV2": {
+				"$ref": "#/components/schemas/PresentationDefinitionV2"
+			},
+			"OpenId4VcVerificationSessionsCreateRequestOptions": {
+				"properties": {
+					"requestSigner": {
+						"$ref": "#/components/schemas/OpenId4VcJwtIssuer",
+						"description": "Signing information for the request JWT. This will be used to sign the request JWT\nand to set the client_id for registration of client_metadata."
+					},
+					"presentationExchange": {
+						"properties": {
+							"definition": {
+								"$ref": "#/components/schemas/DifPresentationExchangeDefinitionV2"
+							}
+						},
+						"required": [
+							"definition"
+						],
+						"type": "object",
+						"description": "A DIF Presentation Definition (v2) can be provided to request a Verifiable Presentation using OpenID4VP."
+					},
+					"publicVerifierId": {
+						"$ref": "#/components/schemas/PublicVerifierId"
+					}
+				},
+				"required": [
+					"requestSigner",
+					"publicVerifierId"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"publicVerifierId": "1ab30c0e-1adb-4f01-90e8-cfd425c0a311",
+					"requestSigner": {
+						"method": "did",
+						"didUrl": "did:key:z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU#z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU"
+					},
+					"presentationExchange": {
+						"definition": {
+							"id": "73797b0c-dae6-46a7-9700-7850855fee22",
+							"name": "Example Presentation Definition",
+							"input_descriptors": [
+								{
+									"id": "64125742-8b6c-422e-82cd-1beb5123ee8f",
+									"constraints": {
+										"limit_disclosure": "required",
+										"fields": [
+											{
+												"path": [
+													"$.age.over_18"
+												],
+												"filter": {
+													"type": "boolean"
+												}
+											}
+										]
+									},
+									"name": "Requested Sd Jwt Example Credential",
+									"purpose": "To provide an example of requesting a credential"
+								}
+							]
+						}
+					}
+				}
+			},
+			"ResponseIss.SELF_ISSUED_V2": {
+				"enum": [
+					"https://self-issued.me/v2"
+				],
+				"type": "string"
+			},
+			"IDTokenPayload": {
+				"properties": {
+					"iss": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/ResponseIss.SELF_ISSUED_V2"
+							},
+							{
+								"type": "string"
+							}
+						]
+					},
+					"sub": {
+						"type": "string"
+					},
+					"aud": {
+						"type": "string"
+					},
+					"iat": {
+						"type": "number",
+						"format": "double"
+					},
+					"nbf": {
+						"type": "number",
+						"format": "double"
+					},
+					"type": {
+						"type": "string"
+					},
+					"exp": {
+						"type": "number",
+						"format": "double"
+					},
+					"rexp": {
+						"type": "number",
+						"format": "double"
+					},
+					"jti": {
+						"type": "string"
+					},
+					"auth_time": {
+						"type": "number",
+						"format": "double"
+					},
+					"nonce": {
+						"type": "string"
+					},
+					"_vp_token": {
+						"properties": {
+							"presentation_submission": {
+								"$ref": "#/components/schemas/PresentationSubmission"
+							}
+						},
+						"required": [
+							"presentation_submission"
+						],
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VcSiopIdTokenPayload": {
+				"$ref": "#/components/schemas/IDTokenPayload"
+			},
+			"Schema": {
+				"properties": {
+					"uri": {
+						"type": "string"
+					},
+					"required": {
+						"type": "boolean"
+					}
+				},
+				"required": [
+					"uri"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FilterV1": {
+				"properties": {
+					"const": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"enum": {
+						"items": {
+							"$ref": "#/components/schemas/OneOfNumberString"
+						},
+						"type": "array"
+					},
+					"exclusiveMinimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"exclusiveMaximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"format": {
+						"type": "string"
+					},
+					"minLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"maxLength": {
+						"type": "number",
+						"format": "double"
+					},
+					"minimum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"maximum": {
+						"$ref": "#/components/schemas/OneOfNumberString"
+					},
+					"not": {
+						"additionalProperties": false,
+						"type": "object"
+					},
+					"pattern": {
+						"type": "string"
+					},
+					"type": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"type"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"FieldV1": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"path": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"purpose": {
+						"type": "string"
+					},
+					"filter": {
+						"$ref": "#/components/schemas/FilterV1"
+					},
+					"predicate": {
+						"$ref": "#/components/schemas/Optionality"
+					}
+				},
+				"required": [
+					"path"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"ConstraintsV1": {
+				"properties": {
+					"limit_disclosure": {
+						"$ref": "#/components/schemas/Optionality"
+					},
+					"statuses": {
+						"$ref": "#/components/schemas/Statuses"
+					},
+					"fields": {
+						"items": {
+							"$ref": "#/components/schemas/FieldV1"
+						},
+						"type": "array"
+					},
+					"subject_is_issuer": {
+						"$ref": "#/components/schemas/Optionality"
+					},
+					"is_holder": {
+						"items": {
+							"$ref": "#/components/schemas/HolderSubject"
+						},
+						"type": "array"
+					},
+					"same_subject": {
+						"items": {
+							"$ref": "#/components/schemas/HolderSubject"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"InputDescriptorV1": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"purpose": {
+						"type": "string"
+					},
+					"group": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"schema": {
+						"items": {
+							"$ref": "#/components/schemas/Schema"
+						},
+						"type": "array"
+					},
+					"issuance": {
+						"items": {
+							"$ref": "#/components/schemas/Issuance"
+						},
+						"type": "array"
+					},
+					"constraints": {
+						"$ref": "#/components/schemas/ConstraintsV1"
+					}
+				},
+				"required": [
+					"id",
+					"schema"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PresentationDefinitionV1": {
+				"properties": {
+					"id": {
+						"type": "string"
+					},
+					"name": {
+						"type": "string"
+					},
+					"purpose": {
+						"type": "string"
+					},
+					"format": {
+						"$ref": "#/components/schemas/Format"
+					},
+					"submission_requirements": {
+						"items": {
+							"$ref": "#/components/schemas/SubmissionRequirement"
+						},
+						"type": "array"
+					},
+					"input_descriptors": {
+						"items": {
+							"$ref": "#/components/schemas/InputDescriptorV1"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"input_descriptors"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"DifPresentationExchangeDefinition": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/PresentationDefinitionV1"
+					},
+					{
+						"$ref": "#/components/schemas/PresentationDefinitionV2"
+					}
+				]
+			},
+			"ClaimFormat.SdJwtVc": {
+				"enum": [
+					"vc+sd-jwt"
+				],
+				"type": "string"
+			},
+			"JwtPayloadJson": {
+				"properties": {
+					"iss": {
+						"type": "string"
+					},
+					"sub": {
+						"type": "string"
+					},
+					"aud": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"items": {
+									"type": "string"
+								},
+								"type": "array"
+							}
+						]
+					},
+					"exp": {
+						"type": "number",
+						"format": "double"
+					},
+					"nbf": {
+						"type": "number",
+						"format": "double"
+					},
+					"iat": {
+						"type": "number",
+						"format": "double"
+					},
+					"jti": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"JwkJson": {
+				"properties": {
+					"kty": {
+						"type": "string"
+					},
+					"use": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"kty"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"JwtHeader": {
+				"properties": {
+					"alg": {
+						"type": "string"
+					},
+					"kid": {
+						"type": "string"
+					},
+					"jwk": {
+						"$ref": "#/components/schemas/JwkJson"
+					}
+				},
+				"required": [
+					"alg"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"ClaimFormat.JwtVp": {
+				"enum": [
+					"jwt_vp"
+				],
+				"type": "string"
+			},
+			"JsonObject": {
+				"properties": {},
+				"type": "object",
+				"additionalProperties": {
+					"$ref": "#/components/schemas/JsonValue"
+				}
+			},
+			"JsonValue": {
+				"anyOf": [
+					{
+						"type": "string"
+					},
+					{
+						"type": "number",
+						"format": "double"
+					},
+					{
+						"type": "boolean"
+					},
+					{
+						"$ref": "#/components/schemas/JsonObject"
+					},
+					{
+						"$ref": "#/components/schemas/JsonArray"
+					}
+				],
+				"nullable": true
+			},
+			"JsonArray": {
+				"items": {
+					"$ref": "#/components/schemas/JsonValue"
+				},
+				"type": "array"
+			},
+			"SingleOrArray_JsonObject_": {
+				"anyOf": [
+					{
+						"$ref": "#/components/schemas/JsonObject"
+					},
+					{
+						"items": {
+							"$ref": "#/components/schemas/JsonObject"
+						},
+						"type": "array"
+					}
+				]
+			},
+			"W3cJsonCredential": {
+				"properties": {
+					"@context": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/components/schemas/JsonObject"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"issuer": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"properties": {
+									"id": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							}
+						]
+					},
+					"issuanceDate": {
+						"type": "string"
+					},
+					"expirationDate": {
+						"type": "string"
+					},
+					"credentialSubject": {
+						"$ref": "#/components/schemas/SingleOrArray_JsonObject_"
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"issuer",
+					"issuanceDate",
+					"credentialSubject"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"W3cJsonPresentation": {
+				"properties": {
+					"@context": {
+						"items": {
+							"anyOf": [
+								{
+									"type": "string"
+								},
+								{
+									"$ref": "#/components/schemas/JsonObject"
+								}
+							]
+						},
+						"type": "array"
+					},
+					"id": {
+						"type": "string"
+					},
+					"type": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"holder": {
+						"anyOf": [
+							{
+								"type": "string"
+							},
+							{
+								"properties": {
+									"id": {
+										"type": "string"
+									}
+								},
+								"type": "object"
+							}
+						]
+					},
+					"verifiableCredential": {
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/components/schemas/W3cJsonCredential"
+								},
+								{
+									"type": "string"
+								}
+							]
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"@context",
+					"type",
+					"holder",
+					"verifiableCredential"
+				],
+				"type": "object",
+				"additionalProperties": {}
+			},
+			"ClaimFormat.LdpVp": {
+				"enum": [
+					"ldp_vp"
+				],
+				"type": "string"
+			},
+			"OpenId4VcVerificationSessionsGetVerifiedAuthorizationResponseResponse": {
+				"description": "Either `idToken` and/or `presentationExchange` will be present, but not none.",
+				"properties": {
+					"idToken": {
+						"properties": {
+							"payload": {
+								"$ref": "#/components/schemas/OpenId4VcSiopIdTokenPayload"
+							}
+						},
+						"required": [
+							"payload"
+						],
+						"type": "object"
+					},
+					"presentationExchange": {
+						"properties": {
+							"presentations": {
+								"items": {
+									"anyOf": [
+										{
+											"properties": {
+												"header": {
+													"$ref": "#/components/schemas/JwtHeader"
+												},
+												"signedPayload": {
+													"$ref": "#/components/schemas/JwtPayloadJson"
+												},
+												"vcPayload": {
+													"$ref": "#/components/schemas/JwtPayloadJson"
+												},
+												"encoded": {
+													"type": "string"
+												},
+												"format": {
+													"$ref": "#/components/schemas/ClaimFormat.SdJwtVc"
+												}
+											},
+											"required": [
+												"header",
+												"signedPayload",
+												"vcPayload",
+												"encoded",
+												"format"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"header": {
+													"$ref": "#/components/schemas/JwtHeader"
+												},
+												"signedPayload": {
+													"$ref": "#/components/schemas/JwtPayloadJson"
+												},
+												"vcPayload": {
+													"$ref": "#/components/schemas/W3cJsonPresentation"
+												},
+												"encoded": {
+													"type": "string"
+												},
+												"format": {
+													"$ref": "#/components/schemas/ClaimFormat.JwtVp"
+												}
+											},
+											"required": [
+												"header",
+												"signedPayload",
+												"vcPayload",
+												"encoded",
+												"format"
+											],
+											"type": "object"
+										},
+										{
+											"properties": {
+												"vcPayload": {
+													"$ref": "#/components/schemas/W3cJsonPresentation"
+												},
+												"encoded": {
+													"$ref": "#/components/schemas/W3cJsonPresentation"
+												},
+												"format": {
+													"$ref": "#/components/schemas/ClaimFormat.LdpVp"
+												}
+											},
+											"required": [
+												"vcPayload",
+												"encoded",
+												"format"
+											],
+											"type": "object"
+										}
+									]
+								},
+								"type": "array"
+							},
+							"definition": {
+								"$ref": "#/components/schemas/DifPresentationExchangeDefinition"
+							},
+							"submission": {
+								"$ref": "#/components/schemas/PresentationSubmission"
+							}
+						},
+						"required": [
+							"presentations",
+							"definition",
+							"submission"
+						],
+						"type": "object"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"PublicIssuerId": {
+				"type": "string",
+				"description": "The public issuer id, used for hosting OpenID4VCI metadata and endpoints"
 			},
 			"CredentialSupportedBrief": {
 				"properties": {
@@ -278,44 +2281,6 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"ICredentialContext": {
-				"properties": {
-					"name": {
-						"type": "string"
-					},
-					"did": {
-						"type": "string"
-					}
-				},
-				"type": "object",
-				"additionalProperties": false
-			},
-			"Record_string.any_": {
-				"properties": {},
-				"additionalProperties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
-			},
-			"AdditionalClaims": {
-				"$ref": "#/components/schemas/Record_string.any_"
-			},
-			"ICredentialContextType": {
-				"anyOf": [
-					{
-						"allOf": [
-							{
-								"$ref": "#/components/schemas/ICredentialContext"
-							},
-							{
-								"$ref": "#/components/schemas/AdditionalClaims"
-							}
-						]
-					},
-					{
-						"type": "string"
-					}
-				]
-			},
 			"CredentialSupportedJwtVcJsonLdAndLdpVc": {
 				"properties": {
 					"types": {
@@ -443,11 +2408,56 @@
 			"OpenId4VciIssuerMetadataDisplay": {
 				"$ref": "#/components/schemas/MetadataDisplay"
 			},
-			"OpenId4VciCreateIssuerOptions": {
+			"OpenId4VcIssuersRecord": {
 				"properties": {
-					"issuerId": {
+					"id": {
+						"$ref": "#/components/schemas/RecordId"
+					},
+					"createdAt": {
 						"type": "string",
-						"description": "Id of the issuer, not the id of the issuer record. Will be exposed publicly"
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"type": {
+						"type": "string"
+					},
+					"publicIssuerId": {
+						"$ref": "#/components/schemas/PublicIssuerId"
+					},
+					"accessTokenPublicKeyFingerprint": {
+						"type": "string"
+					},
+					"credentialsSupported": {
+						"items": {
+							"$ref": "#/components/schemas/OpenId4VciCredentialSupportedWithId"
+						},
+						"type": "array"
+					},
+					"display": {
+						"items": {
+							"$ref": "#/components/schemas/OpenId4VciIssuerMetadataDisplay"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"type",
+					"publicIssuerId",
+					"accessTokenPublicKeyFingerprint",
+					"credentialsSupported"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VcIssuersCreateOptions": {
+				"properties": {
+					"publicIssuerId": {
+						"$ref": "#/components/schemas/PublicIssuerId"
 					},
 					"credentialsSupported": {
 						"items": {
@@ -466,7 +2476,707 @@
 					"credentialsSupported"
 				],
 				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"credentialsSupported": [
+						{
+							"format": "vc+sd-jwt",
+							"id": "ExampleCredentialSdJwtVc",
+							"vct": "https://example.com/vct#ExampleCredential",
+							"cryptographic_binding_methods_supported": [
+								"did:key",
+								"did:jwk"
+							],
+							"cryptographic_suites_supported": [
+								"ES256",
+								"Ed25519"
+							],
+							"display": [
+								{
+									"name": "Example SD JWT Credential",
+									"description": "This is an example SD-JWT credential",
+									"background_color": "#ffffff",
+									"background_image": {
+										"url": "https://example.com/background.png",
+										"alt_text": "Example Credential Background"
+									},
+									"text_color": "#000000",
+									"locale": "en-US",
+									"logo": {
+										"url": "https://example.com/logo.png",
+										"alt_text": "Example Credential Logo"
+									}
+								}
+							]
+						},
+						{
+							"format": "jwt_vc_json",
+							"id": "ExampleCredentialJwtVc",
+							"types": [
+								"VerifiableCredential",
+								"ExampleCredential"
+							],
+							"cryptographic_binding_methods_supported": [
+								"did:key",
+								"did:jwk"
+							],
+							"cryptographic_suites_supported": [
+								"ES256",
+								"Ed25519"
+							],
+							"display": [
+								{
+									"name": "Example SD JWT Credential",
+									"description": "This is an example SD-JWT credential",
+									"background_color": "#ffffff",
+									"background_image": {
+										"url": "https://example.com/background.png",
+										"alt_text": "Example Credential Background"
+									},
+									"text_color": "#000000",
+									"locale": "en-US",
+									"logo": {
+										"url": "https://example.com/logo.png",
+										"alt_text": "Example Credential Logo"
+									}
+								}
+							]
+						}
+					],
+					"display": [
+						{
+							"background_color": "#ffffff",
+							"description": "This is an example issuer",
+							"name": "Example Issuer",
+							"locale": "en-US",
+							"logo": {
+								"alt_text": "Example Issuer Logo",
+								"url": "https://example.com/logo.png"
+							},
+							"text_color": "#000000"
+						}
+					]
+				}
+			},
+			"OpenId4VcIssuersUpdateMetadataOptions": {
+				"properties": {
+					"credentialsSupported": {
+						"items": {
+							"$ref": "#/components/schemas/OpenId4VciCredentialSupportedWithId"
+						},
+						"type": "array"
+					},
+					"display": {
+						"items": {
+							"$ref": "#/components/schemas/OpenId4VciIssuerMetadataDisplay"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"credentialsSupported"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"credentialsSupported": [
+						{
+							"format": "vc+sd-jwt",
+							"id": "ExampleCredentialSdJwtVc",
+							"vct": "https://example.com/vct#ExampleCredential",
+							"cryptographic_binding_methods_supported": [
+								"did:key",
+								"did:jwk"
+							],
+							"cryptographic_suites_supported": [
+								"ES256",
+								"Ed25519"
+							],
+							"display": [
+								{
+									"name": "Example SD JWT Credential",
+									"description": "This is an example SD-JWT credential",
+									"background_color": "#ffffff",
+									"background_image": {
+										"url": "https://example.com/background.png",
+										"alt_text": "Example Credential Background"
+									},
+									"text_color": "#000000",
+									"locale": "en-US",
+									"logo": {
+										"url": "https://example.com/logo.png",
+										"alt_text": "Example Credential Logo"
+									}
+								}
+							]
+						},
+						{
+							"format": "jwt_vc_json",
+							"id": "ExampleCredentialJwtVc",
+							"types": [
+								"VerifiableCredential",
+								"ExampleCredential"
+							],
+							"cryptographic_binding_methods_supported": [
+								"did:key",
+								"did:jwk"
+							],
+							"cryptographic_suites_supported": [
+								"ES256",
+								"Ed25519"
+							],
+							"display": [
+								{
+									"name": "Example SD JWT Credential",
+									"description": "This is an example SD-JWT credential",
+									"background_color": "#ffffff",
+									"background_image": {
+										"url": "https://example.com/background.png",
+										"alt_text": "Example Credential Background"
+									},
+									"text_color": "#000000",
+									"locale": "en-US",
+									"logo": {
+										"url": "https://example.com/logo.png",
+										"alt_text": "Example Credential Logo"
+									}
+								}
+							]
+						}
+					],
+					"display": [
+						{
+							"background_color": "#ffffff",
+							"description": "This is an example issuer",
+							"name": "Example Issuer",
+							"locale": "en-US",
+							"logo": {
+								"alt_text": "Example Issuer Logo",
+								"url": "https://example.com/logo.png"
+							},
+							"text_color": "#000000"
+						}
+					]
+				}
+			},
+			"OpenId4VcIssuanceSessionState": {
+				"enum": [
+					"OfferCreated",
+					"OfferUriRetrieved",
+					"AccessTokenRequested",
+					"AccessTokenCreated",
+					"CredentialRequestReceived",
+					"CredentialIssued",
+					"Error"
+				],
+				"type": "string"
+			},
+			"Record_string.unknown_": {
+				"properties": {},
+				"additionalProperties": {},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"CommonCredentialOfferFormat": {
+				"properties": {
+					"format": {
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/OID4VCICredentialFormat"
+							},
+							{
+								"type": "string"
+							}
+						]
+					}
+				},
+				"required": [
+					"format"
+				],
+				"type": "object",
 				"additionalProperties": false
+			},
+			"JsonLdIssuerCredentialDefinition": {
+				"properties": {
+					"@context": {
+						"items": {
+							"$ref": "#/components/schemas/ICredentialContextType"
+						},
+						"type": "array"
+					},
+					"types": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					},
+					"credentialSubject": {
+						"$ref": "#/components/schemas/IssuerCredentialSubject"
+					}
+				},
+				"required": [
+					"@context",
+					"types"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialOfferFormatJwtVcJsonLdAndLdpVc": {
+				"properties": {
+					"format": {
+						"type": "string",
+						"enum": [
+							"ldp_vc",
+							"jwt_vc_json-ld"
+						]
+					},
+					"credential_definition": {
+						"$ref": "#/components/schemas/JsonLdIssuerCredentialDefinition"
+					}
+				},
+				"required": [
+					"format",
+					"credential_definition"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialOfferFormatJwtVcJson": {
+				"properties": {
+					"format": {
+						"type": "string",
+						"enum": [
+							"jwt_vc_json",
+							"jwt_vc"
+						]
+					},
+					"types": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"format",
+					"types"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialOfferFormatSdJwtVc": {
+				"properties": {
+					"format": {
+						"type": "string",
+						"enum": [
+							"vc+sd-jwt"
+						],
+						"nullable": false
+					},
+					"vct": {
+						"type": "string"
+					},
+					"claims": {
+						"$ref": "#/components/schemas/IssuerCredentialSubject"
+					}
+				},
+				"required": [
+					"format",
+					"vct"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialOfferFormat": {
+				"allOf": [
+					{
+						"$ref": "#/components/schemas/CommonCredentialOfferFormat"
+					},
+					{
+						"anyOf": [
+							{
+								"$ref": "#/components/schemas/CredentialOfferFormatJwtVcJsonLdAndLdpVc"
+							},
+							{
+								"$ref": "#/components/schemas/CredentialOfferFormatJwtVcJson"
+							},
+							{
+								"$ref": "#/components/schemas/CredentialOfferFormatSdJwtVc"
+							}
+						]
+					}
+				]
+			},
+			"GrantAuthorizationCode": {
+				"properties": {
+					"issuer_state": {
+						"type": "string",
+						"description": "OPTIONAL. String value created by the Credential Issuer and opaque to the Wallet that is used to bind the subsequent\nAuthorization Request with the Credential Issuer to a context set up during previous steps."
+					},
+					"authorization_server": {
+						"type": "string",
+						"description": "OPTIONAL string that the Wallet can use to identify the Authorization Server to use with this grant type when authorization_servers parameter in the Credential Issuer metadata has multiple entries. MUST NOT be used otherwise. The value of this parameter MUST match with one of the values in the authorization_servers array obtained from the Credential Issuer metadata"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"GrantUrnIetf": {
+				"properties": {
+					"pre-authorized_code": {
+						"type": "string",
+						"description": "REQUIRED. The code representing the Credential Issuer's authorization for the Wallet to obtain Credentials of a certain type."
+					},
+					"user_pin_required": {
+						"type": "boolean",
+						"description": "OPTIONAL. Boolean value specifying whether the Credential Issuer expects presentation of a user PIN along with the Token Request\nin a Pre-Authorized Code Flow. Default is false."
+					},
+					"interval": {
+						"type": "number",
+						"format": "double",
+						"description": "OPTIONAL. The minimum amount of time in seconds that the Wallet SHOULD wait between polling requests to the token endpoint (in case the Authorization Server responds with error code authorization_pending - see Section 6.3). If no value is provided, Wallets MUST use 5 as the default."
+					},
+					"authorization_server": {
+						"type": "string",
+						"description": "OPTIONAL string that the Wallet can use to identify the Authorization Server to use with this grant type when authorization_servers parameter in the Credential Issuer metadata has multiple entries. MUST NOT be used otherwise. The value of this parameter MUST match with one of the values in the authorization_servers array obtained from the Credential Issuer metadata"
+					}
+				},
+				"required": [
+					"pre-authorized_code",
+					"user_pin_required"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Grant": {
+				"properties": {
+					"authorization_code": {
+						"$ref": "#/components/schemas/GrantAuthorizationCode"
+					},
+					"urn:ietf:params:oauth:grant-type:pre-authorized_code": {
+						"$ref": "#/components/schemas/GrantUrnIetf"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialOfferPayloadV1_0_11": {
+				"properties": {
+					"credential_issuer": {
+						"type": "string",
+						"description": "REQUIRED. The URL of the Credential Issuer, the Wallet is requested to obtain one or more Credentials from."
+					},
+					"credentials": {
+						"items": {
+							"anyOf": [
+								{
+									"$ref": "#/components/schemas/CredentialOfferFormat"
+								},
+								{
+									"type": "string"
+								}
+							]
+						},
+						"type": "array",
+						"description": "REQUIRED. A JSON array, where every entry is a JSON object or a JSON string. If the entry is an object,\nthe object contains the data related to a certain credential type the Wallet MAY request.\nEach object MUST contain a format Claim determining the format of the credential to be requested and\nfurther parameters characterising the type of the credential to be requested as defined in Appendix E.\nIf the entry is a string, the string value MUST be one of the id values in one of the objects in the\ncredentials_supported Credential Issuer metadata parameter.\nWhen processing, the Wallet MUST resolve this string value to the respective object."
+					},
+					"grants": {
+						"$ref": "#/components/schemas/Grant",
+						"description": "OPTIONAL. A JSON object indicating to the Wallet the Grant Types the Credential Issuer's AS is prepared\nto process for this credential offer. Every grant is represented by a key and an object.\nThe key value is the Grant Type identifier, the object MAY contain parameters either determining the way\nthe Wallet MUST use the particular grant and/or parameters the Wallet MUST send with the respective request(s).\nIf grants is not present or empty, the Wallet MUST determine the Grant Types the Credential Issuer's AS supports\nusing the respective metadata. When multiple grants are present, it's at the Wallet's discretion which one to use."
+					},
+					"client_id": {
+						"type": "string",
+						"description": "Some implementations might include a client_id in the offer. For instance EBSI in a same-device flow. (Cross-device tucks it in the state JWT)"
+					}
+				},
+				"required": [
+					"credential_issuer",
+					"credentials"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VciCredentialOfferPayload": {
+				"$ref": "#/components/schemas/CredentialOfferPayloadV1_0_11"
+			},
+			"OpenId4VcIssuanceSessionsRecord": {
+				"properties": {
+					"id": {
+						"$ref": "#/components/schemas/RecordId"
+					},
+					"createdAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"updatedAt": {
+						"type": "string",
+						"format": "date-time"
+					},
+					"type": {
+						"type": "string"
+					},
+					"publicIssuerId": {
+						"$ref": "#/components/schemas/PublicIssuerId"
+					},
+					"state": {
+						"$ref": "#/components/schemas/OpenId4VcIssuanceSessionState",
+						"description": "The state of the issuance session."
+					},
+					"cNonce": {
+						"type": "string",
+						"description": "cNonce that should be used in the credential request by the holder."
+					},
+					"cNonceExpiresAt": {
+						"type": "string",
+						"format": "date-time",
+						"description": "The time at which the cNonce expires."
+					},
+					"preAuthorizedCode": {
+						"type": "string",
+						"description": "Pre authorized code used for the issuance session. Only used when a pre-authorized credential\noffer is created."
+					},
+					"userPin": {
+						"type": "string",
+						"description": "Optional user pin that needs to be provided by the user in the access token request."
+					},
+					"issuanceMetadata": {
+						"$ref": "#/components/schemas/Record_string.unknown_",
+						"description": "User-defined metadata that will be provided to the credential request to credential mapper\nto allow to retrieve the needed credential input data. Can be the credential data itself,\nor some other data that is needed to retrieve the credential data."
+					},
+					"credentialOfferPayload": {
+						"$ref": "#/components/schemas/OpenId4VciCredentialOfferPayload",
+						"description": "The credential offer that was used to create the issuance session."
+					},
+					"credentialOfferUri": {
+						"type": "string",
+						"description": "URI of the credential offer. This is the url that cn can be used to retrieve\nthe credential offer"
+					},
+					"errorMessage": {
+						"type": "string",
+						"description": "Optional error message of the error that occurred during the issuance session. Will be set when state is {@link OpenId4VcIssuanceSessionState.Error}"
+					}
+				},
+				"required": [
+					"id",
+					"createdAt",
+					"type",
+					"publicIssuerId",
+					"state",
+					"credentialOfferPayload",
+					"credentialOfferUri"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VcIssuanceSessionsCreateOfferResponse": {
+				"properties": {
+					"issuanceSession": {
+						"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsRecord"
+					},
+					"credentialOffer": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"issuanceSession",
+					"credentialOffer"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VciCredentialFormatProfile.SdJwtVc": {
+				"enum": [
+					"vc+sd-jwt"
+				],
+				"type": "string"
+			},
+			"Did": {
+				"type": "string"
+			},
+			"DisclosureFrame": {
+				"properties": {},
+				"additionalProperties": {
+					"anyOf": [
+						{
+							"type": "boolean"
+						},
+						{
+							"$ref": "#/components/schemas/DisclosureFrame"
+						}
+					]
+				},
+				"type": "object"
+			},
+			"OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions": {
+				"properties": {
+					"credentialSupportedId": {
+						"type": "string",
+						"description": "The id of the `credential_supported` entry that is present in the issuer\nmetadata. This id is used to identify the credential that is being offered.",
+						"example": "ExampleCredentialSdJwtVc"
+					},
+					"format": {
+						"$ref": "#/components/schemas/OpenId4VciCredentialFormatProfile.SdJwtVc",
+						"description": "The format of the credential that is being offered.\nMUST match the format of the `credential_supported` entry."
+					},
+					"issuer": {
+						"properties": {
+							"didUrl": {
+								"$ref": "#/components/schemas/Did"
+							},
+							"method": {
+								"type": "string",
+								"enum": [
+									"did"
+								],
+								"nullable": false
+							}
+						},
+						"required": [
+							"didUrl",
+							"method"
+						],
+						"type": "object",
+						"description": "The issuer of the credential.\n\nOnly DID based issuance is supported at the moment."
+					},
+					"payload": {
+						"properties": {
+							"vct": {
+								"type": "string"
+							}
+						},
+						"additionalProperties": {},
+						"type": "object",
+						"description": "The payload of the credential that will be issued.\n\nIf `vct` claim is included, it MUST match the `vct` claim from the issuer metadata.\nIf `vct` claim is not included, it will be added automatically.",
+						"example": {
+							"first_name": "John",
+							"last_name": "Doe",
+							"age": {
+								"over_18": true,
+								"over_21": true,
+								"over_65": false
+							}
+						}
+					},
+					"disclosureFrame": {
+						"$ref": "#/components/schemas/DisclosureFrame",
+						"description": "Disclosure frame indicating which fields of the credential can be selectively disclosed.",
+						"example": {
+							"first_name": false,
+							"last_name": false,
+							"age": {
+								"over_18": true,
+								"over_21": true,
+								"over_65": true
+							}
+						}
+					}
+				},
+				"required": [
+					"credentialSupportedId",
+					"format",
+					"issuer",
+					"payload",
+					"disclosureFrame"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"OpenId4VciPreAuthorizedCodeFlowConfig": {
+				"properties": {
+					"preAuthorizedCode": {
+						"type": "string"
+					},
+					"userPinRequired": {
+						"type": "boolean"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_OpenId4VciCreateCredentialOfferOptions.Exclude_keyofOpenId4VciCreateCredentialOfferOptions.offeredCredentials__": {
+				"properties": {
+					"baseUri": {
+						"type": "string",
+						"description": "baseUri for the credential offer uri. By default `openid-credential-offer://` will be used\nif no value is provided. If a value is provided, make sure it contains the scheme as well as `://`."
+					},
+					"preAuthorizedCodeFlowConfig": {
+						"$ref": "#/components/schemas/OpenId4VciPreAuthorizedCodeFlowConfig"
+					},
+					"issuanceMetadata": {
+						"$ref": "#/components/schemas/Record_string.unknown_",
+						"description": "Metadata about the issuance, that will be stored in the issuance session record and\npassed to the credential request to credential mapper. This can be used to e.g. store an\nuser identifier so user data can be fetched in the credential mapper, or the actual credential\ndata."
+					}
+				},
+				"required": [
+					"preAuthorizedCodeFlowConfig"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"OpenId4VcIssuanceSessionsCreateOfferOptions": {
+				"properties": {
+					"baseUri": {
+						"type": "string",
+						"description": "baseUri for the credential offer uri. By default `openid-credential-offer://` will be used\nif no value is provided. If a value is provided, make sure it contains the scheme as well as `://`."
+					},
+					"preAuthorizedCodeFlowConfig": {
+						"$ref": "#/components/schemas/OpenId4VciPreAuthorizedCodeFlowConfig"
+					},
+					"issuanceMetadata": {
+						"$ref": "#/components/schemas/Record_string.unknown_",
+						"description": "Metadata about the issuance, that will be stored in the issuance session record and\npassed to the credential request to credential mapper. This can be used to e.g. store an\nuser identifier so user data can be fetched in the credential mapper, or the actual credential\ndata."
+					},
+					"publicIssuerId": {
+						"$ref": "#/components/schemas/PublicIssuerId"
+					},
+					"credentials": {
+						"items": {
+							"$ref": "#/components/schemas/OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"preAuthorizedCodeFlowConfig",
+					"publicIssuerId",
+					"credentials"
+				],
+				"type": "object",
+				"additionalProperties": false,
+				"example": {
+					"publicIssuerId": "a868257d-7149-4d4d-a52c-78f3197ee538",
+					"preAuthorizedCodeFlowConfig": {
+						"userPinRequired": false
+					},
+					"credentials": [
+						{
+							"credentialSupportedId": "ExampleCredentialSdJwtVc",
+							"format": "vc+sd-jwt",
+							"issuer": {
+								"method": "did",
+								"didUrl": "did:key:z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU#z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU"
+							},
+							"payload": {
+								"first_name": "John",
+								"last_name": "Doe",
+								"age": {
+									"over_18": true,
+									"over_21": true,
+									"over_65": false
+								}
+							},
+							"disclosureFrame": {
+								"first_name": false,
+								"last_name": false,
+								"age": {
+									"over_18": true,
+									"over_21": true,
+									"over_65": true
+								}
+							}
+						}
+					]
+				}
 			},
 			"ThreadId": {
 				"type": "string",
@@ -1395,10 +4105,10 @@
 					"label": {
 						"type": "string"
 					},
-					"alias": {
+					"goalCode": {
 						"type": "string"
 					},
-					"goalCode": {
+					"alias": {
 						"type": "string"
 					},
 					"imageUrl": {
@@ -1431,10 +4141,10 @@
 					"label": {
 						"type": "string"
 					},
-					"alias": {
+					"goalCode": {
 						"type": "string"
 					},
-					"goalCode": {
+					"alias": {
 						"type": "string"
 					},
 					"imageUrl": {
@@ -1600,9 +4310,6 @@
 				],
 				"type": "object",
 				"additionalProperties": false
-			},
-			"Did": {
-				"type": "string"
 			},
 			"DidCommOutOfBandAcceptInvitationOptions": {
 				"properties": {
@@ -1787,46 +4494,6 @@
 					"v1",
 					"v2"
 				]
-			},
-			"JsonValue": {
-				"anyOf": [
-					{
-						"type": "string"
-					},
-					{
-						"type": "number",
-						"format": "double"
-					},
-					{
-						"type": "boolean"
-					},
-					{
-						"$ref": "#/components/schemas/JsonObject"
-					},
-					{
-						"$ref": "#/components/schemas/JsonArray"
-					}
-				],
-				"nullable": true
-			},
-			"JsonObject": {
-				"properties": {},
-				"type": "object",
-				"additionalProperties": {
-					"$ref": "#/components/schemas/JsonValue"
-				}
-			},
-			"JsonArray": {
-				"items": {
-					"$ref": "#/components/schemas/JsonValue"
-				},
-				"type": "array"
-			},
-			"Record_string.unknown_": {
-				"properties": {},
-				"additionalProperties": {},
-				"type": "object",
-				"description": "Construct a type with a set of properties K of type T"
 			},
 			"Pick_JwsGeneralFormat.Exclude_keyofJwsGeneralFormat.payload__": {
 				"properties": {
@@ -4144,7 +6811,7 @@
 		}
 	},
 	"info": {
-		"title": "@credo-ts/rest",
+		"title": "Credo REST API",
 		"version": "0.9.5",
 		"description": "Rest API for using Credo over HTTP",
 		"license": {
@@ -4185,29 +6852,202 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/CreateTenantOptions"
+								"$ref": "#/components/schemas/TenantsCreateOptions"
 							}
 						}
 					}
 				}
-			}
-		},
-		"/openid4vc/issuers": {
-			"post": {
-				"operationId": "CreateIssuer",
+			},
+			"get": {
+				"operationId": "GetTenantsByQuery",
 				"responses": {
 					"200": {
 						"description": "Ok",
 						"content": {
 							"application/json": {
-								"schema": {}
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/TenantsRecord"
+									},
+									"type": "array"
+								}
 							}
 						}
 					}
 				},
-				"description": "Initiate a new openid4vc issuance session by creating a credential offer",
+				"description": "get tenants by query",
 				"tags": [
-					"OpenID4VC Issuer"
+					"Tenants"
+				],
+				"security": [
+					{
+						"tenants": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "label",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "storageVersion",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/tenants/{tenantId}": {
+			"get": {
+				"operationId": "GetTenant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TenantsRecord"
+								}
+							}
+						}
+					}
+				},
+				"description": "get tenant by id",
+				"tags": [
+					"Tenants"
+				],
+				"security": [
+					{
+						"tenants": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "tenantId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateTenant",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/TenantsRecord"
+								}
+							}
+						}
+					}
+				},
+				"description": "update tenant by id.\n\nNOTE: this does not overwrite the entire tenant record, only the properties that are passed in the body.\nIf you want to unset an non-required value, you can pass `null`.",
+				"tags": [
+					"Tenants"
+				],
+				"security": [
+					{
+						"tenants": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "tenantId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/TenantsUpdateOptions"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "DeleteTenant",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "delete tenant by id",
+				"tags": [
+					"Tenants"
+				],
+				"security": [
+					{
+						"tenants": [
+							"admin"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "tenantId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/verifiers": {
+			"post": {
+				"operationId": "CreateVerifier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcVerifiersRecord"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "a3327f09-1d48-48a5-89b1-6678a33c0539",
+											"createdAt": "2024-03-29T15:26:58.347Z",
+											"updatedAt": "2024-03-29T15:26:58.347Z",
+											"type": "OpenId4VcVerifierRecord",
+											"publicVerifierId": "0aa796ef-d79d-457f-a4b9-40b99e47fef2"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new OpenID4VC Verifier",
+				"tags": [
+					"OpenID4VC Verifiers"
 				],
 				"security": [
 					{
@@ -4222,11 +7062,1292 @@
 					"content": {
 						"application/json": {
 							"schema": {
-								"$ref": "#/components/schemas/OpenId4VciCreateIssuerOptions"
+								"$ref": "#/components/schemas/OpenId4VcVerifiersCreateOptions"
 							}
 						}
 					}
 				}
+			},
+			"get": {
+				"operationId": "GetVerifiersByQuery",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/OpenId4VcVerifiersRecord"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"id": "a3327f09-1d48-48a5-89b1-6678a33c0539",
+												"createdAt": "2024-03-29T15:26:58.347Z",
+												"updatedAt": "2024-03-29T15:26:58.347Z",
+												"type": "OpenId4VcVerifierRecord",
+												"publicVerifierId": "0aa796ef-d79d-457f-a4b9-40b99e47fef2"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get OpenID4VC verifiers by query",
+				"tags": [
+					"OpenID4VC Verifiers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "publicVerifierId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/verifiers/{verifierId}": {
+			"get": {
+				"operationId": "GetVerifier",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcVerifiersRecord"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "a3327f09-1d48-48a5-89b1-6678a33c0539",
+											"createdAt": "2024-03-29T15:26:58.347Z",
+											"updatedAt": "2024-03-29T15:26:58.347Z",
+											"type": "OpenId4VcVerifierRecord",
+											"publicVerifierId": "0aa796ef-d79d-457f-a4b9-40b99e47fef2"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an OpenID4VC verifier by id",
+				"tags": [
+					"OpenID4VC Verifiers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "verifierId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteVerifier",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete an OpenID4VC verifier by id",
+				"tags": [
+					"OpenID4VC Verifiers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "verifierId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/verifiers/sessions/create-request": {
+			"post": {
+				"operationId": "CreateRequest",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcVerificationSessionsCreateRequestResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"verificationSession": {
+												"id": "9cde9070-23c9-4e51-b810-e929a0298cbb",
+												"createdAt": "2024-03-29T17:54:34.890Z",
+												"updatedAt": "2024-03-29T17:54:34.890Z",
+												"type": "OpenId4VcVerificationSessionRecord",
+												"publicVerifierId": "a868257d-7149-4d4d-a52c-78f3197ee538",
+												"authorizationRequestJwt": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDprZXk6ejZNa2dWaXdmc3RDTDFMOWk4dGdzZEFZRXU1QTYyVzVtQTlEY21TeWdWVlZMRnVVI3o2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTE3MzgxNjEsImV4cCI6MTcxMTczODI4MSwicmVzcG9uc2VfdHlwZSI6ImlkX3Rva2VuIHZwX3Rva2VuIiwic2NvcGUiOiJvcGVuaWQiLCJjbGllbnRfaWQiOiJkaWQ6a2V5Ono2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSIsInJlZGlyZWN0X3VyaSI6Imh0dHBzOi8vZDBjZS0yMTctMTIzLTE4LTI2Lm5ncm9rLWZyZWUuYXBwL3Npb3AvMWFiMzBjMGUtMWFkYi00ZjAxLTkwZTgtY2ZkNDI1YzBhMzExL2F1dGhvcml6ZSIsInJlc3BvbnNlX21vZGUiOiJwb3N0Iiwibm9uY2UiOiIxMDQwMzQ1NjY0MDI1NTEzODE3MzgyNjk4Iiwic3RhdGUiOiI0MzQ3NTE3MjgzNDM2ODc1NzYzODQ1MTAiLCJjbGllbnRfbWV0YWRhdGEiOnsiaWRfdG9rZW5fc2lnbmluZ19hbGdfdmFsdWVzX3N1cHBvcnRlZCI6WyJFZERTQSIsIkVTMjU2IiwiRVMyNTZLIl0sInJlc3BvbnNlX3R5cGVzX3N1cHBvcnRlZCI6WyJ2cF90b2tlbiIsImlkX3Rva2VuIl0sInN1YmplY3Rfc3ludGF4X3R5cGVzX3N1cHBvcnRlZCI6WyJkaWQ6d2ViIiwiZGlkOmtleSIsImRpZDpqd2siXSwidnBfZm9ybWF0cyI6eyJqd3RfdmMiOnsiYWxnIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXX0sImp3dF92Y19qc29uIjp7ImFsZyI6WyJFZERTQSIsIkVTMjU2IiwiRVMyNTZLIl19LCJqd3RfdnAiOnsiYWxnIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXX0sImxkcF92YyI6eyJwcm9vZl90eXBlIjpbIkVkMjU1MTlTaWduYXR1cmUyMDE4Il19LCJsZHBfdnAiOnsicHJvb2ZfdHlwZSI6WyJFZDI1NTE5U2lnbmF0dXJlMjAxOCJdfSwidmMrc2Qtand0Ijp7ImtiX2p3dF9hbGdfdmFsdWVzIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXSwic2Rfand0X2FsZ192YWx1ZXMiOlsiRWREU0EiLCJFUzI1NiIsIkVTMjU2SyJdfX0sImNsaWVudF9pZCI6ImRpZDprZXk6ejZNa2dWaXdmc3RDTDFMOWk4dGdzZEFZRXU1QTYyVzVtQTlEY21TeWdWVlZMRnVVIn0sInByZXNlbnRhdGlvbl9kZWZpbml0aW9uIjp7ImlkIjoiNzM3OTdiMGMtZGFlNi00NmE3LTk3MDAtNzg1MDg1NWZlZTIyIiwibmFtZSI6IkV4YW1wbGUgUHJlc2VudGF0aW9uIERlZmluaXRpb24iLCJpbnB1dF9kZXNjcmlwdG9ycyI6W3siaWQiOiI2NDEyNTc0Mi04YjZjLTQyMmUtODJjZC0xYmViNTEyM2VlOGYiLCJjb25zdHJhaW50cyI6eyJsaW1pdF9kaXNjbG9zdXJlIjoicmVxdWlyZWQiLCJmaWVsZHMiOlt7InBhdGgiOlsiJC5hZ2Uub3Zlcl8xOCJdLCJmaWx0ZXIiOnsidHlwZSI6ImJvb2xlYW4ifX1dfSwibmFtZSI6IlJlcXVlc3RlZCBTZCBKd3QgRXhhbXBsZSBDcmVkZW50aWFsIiwicHVycG9zZSI6IlRvIHByb3ZpZGUgYW4gZXhhbXBsZSBvZiByZXF1ZXN0aW5nIGEgY3JlZGVudGlhbCJ9XX0sIm5iZiI6MTcxMTczODE2MSwianRpIjoiNThlNTA2MzgtOGU0ZS00NTQ5LWFmNDktMzQzNDI4N2IyODJlIiwiaXNzIjoiZGlkOmtleTp6Nk1rZ1Zpd2ZzdENMMUw5aTh0Z3NkQVlFdTVBNjJXNW1BOURjbVN5Z1ZWVkxGdVUiLCJzdWIiOiJkaWQ6a2V5Ono2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSJ9.zAndpciC3rYi6tmItYi8P9uGqkId_3TNEgJHeFeBA1fWgJ4aY8Y2a5RmeGHl4-fXMV8Ff1-tpR86z-6v7pkvDQ",
+												"authorizationRequestUri": "https://d0ce-217-123-18-26.ngrok-free.app/siop/1ab30c0e-1adb-4f01-90e8-cfd425c0a311/authorization-requests/365d0d2f-e62b-4596-92cd-8c4baa7047d6",
+												"state": "RequestUriRetrieved"
+											},
+											"authorizationRequest": "openid://?request_uri=https%3A%2F%2Fexample.com%2Fsiop%2F6b293c23-d55a-4c6a-8c6a-877d69a70b4d%2Fauthorization-requests%2F6e7dce29-9d6a-4a13-a820-6a19b2ea9945"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create an OpenID4VC verification session by creating a authorization request",
+				"tags": [
+					"OpenID4VC Verification Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OpenId4VcVerificationSessionsCreateRequestOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/openid4vc/verifiers/sessions/{verificationSessionId}/verified-authorization-response": {
+			"get": {
+				"operationId": "GetVerifiedAuthorizationResponse",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcVerificationSessionsGetVerifiedAuthorizationResponseResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"idToken": {
+												"payload": {
+													"iat": 1711678207,
+													"exp": 1711744207,
+													"iss": "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6InRZSkY5a0NCeXpJT1RWc1FOclhrRTlQZW92eEJrcUNuejBQN3Q5Y2poblUiLCJ5IjoiZnlIckh3U21PSGlfa2dDdGM2RWF4ckpZQ2R1WWRQbm5VTGJ5RVBPTGpabyJ9",
+													"aud": "did:key:z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU",
+													"sub": "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6InRZSkY5a0NCeXpJT1RWc1FOclhrRTlQZW92eEJrcUNuejBQN3Q5Y2poblUiLCJ5IjoiZnlIckh3U21PSGlfa2dDdGM2RWF4ckpZQ2R1WWRQbm5VTGJ5RVBPTGpabyJ9",
+													"nonce": "1040345664025513817382698",
+													"state": "434751728343687576384510"
+												}
+											},
+											"presentationExchange": {
+												"definition": {
+													"id": "73797b0c-dae6-46a7-9700-7850855fee22",
+													"name": "Example Presentation Definition",
+													"input_descriptors": [
+														{
+															"id": "64125742-8b6c-422e-82cd-1beb5123ee8f",
+															"constraints": {
+																"limit_disclosure": "required",
+																"fields": [
+																	{
+																		"path": [
+																			"$.age.over_18"
+																		],
+																		"filter": {
+																			"type": "boolean"
+																		}
+																	}
+																]
+															},
+															"name": "Requested Sd Jwt Example Credential",
+															"purpose": "To provide an example of requesting a credential"
+														}
+													]
+												},
+												"presentations": [
+													{
+														"format": "vc+sd-jwt",
+														"encoded": "eyJhbGciOiJFZERTQSIsInR5cCI6InZjK3NkLWp3dCIsImtpZCI6...",
+														"vcPayload": {
+															"first_name": "John",
+															"last_name": "Doe",
+															"age": {
+																"over_18": true
+															},
+															"vct": "https://example.com/vct#ExampleCredential",
+															"cnf": {
+																"kid": "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6InRZSkY5a0NCeXpJT1RWc1FOclhrRTlQZW92eEJrcUNuejBQN3Q5Y2poblUiLCJ5IjoiZnlIckh3U21PSGlfa2dDdGM2RWF4ckpZQ2R1WWRQbm5VTGJ5RVBPTGpabyJ9#0"
+															},
+															"iss": "did:key:z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU",
+															"iat": 1711737824
+														},
+														"signedPayload": {
+															"first_name": "John",
+															"last_name": "Doe",
+															"age": {
+																"_sd": [
+																	"7-KKV_C6uNhINhW1_6zdv9pHGeoSErL0kXQLRLGRkOs",
+																	"J-HR5dUgq0__vzlSknqLhZIgyfdqoFGz1IiWiUUjHy8",
+																	"Y5fMNOwiZgzQFD3XtjowpRYEr0Rw6YU7ZwDimGV3b60"
+																]
+															},
+															"vct": "https://example.com/vct#ExampleCredential",
+															"cnf": {
+																"kid": "did:jwk:eyJrdHkiOiJFQyIsImNydiI6IlAtMjU2IiwieCI6InRZSkY5a0NCeXpJT1RWc1FOclhrRTlQZW92eEJrcUNuejBQN3Q5Y2poblUiLCJ5IjoiZnlIckh3U21PSGlfa2dDdGM2RWF4ckpZQ2R1WWRQbm5VTGJ5RVBPTGpabyJ9#0"
+															},
+															"iss": "did:key:z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU",
+															"iat": 1711737824,
+															"_sd_alg": "sha-256"
+														},
+														"header": {
+															"alg": "EdDSA",
+															"typ": "vc+sd-jwt",
+															"kid": "#z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU"
+														}
+													}
+												],
+												"submission": {
+													"id": "tmCha4zQKAZF-aBTCT8W3",
+													"definition_id": "73797b0c-dae6-46a7-9700-7850855fee22",
+													"descriptor_map": [
+														{
+															"id": "64125742-8b6c-422e-82cd-1beb5123ee8f",
+															"format": "vc+sd-jwt",
+															"path": "$"
+														}
+													]
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get the verified authorization response data for a OpenID4VC verification session.\n\nThis endpoint can only be called for verification sessions where the state is `ResponseVerified`.",
+				"tags": [
+					"OpenID4VC Verification Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "verificationSessionId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/verifiers/sessions": {
+			"get": {
+				"operationId": "GetVerificationSessionsByQuery",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/OpenId4VcVerificationSessionsRecord"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"id": "9cde9070-23c9-4e51-b810-e929a0298cbb",
+												"createdAt": "2024-03-29T17:54:34.890Z",
+												"updatedAt": "2024-03-29T17:54:34.890Z",
+												"type": "OpenId4VcVerificationSessionRecord",
+												"publicVerifierId": "a868257d-7149-4d4d-a52c-78f3197ee538",
+												"authorizationRequestJwt": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDprZXk6ejZNa2dWaXdmc3RDTDFMOWk4dGdzZEFZRXU1QTYyVzVtQTlEY21TeWdWVlZMRnVVI3o2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTE3MzgxNjEsImV4cCI6MTcxMTczODI4MSwicmVzcG9uc2VfdHlwZSI6ImlkX3Rva2VuIHZwX3Rva2VuIiwic2NvcGUiOiJvcGVuaWQiLCJjbGllbnRfaWQiOiJkaWQ6a2V5Ono2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSIsInJlZGlyZWN0X3VyaSI6Imh0dHBzOi8vZDBjZS0yMTctMTIzLTE4LTI2Lm5ncm9rLWZyZWUuYXBwL3Npb3AvMWFiMzBjMGUtMWFkYi00ZjAxLTkwZTgtY2ZkNDI1YzBhMzExL2F1dGhvcml6ZSIsInJlc3BvbnNlX21vZGUiOiJwb3N0Iiwibm9uY2UiOiIxMDQwMzQ1NjY0MDI1NTEzODE3MzgyNjk4Iiwic3RhdGUiOiI0MzQ3NTE3MjgzNDM2ODc1NzYzODQ1MTAiLCJjbGllbnRfbWV0YWRhdGEiOnsiaWRfdG9rZW5fc2lnbmluZ19hbGdfdmFsdWVzX3N1cHBvcnRlZCI6WyJFZERTQSIsIkVTMjU2IiwiRVMyNTZLIl0sInJlc3BvbnNlX3R5cGVzX3N1cHBvcnRlZCI6WyJ2cF90b2tlbiIsImlkX3Rva2VuIl0sInN1YmplY3Rfc3ludGF4X3R5cGVzX3N1cHBvcnRlZCI6WyJkaWQ6d2ViIiwiZGlkOmtleSIsImRpZDpqd2siXSwidnBfZm9ybWF0cyI6eyJqd3RfdmMiOnsiYWxnIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXX0sImp3dF92Y19qc29uIjp7ImFsZyI6WyJFZERTQSIsIkVTMjU2IiwiRVMyNTZLIl19LCJqd3RfdnAiOnsiYWxnIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXX0sImxkcF92YyI6eyJwcm9vZl90eXBlIjpbIkVkMjU1MTlTaWduYXR1cmUyMDE4Il19LCJsZHBfdnAiOnsicHJvb2ZfdHlwZSI6WyJFZDI1NTE5U2lnbmF0dXJlMjAxOCJdfSwidmMrc2Qtand0Ijp7ImtiX2p3dF9hbGdfdmFsdWVzIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXSwic2Rfand0X2FsZ192YWx1ZXMiOlsiRWREU0EiLCJFUzI1NiIsIkVTMjU2SyJdfX0sImNsaWVudF9pZCI6ImRpZDprZXk6ejZNa2dWaXdmc3RDTDFMOWk4dGdzZEFZRXU1QTYyVzVtQTlEY21TeWdWVlZMRnVVIn0sInByZXNlbnRhdGlvbl9kZWZpbml0aW9uIjp7ImlkIjoiNzM3OTdiMGMtZGFlNi00NmE3LTk3MDAtNzg1MDg1NWZlZTIyIiwibmFtZSI6IkV4YW1wbGUgUHJlc2VudGF0aW9uIERlZmluaXRpb24iLCJpbnB1dF9kZXNjcmlwdG9ycyI6W3siaWQiOiI2NDEyNTc0Mi04YjZjLTQyMmUtODJjZC0xYmViNTEyM2VlOGYiLCJjb25zdHJhaW50cyI6eyJsaW1pdF9kaXNjbG9zdXJlIjoicmVxdWlyZWQiLCJmaWVsZHMiOlt7InBhdGgiOlsiJC5hZ2Uub3Zlcl8xOCJdLCJmaWx0ZXIiOnsidHlwZSI6ImJvb2xlYW4ifX1dfSwibmFtZSI6IlJlcXVlc3RlZCBTZCBKd3QgRXhhbXBsZSBDcmVkZW50aWFsIiwicHVycG9zZSI6IlRvIHByb3ZpZGUgYW4gZXhhbXBsZSBvZiByZXF1ZXN0aW5nIGEgY3JlZGVudGlhbCJ9XX0sIm5iZiI6MTcxMTczODE2MSwianRpIjoiNThlNTA2MzgtOGU0ZS00NTQ5LWFmNDktMzQzNDI4N2IyODJlIiwiaXNzIjoiZGlkOmtleTp6Nk1rZ1Zpd2ZzdENMMUw5aTh0Z3NkQVlFdTVBNjJXNW1BOURjbVN5Z1ZWVkxGdVUiLCJzdWIiOiJkaWQ6a2V5Ono2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSJ9.zAndpciC3rYi6tmItYi8P9uGqkId_3TNEgJHeFeBA1fWgJ4aY8Y2a5RmeGHl4-fXMV8Ff1-tpR86z-6v7pkvDQ",
+												"authorizationRequestUri": "https://d0ce-217-123-18-26.ngrok-free.app/siop/1ab30c0e-1adb-4f01-90e8-cfd425c0a311/authorization-requests/365d0d2f-e62b-4596-92cd-8c4baa7047d6",
+												"state": "RequestUriRetrieved"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Find all OpenID4VC verification sessions by query",
+				"tags": [
+					"OpenID4VC Verification Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "nonce",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "publicVerifierId",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PublicIssuerId"
+						}
+					},
+					{
+						"in": "query",
+						"name": "payloadState",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "state",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/OpenId4VcVerificationSessionState"
+						}
+					},
+					{
+						"in": "query",
+						"name": "authorizationRequestUri",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/verifiers/sessions/{verificationSessionId}": {
+			"get": {
+				"operationId": "GetVerificationSession",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcVerificationSessionsRecord"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "9cde9070-23c9-4e51-b810-e929a0298cbb",
+											"createdAt": "2024-03-29T17:54:34.890Z",
+											"updatedAt": "2024-03-29T17:54:34.890Z",
+											"type": "OpenId4VcVerificationSessionRecord",
+											"publicVerifierId": "a868257d-7149-4d4d-a52c-78f3197ee538",
+											"authorizationRequestJwt": "eyJhbGciOiJFZERTQSIsImtpZCI6ImRpZDprZXk6ejZNa2dWaXdmc3RDTDFMOWk4dGdzZEFZRXU1QTYyVzVtQTlEY21TeWdWVlZMRnVVI3o2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE3MTE3MzgxNjEsImV4cCI6MTcxMTczODI4MSwicmVzcG9uc2VfdHlwZSI6ImlkX3Rva2VuIHZwX3Rva2VuIiwic2NvcGUiOiJvcGVuaWQiLCJjbGllbnRfaWQiOiJkaWQ6a2V5Ono2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSIsInJlZGlyZWN0X3VyaSI6Imh0dHBzOi8vZDBjZS0yMTctMTIzLTE4LTI2Lm5ncm9rLWZyZWUuYXBwL3Npb3AvMWFiMzBjMGUtMWFkYi00ZjAxLTkwZTgtY2ZkNDI1YzBhMzExL2F1dGhvcml6ZSIsInJlc3BvbnNlX21vZGUiOiJwb3N0Iiwibm9uY2UiOiIxMDQwMzQ1NjY0MDI1NTEzODE3MzgyNjk4Iiwic3RhdGUiOiI0MzQ3NTE3MjgzNDM2ODc1NzYzODQ1MTAiLCJjbGllbnRfbWV0YWRhdGEiOnsiaWRfdG9rZW5fc2lnbmluZ19hbGdfdmFsdWVzX3N1cHBvcnRlZCI6WyJFZERTQSIsIkVTMjU2IiwiRVMyNTZLIl0sInJlc3BvbnNlX3R5cGVzX3N1cHBvcnRlZCI6WyJ2cF90b2tlbiIsImlkX3Rva2VuIl0sInN1YmplY3Rfc3ludGF4X3R5cGVzX3N1cHBvcnRlZCI6WyJkaWQ6d2ViIiwiZGlkOmtleSIsImRpZDpqd2siXSwidnBfZm9ybWF0cyI6eyJqd3RfdmMiOnsiYWxnIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXX0sImp3dF92Y19qc29uIjp7ImFsZyI6WyJFZERTQSIsIkVTMjU2IiwiRVMyNTZLIl19LCJqd3RfdnAiOnsiYWxnIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXX0sImxkcF92YyI6eyJwcm9vZl90eXBlIjpbIkVkMjU1MTlTaWduYXR1cmUyMDE4Il19LCJsZHBfdnAiOnsicHJvb2ZfdHlwZSI6WyJFZDI1NTE5U2lnbmF0dXJlMjAxOCJdfSwidmMrc2Qtand0Ijp7ImtiX2p3dF9hbGdfdmFsdWVzIjpbIkVkRFNBIiwiRVMyNTYiLCJFUzI1NksiXSwic2Rfand0X2FsZ192YWx1ZXMiOlsiRWREU0EiLCJFUzI1NiIsIkVTMjU2SyJdfX0sImNsaWVudF9pZCI6ImRpZDprZXk6ejZNa2dWaXdmc3RDTDFMOWk4dGdzZEFZRXU1QTYyVzVtQTlEY21TeWdWVlZMRnVVIn0sInByZXNlbnRhdGlvbl9kZWZpbml0aW9uIjp7ImlkIjoiNzM3OTdiMGMtZGFlNi00NmE3LTk3MDAtNzg1MDg1NWZlZTIyIiwibmFtZSI6IkV4YW1wbGUgUHJlc2VudGF0aW9uIERlZmluaXRpb24iLCJpbnB1dF9kZXNjcmlwdG9ycyI6W3siaWQiOiI2NDEyNTc0Mi04YjZjLTQyMmUtODJjZC0xYmViNTEyM2VlOGYiLCJjb25zdHJhaW50cyI6eyJsaW1pdF9kaXNjbG9zdXJlIjoicmVxdWlyZWQiLCJmaWVsZHMiOlt7InBhdGgiOlsiJC5hZ2Uub3Zlcl8xOCJdLCJmaWx0ZXIiOnsidHlwZSI6ImJvb2xlYW4ifX1dfSwibmFtZSI6IlJlcXVlc3RlZCBTZCBKd3QgRXhhbXBsZSBDcmVkZW50aWFsIiwicHVycG9zZSI6IlRvIHByb3ZpZGUgYW4gZXhhbXBsZSBvZiByZXF1ZXN0aW5nIGEgY3JlZGVudGlhbCJ9XX0sIm5iZiI6MTcxMTczODE2MSwianRpIjoiNThlNTA2MzgtOGU0ZS00NTQ5LWFmNDktMzQzNDI4N2IyODJlIiwiaXNzIjoiZGlkOmtleTp6Nk1rZ1Zpd2ZzdENMMUw5aTh0Z3NkQVlFdTVBNjJXNW1BOURjbVN5Z1ZWVkxGdVUiLCJzdWIiOiJkaWQ6a2V5Ono2TWtnVml3ZnN0Q0wxTDlpOHRnc2RBWUV1NUE2Mlc1bUE5RGNtU3lnVlZWTEZ1VSJ9.zAndpciC3rYi6tmItYi8P9uGqkId_3TNEgJHeFeBA1fWgJ4aY8Y2a5RmeGHl4-fXMV8Ff1-tpR86z-6v7pkvDQ",
+											"authorizationRequestUri": "https://d0ce-217-123-18-26.ngrok-free.app/siop/1ab30c0e-1adb-4f01-90e8-cfd425c0a311/authorization-requests/365d0d2f-e62b-4596-92cd-8c4baa7047d6",
+											"state": "RequestUriRetrieved"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an OpenID4VC verification session by verification session id",
+				"tags": [
+					"OpenID4VC Verification Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "verificationSessionId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteVerificationSession",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete an OpenID4VC verification session by id",
+				"tags": [
+					"OpenID4VC Verification Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "verificationSessionId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/issuers": {
+			"post": {
+				"operationId": "CreateIssuer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "65dff314-b7c8-4617-952e-a82864fecec5",
+											"createdAt": "2024-03-29T15:26:58.347Z",
+											"updatedAt": "2024-03-29T15:26:58.347Z",
+											"type": "OpenId4VcIssuerRecord",
+											"publicIssuerId": "129ea46f-92bc-4d44-8433-ac153b7da2e6",
+											"accessTokenPublicKeyFingerprint": "z6MkrSAZxmNERyktTeT2ich4Ntu3TPc5RdcB4sCsEbZa4vzh",
+											"credentialsSupported": [
+												{
+													"format": "vc+sd-jwt",
+													"id": "ExampleCredentialSdJwtVc",
+													"vct": "https://example.com/vct#ExampleCredential",
+													"cryptographic_binding_methods_supported": [
+														"did:key",
+														"did:jwk"
+													],
+													"cryptographic_suites_supported": [
+														"ES256",
+														"Ed25519"
+													],
+													"display": [
+														{
+															"name": "Example SD JWT Credential",
+															"description": "This is an example SD-JWT credential",
+															"background_color": "#ffffff",
+															"background_image": {
+																"url": "https://example.com/background.png",
+																"alt_text": "Example Credential Background"
+															},
+															"text_color": "#000000",
+															"locale": "en-US",
+															"logo": {
+																"url": "https://example.com/logo.png",
+																"alt_text": "Example Credential Logo"
+															}
+														}
+													]
+												},
+												{
+													"format": "jwt_vc_json",
+													"id": "ExampleCredentialJwtVc",
+													"types": [
+														"VerifiableCredential",
+														"ExampleCredential"
+													],
+													"cryptographic_binding_methods_supported": [
+														"did:key",
+														"did:jwk"
+													],
+													"cryptographic_suites_supported": [
+														"ES256",
+														"Ed25519"
+													],
+													"display": [
+														{
+															"name": "Example SD JWT Credential",
+															"description": "This is an example SD-JWT credential",
+															"background_color": "#ffffff",
+															"background_image": {
+																"url": "https://example.com/background.png",
+																"alt_text": "Example Credential Background"
+															},
+															"text_color": "#000000",
+															"locale": "en-US",
+															"logo": {
+																"url": "https://example.com/logo.png",
+																"alt_text": "Example Credential Logo"
+															}
+														}
+													]
+												}
+											],
+											"display": [
+												{
+													"background_color": "#ffffff",
+													"description": "This is an example issuer",
+													"name": "Example Issuer",
+													"locale": "en-US",
+													"logo": {
+														"alt_text": "Example Issuer Logo",
+														"url": "https://example.com/logo.png"
+													},
+													"text_color": "#000000"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create a new OpenID4VCI Issuer",
+				"tags": [
+					"OpenID4VC Issuers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OpenId4VcIssuersCreateOptions"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetIssuersByQuery",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"id": "65dff314-b7c8-4617-952e-a82864fecec5",
+												"createdAt": "2024-03-29T15:26:58.347Z",
+												"updatedAt": "2024-03-29T15:26:58.347Z",
+												"type": "OpenId4VcIssuerRecord",
+												"publicIssuerId": "129ea46f-92bc-4d44-8433-ac153b7da2e6",
+												"accessTokenPublicKeyFingerprint": "z6MkrSAZxmNERyktTeT2ich4Ntu3TPc5RdcB4sCsEbZa4vzh",
+												"credentialsSupported": [
+													{
+														"format": "vc+sd-jwt",
+														"id": "ExampleCredentialSdJwtVc",
+														"vct": "https://example.com/vct#ExampleCredential",
+														"cryptographic_binding_methods_supported": [
+															"did:key",
+															"did:jwk"
+														],
+														"cryptographic_suites_supported": [
+															"ES256",
+															"Ed25519"
+														],
+														"display": [
+															{
+																"name": "Example SD JWT Credential",
+																"description": "This is an example SD-JWT credential",
+																"background_color": "#ffffff",
+																"background_image": {
+																	"url": "https://example.com/background.png",
+																	"alt_text": "Example Credential Background"
+																},
+																"text_color": "#000000",
+																"locale": "en-US",
+																"logo": {
+																	"url": "https://example.com/logo.png",
+																	"alt_text": "Example Credential Logo"
+																}
+															}
+														]
+													},
+													{
+														"format": "jwt_vc_json",
+														"id": "ExampleCredentialJwtVc",
+														"types": [
+															"VerifiableCredential",
+															"ExampleCredential"
+														],
+														"cryptographic_binding_methods_supported": [
+															"did:key",
+															"did:jwk"
+														],
+														"cryptographic_suites_supported": [
+															"ES256",
+															"Ed25519"
+														],
+														"display": [
+															{
+																"name": "Example SD JWT Credential",
+																"description": "This is an example SD-JWT credential",
+																"background_color": "#ffffff",
+																"background_image": {
+																	"url": "https://example.com/background.png",
+																	"alt_text": "Example Credential Background"
+																},
+																"text_color": "#000000",
+																"locale": "en-US",
+																"logo": {
+																	"url": "https://example.com/logo.png",
+																	"alt_text": "Example Credential Logo"
+																}
+															}
+														]
+													}
+												],
+												"display": [
+													{
+														"background_color": "#ffffff",
+														"description": "This is an example issuer",
+														"name": "Example Issuer",
+														"locale": "en-US",
+														"logo": {
+															"alt_text": "Example Issuer Logo",
+															"url": "https://example.com/logo.png"
+														},
+														"text_color": "#000000"
+													}
+												]
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"OpenID4VC Issuers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "publicIssuerId",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/issuers/{issuerId}": {
+			"delete": {
+				"operationId": "DeleteIssuer",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete an OpenID4VCI issuer by id",
+				"tags": [
+					"OpenID4VC Issuers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "issuerId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"get": {
+				"operationId": "GetIssuer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "65dff314-b7c8-4617-952e-a82864fecec5",
+											"createdAt": "2024-03-29T15:26:58.347Z",
+											"updatedAt": "2024-03-29T15:26:58.347Z",
+											"type": "OpenId4VcIssuerRecord",
+											"publicIssuerId": "129ea46f-92bc-4d44-8433-ac153b7da2e6",
+											"accessTokenPublicKeyFingerprint": "z6MkrSAZxmNERyktTeT2ich4Ntu3TPc5RdcB4sCsEbZa4vzh",
+											"credentialsSupported": [
+												{
+													"format": "vc+sd-jwt",
+													"id": "ExampleCredentialSdJwtVc",
+													"vct": "https://example.com/vct#ExampleCredential",
+													"cryptographic_binding_methods_supported": [
+														"did:key",
+														"did:jwk"
+													],
+													"cryptographic_suites_supported": [
+														"ES256",
+														"Ed25519"
+													],
+													"display": [
+														{
+															"name": "Example SD JWT Credential",
+															"description": "This is an example SD-JWT credential",
+															"background_color": "#ffffff",
+															"background_image": {
+																"url": "https://example.com/background.png",
+																"alt_text": "Example Credential Background"
+															},
+															"text_color": "#000000",
+															"locale": "en-US",
+															"logo": {
+																"url": "https://example.com/logo.png",
+																"alt_text": "Example Credential Logo"
+															}
+														}
+													]
+												},
+												{
+													"format": "jwt_vc_json",
+													"id": "ExampleCredentialJwtVc",
+													"types": [
+														"VerifiableCredential",
+														"ExampleCredential"
+													],
+													"cryptographic_binding_methods_supported": [
+														"did:key",
+														"did:jwk"
+													],
+													"cryptographic_suites_supported": [
+														"ES256",
+														"Ed25519"
+													],
+													"display": [
+														{
+															"name": "Example SD JWT Credential",
+															"description": "This is an example SD-JWT credential",
+															"background_color": "#ffffff",
+															"background_image": {
+																"url": "https://example.com/background.png",
+																"alt_text": "Example Credential Background"
+															},
+															"text_color": "#000000",
+															"locale": "en-US",
+															"logo": {
+																"url": "https://example.com/logo.png",
+																"alt_text": "Example Credential Logo"
+															}
+														}
+													]
+												}
+											],
+											"display": [
+												{
+													"background_color": "#ffffff",
+													"description": "This is an example issuer",
+													"name": "Example Issuer",
+													"locale": "en-US",
+													"logo": {
+														"alt_text": "Example Issuer Logo",
+														"url": "https://example.com/logo.png"
+													},
+													"text_color": "#000000"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an OpenID4VCI issuer by id",
+				"tags": [
+					"OpenID4VC Issuers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "issuerId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"put": {
+				"operationId": "UpdateIssuerMetadata",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"id": "65dff314-b7c8-4617-952e-a82864fecec5",
+											"createdAt": "2024-03-29T15:26:58.347Z",
+											"updatedAt": "2024-03-29T15:26:58.347Z",
+											"type": "OpenId4VcIssuerRecord",
+											"publicIssuerId": "129ea46f-92bc-4d44-8433-ac153b7da2e6",
+											"accessTokenPublicKeyFingerprint": "z6MkrSAZxmNERyktTeT2ich4Ntu3TPc5RdcB4sCsEbZa4vzh",
+											"credentialsSupported": [
+												{
+													"format": "vc+sd-jwt",
+													"id": "ExampleCredentialSdJwtVc",
+													"vct": "https://example.com/vct#ExampleCredential",
+													"cryptographic_binding_methods_supported": [
+														"did:key",
+														"did:jwk"
+													],
+													"cryptographic_suites_supported": [
+														"ES256",
+														"Ed25519"
+													],
+													"display": [
+														{
+															"name": "Example SD JWT Credential",
+															"description": "This is an example SD-JWT credential",
+															"background_color": "#ffffff",
+															"background_image": {
+																"url": "https://example.com/background.png",
+																"alt_text": "Example Credential Background"
+															},
+															"text_color": "#000000",
+															"locale": "en-US",
+															"logo": {
+																"url": "https://example.com/logo.png",
+																"alt_text": "Example Credential Logo"
+															}
+														}
+													]
+												},
+												{
+													"format": "jwt_vc_json",
+													"id": "ExampleCredentialJwtVc",
+													"types": [
+														"VerifiableCredential",
+														"ExampleCredential"
+													],
+													"cryptographic_binding_methods_supported": [
+														"did:key",
+														"did:jwk"
+													],
+													"cryptographic_suites_supported": [
+														"ES256",
+														"Ed25519"
+													],
+													"display": [
+														{
+															"name": "Example SD JWT Credential",
+															"description": "This is an example SD-JWT credential",
+															"background_color": "#ffffff",
+															"background_image": {
+																"url": "https://example.com/background.png",
+																"alt_text": "Example Credential Background"
+															},
+															"text_color": "#000000",
+															"locale": "en-US",
+															"logo": {
+																"url": "https://example.com/logo.png",
+																"alt_text": "Example Credential Logo"
+															}
+														}
+													]
+												}
+											],
+											"display": [
+												{
+													"background_color": "#ffffff",
+													"description": "This is an example issuer",
+													"name": "Example Issuer",
+													"locale": "en-US",
+													"logo": {
+														"alt_text": "Example Issuer Logo",
+														"url": "https://example.com/logo.png"
+													},
+													"text_color": "#000000"
+												}
+											]
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Update issuer metadata (`display` and `credentialsSupported`).\n\nNOTE: this method overwrites the existing metadata with the new metadata, so\nmake sure to include all the metadata you want to keep in the new metadata.",
+				"tags": [
+					"OpenID4VC Issuers"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "issuerId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OpenId4VcIssuersUpdateMetadataOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/openid4vc/issuers/sessions/create-offer": {
+			"post": {
+				"operationId": "CreateOffer",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsCreateOfferResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"issuanceSession": {
+												"id": "9cde9070-23c9-4e51-b810-e929a0298cbb",
+												"createdAt": "2024-03-29T17:54:34.890Z",
+												"updatedAt": "2024-03-29T17:54:34.890Z",
+												"type": "OpenId4VcIssuanceSessionRecord",
+												"publicIssuerId": "a868257d-7149-4d4d-a52c-78f3197ee538",
+												"state": "OfferCreated",
+												"preAuthorizedCode": "963352229993506863726932",
+												"issuanceMetadata": {
+													"credentials": [
+														{
+															"credentialSupportedId": "ExampleCredentialSdJwtVc",
+															"format": "vc+sd-jwt",
+															"issuer": {
+																"method": "did",
+																"didUrl": "did:key:z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU#z6MkgViwfstCL1L9i8tgsdAYEu5A62W5mA9DcmSygVVVLFuU"
+															},
+															"payload": {
+																"first_name": "John",
+																"last_name": "Doe",
+																"age": {
+																	"over_18": true,
+																	"over_21": true,
+																	"over_65": false
+																},
+																"vct": "https://example.com/vct#ExampleCredential"
+															},
+															"disclosureFrame": {
+																"first_name": false,
+																"last_name": false,
+																"age": {
+																	"over_18": true,
+																	"over_21": true,
+																	"over_65": true
+																}
+															}
+														}
+													]
+												},
+												"credentialOfferPayload": {
+													"grants": {
+														"urn:ietf:params:oauth:grant-type:pre-authorized_code": {
+															"pre-authorized_code": "963352229993506863726932",
+															"user_pin_required": false
+														}
+													},
+													"credentials": [
+														"ExampleCredentialSdJwtVc"
+													],
+													"credential_issuer": "http://localhost:3008/oid4vci/a868257d-7149-4d4d-a52c-78f3197ee538"
+												},
+												"credentialOfferUri": "http://localhost:3008/oid4vci/a868257d-7149-4d4d-a52c-78f3197ee538/offers/4a85ea23-998c-4bbe-af0a-9b03a2b030db"
+											},
+											"credentialOffer": "openid-credential-offer://?credential_offer_uri=http%3A%2F%2Flocalhost%3A3008%2Foid4vci%2Fa868257d-7149-4d4d-a52c-78f3197ee538%2Foffers%2F4a85ea23-998c-4bbe-af0a-9b03a2b030db"
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Create an OpenID4VC issuance session by creating a credential offer",
+				"tags": [
+					"OpenID4VC Issuance Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsCreateOfferOptions"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/openid4vc/issuers/sessions": {
+			"get": {
+				"operationId": "GetIssuanceSessionsByQuery",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsRecord"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"description": "Find all OpenID4VC issuance sessions by query",
+				"tags": [
+					"OpenID4VC Issuance Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "query",
+						"name": "cNonce",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "publicIssuerId",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/PublicIssuerId"
+						}
+					},
+					{
+						"in": "query",
+						"name": "preAuthorizedCode",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					},
+					{
+						"in": "query",
+						"name": "state",
+						"required": false,
+						"schema": {
+							"$ref": "#/components/schemas/OpenId4VcIssuanceSessionState"
+						}
+					},
+					{
+						"in": "query",
+						"name": "credentialOfferUri",
+						"required": false,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		},
+		"/openid4vc/issuers/sessions/{issuanceSessionId}": {
+			"get": {
+				"operationId": "GetIssuanceSession",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsRecord"
+								}
+							}
+						}
+					}
+				},
+				"description": "Get an OpenID4VC issuance session by issuance session id",
+				"tags": [
+					"OpenID4VC Issuance Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "issuanceSessionId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			},
+			"delete": {
+				"operationId": "DeleteIssuanceSession",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"description": "Delete an OpenID4VC issuance session by id",
+				"tags": [
+					"OpenID4VC Issuance Sessions"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "issuanceSessionId",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		},
 		"/didcomm/proofs": {

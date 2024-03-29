@@ -1,4 +1,5 @@
 import type { RestRootAgent, RestRootAgentWithTenants } from '../utils/agent'
+import type { NetworkConfig as CheqdNetworkConfig } from '@credo-ts/cheqd/build/CheqdModuleConfig'
 import type { WalletConfig, AutoAcceptCredential, AutoAcceptProof, LogLevel } from '@credo-ts/core'
 import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 import type { Express } from 'express'
@@ -31,7 +32,6 @@ export interface CredoRestAgentConfig {
    */
   multiTenant?: boolean
 
-  indyLedgers?: IndyVdrPoolConfig[]
   endpoints?: string[]
 
   /**
@@ -78,6 +78,9 @@ export interface CredoRestAgentConfig {
   autoAcceptMediationRequests?: boolean
 
   connectionImageUrl?: string
+
+  indyLedgers?: IndyVdrPoolConfig[]
+  cheqdLedgers?: CheqdNetworkConfig[]
 }
 
 export interface CredoRestSetupAppConfig {

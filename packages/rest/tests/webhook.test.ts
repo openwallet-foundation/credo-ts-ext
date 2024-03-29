@@ -1,6 +1,12 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 import type { WebhookData } from './utils/webhook'
-import type { Agent, CredentialStateChangedEvent, ProofStateChangedEvent } from '@credo-ts/core'
+import type {
+  Agent,
+  BasicMessageStateChangedEvent,
+  ConnectionStateChangedEvent,
+  CredentialStateChangedEvent,
+  ProofStateChangedEvent,
+} from '@credo-ts/core'
 import type { Server } from 'net'
 
 import {
@@ -15,35 +21,55 @@ import {
   ConnectionEventTypes,
   BasicMessageEventTypes,
   BasicMessageRole,
+  ConnectionRecord,
+  DidExchangeRole,
+  DidExchangeState,
+  BasicMessageRecord,
+  BasicMessage,
 } from '@credo-ts/core'
 
+import { setupApp } from '../src'
 import { connectionRecordToApiModel } from '../src/controllers/didcomm/connections/ConnectionsControllerTypes'
 import { credentialExchangeRecordToApiModel } from '../src/controllers/didcomm/credentials/CredentialsControllerTypes'
 import { proofExchangeRecordToApiModel } from '../src/controllers/didcomm/proofs/ProofsControllerTypes'
-import { setupServer } from '../src/server'
 
 import { getTestAgent } from './utils/helpers'
 import { waitForHook, webhookListener } from './utils/webhook'
 
 describe('WebhookTests', () => {
-  let aliceAgent: Agent
-  let bobAgent: Agent
+  let agent: Agent
   let server: Server
   const webhooks: WebhookData[] = []
 
   beforeAll(async () => {
-    aliceAgent = await getTestAgent('Webhook REST Agent Test Alice', 3042)
-    bobAgent = await getTestAgent('Webhook REST Agent Test Bob', 3043)
+    agent = await getTestAgent('Webhook REST Agent Test')
     server = await webhookListener(3044, webhooks)
-    await setupServer(bobAgent, { webhookUrl: 'http://localhost:3044', port: 6045 })
+    await setupApp({
+      agent: agent,
+      adminPort: 3042,
+      webhookUrl: 'http://localhost:3044',
+    })
   })
 
   test('should return a webhook event when basic message state changed', async () => {
-    const { outOfBandInvitation } = await aliceAgent.oob.createInvitation()
-    const { connectionRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
-    const connection = await bobAgent.connections.returnWhenIsConnected(connectionRecord!.id)
+    const basicMessageRecord = new BasicMessageRecord({
+      id: '8220e065-d884-4df4-88d8-9c33e9b2f788',
+      connectionId: 'random',
+      content: 'Hello!',
+      role: BasicMessageRole.Sender,
+      sentTime: 'now',
+      threadId: 'randomt',
+    })
 
-    const senderBasicMessage = await bobAgent.basicMessages.sendMessage(connection.id, 'Hello')
+    agent.events.emit<BasicMessageStateChangedEvent>(agent.context, {
+      type: BasicMessageEventTypes.BasicMessageStateChanged,
+      payload: {
+        message: new BasicMessage({
+          content: 'Hello!',
+        }),
+        basicMessageRecord,
+      },
+    })
 
     const webhook = await waitForHook(
       webhooks,
@@ -53,7 +79,7 @@ describe('WebhookTests', () => {
     expect(webhook?.body).toMatchObject({
       payload: {
         basicMessageRecord: {
-          threadId: senderBasicMessage.threadId,
+          threadId: 'randomt',
           role: BasicMessageRole.Sender,
         },
       },
@@ -61,20 +87,31 @@ describe('WebhookTests', () => {
   })
 
   test('should return a webhook event when connection state changed', async () => {
-    const { outOfBandInvitation } = await aliceAgent.oob.createInvitation()
-    const { connectionRecord } = await bobAgent.oob.receiveInvitation(outOfBandInvitation)
-    const connection = await bobAgent.connections.returnWhenIsConnected(connectionRecord!.id)
+    const connectionRecord = new ConnectionRecord({
+      id: '8220e065-d884-4df4-88d8-9c33e9b2f788',
+      role: DidExchangeRole.Requester,
+      state: DidExchangeState.Completed,
+      alias: 'test',
+    })
+
+    agent.events.emit<ConnectionStateChangedEvent>(agent.context, {
+      type: ConnectionEventTypes.ConnectionStateChanged,
+      payload: {
+        previousState: null,
+        connectionRecord,
+      },
+    })
 
     const webhook = await waitForHook(
       webhooks,
       (webhook) =>
         webhook.body.type === ConnectionEventTypes.ConnectionStateChanged &&
-        webhook.body.payload.connectionRecord.id === connection.id &&
-        webhook.body.payload.connectionRecord.state === connection.state,
+        webhook.body.payload.connectionRecord.id === connectionRecord.id &&
+        webhook.body.payload.connectionRecord.state === connectionRecord.state,
     )
 
     expect(webhook?.body).toMatchObject({
-      payload: { connectionRecord: JSON.parse(JSON.stringify(connectionRecordToApiModel(connection))) },
+      payload: { connectionRecord: JSON.parse(JSON.stringify(connectionRecordToApiModel(connectionRecord))) },
     })
   })
 
@@ -87,7 +124,7 @@ describe('WebhookTests', () => {
       role: CredentialRole.Holder,
     })
 
-    bobAgent.events.emit<CredentialStateChangedEvent>(bobAgent.context, {
+    agent.events.emit<CredentialStateChangedEvent>(agent.context, {
       type: CredentialEventTypes.CredentialStateChanged,
       payload: {
         previousState: null,
@@ -117,7 +154,7 @@ describe('WebhookTests', () => {
       role: ProofRole.Prover,
     })
 
-    bobAgent.events.emit<ProofStateChangedEvent>(bobAgent.context, {
+    agent.events.emit<ProofStateChangedEvent>(agent.context, {
       type: ProofEventTypes.ProofStateChanged,
       payload: {
         previousState: null,
@@ -139,10 +176,8 @@ describe('WebhookTests', () => {
   })
 
   afterAll(async () => {
-    await aliceAgent.shutdown()
-    await aliceAgent.wallet.delete()
-    await bobAgent.shutdown()
-    await bobAgent.wallet.delete()
+    await agent.shutdown()
+    await agent.wallet.delete()
     server.close()
   })
 })

@@ -1,5 +1,6 @@
 import type { CredoRestAgentConfig } from './CredoRestConfig'
 import type { RestRootAgent, RestRootAgentWithTenants } from '../utils/agent'
+import type { NetworkConfig as CheqdNetworkConfig } from '@credo-ts/cheqd/build/CheqdModuleConfig'
 import type { InitConfig } from '@credo-ts/core'
 import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 
@@ -17,6 +18,7 @@ export async function createRestAgent(config: CredoRestAgentConfig): Promise<Res
     inboundTransports = [],
     outboundTransports = [],
     indyLedgers = [],
+    cheqdLedgers = [],
     autoAcceptConnections = true,
     autoAcceptCredentials = AutoAcceptCredential.ContentApproved,
     autoAcceptMediationRequests = true,
@@ -39,13 +41,16 @@ export async function createRestAgent(config: CredoRestAgentConfig): Promise<Res
     throw new Error('No http endpoint found in config, unable to set up OpenID4VC modules.')
   }
 
-  const maybeLedgers = indyLedgers.length > 0 ? (indyLedgers as [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]) : undefined
+  const maybeIndyLedgers =
+    indyLedgers.length > 0 ? (indyLedgers as [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]) : undefined
+  const maybeCheqdLedgers = cheqdLedgers.length > 0 ? (cheqdLedgers as CheqdNetworkConfig[]) : undefined
   const modules = getAgentModules({
     autoAcceptConnections,
     autoAcceptProofs,
     autoAcceptCredentials,
     autoAcceptMediationRequests,
-    indyLedgers: maybeLedgers,
+    indyLedgers: maybeIndyLedgers,
+    cheqdLedgers: maybeCheqdLedgers,
     multiTenant,
     baseUrl: httpEndpoint,
   })

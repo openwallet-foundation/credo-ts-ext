@@ -28,6 +28,11 @@ const parsed = yargs
     default: [],
     coerce: (items: unknown[]) => items.map((i) => (typeof i === 'string' ? JSON.parse(i) : i)),
   })
+  .option('cheqd-ledger', {
+    array: true,
+    default: [],
+    coerce: (items: unknown[]) => items.map((i) => (typeof i === 'string' ? JSON.parse(i) : i)),
+  })
   .option('endpoint', {
     array: true,
     string: true,
@@ -178,6 +183,7 @@ export async function runCliServer() {
               } satisfies AskarWalletPostgresStorageConfig),
       },
       indyLedgers: parsed['indy-ledger'],
+      cheqdLedgers: parsed['cheqd-ledger'],
       endpoints: parsed.endpoint,
       autoAcceptConnections: parsed['auto-accept-connections'],
       autoAcceptCredentials: parsed['auto-accept-credentials'],

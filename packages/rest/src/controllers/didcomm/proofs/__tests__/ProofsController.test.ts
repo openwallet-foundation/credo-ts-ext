@@ -10,16 +10,16 @@ import {
   ProofRole,
   ProofState,
 } from '@credo-ts/core'
-import { type Express } from 'express'
+import express from 'express'
 import { filter, first, firstValueFrom, timeout } from 'rxjs'
 import request from 'supertest'
 
 import { getTestAgent } from '../../../../../tests/utils/helpers'
-import { setupServer } from '../../../../server'
+import { setupApp } from '../../../../setup/setupApp'
 import { testAnonCredsSchema } from '../../../anoncreds/__tests__/fixtures'
 
 describe('ProofsController', () => {
-  let app: Express
+  const app = express()
   let agent: RestRootAgent
   let inviterConnectionId: string
   let receiverConnectionId: string
