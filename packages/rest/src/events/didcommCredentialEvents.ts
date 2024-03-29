@@ -7,7 +7,7 @@ import { credentialExchangeRecordToApiModel } from '../controllers/didcomm/crede
 
 import { emitEvent } from './emitEvent'
 
-export const credentialEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
+export const didcommCredentialEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
   agent.events.on(CredentialEventTypes.CredentialStateChanged, async (event: CredentialStateChangedEvent) => {
     const { credentialRecord, ...payload } = event.payload
     const webhookPayload = {

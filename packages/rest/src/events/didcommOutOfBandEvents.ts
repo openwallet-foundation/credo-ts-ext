@@ -6,7 +6,7 @@ import { outOfBandRecordToApiModel } from '../controllers/didcomm/out-of-band/Ou
 
 import { emitEvent, type EmitEventConfig } from './emitEvent'
 
-export const outOfBandEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
+export const didcommOutOfBandEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
   agent.events.on<OutOfBandStateChangedEvent>(OutOfBandEventTypes.OutOfBandStateChanged, async (event) => {
     const { outOfBandRecord, ...payload } = event.payload
     const webhookPayload = {

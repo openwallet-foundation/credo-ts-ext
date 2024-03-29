@@ -6,7 +6,7 @@ import { connectionRecordToApiModel } from '../controllers/didcomm/connections/C
 
 import { emitEvent, type EmitEventConfig } from './emitEvent'
 
-export const connectionEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
+export const didcommConnectionEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
   agent.events.on(ConnectionEventTypes.ConnectionStateChanged, async (event: ConnectionStateChangedEvent) => {
     const { connectionRecord, ...payload } = event.payload
     const webhookPayload = {

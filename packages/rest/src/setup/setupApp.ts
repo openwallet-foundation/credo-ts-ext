@@ -16,13 +16,13 @@ import { ValidateError } from 'tsoa'
 import { container } from 'tsyringe'
 import { Server as WsServer } from 'ws'
 
-import { openId4VcIssuanceSessionEvents } from '../events/OpenId4VcIssuanceSessionEvents'
-import { openId4VcVerificationSessionEvents } from '../events/OpenId4VcVerificationSessionEvents'
-import { basicMessageEvents } from '../events/basicMessageEvents'
-import { connectionEvents } from '../events/connectionEvents'
-import { credentialEvents } from '../events/credentialEvents'
-import { outOfBandEvents } from '../events/outOfBandEvents'
-import { proofEvents } from '../events/proofEvents'
+import { didcommBasicMessageEvents } from '../events/didcommBasicMessageEvents'
+import { didcommConnectionEvents } from '../events/didcommConnectionEvents'
+import { didcommCredentialEvents } from '../events/didcommCredentialEvents'
+import { didcommOutOfBandEvents } from '../events/didcommOutOfBandEvents'
+import { didcommProofEvents } from '../events/didcommProofEvents'
+import { openId4VcIssuanceSessionEvents } from '../events/openId4VcIssuanceSessionEvents'
+import { openId4VcVerificationSessionEvents } from '../events/openId4VcVerificationSessionEvents'
 import { RegisterRoutes } from '../generated/routes'
 
 import { createRestAgent } from './createRestAgent'
@@ -47,11 +47,11 @@ export async function setupApp(config: CredoRestSetupAppConfig) {
       socketServer,
       webhookUrl: config.webhookUrl,
     }
-    basicMessageEvents(agent, emitEventConfig)
-    connectionEvents(agent, emitEventConfig)
-    credentialEvents(agent, emitEventConfig)
-    proofEvents(agent, emitEventConfig)
-    outOfBandEvents(agent, emitEventConfig)
+    didcommBasicMessageEvents(agent, emitEventConfig)
+    didcommConnectionEvents(agent, emitEventConfig)
+    didcommCredentialEvents(agent, emitEventConfig)
+    didcommProofEvents(agent, emitEventConfig)
+    didcommOutOfBandEvents(agent, emitEventConfig)
     openId4VcIssuanceSessionEvents(agent, emitEventConfig)
     openId4VcVerificationSessionEvents(agent, emitEventConfig)
   }

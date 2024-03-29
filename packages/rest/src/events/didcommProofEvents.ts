@@ -6,7 +6,7 @@ import { proofExchangeRecordToApiModel } from '../controllers/didcomm/proofs/Pro
 
 import { emitEvent, type EmitEventConfig } from './emitEvent'
 
-export const proofEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
+export const didcommProofEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
   agent.events.on(ProofEventTypes.ProofStateChanged, async (event: ProofStateChangedEvent) => {
     const { proofRecord, ...payload } = event.payload
     const webhookPayload = {
