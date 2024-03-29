@@ -94,7 +94,7 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"string","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "OpenId4VcVerifiersRecord": {
+    "OpenId4VcVerifierRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},
@@ -327,7 +327,7 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"AuthorizationResponsePayload","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "OpenId4VcVerificationSessionsRecord": {
+    "OpenId4VcVerificationSessionRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},
@@ -347,7 +347,7 @@ const models: TsoaRoute.Models = {
     "OpenId4VcVerificationSessionsCreateRequestResponse": {
         "dataType": "refObject",
         "properties": {
-            "verificationSession": {"ref":"OpenId4VcVerificationSessionsRecord","required":true},
+            "verificationSession": {"ref":"OpenId4VcVerificationSessionRecord","required":true},
             "authorizationRequest": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -986,7 +986,7 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"MetadataDisplay","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "OpenId4VcIssuersRecord": {
+    "OpenId4VcIssuerRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},
@@ -1126,7 +1126,7 @@ const models: TsoaRoute.Models = {
         "type": {"ref":"CredentialOfferPayloadV1_0_11","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "OpenId4VcIssuanceSessionsRecord": {
+    "OpenId4VcIssuanceSessionRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},
@@ -1150,7 +1150,7 @@ const models: TsoaRoute.Models = {
     "OpenId4VcIssuanceSessionsCreateOfferResponse": {
         "dataType": "refObject",
         "properties": {
-            "issuanceSession": {"ref":"OpenId4VcIssuanceSessionsRecord","required":true},
+            "issuanceSession": {"ref":"OpenId4VcIssuanceSessionRecord","required":true},
             "credentialOffer": {"dataType":"string","required":true},
         },
         "additionalProperties": false,
@@ -1229,7 +1229,7 @@ const models: TsoaRoute.Models = {
         "enums": ["always","contentApproved","never"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DidCommProofsExchangeRecord": {
+    "DidCommProofExchangeRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},
@@ -1360,7 +1360,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "message": {"ref":"PlaintextMessage","required":true},
-            "proofExchange": {"ref":"DidCommProofsExchangeRecord","required":true},
+            "proofExchange": {"ref":"DidCommProofExchangeRecord","required":true},
         },
         "additionalProperties": false,
     },
@@ -1704,7 +1704,7 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DidCommCredentialsExchangeRecord": {
+    "DidCommCredentialExchangeRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},
@@ -1859,7 +1859,7 @@ const models: TsoaRoute.Models = {
         "dataType": "refObject",
         "properties": {
             "message": {"ref":"PlaintextMessage","required":true},
-            "credentialExchange": {"ref":"DidCommCredentialsExchangeRecord","required":true},
+            "credentialExchange": {"ref":"DidCommCredentialExchangeRecord","required":true},
         },
         "additionalProperties": false,
     },
@@ -1967,7 +1967,7 @@ const models: TsoaRoute.Models = {
         "enums": ["mediator"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DidCommConnectionsRecord": {
+    "DidCommConnectionRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},
@@ -2000,7 +2000,7 @@ const models: TsoaRoute.Models = {
         "enums": ["sender","receiver"],
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "DidCommBasicMessagesRecord": {
+    "DidCommBasicMessageRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},

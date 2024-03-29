@@ -14,7 +14,7 @@ import type { PlaintextMessage } from '@credo-ts/core/build/types'
 type CredentialFormats = [LegacyIndyCredentialFormat, AnonCredsCredentialFormat]
 type CredentialProtocolVersion = 'v1' | 'v2'
 
-export interface DidCommCredentialsExchangeRecord extends CredoBaseRecord {
+export interface DidCommCredentialExchangeRecord extends CredoBaseRecord {
   connectionId?: RecordId
   threadId: ThreadId
   parentThreadId?: ThreadId
@@ -33,7 +33,7 @@ export interface DidCommCredentialsExchangeRecord extends CredoBaseRecord {
 
 export function credentialExchangeRecordToApiModel(
   record: CredoCredentialExchangeRecord,
-): DidCommCredentialsExchangeRecord {
+): DidCommCredentialExchangeRecord {
   return {
     // Base Record
     id: record.id,
@@ -91,7 +91,7 @@ export interface CreateOfferOptions {
 
 export interface DidCommCredentialsCreateOfferResponse {
   message: PlaintextMessage
-  credentialExchange: DidCommCredentialsExchangeRecord
+  credentialExchange: DidCommCredentialExchangeRecord
 }
 
 export interface OfferCredentialOptions {

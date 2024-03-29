@@ -11,7 +11,7 @@ import type {
 import type { OpenId4VcVerificationSessionRecord as CredoOpenId4VcVerificationSessionRecord } from '@credo-ts/openid4vc/build/openid4vc-verifier/repository/OpenId4VcVerificationSessionRecord'
 import type { PresentationSubmission } from '@sphereon/ssi-types'
 
-export interface OpenId4VcVerificationSessionsRecord extends CredoBaseRecord {
+export interface OpenId4VcVerificationSessionRecord extends CredoBaseRecord {
   publicVerifierId: PublicVerifierId
 
   /**
@@ -43,7 +43,7 @@ export interface OpenId4VcVerificationSessionsRecord extends CredoBaseRecord {
 
 export function openId4VcVerificationSessionRecordToApiModel(
   record: CredoOpenId4VcVerificationSessionRecord,
-): OpenId4VcVerificationSessionsRecord {
+): OpenId4VcVerificationSessionRecord {
   return {
     // Base Record
     id: record.id,
@@ -102,7 +102,7 @@ export interface OpenId4VcVerificationSessionsCreateRequestOptions
 }
 
 export interface OpenId4VcVerificationSessionsCreateRequestResponse {
-  verificationSession: OpenId4VcVerificationSessionsRecord
+  verificationSession: OpenId4VcVerificationSessionRecord
 
   /**
    * @example openid://?request_uri=https%3A%2F%2Fexample.com%2Fsiop%2F6b293c23-d55a-4c6a-8c6a-877d69a70b4d%2Fauthorization-requests%2F6e7dce29-9d6a-4a13-a820-6a19b2ea9945

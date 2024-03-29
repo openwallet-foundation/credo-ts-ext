@@ -1,13 +1,13 @@
 import type {
   OpenId4VcVerificationSessionsCreateRequestResponse,
   OpenId4VcVerificationSessionsGetVerifiedAuthorizationResponseResponse,
-  OpenId4VcVerificationSessionsRecord,
+  OpenId4VcVerificationSessionRecord,
 } from './OpenId4VcVerificationSessionsControllerTypes'
 
 import { ClaimFormat } from '@credo-ts/core'
 import { OpenId4VcVerificationSessionState } from '@credo-ts/openid4vc'
 
-export const openId4VcVerificationSessionsRecordExample: OpenId4VcVerificationSessionsRecord = {
+export const openId4VcIssuanceSessionRecordExample: OpenId4VcVerificationSessionRecord = {
   id: '9cde9070-23c9-4e51-b810-e929a0298cbb',
   createdAt: new Date('2024-03-29T17:54:34.890Z'),
   updatedAt: new Date('2024-03-29T17:54:34.890Z'),
@@ -21,7 +21,7 @@ export const openId4VcVerificationSessionsRecordExample: OpenId4VcVerificationSe
 }
 
 export const openId4VcVerificationSessionsCreateRequestResponse: OpenId4VcVerificationSessionsCreateRequestResponse = {
-  verificationSession: openId4VcVerificationSessionsRecordExample,
+  verificationSession: openId4VcIssuanceSessionRecordExample,
   authorizationRequest:
     'openid://?request_uri=https%3A%2F%2Fexample.com%2Fsiop%2F6b293c23-d55a-4c6a-8c6a-877d69a70b4d%2Fauthorization-requests%2F6e7dce29-9d6a-4a13-a820-6a19b2ea9945',
 }

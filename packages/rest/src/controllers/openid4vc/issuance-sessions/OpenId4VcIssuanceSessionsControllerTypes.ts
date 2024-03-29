@@ -9,7 +9,7 @@ import type {
 } from '@credo-ts/openid4vc'
 import type { OpenId4VcIssuanceSessionRecord as CredoOpenId4VcIssuanceSessionRecord } from '@credo-ts/openid4vc/build/openid4vc-issuer/repository/OpenId4VcIssuanceSessionRecord'
 
-export interface OpenId4VcIssuanceSessionsRecord extends CredoBaseRecord {
+export interface OpenId4VcIssuanceSessionRecord extends CredoBaseRecord {
   publicIssuerId: PublicIssuerId
 
   /**
@@ -64,7 +64,7 @@ export interface OpenId4VcIssuanceSessionsRecord extends CredoBaseRecord {
 
 export function openId4VcIssuanceSessionRecordToApiModel(
   record: CredoOpenId4VcIssuanceSessionRecord,
-): OpenId4VcIssuanceSessionsRecord {
+): OpenId4VcIssuanceSessionRecord {
   return {
     // Base Record
     id: record.id,
@@ -199,7 +199,7 @@ export interface OpenId4VcIssuanceSessionsCreateOfferOptions
 }
 
 export interface OpenId4VcIssuanceSessionsCreateOfferResponse {
-  issuanceSession: OpenId4VcIssuanceSessionsRecord
+  issuanceSession: OpenId4VcIssuanceSessionRecord
 
   /**
    * @example openid-credential-offer://?credential_offer_uri=https%3A%2F%2Fexample.com%2Foid4vci%2F6b293c23-d55a-4c6a-8c6a-877d69a70b4d%2Foffers%2F6e7dce29-9d6a-4a13-a820-6a19b2ea9945

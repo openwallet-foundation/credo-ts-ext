@@ -1,4 +1,4 @@
-import type { DidCommProofsCreateRequestResponse, DidCommProofsExchangeRecord } from './ProofsControllerTypes'
+import type { DidCommProofsCreateRequestResponse, DidCommProofExchangeRecord } from './ProofsControllerTypes'
 
 import { ProofRole, ProofState, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
@@ -27,7 +27,7 @@ export class ProofsController extends Controller {
   /**
    * Find proof exchanges by query
    */
-  @Example<DidCommProofsExchangeRecord[]>([proofExchangeRecordExample])
+  @Example<DidCommProofExchangeRecord[]>([proofExchangeRecordExample])
   @Get('/')
   public async findProofsByQuery(
     @Request() request: RequestWithAgent,
@@ -36,7 +36,7 @@ export class ProofsController extends Controller {
     @Query('state') state?: ProofState,
     @Query('parentThreadId') parentThreadId?: ThreadId,
     @Query('role') role?: ProofRole,
-  ): Promise<DidCommProofsExchangeRecord[]> {
+  ): Promise<DidCommProofExchangeRecord[]> {
     const proofs = await request.user.agent.proofs.findAllByQuery({
       threadId,
       connectionId,
@@ -52,11 +52,11 @@ export class ProofsController extends Controller {
    * Retrieve proof exchange by proof exchange id
    */
   @Get('/:proofExchangeId')
-  @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
+  @Example<DidCommProofExchangeRecord>(proofExchangeRecordExample)
   public async getProofExchangeById(
     @Request() request: RequestWithAgent,
     @Path('proofExchangeId') proofExchangeId: RecordId,
-  ): Promise<DidCommProofsExchangeRecord> {
+  ): Promise<DidCommProofExchangeRecord> {
     const proofExchange = await request.user.agent.proofs.findById(proofExchangeId)
 
     if (!proofExchange) {
@@ -94,11 +94,11 @@ export class ProofsController extends Controller {
    * to the connection with the specified connection id.
    */
   @Post('/propose-proof')
-  @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
+  @Example<DidCommProofExchangeRecord>(proofExchangeRecordExample)
   public async proposeProof(
     @Request() request: RequestWithAgent,
     @Body() body: DidCommProofsProposeProofOptions,
-  ): Promise<DidCommProofsExchangeRecord> {
+  ): Promise<DidCommProofExchangeRecord> {
     try {
       const proofExchange = await request.user.agent.proofs.proposeProof(body)
       return proofExchangeRecordToApiModel(proofExchange)
@@ -118,12 +118,12 @@ export class ProofsController extends Controller {
    * to the connection associated with the proof record.
    */
   @Post('/:proofExchangeId/accept-proposal')
-  @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
+  @Example<DidCommProofExchangeRecord>(proofExchangeRecordExample)
   public async acceptProposal(
     @Request() request: RequestWithAgent,
     @Path('proofExchangeId') proofExchangeId: RecordId,
     @Body() body: DidCommProofsAcceptProposalOptions,
-  ): Promise<DidCommProofsExchangeRecord> {
+  ): Promise<DidCommProofExchangeRecord> {
     try {
       const proof = await request.user.agent.proofs.acceptProposal({
         proofRecordId: proofExchangeId,
@@ -180,7 +180,7 @@ export class ProofsController extends Controller {
    * Creates a presentation request bound to existing connection
    */
   @Post('/request-proof')
-  @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
+  @Example<DidCommProofExchangeRecord>(proofExchangeRecordExample)
   public async requestProof(@Request() request: RequestWithAgent, @Body() body: DidCommProofsSendRequestOptions) {
     try {
       // NOTE: Credo does not work well if 'undefined' is passed as a proofFormat key. We should fix this in credo
@@ -214,7 +214,7 @@ export class ProofsController extends Controller {
    * to the connection associated with the proof record.
    */
   @Post('/:proofExchangeId/accept-request')
-  @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
+  @Example<DidCommProofExchangeRecord>(proofExchangeRecordExample)
   public async acceptRequest(
     @Request() request: RequestWithAgent,
     @Path('proofExchangeId') proofExchangeId: RecordId,
@@ -244,7 +244,7 @@ export class ProofsController extends Controller {
    * to the connection associated with the proof record.
    */
   @Post('/:proofExchangeId/accept-presentation')
-  @Example<DidCommProofsExchangeRecord>(proofExchangeRecordExample)
+  @Example<DidCommProofExchangeRecord>(proofExchangeRecordExample)
   public async acceptPresentation(
     @Request() request: RequestWithAgent,
     @Path('proofExchangeId') proofExchangeId: RecordId,

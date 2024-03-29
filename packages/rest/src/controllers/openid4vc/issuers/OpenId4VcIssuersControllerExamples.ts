@@ -1,12 +1,10 @@
-import type { OpenId4VcIssuersRecord } from './OpenId4VcIssuersControllerTypes'
+import type { OpenId4VcIssuerRecord } from './OpenId4VcIssuersControllerTypes'
 
-import { OpenId4VcIssuerRecord } from '@credo-ts/openid4vc'
-
-export const openId4VcIssuersRecordExample: OpenId4VcIssuersRecord = {
+export const openId4VcIssuerRecordExample: OpenId4VcIssuerRecord = {
   id: '65dff314-b7c8-4617-952e-a82864fecec5',
   createdAt: new Date('2024-03-29T15:26:58.347Z'),
   updatedAt: new Date('2024-03-29T15:26:58.347Z'),
-  type: OpenId4VcIssuerRecord.type,
+  type: 'OpenId4VcIssuerRecord',
   publicIssuerId: '129ea46f-92bc-4d44-8433-ac153b7da2e6',
   accessTokenPublicKeyFingerprint: 'z6MkrSAZxmNERyktTeT2ich4Ntu3TPc5RdcB4sCsEbZa4vzh',
   credentialsSupported: [

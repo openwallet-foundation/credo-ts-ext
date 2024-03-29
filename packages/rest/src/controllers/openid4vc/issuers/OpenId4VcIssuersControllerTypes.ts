@@ -12,7 +12,7 @@ import type {
  */
 export type PublicIssuerId = string
 
-export interface OpenId4VcIssuersRecord extends CredoBaseRecord {
+export interface OpenId4VcIssuerRecord extends CredoBaseRecord {
   publicIssuerId: PublicIssuerId
   accessTokenPublicKeyFingerprint: string
 
@@ -20,7 +20,7 @@ export interface OpenId4VcIssuersRecord extends CredoBaseRecord {
   display?: OpenId4VciIssuerMetadataDisplay[]
 }
 
-export function openId4VcIssuerRecordToApiModel(record: CredoOpenId4VcIssuerRecord): OpenId4VcIssuersRecord {
+export function openId4VcIssuerRecordToApiModel(record: CredoOpenId4VcIssuerRecord): OpenId4VcIssuerRecord {
   return {
     // Base Record
     id: record.id,

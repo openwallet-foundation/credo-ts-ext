@@ -8,11 +8,11 @@ import type { OpenId4VcVerifierRecord as CredoOpenId4VcVerifierRecord } from '@c
  */
 export type PublicVerifierId = string
 
-export interface OpenId4VcVerifiersRecord extends CredoBaseRecord {
+export interface OpenId4VcVerifierRecord extends CredoBaseRecord {
   publicVerifierId: PublicVerifierId
 }
 
-export function openId4vcVerifierRecordToApiModel(record: CredoOpenId4VcVerifierRecord): OpenId4VcVerifiersRecord {
+export function openId4vcVerifierRecordToApiModel(record: CredoOpenId4VcVerifierRecord): OpenId4VcVerifierRecord {
   return {
     // Base Record
     id: record.id,

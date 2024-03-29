@@ -1,11 +1,11 @@
 import type {
   DidCommCredentialsCreateOfferResponse,
-  DidCommCredentialsExchangeRecord,
+  DidCommCredentialExchangeRecord,
 } from './CredentialsControllerTypes'
 
 import { CredentialExchangeRecord, CredentialRole, CredentialState } from '@credo-ts/core'
 
-export const credentialExchangeRecordExample: DidCommCredentialsExchangeRecord = {
+export const credentialExchangeRecordExample: DidCommCredentialExchangeRecord = {
   credentials: [],
   type: CredentialExchangeRecord.type,
   role: CredentialRole.Holder,

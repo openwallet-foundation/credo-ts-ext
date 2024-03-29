@@ -24,7 +24,7 @@ import { maybeMapValues } from '../../../utils/maybeMapValues'
 
 type ProofProtocolVersion = 'v1' | 'v2'
 
-export interface DidCommProofsExchangeRecord extends CredoBaseRecord {
+export interface DidCommProofExchangeRecord extends CredoBaseRecord {
   connectionId?: RecordId
   threadId: ThreadId
   parentThreadId?: ThreadId
@@ -35,7 +35,7 @@ export interface DidCommProofsExchangeRecord extends CredoBaseRecord {
   protocolVersion: string
 }
 
-export function proofExchangeRecordToApiModel(record: CredoProofExchangeRecord): DidCommProofsExchangeRecord {
+export function proofExchangeRecordToApiModel(record: CredoProofExchangeRecord): DidCommProofExchangeRecord {
   return {
     // Base Record
     id: record.id,
@@ -77,7 +77,7 @@ export interface DidCommProofsAcceptProposalOptions
 
 export interface DidCommProofsCreateRequestResponse {
   message: PlaintextMessage
-  proofExchange: DidCommProofsExchangeRecord
+  proofExchange: DidCommProofExchangeRecord
 }
 
 export interface DidCommProofsAcceptRequestOptions

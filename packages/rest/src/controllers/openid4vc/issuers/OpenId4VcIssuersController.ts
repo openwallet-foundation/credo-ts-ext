@@ -5,12 +5,12 @@ import { injectable } from 'tsyringe'
 import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 
-import { openId4VcIssuersRecordExample } from './OpenId4VcIssuersControllerExamples'
+import { openId4VcIssuerRecordExample } from './OpenId4VcIssuersControllerExamples'
 import {
   openId4VcIssuerRecordToApiModel,
   OpenId4VcIssuersCreateOptions,
   OpenId4VcIssuersUpdateMetadataOptions,
-  type OpenId4VcIssuersRecord,
+  type OpenId4VcIssuerRecord,
 } from './OpenId4VcIssuersControllerTypes'
 
 @Tags('OpenID4VC Issuers')
@@ -22,11 +22,11 @@ export class OpenId4VcIssuersController extends Controller {
    * Create a new OpenID4VCI Issuer
    */
   @Post('/')
-  @Example<OpenId4VcIssuersRecord>(openId4VcIssuersRecordExample)
+  @Example<OpenId4VcIssuerRecord>(openId4VcIssuerRecordExample)
   public async createIssuer(
     @Request() request: RequestWithAgent,
     @Body() options: OpenId4VcIssuersCreateOptions,
-  ): Promise<OpenId4VcIssuersRecord> {
+  ): Promise<OpenId4VcIssuerRecord> {
     const { publicIssuerId, ...rest } = options
     try {
       const issuer = await request.user.agent.modules.openId4VcIssuer.createIssuer({
@@ -41,11 +41,11 @@ export class OpenId4VcIssuersController extends Controller {
   }
 
   @Get('/')
-  @Example<OpenId4VcIssuersRecord[]>([openId4VcIssuersRecordExample])
+  @Example<OpenId4VcIssuerRecord[]>([openId4VcIssuerRecordExample])
   public async getIssuersByQuery(
     @Request() request: RequestWithAgent,
     @Query('publicIssuerId') publicIssuerId?: string,
-  ): Promise<OpenId4VcIssuersRecord[]> {
+  ): Promise<OpenId4VcIssuerRecord[]> {
     try {
       const issuerRepository = request.user.agent.dependencyManager.resolve(OpenId4VcIssuerRepository)
       const issuers = await issuerRepository.findByQuery(request.user.agent.context, {
@@ -77,11 +77,11 @@ export class OpenId4VcIssuersController extends Controller {
    * Get an OpenID4VCI issuer by id
    */
   @Get('/{issuerId}')
-  @Example<OpenId4VcIssuersRecord>(openId4VcIssuersRecordExample)
+  @Example<OpenId4VcIssuerRecord>(openId4VcIssuerRecordExample)
   public async getIssuer(
     @Request() request: RequestWithAgent,
     @Path('issuerId') issuerId: string,
-  ): Promise<OpenId4VcIssuersRecord> {
+  ): Promise<OpenId4VcIssuerRecord> {
     try {
       this.setStatus(204)
       const issuerRepository = request.user.agent.dependencyManager.resolve(OpenId4VcIssuerRepository)
@@ -100,12 +100,12 @@ export class OpenId4VcIssuersController extends Controller {
    * make sure to include all the metadata you want to keep in the new metadata.
    */
   @Put('/{issuerId}')
-  @Example<OpenId4VcIssuersRecord>(openId4VcIssuersRecordExample)
+  @Example<OpenId4VcIssuerRecord>(openId4VcIssuerRecordExample)
   public async updateIssuerMetadata(
     @Request() request: RequestWithAgent,
     @Path('issuerId') issuerId: string,
     @Body() body: OpenId4VcIssuersUpdateMetadataOptions,
-  ): Promise<OpenId4VcIssuersRecord> {
+  ): Promise<OpenId4VcIssuerRecord> {
     try {
       // FIXME: in Credo we update based on the public issuerId, but that's quit weird and we should
       // do it based on the internal record id. So in the API we do it consistently, but need to fetch

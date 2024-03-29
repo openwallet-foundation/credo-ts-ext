@@ -1,7 +1,7 @@
 import type {
   OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions,
   OpenId4VcIssuanceSessionsCreateOfferResponse,
-  OpenId4VcIssuanceSessionsRecord,
+  OpenId4VcIssuanceSessionRecord,
 } from './OpenId4VcIssuanceSessionsControllerTypes'
 
 import { OpenId4VcIssuanceSessionState } from '@credo-ts/openid4vc'
@@ -96,7 +96,7 @@ export class OpenId4VcIssuanceSessionsController extends Controller {
     @Query('preAuthorizedCode') preAuthorizedCode?: string,
     @Query('state') state?: OpenId4VcIssuanceSessionState,
     @Query('credentialOfferUri') credentialOfferUri?: string,
-  ): Promise<OpenId4VcIssuanceSessionsRecord[]> {
+  ): Promise<OpenId4VcIssuanceSessionRecord[]> {
     try {
       const issuanceSessionRepository = request.user.agent.dependencyManager.resolve(OpenId4VcIssuanceSessionRepository)
       const issuanceSessions = await issuanceSessionRepository.findByQuery(request.user.agent.context, {
@@ -121,7 +121,7 @@ export class OpenId4VcIssuanceSessionsController extends Controller {
   public async getIssuanceSession(
     @Request() request: RequestWithAgent,
     @Path('issuanceSessionId') issuanceSessionId: string,
-  ): Promise<OpenId4VcIssuanceSessionsRecord> {
+  ): Promise<OpenId4VcIssuanceSessionRecord> {
     try {
       const issuanceSessionRepository = request.user.agent.dependencyManager.resolve(OpenId4VcIssuanceSessionRepository)
       const issuanceSession = await issuanceSessionRepository.getById(request.user.agent.context, issuanceSessionId)

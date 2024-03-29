@@ -5,11 +5,11 @@ import { injectable } from 'tsyringe'
 import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 
-import { openId4VcIssuersRecordExample } from './OpenId4VcVerifiersControllerExamples'
+import { openId4VcIssuerRecordExample } from './OpenId4VcVerifiersControllerExamples'
 import {
   openId4vcVerifierRecordToApiModel,
   OpenId4VcVerifiersCreateOptions,
-  type OpenId4VcVerifiersRecord,
+  type OpenId4VcVerifierRecord,
 } from './OpenId4VcVerifiersControllerTypes'
 
 @Tags('OpenID4VC Verifiers')
@@ -21,11 +21,11 @@ export class OpenId4VcVerifiersController extends Controller {
    * Create a new OpenID4VC Verifier
    */
   @Post('/')
-  @Example<OpenId4VcVerifiersRecord>(openId4VcIssuersRecordExample)
+  @Example<OpenId4VcVerifierRecord>(openId4VcIssuerRecordExample)
   public async createVerifier(
     @Request() request: RequestWithAgent,
     @Body() options: OpenId4VcVerifiersCreateOptions,
-  ): Promise<OpenId4VcVerifiersRecord> {
+  ): Promise<OpenId4VcVerifierRecord> {
     try {
       const verifier = await request.user.agent.modules.openId4VcVerifier.createVerifier({
         verifierId: options.publicVerifierId,
@@ -41,11 +41,11 @@ export class OpenId4VcVerifiersController extends Controller {
    * Get OpenID4VC verifiers by query
    */
   @Get('/')
-  @Example<OpenId4VcVerifiersRecord[]>([openId4VcIssuersRecordExample])
+  @Example<OpenId4VcVerifierRecord[]>([openId4VcIssuerRecordExample])
   public async getVerifiersByQuery(
     @Request() request: RequestWithAgent,
     @Query('publicVerifierId') publicVerifierId?: string,
-  ): Promise<OpenId4VcVerifiersRecord[]> {
+  ): Promise<OpenId4VcVerifierRecord[]> {
     try {
       const verifierRepository = request.user.agent.dependencyManager.resolve(OpenId4VcVerifierRepository)
       const verifiers = await verifierRepository.findByQuery(request.user.agent.context, {
@@ -62,11 +62,11 @@ export class OpenId4VcVerifiersController extends Controller {
    * Get an OpenID4VC verifier by id
    */
   @Get('/{verifierId}')
-  @Example<OpenId4VcVerifiersRecord>(openId4VcIssuersRecordExample)
+  @Example<OpenId4VcVerifierRecord>(openId4VcIssuerRecordExample)
   public async getVerifier(
     @Request() request: RequestWithAgent,
     @Path('verifierId') verifierId: string,
-  ): Promise<OpenId4VcVerifiersRecord> {
+  ): Promise<OpenId4VcVerifierRecord> {
     try {
       const verifierRepository = request.user.agent.dependencyManager.resolve(OpenId4VcVerifierRepository)
       const verifier = await verifierRepository.getById(request.user.agent.context, verifierId)

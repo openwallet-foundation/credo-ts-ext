@@ -1,8 +1,8 @@
-import type { DidCommProofsCreateRequestResponse, DidCommProofsExchangeRecord } from './ProofsControllerTypes'
+import type { DidCommProofsCreateRequestResponse, DidCommProofExchangeRecord } from './ProofsControllerTypes'
 
 import { AutoAcceptProof, ProofExchangeRecord, ProofRole, ProofState } from '@credo-ts/core'
 
-export const proofExchangeRecordExample: DidCommProofsExchangeRecord = {
+export const proofExchangeRecordExample: DidCommProofExchangeRecord = {
   id: '821f9b26-ad04-4f56-89b6-e2ef9c72b36e',
   protocolVersion: 'v2',
   role: ProofRole.Prover,

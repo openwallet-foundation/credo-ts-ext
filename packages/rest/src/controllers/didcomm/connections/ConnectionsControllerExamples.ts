@@ -1,8 +1,8 @@
-import type { DidCommConnectionsRecord } from './ConnectionsControllerTypes'
+import type { DidCommConnectionRecord } from './ConnectionsControllerTypes'
 
 import { ConnectionRecord, DidExchangeRole, DidExchangeState } from '@credo-ts/core'
 
-export const connectionsRecordExample: DidCommConnectionsRecord = {
+export const connectionRecordExample: DidCommConnectionRecord = {
   id: '821f9b26-ad04-4f56-89b6-e2ef9c72b36e',
   type: ConnectionRecord.type,
   createdAt: new Date('2022-01-01T00:00:00.000Z'),

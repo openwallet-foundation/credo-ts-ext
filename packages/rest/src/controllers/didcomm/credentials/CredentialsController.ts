@@ -1,6 +1,6 @@
 import type {
   DidCommCredentialsCreateOfferResponse,
-  DidCommCredentialsExchangeRecord,
+  DidCommCredentialExchangeRecord,
 } from './CredentialsControllerTypes'
 
 import { CredentialState, RecordNotFoundError, CredentialRole } from '@credo-ts/core'
@@ -30,7 +30,7 @@ export class CredentialsController extends Controller {
   /**
    * Retrieve all credential exchange records by query
    */
-  @Example<DidCommCredentialsExchangeRecord[]>([credentialExchangeRecordExample])
+  @Example<DidCommCredentialExchangeRecord[]>([credentialExchangeRecordExample])
   @Get('/')
   public async findCredentialsByQuery(
     @Request() request: RequestWithAgent,
@@ -57,7 +57,7 @@ export class CredentialsController extends Controller {
    * @param credentialExchangeId
    * @returns CredentialExchangeRecord
    */
-  @Example<DidCommCredentialsExchangeRecord>(credentialExchangeRecordExample)
+  @Example<DidCommCredentialExchangeRecord>(credentialExchangeRecordExample)
   @Get('/:credentialExchangeId')
   public async getCredentialById(
     @Request() request: RequestWithAgent,
@@ -108,7 +108,7 @@ export class CredentialsController extends Controller {
    * @param options
    * @returns CredentialExchangeRecord
    */
-  @Example<DidCommCredentialsExchangeRecord>(credentialExchangeRecordExample)
+  @Example<DidCommCredentialExchangeRecord>(credentialExchangeRecordExample)
   @Post('/propose-credential')
   public async proposeCredential(@Request() request: RequestWithAgent, @Body() options: ProposeCredentialOptions) {
     try {
@@ -129,7 +129,7 @@ export class CredentialsController extends Controller {
    * Accept a credential proposal as issuer by sending an accept proposal message
    * to the connection associated with the credential exchange record.
    */
-  @Example<DidCommCredentialsExchangeRecord>(credentialExchangeRecordExample)
+  @Example<DidCommCredentialExchangeRecord>(credentialExchangeRecordExample)
   @Post('/:credentialExchangeId/accept-proposal')
   public async acceptProposal(
     @Request() request: RequestWithAgent,
@@ -180,7 +180,7 @@ export class CredentialsController extends Controller {
    * Initiate a new credential exchange as issuer by sending a offer credential message
    * to the connection with the specified connection id.
    */
-  @Example<DidCommCredentialsExchangeRecord>(credentialExchangeRecordExample)
+  @Example<DidCommCredentialExchangeRecord>(credentialExchangeRecordExample)
   @Post('/offer-credential')
   public async offerCredential(@Request() request: RequestWithAgent, @Body() options: OfferCredentialOptions) {
     try {
@@ -201,7 +201,7 @@ export class CredentialsController extends Controller {
    * Accept a credential offer as holder by sending an accept offer message
    * to the connection associated with the credential exchange record.
    */
-  @Example<DidCommCredentialsExchangeRecord>(credentialExchangeRecordExample)
+  @Example<DidCommCredentialExchangeRecord>(credentialExchangeRecordExample)
   @Post('/:credentialExchangeId/accept-offer')
   public async acceptOffer(
     @Request() request: RequestWithAgent,
@@ -229,7 +229,7 @@ export class CredentialsController extends Controller {
    * Accept a credential request as issuer by sending an accept request message
    * to the connection associated with the credential exchange record.
    */
-  @Example<DidCommCredentialsExchangeRecord>(credentialExchangeRecordExample)
+  @Example<DidCommCredentialExchangeRecord>(credentialExchangeRecordExample)
   @Post('/:credentialExchangeId/accept-request')
   public async acceptRequest(
     @Request() request: RequestWithAgent,
@@ -257,7 +257,7 @@ export class CredentialsController extends Controller {
    * Accept a credential as holder by sending an accept credential message
    * to the connection associated with the credential exchange record.
    */
-  @Example<DidCommCredentialsExchangeRecord>(credentialExchangeRecordExample)
+  @Example<DidCommCredentialExchangeRecord>(credentialExchangeRecordExample)
   @Post('/:credentialExchangeId/accept-credential')
   public async acceptCredential(
     @Request() request: RequestWithAgent,

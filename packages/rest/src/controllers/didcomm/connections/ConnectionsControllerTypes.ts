@@ -8,7 +8,7 @@ import type {
   HandshakeProtocol,
 } from '@credo-ts/core'
 
-export interface DidCommConnectionsRecord extends CredoBaseRecord {
+export interface DidCommConnectionRecord extends CredoBaseRecord {
   did?: Did
   theirDid?: Did
   theirLabel?: string
@@ -28,7 +28,7 @@ export interface DidCommConnectionsRecord extends CredoBaseRecord {
   previousTheirDids?: Array<Did>
 }
 
-export function connectionRecordToApiModel(record: CredoConnectionRecord): DidCommConnectionsRecord {
+export function connectionRecordToApiModel(record: CredoConnectionRecord): DidCommConnectionRecord {
   return {
     // Base Record
     id: record.id,

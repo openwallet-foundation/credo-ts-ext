@@ -1,6 +1,6 @@
-import type { DidCommConnectionsRecord } from './ConnectionsControllerTypes'
+import type { DidCommConnectionRecord } from './ConnectionsControllerTypes'
 
-import { DidExchangeState, Agent, RecordNotFoundError } from '@credo-ts/core'
+import { DidExchangeState, RecordNotFoundError } from '@credo-ts/core'
 import { Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -9,7 +9,7 @@ import { apiErrorResponse } from '../../../utils/response'
 import { Did } from '../../did/DidsControllerTypes'
 import { RecordId } from '../../types'
 
-import { connectionsRecordExample } from './ConnectionsControllerExamples'
+import { connectionRecordExample } from './ConnectionsControllerExamples'
 import { connectionRecordToApiModel } from './ConnectionsControllerTypes'
 
 @Tags('DIDComm Connections')
@@ -17,14 +17,10 @@ import { connectionRecordToApiModel } from './ConnectionsControllerTypes'
 @Security('tenants', ['tenant'])
 @injectable()
 export class ConnectionsController extends Controller {
-  public constructor(private agent: Agent) {
-    super()
-  }
-
   /**
    * Find connection record by query
    */
-  @Example<DidCommConnectionsRecord[]>([connectionsRecordExample])
+  @Example<DidCommConnectionRecord[]>([connectionRecordExample])
   @Get('/')
   public async findConnectionsByQuery(
     @Request() request: RequestWithAgent,
@@ -52,7 +48,7 @@ export class ConnectionsController extends Controller {
    * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
-  @Example<DidCommConnectionsRecord>(connectionsRecordExample)
+  @Example<DidCommConnectionRecord>(connectionRecordExample)
   @Get('/:connectionId')
   public async getConnectionById(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     const connection = await request.user.agent.connections.findById(connectionId)
@@ -92,7 +88,7 @@ export class ConnectionsController extends Controller {
    *
    * This is not needed when auto accepting of connection is enabled.
    */
-  @Example<DidCommConnectionsRecord>(connectionsRecordExample)
+  @Example<DidCommConnectionRecord>(connectionRecordExample)
   @Post('/:connectionId/accept-request')
   public async acceptRequest(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {
@@ -118,7 +114,7 @@ export class ConnectionsController extends Controller {
    * @param connectionId Connection identifier
    * @returns ConnectionRecord
    */
-  @Example<DidCommConnectionsRecord>(connectionsRecordExample)
+  @Example<DidCommConnectionRecord>(connectionRecordExample)
   @Post('/:connectionId/accept-response')
   public async acceptResponse(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {

@@ -1,7 +1,7 @@
 import type {
   OpenId4VcVerificationSessionsCreateRequestResponse,
   OpenId4VcVerificationSessionsGetVerifiedAuthorizationResponseResponse,
-  OpenId4VcVerificationSessionsRecord,
+  OpenId4VcVerificationSessionRecord,
 } from './OpenId4VcVerificationSessionsControllerTypes'
 import type { Jwt } from '@credo-ts/core'
 
@@ -18,7 +18,7 @@ import { PublicIssuerId } from '../issuers/OpenId4VcIssuersControllerTypes'
 import {
   openId4VcVerificationSessionsCreateRequestResponse,
   openId4VcVerificationSessionsGetVerifiedAuthorizationResponseExample,
-  openId4VcVerificationSessionsRecordExample,
+  openId4VcIssuanceSessionRecordExample,
 } from './OpenId4VcVerificationSessionsControllerExamples'
 import {
   openId4VcVerificationSessionRecordToApiModel,
@@ -120,7 +120,7 @@ export class OpenId4VcVerificationSessionsController extends Controller {
    * Find all OpenID4VC verification sessions by query
    */
   @Get('/')
-  @Example<OpenId4VcVerificationSessionsRecord[]>([openId4VcVerificationSessionsRecordExample])
+  @Example<OpenId4VcVerificationSessionRecord[]>([openId4VcIssuanceSessionRecordExample])
   public async getVerificationSessionsByQuery(
     @Request() request: RequestWithAgent,
     @Query('nonce') nonce?: string,
@@ -128,7 +128,7 @@ export class OpenId4VcVerificationSessionsController extends Controller {
     @Query('payloadState') payloadState?: string,
     @Query('state') state?: OpenId4VcVerificationSessionState,
     @Query('authorizationRequestUri') authorizationRequestUri?: string,
-  ): Promise<OpenId4VcVerificationSessionsRecord[]> {
+  ): Promise<OpenId4VcVerificationSessionRecord[]> {
     try {
       const verificationSessionRepository = request.user.agent.dependencyManager.resolve(
         OpenId4VcVerificationSessionRepository,
@@ -152,11 +152,11 @@ export class OpenId4VcVerificationSessionsController extends Controller {
    * Get an OpenID4VC verification session by verification session id
    */
   @Get('/{verificationSessionId}')
-  @Example<OpenId4VcVerificationSessionsRecord>(openId4VcVerificationSessionsRecordExample)
+  @Example<OpenId4VcVerificationSessionRecord>(openId4VcIssuanceSessionRecordExample)
   public async getVerificationSession(
     @Request() request: RequestWithAgent,
     @Path('verificationSessionId') verificationSessionId: string,
-  ): Promise<OpenId4VcVerificationSessionsRecord> {
+  ): Promise<OpenId4VcVerificationSessionRecord> {
     try {
       const verificationSessionRepository = request.user.agent.dependencyManager.resolve(
         OpenId4VcVerificationSessionRepository,

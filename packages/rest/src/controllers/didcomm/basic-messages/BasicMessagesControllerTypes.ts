@@ -1,7 +1,7 @@
 import type { CredoBaseRecord, RecordId, ThreadId } from '../../types'
 import type { BasicMessageRole, BasicMessageRecord as CredoBasicMessageRecord } from '@credo-ts/core'
 
-export interface DidCommBasicMessagesRecord extends CredoBaseRecord {
+export interface DidCommBasicMessageRecord extends CredoBaseRecord {
   connectionId: RecordId
   role: BasicMessageRole
   content: string
@@ -10,7 +10,7 @@ export interface DidCommBasicMessagesRecord extends CredoBaseRecord {
   parentThreadId?: ThreadId
 }
 
-export function basicMessageRecordToApiModel(record: CredoBasicMessageRecord): DidCommBasicMessagesRecord {
+export function basicMessageRecordToApiModel(record: CredoBasicMessageRecord): DidCommBasicMessageRecord {
   return {
     // Base Record
     id: record.id,

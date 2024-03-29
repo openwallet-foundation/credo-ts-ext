@@ -111,7 +111,7 @@
 				"type": "string",
 				"description": "The public verifier id, used for hosting SIOP / OAuth2 endpoints and metadata"
 			},
-			"OpenId4VcVerifiersRecord": {
+			"OpenId4VcVerifierRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -695,7 +695,7 @@
 			"OpenId4VcSiopAuthorizationResponsePayload": {
 				"$ref": "#/components/schemas/AuthorizationResponsePayload"
 			},
-			"OpenId4VcVerificationSessionsRecord": {
+			"OpenId4VcVerificationSessionRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -750,7 +750,7 @@
 			"OpenId4VcVerificationSessionsCreateRequestResponse": {
 				"properties": {
 					"verificationSession": {
-						"$ref": "#/components/schemas/OpenId4VcVerificationSessionsRecord"
+						"$ref": "#/components/schemas/OpenId4VcVerificationSessionRecord"
 					},
 					"authorizationRequest": {
 						"type": "string"
@@ -2408,7 +2408,7 @@
 			"OpenId4VciIssuerMetadataDisplay": {
 				"$ref": "#/components/schemas/MetadataDisplay"
 			},
-			"OpenId4VcIssuersRecord": {
+			"OpenId4VcIssuerRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -2899,7 +2899,7 @@
 			"OpenId4VciCredentialOfferPayload": {
 				"$ref": "#/components/schemas/CredentialOfferPayloadV1_0_11"
 			},
-			"OpenId4VcIssuanceSessionsRecord": {
+			"OpenId4VcIssuanceSessionRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -2971,7 +2971,7 @@
 			"OpenId4VcIssuanceSessionsCreateOfferResponse": {
 				"properties": {
 					"issuanceSession": {
-						"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsRecord"
+						"$ref": "#/components/schemas/OpenId4VcIssuanceSessionRecord"
 					},
 					"credentialOffer": {
 						"type": "string"
@@ -3213,7 +3213,7 @@
 				],
 				"type": "string"
 			},
-			"DidCommProofsExchangeRecord": {
+			"DidCommProofExchangeRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -3530,7 +3530,7 @@
 						"$ref": "#/components/schemas/PlaintextMessage"
 					},
 					"proofExchange": {
-						"$ref": "#/components/schemas/DidCommProofsExchangeRecord"
+						"$ref": "#/components/schemas/DidCommProofExchangeRecord"
 					}
 				},
 				"required": [
@@ -4407,7 +4407,7 @@
 				"type": "object",
 				"additionalProperties": false
 			},
-			"DidCommCredentialsExchangeRecord": {
+			"DidCommCredentialExchangeRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -4827,7 +4827,7 @@
 						"$ref": "#/components/schemas/PlaintextMessage"
 					},
 					"credentialExchange": {
-						"$ref": "#/components/schemas/DidCommCredentialsExchangeRecord"
+						"$ref": "#/components/schemas/DidCommCredentialExchangeRecord"
 					}
 				},
 				"required": [
@@ -5031,7 +5031,7 @@
 				],
 				"type": "string"
 			},
-			"DidCommConnectionsRecord": {
+			"DidCommConnectionRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -5132,7 +5132,7 @@
 				],
 				"type": "string"
 			},
-			"DidCommBasicMessagesRecord": {
+			"DidCommBasicMessageRecord": {
 				"properties": {
 					"id": {
 						"$ref": "#/components/schemas/RecordId"
@@ -7028,7 +7028,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/OpenId4VcVerifiersRecord"
+									"$ref": "#/components/schemas/OpenId4VcVerifierRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -7077,7 +7077,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/OpenId4VcVerifiersRecord"
+										"$ref": "#/components/schemas/OpenId4VcVerifierRecord"
 									},
 									"type": "array"
 								},
@@ -7130,7 +7130,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/OpenId4VcVerifiersRecord"
+									"$ref": "#/components/schemas/OpenId4VcVerifierRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -7399,7 +7399,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/OpenId4VcVerificationSessionsRecord"
+										"$ref": "#/components/schemas/OpenId4VcVerificationSessionRecord"
 									},
 									"type": "array"
 								},
@@ -7487,7 +7487,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/OpenId4VcVerificationSessionsRecord"
+									"$ref": "#/components/schemas/OpenId4VcVerificationSessionRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -7568,7 +7568,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+									"$ref": "#/components/schemas/OpenId4VcIssuerRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -7696,7 +7696,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+										"$ref": "#/components/schemas/OpenId4VcIssuerRecord"
 									},
 									"type": "array"
 								},
@@ -7856,7 +7856,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+									"$ref": "#/components/schemas/OpenId4VcIssuerRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -7982,7 +7982,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/OpenId4VcIssuersRecord"
+									"$ref": "#/components/schemas/OpenId4VcIssuerRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -8220,7 +8220,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsRecord"
+										"$ref": "#/components/schemas/OpenId4VcIssuanceSessionRecord"
 									},
 									"type": "array"
 								}
@@ -8292,7 +8292,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/OpenId4VcIssuanceSessionsRecord"
+									"$ref": "#/components/schemas/OpenId4VcIssuanceSessionRecord"
 								}
 							}
 						}
@@ -8360,7 +8360,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DidCommProofsExchangeRecord"
+										"$ref": "#/components/schemas/DidCommProofExchangeRecord"
 									},
 									"type": "array"
 								},
@@ -8449,7 +8449,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DidCommProofsExchangeRecord"
+									"$ref": "#/components/schemas/DidCommProofExchangeRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -8531,7 +8531,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DidCommProofsExchangeRecord"
+									"$ref": "#/components/schemas/DidCommProofExchangeRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -8585,7 +8585,7 @@
 						"content": {
 							"application/json": {
 								"schema": {
-									"$ref": "#/components/schemas/DidCommProofsExchangeRecord"
+									"$ref": "#/components/schemas/DidCommProofExchangeRecord"
 								},
 								"examples": {
 									"Example 1": {
@@ -9492,7 +9492,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DidCommCredentialsExchangeRecord"
+										"$ref": "#/components/schemas/DidCommCredentialExchangeRecord"
 									},
 									"type": "array"
 								},
@@ -10074,7 +10074,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DidCommConnectionsRecord"
+										"$ref": "#/components/schemas/DidCommConnectionRecord"
 									},
 									"type": "array"
 								},
@@ -10358,7 +10358,7 @@
 							"application/json": {
 								"schema": {
 									"items": {
-										"$ref": "#/components/schemas/DidCommBasicMessagesRecord"
+										"$ref": "#/components/schemas/DidCommBasicMessageRecord"
 									},
 									"type": "array"
 								},
