@@ -34,7 +34,7 @@ import { createRestAgent } from './createRestAgent'
  */
 export async function setupApp(config: CredoRestSetupAppConfig) {
   const agent = config.agent instanceof Agent ? config.agent : await createRestAgent(config.agent)
-  container.registerInstance(Agent, config.agent as Agent)
+  container.registerInstance(Agent, agent as Agent)
 
   const app = config.baseApp ?? express()
   if (config.enableCors) app.use(cors())
