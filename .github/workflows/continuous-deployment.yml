@@ -39,8 +39,7 @@ jobs:
           images: ${{ env.IMAGE_NAME }}
           tags: |
             type=ref,event=branch
-            type=ref,event=tag,enable=${GITHUB_REF#refs/tags/rest-v*}
-            type=raw,value=${GITHUB_REF#refs/tags/rest-v},enable=${GITHUB_REF#refs/tags/rest-v*}
+            type=ref,event=tag
             type=raw,value=${{ inputs.tag }},enable=${{ github.event_name == 'workflow_dispatch' }}
 
       - name: Build and push Docker image
