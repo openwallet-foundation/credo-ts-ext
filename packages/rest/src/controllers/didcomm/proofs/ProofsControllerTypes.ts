@@ -7,6 +7,7 @@ import type {
   AnonCredsProposeProofFormat,
   AnonCredsRequestProofFormat,
   AnonCredsProofRequestRestriction,
+  LegacyIndyProofFormat,
 } from '@credo-ts/anoncreds'
 import type {
   ProofExchangeRecord as CredoProofExchangeRecord,
@@ -17,11 +18,13 @@ import type {
   AcceptProofRequestOptions,
   ProposeProofOptions,
   AcceptProofProposalOptions,
+  GetProofFormatDataReturn,
 } from '@credo-ts/core'
 import type { PlaintextMessage } from '@credo-ts/core/build/types'
 
 import { maybeMapValues } from '../../../utils/maybeMapValues'
 
+type ProofFormats = [LegacyIndyProofFormat, AnonCredsProofFormat]
 type ProofProtocolVersion = 'v1' | 'v2'
 
 export interface DidCommProofExchangeRecord extends CredoBaseRecord {
@@ -216,3 +219,5 @@ export interface AnonCredsRequestProofFormatOptions {
     [key: string]: AnonCredsRequestedPredicateOptions
   }
 }
+
+export interface DidCommProofsGetFormatDataResponse extends GetProofFormatDataReturn<ProofFormats> {}

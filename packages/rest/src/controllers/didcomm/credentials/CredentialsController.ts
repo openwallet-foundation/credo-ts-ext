@@ -1,6 +1,7 @@
 import type {
   DidCommCredentialsCreateOfferResponse,
   DidCommCredentialExchangeRecord,
+  DidCommCredentialsGetFormatDataResponse,
 } from './CredentialsControllerTypes'
 
 import { CredentialState, RecordNotFoundError, CredentialRole } from '@credo-ts/core'
@@ -11,7 +12,11 @@ import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId, ThreadId } from '../../types'
 
-import { credentialExchangeRecordExample, didCommCredentialsCreateOfferResponse } from './CredentialsControllerExamples'
+import {
+  credentialExchangeRecordExample,
+  didCommCredentialsCreateOfferResponse,
+  didCommCredentialsGetFormatDataExample,
+} from './CredentialsControllerExamples'
 import {
   AcceptCredentialRequestOptions,
   OfferCredentialOptions,
@@ -73,6 +78,28 @@ export class CredentialsController extends Controller {
       }
 
       this.setStatus(500)
+      return apiErrorResponse(error)
+    }
+  }
+
+  /**
+   * Retrieve the format data associated with a credential exchange
+   */
+  @Get('/:credentialExchangeId/format-data')
+  @Example<DidCommCredentialsGetFormatDataResponse>(didCommCredentialsGetFormatDataExample)
+  public async getFormatDateForCredentialExchange(
+    @Request() request: RequestWithAgent,
+    @Path('credentialExchangeId') credentialExchangeId: RecordId,
+  ): Promise<DidCommCredentialsGetFormatDataResponse> {
+    try {
+      const formatData = await request.user.agent.credentials.getFormatData(credentialExchangeId)
+      return formatData
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        this.setStatus(404)
+        return apiErrorResponse(`credential exchange with id "${credentialExchangeId}" not found.`)
+      }
+
       return apiErrorResponse(error)
     }
   }

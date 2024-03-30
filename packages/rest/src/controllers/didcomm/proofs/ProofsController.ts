@@ -1,4 +1,8 @@
-import type { DidCommProofsCreateRequestResponse, DidCommProofExchangeRecord } from './ProofsControllerTypes'
+import type {
+  DidCommProofsCreateRequestResponse,
+  DidCommProofExchangeRecord,
+  DidCommProofsGetFormatDataResponse,
+} from './ProofsControllerTypes'
 
 import { ProofRole, ProofState, RecordNotFoundError } from '@credo-ts/core'
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
@@ -8,7 +12,11 @@ import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId, ThreadId } from '../../types'
 
-import { didCommProofsCreateRequestResponse, proofExchangeRecordExample } from './ProofsControllerExamples'
+import {
+  didCommProofsCreateRequestResponse,
+  didCommProofsGetFormatDataExample,
+  proofExchangeRecordExample,
+} from './ProofsControllerExamples'
 import {
   DidCommProofsCreateRequestOptions,
   DidCommProofsAcceptRequestOptions,
@@ -46,6 +54,29 @@ export class ProofsController extends Controller {
     })
 
     return proofs.map(proofExchangeRecordToApiModel)
+  }
+
+  /**
+   * Retrieve the format data associated with a proof exchange
+   */
+  @Get('/:proofExchangeId/format-data')
+  @Example<DidCommProofsGetFormatDataResponse>(didCommProofsGetFormatDataExample)
+  public async getFormatDateForProofExchange(
+    @Request() request: RequestWithAgent,
+    @Path('proofExchangeId') proofExchangeId: RecordId,
+  ): Promise<DidCommProofsGetFormatDataResponse> {
+    try {
+      const formatData = await request.user.agent.proofs.getFormatData(proofExchangeId)
+      return formatData
+    } catch (error) {
+      if (error instanceof RecordNotFoundError) {
+        this.setStatus(404)
+        return apiErrorResponse(`proof exchange with id "${proofExchangeId}" not found.`)
+      }
+
+      this.setStatus(500)
+      return apiErrorResponse(error)
+    }
   }
 
   /**

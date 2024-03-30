@@ -3266,6 +3266,36 @@
 				"type": "object",
 				"additionalProperties": false
 			},
+			"ProofFormatDataMessagePayload_ProofFormats.proposal_": {
+				"properties": {},
+				"type": "object",
+				"description": "Get the format data payload for a specific message from a list of ProofFormat interfaces and a message\n\nFor an indy offer, this resolves to the proof request format as defined here:\nhttps://github.com/hyperledger/aries-rfcs/tree/b3a3942ef052039e73cd23d847f42947f8287da2/features/0592-indy-attachments#proof-request-format"
+			},
+			"ProofFormatDataMessagePayload_ProofFormats.request_": {
+				"properties": {},
+				"type": "object",
+				"description": "Get the format data payload for a specific message from a list of ProofFormat interfaces and a message\n\nFor an indy offer, this resolves to the proof request format as defined here:\nhttps://github.com/hyperledger/aries-rfcs/tree/b3a3942ef052039e73cd23d847f42947f8287da2/features/0592-indy-attachments#proof-request-format"
+			},
+			"ProofFormatDataMessagePayload_ProofFormats.presentation_": {
+				"properties": {},
+				"type": "object",
+				"description": "Get the format data payload for a specific message from a list of ProofFormat interfaces and a message\n\nFor an indy offer, this resolves to the proof request format as defined here:\nhttps://github.com/hyperledger/aries-rfcs/tree/b3a3942ef052039e73cd23d847f42947f8287da2/features/0592-indy-attachments#proof-request-format"
+			},
+			"DidCommProofsGetFormatDataResponse": {
+				"properties": {
+					"presentation": {
+						"$ref": "#/components/schemas/ProofFormatDataMessagePayload_ProofFormats.presentation_"
+					},
+					"request": {
+						"$ref": "#/components/schemas/ProofFormatDataMessagePayload_ProofFormats.request_"
+					},
+					"proposal": {
+						"$ref": "#/components/schemas/ProofFormatDataMessagePayload_ProofFormats.proposal_"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
 			"ProofProtocolVersion": {
 				"type": "string",
 				"enum": [
@@ -4485,6 +4515,320 @@
 					"protocolVersion",
 					"credentials"
 				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Pick_AnonCredsCredentialProposalFormat.Exclude_keyofAnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id__": {
+				"properties": {
+					"schema_name": {
+						"type": "string"
+					},
+					"schema_version": {
+						"type": "string"
+					},
+					"schema_id": {
+						"type": "string"
+					},
+					"cred_def_id": {
+						"type": "string"
+					},
+					"schema_issuer_did": {
+						"type": "string"
+					},
+					"issuer_did": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"Omit_AnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id_": {
+				"$ref": "#/components/schemas/Pick_AnonCredsCredentialProposalFormat.Exclude_keyofAnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id__",
+				"description": "Construct a type with the properties of T except for those in type K."
+			},
+			"LegacyIndyCredentialProposalFormat": {
+				"$ref": "#/components/schemas/Omit_AnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id_"
+			},
+			"AnonCredsCredentialProposalFormat": {
+				"properties": {
+					"schema_issuer_id": {
+						"type": "string"
+					},
+					"schema_name": {
+						"type": "string"
+					},
+					"schema_version": {
+						"type": "string"
+					},
+					"schema_id": {
+						"type": "string"
+					},
+					"cred_def_id": {
+						"type": "string"
+					},
+					"issuer_id": {
+						"type": "string"
+					},
+					"schema_issuer_did": {
+						"type": "string"
+					},
+					"issuer_did": {
+						"type": "string"
+					}
+				},
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatDataMessagePayload_CredentialFormats.proposal_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/LegacyIndyCredentialProposalFormat"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsCredentialProposalFormat"
+					}
+				},
+				"type": "object",
+				"description": "Get the format data payload for a specific message from a list of CredentialFormat interfaces and a message\n\nFor an indy offer, this resolves to the cred abstract format as defined here:\nhttps://github.com/hyperledger/aries-rfcs/tree/b3a3942ef052039e73cd23d847f42947f8287da2/features/0592-indy-attachments#cred-abstract-format"
+			},
+			"LegacyIndyCredentialRequest": {
+				"properties": {
+					"prover_did": {
+						"type": "string"
+					},
+					"entropy": {
+						"type": "string"
+					},
+					"cred_def_id": {
+						"type": "string"
+					},
+					"blinded_ms": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					},
+					"blinded_ms_correctness_proof": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					},
+					"nonce": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"cred_def_id",
+					"blinded_ms",
+					"blinded_ms_correctness_proof",
+					"nonce",
+					"prover_did"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"AnonCredsCredentialRequest": {
+				"properties": {
+					"prover_did": {
+						"type": "string"
+					},
+					"entropy": {
+						"type": "string"
+					},
+					"cred_def_id": {
+						"type": "string"
+					},
+					"blinded_ms": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					},
+					"blinded_ms_correctness_proof": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					},
+					"nonce": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"cred_def_id",
+					"blinded_ms",
+					"blinded_ms_correctness_proof",
+					"nonce"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatDataMessagePayload_CredentialFormats.request_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/LegacyIndyCredentialRequest"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsCredentialRequest"
+					}
+				},
+				"type": "object",
+				"description": "Get the format data payload for a specific message from a list of CredentialFormat interfaces and a message\n\nFor an indy offer, this resolves to the cred abstract format as defined here:\nhttps://github.com/hyperledger/aries-rfcs/tree/b3a3942ef052039e73cd23d847f42947f8287da2/features/0592-indy-attachments#cred-abstract-format"
+			},
+			"AnonCredsCredentialOffer": {
+				"properties": {
+					"schema_id": {
+						"type": "string"
+					},
+					"cred_def_id": {
+						"type": "string"
+					},
+					"nonce": {
+						"type": "string"
+					},
+					"key_correctness_proof": {
+						"$ref": "#/components/schemas/Record_string.unknown_"
+					}
+				},
+				"required": [
+					"schema_id",
+					"cred_def_id",
+					"nonce",
+					"key_correctness_proof"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatDataMessagePayload_CredentialFormats.offer_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/AnonCredsCredentialOffer"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsCredentialOffer"
+					}
+				},
+				"type": "object",
+				"description": "Get the format data payload for a specific message from a list of CredentialFormat interfaces and a message\n\nFor an indy offer, this resolves to the cred abstract format as defined here:\nhttps://github.com/hyperledger/aries-rfcs/tree/b3a3942ef052039e73cd23d847f42947f8287da2/features/0592-indy-attachments#cred-abstract-format"
+			},
+			"AnonCredsCredentialValue": {
+				"properties": {
+					"raw": {
+						"type": "string"
+					},
+					"encoded": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"raw",
+					"encoded"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"Record_string.AnonCredsCredentialValue_": {
+				"properties": {},
+				"additionalProperties": {
+					"$ref": "#/components/schemas/AnonCredsCredentialValue"
+				},
+				"type": "object",
+				"description": "Construct a type with a set of properties K of type T"
+			},
+			"AnonCredsCredential": {
+				"properties": {
+					"schema_id": {
+						"type": "string"
+					},
+					"cred_def_id": {
+						"type": "string"
+					},
+					"rev_reg_id": {
+						"type": "string"
+					},
+					"values": {
+						"$ref": "#/components/schemas/Record_string.AnonCredsCredentialValue_"
+					},
+					"signature": {},
+					"signature_correctness_proof": {}
+				},
+				"required": [
+					"schema_id",
+					"cred_def_id",
+					"values",
+					"signature",
+					"signature_correctness_proof"
+				],
+				"type": "object",
+				"additionalProperties": false
+			},
+			"CredentialFormatDataMessagePayload_CredentialFormats.credential_": {
+				"properties": {
+					"indy": {
+						"$ref": "#/components/schemas/AnonCredsCredential"
+					},
+					"anoncreds": {
+						"$ref": "#/components/schemas/AnonCredsCredential"
+					}
+				},
+				"type": "object",
+				"description": "Get the format data payload for a specific message from a list of CredentialFormat interfaces and a message\n\nFor an indy offer, this resolves to the cred abstract format as defined here:\nhttps://github.com/hyperledger/aries-rfcs/tree/b3a3942ef052039e73cd23d847f42947f8287da2/features/0592-indy-attachments#cred-abstract-format"
+			},
+			"Pick_GetCredentialFormatDataReturn_CredentialFormats_.Exclude_keyofGetCredentialFormatDataReturn_CredentialFormats_.offerAttributes__": {
+				"properties": {
+					"proposal": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.proposal_"
+					},
+					"request": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.request_"
+					},
+					"offer": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.offer_"
+					},
+					"credential": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.credential_"
+					},
+					"proposalAttributes": {
+						"items": {
+							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
+						},
+						"type": "array"
+					}
+				},
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"DidCommCredentialsGetFormatDataResponse": {
+				"properties": {
+					"proposal": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.proposal_"
+					},
+					"request": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.request_"
+					},
+					"offer": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.offer_"
+					},
+					"credential": {
+						"$ref": "#/components/schemas/CredentialFormatDataMessagePayload_CredentialFormats.credential_"
+					},
+					"proposalAttributes": {
+						"items": {
+							"$ref": "#/components/schemas/CredentialPreviewAttributeOptions"
+						},
+						"type": "array"
+					},
+					"offerAttributes": {
+						"items": {
+							"properties": {
+								"value": {
+									"type": "string"
+								},
+								"name": {
+									"type": "string"
+								},
+								"mime-type": {
+									"type": "string"
+								}
+							},
+							"required": [
+								"value",
+								"name"
+							],
+							"type": "object"
+						},
+						"type": "array"
+					}
+				},
 				"type": "object",
 				"additionalProperties": false
 			},
@@ -8440,6 +8784,376 @@
 				]
 			}
 		},
+		"/didcomm/proofs/{proofExchangeId}/format-data": {
+			"get": {
+				"operationId": "GetFormatDateForProofExchange",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DidCommProofsGetFormatDataResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"request": {
+												"anoncreds": {
+													"name": "proof",
+													"version": "1.0",
+													"nonce": "758240050114745983655710",
+													"requested_attributes": {
+														"prop1": {
+															"restrictions": [
+																{
+																	"cred_def_id": "credential-definition:_p5hLM-uQa1zWnn3tBlSZjLHN3_jrHOq48HZg9x0WNU"
+																}
+															],
+															"name": "prop1"
+														}
+													},
+													"requested_predicates": {}
+												}
+											},
+											"presentation": {
+												"anoncreds": {
+													"proof": {
+														"proofs": [
+															{
+																"primary_proof": {
+																	"eq_proof": {
+																		"revealed_attrs": {
+																			"prop1": "27034640024117331033063128044004318218486816931520886405535659934417438781507"
+																		},
+																		"a_prime": "19047116433504188994272881641822894872902270927119448171860075215300057790220032716001623222457003097557526300243774256052213342685786339664359702293068763238941477983249827037208391202082237355452899615066813136375104369999353835295981406017700484554961999776491254535901817543204922312909798679047221330019235737943019299392326535879346715038129185356279868745469303380007785962003959306434843861572801946425200870616819278614278447453156100921293441241791644660148472591502140793919913129642727070863794832260096533561211015144668753888527444212286891447285472223278089710845256263784748983746718325771142088732939",
+																		"e": "10259898129295787961743851056978055195603429485644503254324436416167764909267793244904075766652236796402891954383818563601919019183718168",
+																		"v": "1231362115035007024570764941449044031590844390550471600312531446117722154659868456888335013946335458040274898035202658225595068963856089705169119329625310606633779849291885735720644454949213413794453812488717746459159104479357614205354859977539345197819006257295943057033308104945137276434448035162025255321821437631597083690718246293836723511817575318157392852647929432326303080306792286331173382522988459574485523423956289579780768305214142906216511255127647152962121322858014142270114082615381637234314728038304949470391361208405519610497147621327793260813179177368913095571745867719207542759576560425897236709768313140801020933801485735855445633964031941661640923635020541019781997653754765174059228323815763523970880399098098455858988336056250017116998250153813329152217051921736584301286899814639213197350128774690139583010473926868949760824128601421310373158774629991706471289635887140592649446912506997480513587053",
+																		"m": {
+																			"prop2": "16162691443890709574767645052161691434918099895053484805751392155204331411424414052735813491020922097673389640501460090756960039580468937518501805646597654106586801848678500913986",
+																			"master_secret": "10922412082717230367748516141129893501521277218767044762649924912605238791909366369223988111691711544332629968246354239716138904917009438604729675733830274629976624843073297367700"
+																		},
+																		"m2": "143283050199231500752147520595402404430732435435603814807867477210654907867800083910082782289810115670692637233938031314254705029316478576894690559684263226485325994959779501355610180066672024099090659111271057300388050170242803008137083396212408809319025355910950905661669766118741906012674213690293786101106250316977895458665512868288955286373377155511034215107395178211834003022495581825841682012396310023015657545525739013246143790276942948375829743916303018361158237084452134993073397899480348489140658247064717903765898129567455078992931912070154142338171836287509698783369557812496197648966004949431901163349211745070465330233452514957502613847594191716703134436607494648786994546260304783197646882841310437319877565249799794"
+																	},
+																	"ge_proofs": []
+																},
+																"non_revoc_proof": null
+															}
+														],
+														"aggregated_proof": {
+															"c_hash": "76178432210457409800554029394836415101930849642483382585409939514864801686752",
+															"c_list": [
+																[
+																	150,
+																	225,
+																	217,
+																	140,
+																	172,
+																	223,
+																	12,
+																	66,
+																	140,
+																	46,
+																	192,
+																	81,
+																	148,
+																	134,
+																	190,
+																	64,
+																	6,
+																	79,
+																	137,
+																	224,
+																	183,
+																	196,
+																	1,
+																	53,
+																	74,
+																	202,
+																	142,
+																	207,
+																	205,
+																	85,
+																	68,
+																	149,
+																	183,
+																	231,
+																	102,
+																	151,
+																	99,
+																	207,
+																	81,
+																	103,
+																	28,
+																	162,
+																	11,
+																	32,
+																	124,
+																	123,
+																	124,
+																	16,
+																	110,
+																	54,
+																	177,
+																	85,
+																	202,
+																	169,
+																	186,
+																	146,
+																	134,
+																	43,
+																	149,
+																	79,
+																	220,
+																	161,
+																	129,
+																	15,
+																	229,
+																	253,
+																	44,
+																	250,
+																	129,
+																	223,
+																	194,
+																	175,
+																	101,
+																	181,
+																	78,
+																	155,
+																	71,
+																	122,
+																	9,
+																	131,
+																	166,
+																	178,
+																	239,
+																	35,
+																	72,
+																	64,
+																	93,
+																	160,
+																	230,
+																	202,
+																	255,
+																	4,
+																	121,
+																	243,
+																	107,
+																	81,
+																	38,
+																	10,
+																	98,
+																	80,
+																	62,
+																	15,
+																	180,
+																	7,
+																	148,
+																	52,
+																	164,
+																	154,
+																	45,
+																	154,
+																	104,
+																	10,
+																	156,
+																	144,
+																	223,
+																	255,
+																	132,
+																	248,
+																	109,
+																	87,
+																	40,
+																	167,
+																	194,
+																	139,
+																	49,
+																	3,
+																	153,
+																	175,
+																	119,
+																	231,
+																	156,
+																	204,
+																	54,
+																	41,
+																	26,
+																	79,
+																	19,
+																	169,
+																	153,
+																	192,
+																	102,
+																	105,
+																	168,
+																	90,
+																	5,
+																	21,
+																	249,
+																	187,
+																	26,
+																	176,
+																	136,
+																	204,
+																	113,
+																	73,
+																	240,
+																	143,
+																	56,
+																	121,
+																	23,
+																	77,
+																	112,
+																	126,
+																	222,
+																	54,
+																	233,
+																	110,
+																	73,
+																	70,
+																	77,
+																	9,
+																	135,
+																	65,
+																	186,
+																	27,
+																	22,
+																	140,
+																	137,
+																	169,
+																	230,
+																	49,
+																	191,
+																	60,
+																	66,
+																	8,
+																	136,
+																	88,
+																	183,
+																	240,
+																	225,
+																	80,
+																	151,
+																	123,
+																	45,
+																	110,
+																	91,
+																	222,
+																	242,
+																	236,
+																	20,
+																	123,
+																	104,
+																	154,
+																	187,
+																	164,
+																	96,
+																	46,
+																	218,
+																	129,
+																	133,
+																	233,
+																	225,
+																	252,
+																	77,
+																	139,
+																	163,
+																	93,
+																	117,
+																	171,
+																	78,
+																	170,
+																	16,
+																	99,
+																	127,
+																	232,
+																	161,
+																	106,
+																	41,
+																	94,
+																	177,
+																	179,
+																	9,
+																	216,
+																	233,
+																	175,
+																	192,
+																	36,
+																	45,
+																	192,
+																	148,
+																	173,
+																	217,
+																	7,
+																	43,
+																	188,
+																	80,
+																	79,
+																	183,
+																	230,
+																	183,
+																	166,
+																	117,
+																	48,
+																	1,
+																	253,
+																	177,
+																	11
+																]
+															]
+														}
+													},
+													"requested_proof": {
+														"revealed_attrs": {
+															"prop1": {
+																"sub_proof_index": 0,
+																"raw": "Alice",
+																"encoded": "27034640024117331033063128044004318218486816931520886405535659934417438781507"
+															}
+														},
+														"self_attested_attrs": {},
+														"unrevealed_attrs": {},
+														"predicates": {}
+													},
+													"identifiers": [
+														{
+															"schema_id": "schema:gSl0JkGIcmRif593Q6XYGsJndHGOzm1jWRFa-Lwrz9o",
+															"cred_def_id": "credential-definition:_p5hLM-uQa1zWnn3tBlSZjLHN3_jrHOq48HZg9x0WNU"
+														}
+													]
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve the format data associated with a proof exchange",
+				"tags": [
+					"DIDComm Proofs"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "proofExchangeId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
 		"/didcomm/proofs/{proofExchangeId}": {
 			"get": {
 				"operationId": "GetProofExchangeById",
@@ -9637,6 +10351,139 @@
 					}
 				},
 				"description": "Deletes a credential exchange record in the credential repository.",
+				"tags": [
+					"DIDComm Credentials"
+				],
+				"security": [
+					{
+						"tenants": [
+							"tenant"
+						]
+					}
+				],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "credentialExchangeId",
+						"required": true,
+						"schema": {
+							"$ref": "#/components/schemas/RecordId"
+						}
+					}
+				]
+			}
+		},
+		"/didcomm/credentials/{credentialExchangeId}/format-data": {
+			"get": {
+				"operationId": "GetFormatDateForCredentialExchange",
+				"responses": {
+					"200": {
+						"description": "Ok",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/DidCommCredentialsGetFormatDataResponse"
+								},
+								"examples": {
+									"Example 1": {
+										"value": {
+											"offerAttributes": [
+												{
+													"mime-type": "text/plain",
+													"name": "prop1",
+													"value": "Alice"
+												},
+												{
+													"mime-type": "text/plain",
+													"name": "prop2",
+													"value": "Bob"
+												}
+											],
+											"offer": {
+												"anoncreds": {
+													"schema_id": "schema:gSl0JkGIcmRif593Q6XYGsJndHGOzm1jWRFa-Lwrz9o",
+													"cred_def_id": "credential-definition:_p5hLM-uQa1zWnn3tBlSZjLHN3_jrHOq48HZg9x0WNU",
+													"key_correctness_proof": {
+														"c": "99492103123537767435780273140747875256790346132054146213963860002839562036500",
+														"xz_cap": "580439401883808314813871954452291264672809884147416670644868202601349938534100012582121009892201828623456062583253712122390217453057344836461080181231409709931412795314081026936945930855825367373487243407763891173044774127684739520982825154953842442273813308991169090527022468436144816388847602118294979269313055482643679093387752228933342461551523525381348315077261080667315083376665151670823724165412812789868725296452469727913099297098501657154305553628601670242915979173502981519452691532364945800381784094698957899207092852251635741642974685343076909543754528139524390330974942129175514270934196165227837447039632098505018004458669992226178741765564079908532417644335223001107373553800636",
+														"xr_cap": [
+															[
+																"prop2",
+																"995399175086393290156643492153533410460088296042299023071321712767423823125266832866393832677059827513393172141469698615988398481324616362988306901757713912635730675164176333343113543425145312139791479962174299119310631546985779208764729297940146997294517195382469523212546412350946365060108495261812541753519099438498374096964273878810634998095141423219246735648908552325440689746900928839923227716273385790878307688202350090032242160533886272557839856485554366696826060620961486642370355665610549033927229155523847761590023494696062955267842162962594983582064910274022357686360792641497125074245699228183099824304332072233714267713611371961270313585807822270849608871260298873632530881181868"
+															],
+															[
+																"prop1",
+																"1332724481340046129877312153176690921485462825381114334570976976911683740241735795674573565883450256485008453985793480391949571168596993894012183159420293482819645749037942541031221713594705004813170460963384907003707588246318592228064786935434434436493334335846541085008786621396358737393954898248156584956789603719162774096077144488775239706705659235938222621701852501004590177199881330248514156406621561858785958857377365259412279939255354717554715259409741463035067370342340375245558605525782229283165954317144433290958178245662795970871238028493809988026433044315609370187889271966194713168137139044017058936597616750741033931501545012220127203710939560438531093698046054460328575918119603"
+															],
+															[
+																"master_secret",
+																"555027667428826242052970636449944760049716355932181005994059994704109863707489157610003651613465020982803541959788424930381416736220275982020574537155052939117498439344162350344720165428803548470057405536121354129959126518248455145191069141936666484179865018445996249913288495893190150238690838395991946573833346853053011240922319143499605693196163287075552588023831726135219961691799755462617042764987540423466441420500952919498995496310058387923814988140775894040589217067406516222451334977386486085574931826246195042640621402064770528877288327158750876201208151309067281791780644173220251685733148275860559683101771901936515172131760435059336917112277256735606589048477347147443664213752574"
+															]
+														]
+													},
+													"nonce": "692456490106322710069916"
+												}
+											},
+											"request": {
+												"anoncreds": {
+													"entropy": "283559102751594275830315",
+													"cred_def_id": "credential-definition:_p5hLM-uQa1zWnn3tBlSZjLHN3_jrHOq48HZg9x0WNU",
+													"blinded_ms": {
+														"u": "58231223348966103131811162273993912136371812752782223808009746737780125568145868523057859605972791511440980139494915406073803687889151020231709198213752951834097534156853321419009300133041701988088059045538840265627332554454194121024426435019582352173715814900227749253559086664858523212471480396321468257159168804913614969187532210509785588812584841739263332234841113948381329216546405289807839367671066394371976377285491314443468087042916655417085254764424047492227119854758243993637314070997551720795324547265481480108567082864623565773819911308131308207210554182277214230022063294515760720713009700825428955532510",
+														"ur": null,
+														"hidden_attributes": [
+															"master_secret"
+														],
+														"committed_attributes": {}
+													},
+													"blinded_ms_correctness_proof": {
+														"c": "14842005166951621146114950228033228166587445948917220775188417180669817458071",
+														"v_dash_cap": "525886886600441444565563165744451574453581209783186527553278087235218067249143670252864427868001371270984533684519358843687605475581166282935142905703276466255860485038094631924069785904354326434488518339194078002719755861388964711768508348545543255979806148850295089036263281958934849704765108579167429147052286486914403929145073420962893811107068894159729549508196847548809587052009560288805123173353269086571490649648022184768357155256457950107309654761616752977676620176099125951088465313509009701650195907112862265146926434945766292668030673219665354811192934496571751927032511309995906445544597811901863475749538496709548405261395672321054035313087600543076125543620519913607917930629021139372239900295387614530",
+														"m_caps": {
+															"master_secret": "26403860841992559132025470865700367282768662423342071327016182400364926167433347005018624226591156120350434943733972616556764215219552899959288997912500104383298723878965850738210"
+														},
+														"r_caps": {}
+													},
+													"nonce": "539202924201893565376900"
+												}
+											},
+											"credential": {
+												"anoncreds": {
+													"schema_id": "schema:gSl0JkGIcmRif593Q6XYGsJndHGOzm1jWRFa-Lwrz9o",
+													"cred_def_id": "credential-definition:_p5hLM-uQa1zWnn3tBlSZjLHN3_jrHOq48HZg9x0WNU",
+													"values": {
+														"prop2": {
+															"raw": "Bob",
+															"encoded": "93006290325627508022776103386395994712401809437930957652111221015872244345185"
+														},
+														"prop1": {
+															"raw": "Alice",
+															"encoded": "27034640024117331033063128044004318218486816931520886405535659934417438781507"
+														}
+													},
+													"signature": {
+														"p_credential": {
+															"m_2": "2911715207125951422480156302046291340123870729973317007174252437265217048587",
+															"a": "11395635159250760503996843059477894862759042446759456478905609052258966666054297486499529657198356040094543149614125789362925680451864913383442428405747925006507714967572810462914901849679778018440516366649116468683963048348928719272415537003338969559562235424937950447758592924825449445925605210390900510823781990795216551732658029427081784108220873232530576542198769893886026016329571813137791144743390726969182823512920008254774588891824872946440672297966557771368796896826221080416623922702670373253252601697257131639339789773605316559189611430460668913621031924922363795873865565810614212399140440158978630736492",
+															"e": "259344723055062059907025491480697571938277889515152306249728583105665800713306759149981690559193987143012367913206299323899696942213235956742930090344543936461575196618473935962381",
+															"v": "8001814536142162607770363548208093772576030885155777393828891920810388269643639795739496611196183494954511428986568490597372615758581717334821354274023290392255038227577524325982981782454790052567586095566736421356705577874795304121932343609694749077725813635912948953884849597222055594720249473114949732531603732043206297827614841392072041631247914713339543298071003341199125553155575573253915872830335388346577731204615565550928758657918974242548635243688870260125103464458103572944515798752393429291619708048708181234777305612276265184799282497088401357918659516303709468557162638343709893397545583781671672656111029322715215691886249339655634731004758885743276863891497637192845057331073900220047078918373696507486114747681960422431667787893756346748792880297182146033915387360507174461962945213023817226802833132149"
+														},
+														"r_credential": null
+													},
+													"signature_correctness_proof": {
+														"se": "18071888966807930445969341878476115756105579849496822693675536304985965652940046036953323270875830549601629354090648450651925366597175546789259250284156036563261793522690459846803775756759065096398577328540423797501842695683583228588830053641258351279667129839173861484988969984108220499135535938554712154909596949678407619115337420038902354926030012219508589609561675458487780368202144228827896948708718677481449347040231630306565656593268126349021640222232240758703745752333545546720963799056251898068823571706878796745922121208045372883817285034174020297113979889276046972260648750830806544618009796203666715262922",
+														"c": "32233748970469592854527577130712976905395946986728509546042467955793436240507"
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				},
+				"description": "Retrieve the format data associated with a credential exchange",
 				"tags": [
 					"DIDComm Credentials"
 				],

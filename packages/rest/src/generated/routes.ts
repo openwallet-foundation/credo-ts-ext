@@ -1248,6 +1248,31 @@ const models: TsoaRoute.Models = {
         "additionalProperties": false,
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProofFormatDataMessagePayload_ProofFormats.proposal_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProofFormatDataMessagePayload_ProofFormats.request_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "ProofFormatDataMessagePayload_ProofFormats.presentation_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DidCommProofsGetFormatDataResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "presentation": {"ref":"ProofFormatDataMessagePayload_ProofFormats.presentation_"},
+            "request": {"ref":"ProofFormatDataMessagePayload_ProofFormats.request_"},
+            "proposal": {"ref":"ProofFormatDataMessagePayload_ProofFormats.proposal_"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
     "ProofProtocolVersion": {
         "dataType": "refAlias",
         "type": {"dataType":"union","subSchemas":[{"dataType":"enum","enums":["v1"]},{"dataType":"enum","enums":["v2"]}],"validators":{}},
@@ -1722,6 +1747,138 @@ const models: TsoaRoute.Models = {
             "protocolVersion": {"dataType":"string","required":true},
             "credentials": {"dataType":"array","array":{"dataType":"refObject","ref":"CredentialRecordBinding"},"required":true},
             "credentialAttributes": {"dataType":"array","array":{"dataType":"refObject","ref":"CredentialPreviewAttributeOptions"}},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_AnonCredsCredentialProposalFormat.Exclude_keyofAnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"schema_name":{"dataType":"string"},"schema_version":{"dataType":"string"},"schema_id":{"dataType":"string"},"cred_def_id":{"dataType":"string"},"schema_issuer_did":{"dataType":"string"},"issuer_did":{"dataType":"string"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Omit_AnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id_": {
+        "dataType": "refAlias",
+        "type": {"ref":"Pick_AnonCredsCredentialProposalFormat.Exclude_keyofAnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id__","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LegacyIndyCredentialProposalFormat": {
+        "dataType": "refAlias",
+        "type": {"ref":"Omit_AnonCredsCredentialProposalFormat.schema_issuer_id-or-issuer_id_","validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AnonCredsCredentialProposalFormat": {
+        "dataType": "refObject",
+        "properties": {
+            "schema_issuer_id": {"dataType":"string"},
+            "schema_name": {"dataType":"string"},
+            "schema_version": {"dataType":"string"},
+            "schema_id": {"dataType":"string"},
+            "cred_def_id": {"dataType":"string"},
+            "issuer_id": {"dataType":"string"},
+            "schema_issuer_did": {"dataType":"string"},
+            "issuer_did": {"dataType":"string"},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CredentialFormatDataMessagePayload_CredentialFormats.proposal_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"LegacyIndyCredentialProposalFormat"},"anoncreds":{"ref":"AnonCredsCredentialProposalFormat"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "LegacyIndyCredentialRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "prover_did": {"dataType":"string","required":true},
+            "entropy": {"dataType":"string"},
+            "cred_def_id": {"dataType":"string","required":true},
+            "blinded_ms": {"ref":"Record_string.unknown_","required":true},
+            "blinded_ms_correctness_proof": {"ref":"Record_string.unknown_","required":true},
+            "nonce": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AnonCredsCredentialRequest": {
+        "dataType": "refObject",
+        "properties": {
+            "prover_did": {"dataType":"string"},
+            "entropy": {"dataType":"string"},
+            "cred_def_id": {"dataType":"string","required":true},
+            "blinded_ms": {"ref":"Record_string.unknown_","required":true},
+            "blinded_ms_correctness_proof": {"ref":"Record_string.unknown_","required":true},
+            "nonce": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CredentialFormatDataMessagePayload_CredentialFormats.request_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"LegacyIndyCredentialRequest"},"anoncreds":{"ref":"AnonCredsCredentialRequest"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AnonCredsCredentialOffer": {
+        "dataType": "refObject",
+        "properties": {
+            "schema_id": {"dataType":"string","required":true},
+            "cred_def_id": {"dataType":"string","required":true},
+            "nonce": {"dataType":"string","required":true},
+            "key_correctness_proof": {"ref":"Record_string.unknown_","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CredentialFormatDataMessagePayload_CredentialFormats.offer_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"AnonCredsCredentialOffer"},"anoncreds":{"ref":"AnonCredsCredentialOffer"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AnonCredsCredentialValue": {
+        "dataType": "refObject",
+        "properties": {
+            "raw": {"dataType":"string","required":true},
+            "encoded": {"dataType":"string","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Record_string.AnonCredsCredentialValue_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{},"additionalProperties":{"ref":"AnonCredsCredentialValue"},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "AnonCredsCredential": {
+        "dataType": "refObject",
+        "properties": {
+            "schema_id": {"dataType":"string","required":true},
+            "cred_def_id": {"dataType":"string","required":true},
+            "rev_reg_id": {"dataType":"string"},
+            "values": {"ref":"Record_string.AnonCredsCredentialValue_","required":true},
+            "signature": {"dataType":"any","required":true},
+            "signature_correctness_proof": {"dataType":"any","required":true},
+        },
+        "additionalProperties": false,
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "CredentialFormatDataMessagePayload_CredentialFormats.credential_": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"indy":{"ref":"AnonCredsCredential"},"anoncreds":{"ref":"AnonCredsCredential"}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "Pick_GetCredentialFormatDataReturn_CredentialFormats_.Exclude_keyofGetCredentialFormatDataReturn_CredentialFormats_.offerAttributes__": {
+        "dataType": "refAlias",
+        "type": {"dataType":"nestedObjectLiteral","nestedProperties":{"proposal":{"ref":"CredentialFormatDataMessagePayload_CredentialFormats.proposal_"},"request":{"ref":"CredentialFormatDataMessagePayload_CredentialFormats.request_"},"offer":{"ref":"CredentialFormatDataMessagePayload_CredentialFormats.offer_"},"credential":{"ref":"CredentialFormatDataMessagePayload_CredentialFormats.credential_"},"proposalAttributes":{"dataType":"array","array":{"dataType":"refObject","ref":"CredentialPreviewAttributeOptions"}}},"validators":{}},
+    },
+    // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+    "DidCommCredentialsGetFormatDataResponse": {
+        "dataType": "refObject",
+        "properties": {
+            "proposal": {"ref":"CredentialFormatDataMessagePayload_CredentialFormats.proposal_"},
+            "request": {"ref":"CredentialFormatDataMessagePayload_CredentialFormats.request_"},
+            "offer": {"ref":"CredentialFormatDataMessagePayload_CredentialFormats.offer_"},
+            "credential": {"ref":"CredentialFormatDataMessagePayload_CredentialFormats.credential_"},
+            "proposalAttributes": {"dataType":"array","array":{"dataType":"refObject","ref":"CredentialPreviewAttributeOptions"}},
+            "offerAttributes": {"dataType":"array","array":{"dataType":"nestedObjectLiteral","nestedProperties":{"value":{"dataType":"string","required":true},"name":{"dataType":"string","required":true},"mime-type":{"dataType":"string"}}}},
         },
         "additionalProperties": false,
     },
@@ -3545,6 +3702,44 @@ export function RegisterRoutes(app: Router) {
             }
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/didcomm/proofs/:proofExchangeId/format-data',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
+            ...(fetchMiddlewares<RequestHandler>(ProofsController)),
+            ...(fetchMiddlewares<RequestHandler>(ProofsController.prototype.getFormatDateForProofExchange)),
+
+            async function ProofsController_getFormatDateForProofExchange(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                    proofExchangeId: {"in":"path","name":"proofExchangeId","required":true,"ref":"RecordId"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<ProofsController>(ProofsController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+              await templateService.apiHandler({
+                methodName: 'getFormatDateForProofExchange',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/didcomm/proofs/:proofExchangeId',
             authenticateMiddleware([{"tenants":["tenant"]}]),
             ...(fetchMiddlewares<RequestHandler>(ProofsController)),
@@ -4227,6 +4422,44 @@ export function RegisterRoutes(app: Router) {
 
               await templateService.apiHandler({
                 methodName: 'getCredentialById',
+                controller,
+                response,
+                next,
+                validatedArgs,
+                successStatus: undefined,
+              });
+              next()
+            } catch (err) {
+                return next(err);
+            }
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.get('/didcomm/credentials/:credentialExchangeId/format-data',
+            authenticateMiddleware([{"tenants":["tenant"]}]),
+            ...(fetchMiddlewares<RequestHandler>(CredentialsController)),
+            ...(fetchMiddlewares<RequestHandler>(CredentialsController.prototype.getFormatDateForCredentialExchange)),
+
+            async function CredentialsController_getFormatDateForCredentialExchange(request: ExRequest, response: ExResponse, next: any) {
+            const args: Record<string, TsoaRoute.ParameterSchema> = {
+                    request: {"in":"request","name":"request","required":true,"dataType":"object"},
+                    credentialExchangeId: {"in":"path","name":"credentialExchangeId","required":true,"ref":"RecordId"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = templateService.getValidatedArgs({ args, request, response });
+
+                const container: IocContainer = typeof iocContainer === 'function' ? (iocContainer as IocContainerFactory)(request) : iocContainer;
+
+                const controller: any = await container.get<CredentialsController>(CredentialsController);
+                if (typeof controller['setStatus'] === 'function') {
+                controller.setStatus(undefined);
+                }
+
+              await templateService.apiHandler({
+                methodName: 'getFormatDateForCredentialExchange',
                 controller,
                 response,
                 next,
