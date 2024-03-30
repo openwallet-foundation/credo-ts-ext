@@ -1,8 +1,8 @@
-import type { DidCommBasicMessagesRecord } from './BasicMessagesControllerTypes'
+import type { DidCommBasicMessageRecord } from './BasicMessagesControllerTypes'
 
 import { BasicMessageRecord, BasicMessageRole } from '@credo-ts/core'
 
-export const basicMessageRecordExample: DidCommBasicMessagesRecord = {
+export const basicMessageRecordExample: DidCommBasicMessageRecord = {
   id: '74bcf865-1fdc-45b4-b517-9def02dfd25f',
   createdAt: new Date('2022-08-18T08:38:40.216Z'),
   type: BasicMessageRecord.type,

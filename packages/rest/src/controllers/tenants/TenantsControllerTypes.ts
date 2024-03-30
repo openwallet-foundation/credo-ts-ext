@@ -24,3 +24,17 @@ export function tenantRecordToApiModel(record: CredoTenantRecord): TenantsRecord
     config,
   }
 }
+
+export interface TenantsCreateOptions {
+  config: {
+    label: string
+    connectionImageUrl?: string
+  }
+}
+
+export interface TenantsUpdateOptions {
+  config?: {
+    label?: string
+    connectionImageUrl?: string | null
+  }
+}

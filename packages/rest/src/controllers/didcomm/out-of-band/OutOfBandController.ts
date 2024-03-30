@@ -17,8 +17,8 @@ import { injectable } from 'tsyringe'
 import { RequestWithAgent } from '../../../authentication'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId } from '../../types'
-import { connectionsRecordExample } from '../connections/ConnectionsControllerExamples'
-import { connectionRecordToApiModel, type DidCommConnectionsRecord } from '../connections/ConnectionsControllerTypes'
+import { connectionRecordExample } from '../connections/ConnectionsControllerExamples'
+import { connectionRecordToApiModel, type DidCommConnectionRecord } from '../connections/ConnectionsControllerTypes'
 
 import {
   legacyInvitationExample,
@@ -181,9 +181,9 @@ export class OutOfBandController extends Controller {
    * Receive an out of band invitation. Supports urls as well as JSON messages. Also supports legacy
    * connection invitations
    */
-  @Example<{ outOfBandRecord: DidCommOutOfBandRecord; connectionRecord?: DidCommConnectionsRecord }>({
+  @Example<{ outOfBandRecord: DidCommOutOfBandRecord; connectionRecord?: DidCommConnectionRecord }>({
     outOfBandRecord: outOfBandRecordExample,
-    connectionRecord: connectionsRecordExample,
+    connectionRecord: connectionRecordExample,
   })
   @Post('/receive-invitation')
   public async receiveInvitation(
@@ -223,9 +223,9 @@ export class OutOfBandController extends Controller {
    * Accept a connection invitation as invitee (by sending a connection request message) for the connection with the specified connection id.
    * This is not needed when auto accepting of connections is enabled.
    */
-  @Example<{ outOfBandRecord: DidCommOutOfBandRecord; connectionRecord?: DidCommConnectionsRecord }>({
+  @Example<{ outOfBandRecord: DidCommOutOfBandRecord; connectionRecord?: DidCommConnectionRecord }>({
     outOfBandRecord: outOfBandRecordExample,
-    connectionRecord: connectionsRecordExample,
+    connectionRecord: connectionRecordExample,
   })
   @Post('/:outOfBandId/accept-invitation')
   public async acceptInvitation(

@@ -3,20 +3,20 @@ import type { ConnectionStateChangedEvent } from '@credo-ts/core'
 
 import { ConnectionEventTypes, DidExchangeState } from '@credo-ts/core'
 import { randomUUID } from 'crypto'
-import { type Express } from 'express'
+import express from 'express'
 import { filter, first, firstValueFrom, timeout } from 'rxjs'
 import request from 'supertest'
 
 import { getTestAgent } from '../../../../../tests/utils/helpers'
-import { setupServer } from '../../../../server'
+import { setupApp } from '../../../../setup/setupApp'
 
 describe('OutOfBandController', () => {
-  let app: Express
+  const app = express()
   let agent: RestRootAgent
 
   beforeAll(async () => {
     agent = await getTestAgent('DIDComm Out Of Band REST Agent Test')
-    app = await setupServer(agent, { port: 3000 })
+    await setupApp({ agent, adminPort: 3000, baseApp: app })
   })
 
   afterAll(async () => {

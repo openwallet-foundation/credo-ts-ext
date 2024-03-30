@@ -10,7 +10,7 @@ import { basicMessageRecordExample } from './BasicMessagesControllerExamples'
 import {
   basicMessageRecordToApiModel,
   DidCommBasicMessagesSendOptions,
-  type DidCommBasicMessagesRecord,
+  type DidCommBasicMessageRecord,
 } from './BasicMessagesControllerTypes'
 
 @Tags('DIDComm Basic Messages')
@@ -24,7 +24,7 @@ export class DidCommBasicMessagesController extends Controller {
    * @param connectionId Connection identifier
    * @returns BasicMessageRecord[]
    */
-  @Example<DidCommBasicMessagesRecord[]>([basicMessageRecordExample])
+  @Example<DidCommBasicMessageRecord[]>([basicMessageRecordExample])
   @Get('/')
   public async findBasicMessagesByQuery(
     @Request() request: RequestWithAgent,
@@ -32,7 +32,7 @@ export class DidCommBasicMessagesController extends Controller {
     @Query('role') role?: BasicMessageRole,
     @Query('threadId') threadId?: ThreadId,
     @Query('parentThreadId') parentThreadId?: ThreadId,
-  ): Promise<DidCommBasicMessagesRecord[]> {
+  ): Promise<DidCommBasicMessageRecord[]> {
     const basicMessageRecords = await request.user.agent.basicMessages.findAllByQuery({
       connectionId,
       role,
@@ -49,7 +49,7 @@ export class DidCommBasicMessagesController extends Controller {
    * @param content The content of the message
    * @returns BasicMessageRecord
    */
-  @Example<DidCommBasicMessagesRecord>(basicMessageRecordExample)
+  @Example<DidCommBasicMessageRecord>(basicMessageRecordExample)
   @Post('/send')
   public async sendMessage(@Request() request: RequestWithAgent, @Body() body: DidCommBasicMessagesSendOptions) {
     try {

@@ -10,16 +10,16 @@ import {
   ProofRole,
   ProofState,
 } from '@credo-ts/core'
-import { type Express } from 'express'
+import express from 'express'
 import { filter, first, firstValueFrom, timeout } from 'rxjs'
 import request from 'supertest'
 
 import { getTestAgent } from '../../../../../tests/utils/helpers'
-import { setupServer } from '../../../../server'
+import { setupApp } from '../../../../setup/setupApp'
 import { testAnonCredsSchema } from '../../../anoncreds/__tests__/fixtures'
 
 describe('ProofsController', () => {
-  let app: Express
+  const app = express()
   let agent: RestRootAgent
   let inviterConnectionId: string
   let receiverConnectionId: string
@@ -28,7 +28,7 @@ describe('ProofsController', () => {
 
   beforeAll(async () => {
     agent = await getTestAgent('DIDComm Proofs REST Agent Test')
-    app = await setupServer(agent, { port: 3000 })
+    await setupApp({ agent, adminPort: 3000, baseApp: app })
 
     const inviterOutOfBandRecord = await agent.oob.createInvitation()
     let { connectionRecord: receiverConnection } = await agent.oob.receiveInvitation(
@@ -193,5 +193,78 @@ describe('ProofsController', () => {
     expect(acceptResponse.statusCode).toBe(200)
 
     await proofAcked
+
+    const formatData = await request(app).get(`/didcomm/proofs/${receiverExchangeResponse.body[0].id}/format-data`)
+    expect(formatData.body).toEqual({
+      request: {
+        anoncreds: {
+          name: 'proof',
+          version: '1.0',
+          nonce: expect.any(String),
+          requested_attributes: {
+            prop1: {
+              restrictions: [
+                {
+                  cred_def_id: 'credential-definition:_p5hLM-uQa1zWnn3tBlSZjLHN3_jrHOq48HZg9x0WNU',
+                },
+              ],
+              name: 'prop1',
+            },
+          },
+          requested_predicates: {},
+        },
+      },
+      presentation: {
+        anoncreds: {
+          proof: {
+            proofs: [
+              {
+                primary_proof: {
+                  eq_proof: {
+                    revealed_attrs: {
+                      prop1: expect.any(String),
+                    },
+                    a_prime: expect.any(String),
+                    e: expect.any(String),
+                    v: expect.any(String),
+                    m: {
+                      prop2: expect.any(String),
+                      master_secret: expect.any(String),
+                    },
+                    m2: expect.any(String),
+                  },
+                  ge_proofs: [],
+                },
+                non_revoc_proof: null,
+              },
+            ],
+            aggregated_proof: {
+              c_hash: expect.any(String),
+              c_list: [expect.any(Array)],
+            },
+          },
+          requested_proof: {
+            revealed_attrs: {
+              prop1: {
+                sub_proof_index: 0,
+                raw: 'Alice',
+                encoded: '27034640024117331033063128044004318218486816931520886405535659934417438781507',
+              },
+            },
+            self_attested_attrs: {},
+            unrevealed_attrs: {},
+            predicates: {},
+          },
+          identifiers: [
+            {
+              schema_id: 'schema:gSl0JkGIcmRif593Q6XYGsJndHGOzm1jWRFa-Lwrz9o',
+              cred_def_id: 'credential-definition:_p5hLM-uQa1zWnn3tBlSZjLHN3_jrHOq48HZg9x0WNU',
+              rev_reg_id: null,
+              timestamp: null,
+            },
+          ],
+        },
+      },
+    })
   })
 })

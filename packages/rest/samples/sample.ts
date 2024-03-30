@@ -1,21 +1,32 @@
-import type { ServerConfig } from '../src/utils/ServerConfig'
+import type { CredoRestAgentConfig } from '../src'
 
-import { startServer } from '../src/index'
-import { setupAgent } from '../src/utils/agent'
+import { LogLevel } from '@credo-ts/core'
+
+import { setupApp } from '../src'
 
 const run = async () => {
-  const agent = await setupAgent({
-    httpInboundTransportPort: 3001,
-    endpoints: ['http://localhost:3001'],
-    name: 'Aries Test Agent',
+  const { start } = await setupApp({
+    adminPort: 3000,
+    enableCors: true,
+
+    agent: {
+      label: 'Aries Test Agent',
+      inboundTransports: [
+        {
+          transport: 'http',
+          port: 3001,
+        },
+      ],
+      logLevel: LogLevel.debug,
+      endpoints: ['http://localhost:3001'],
+      walletConfig: {
+        id: 'test-agent',
+        key: 'test-agent',
+      },
+    } satisfies CredoRestAgentConfig,
   })
 
-  const conf: ServerConfig = {
-    port: 3000,
-    cors: true,
-  }
-
-  await startServer(agent, conf)
+  start()
 }
 
 run()

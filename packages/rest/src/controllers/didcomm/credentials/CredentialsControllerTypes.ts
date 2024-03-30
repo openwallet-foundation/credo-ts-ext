@@ -8,13 +8,14 @@ import type {
   CredentialRole,
   CredentialState,
   CredentialExchangeRecord as CredoCredentialExchangeRecord,
+  GetCredentialFormatDataReturn,
 } from '@credo-ts/core'
 import type { PlaintextMessage } from '@credo-ts/core/build/types'
 
 type CredentialFormats = [LegacyIndyCredentialFormat, AnonCredsCredentialFormat]
 type CredentialProtocolVersion = 'v1' | 'v2'
 
-export interface DidCommCredentialsExchangeRecord extends CredoBaseRecord {
+export interface DidCommCredentialExchangeRecord extends CredoBaseRecord {
   connectionId?: RecordId
   threadId: ThreadId
   parentThreadId?: ThreadId
@@ -31,9 +32,14 @@ export interface DidCommCredentialsExchangeRecord extends CredoBaseRecord {
   credentialAttributes?: CredentialPreviewAttributeOptions[]
 }
 
+export interface DidCommCredentialExchangeWithFormatData {
+  credentialExchange: DidCommCredentialExchangeRecord
+  formatData?: GetCredentialFormatDataReturn<CredentialFormats>
+}
+
 export function credentialExchangeRecordToApiModel(
   record: CredoCredentialExchangeRecord,
-): DidCommCredentialsExchangeRecord {
+): DidCommCredentialExchangeRecord {
   return {
     // Base Record
     id: record.id,
@@ -91,7 +97,7 @@ export interface CreateOfferOptions {
 
 export interface DidCommCredentialsCreateOfferResponse {
   message: PlaintextMessage
-  credentialExchange: DidCommCredentialsExchangeRecord
+  credentialExchange: DidCommCredentialExchangeRecord
 }
 
 export interface OfferCredentialOptions {
@@ -112,4 +118,13 @@ export interface AcceptCredentialRequestOptions {
   credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptRequest'>
   autoAcceptCredential?: AutoAcceptCredential
   comment?: string
+}
+
+export interface DidCommCredentialsGetFormatDataResponse
+  extends Omit<GetCredentialFormatDataReturn<CredentialFormats>, 'offerAttributes'> {
+  offerAttributes?: Array<{
+    'mime-type'?: string
+    name: string
+    value: string
+  }>
 }
