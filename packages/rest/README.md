@@ -33,7 +33,7 @@ The Credo REST API is the most convenient way to get started with Credo in the c
 - ⭐ **Endpoints** to work with both DIDComm and OpenID4VC.
 - 💻 **CLI** that makes it super easy to start an instance of the REST API.
 - 🌐 **Interoperable** with all major Aries implementations.
-- 🧑 **Multi-tenant** Use the same agent and server for as many tenants as you want. Each tenants has it's own separate encrypted storage.
+- 🧑 **Multi-tenant** Use the same agent and server for as many tenants as you want. Each tenant has its own separate encrypted storage.
 
 ### Quick start
 
