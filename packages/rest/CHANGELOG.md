@@ -1,5 +1,30 @@
 # Changelog
 
+## [0.10.0](https://www.github.com/openwallet-foundation/credo-ts-ext/compare/rest-v0.9.5...rest-v0.10.0) (2024-03-31)
+
+
+### ⚠ BREAKING CHANGES
+
+* **rest:** openid4vc (#260)
+* **rest:** Signed-off-by: Matthew Dean <matthew.dean@digicatapult.org.uk> Signed-off-by: Timo Glastra <timo@animo.id> Co-authored-by: Matthew Dean <matthew.dean@digicatapult.org.uk> Co-authored-by: Ariel Gentile <gentilester@gmail.com>
+* update to credo 0.5 (#239)
+
+### Features
+
+* **rest:** auth improvements ([#263](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/263)) ([791d6ee](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/791d6ee2e88d4882b72d163aad09bf654bbe6374))
+* **rest:** openid4vc ([#260](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/260)) ([e3e4026](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/e3e4026e7ac5f06358476a869b361a40304d8f82))
+* **rest:** upgrade to credo 0.5 ([#256](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/256)) ([3849aec](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/3849aecc5501444cb4e9720f639f7605bcfca7ec))
+
+
+### Bug Fixes
+
+* **rest:** app setup config ([#262](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/262)) ([d09b153](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/d09b153cc8d846ff513b7cfd32df233154239419))
+
+
+### Miscellaneous Chores
+
+* update to credo 0.5 ([#239](https://www.github.com/openwallet-foundation/credo-ts-ext/issues/239)) ([16e44ec](https://www.github.com/openwallet-foundation/credo-ts-ext/commit/16e44ec3134bf401bc98e89918a3cc5d223f90d6))
+
 ### [0.9.5](https://www.github.com/hyperledger/aries-framework-javascript-ext/compare/rest-v0.9.4...rest-v0.9.5) (2023-06-29)
 
 
