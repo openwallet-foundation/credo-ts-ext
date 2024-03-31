@@ -1,11 +1,12 @@
-import type { TenantsRecord } from './TenantsControllerTypes'
+import type { TenantRecord } from './TenantsControllerTypes'
 import type { VersionString } from '@credo-ts/core'
 
-import { Body, Controller, Delete, Get, Path, Post, Put, Query, Request, Route, Security, Tags } from 'tsoa'
+import { Body, Controller, Delete, Example, Get, Path, Post, Put, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RequestWithRootTenantAgent } from '../../authentication'
+import { RequestWithRootTenantAgent } from '../../tenantMiddleware'
 
+import { tenantRecordExample } from './TenantControllerExamples'
 import { tenantRecordToApiModel, TenantsCreateOptions, TenantsUpdateOptions } from './TenantsControllerTypes'
 
 @Tags('Tenants')
@@ -17,10 +18,11 @@ export class TenantsController extends Controller {
    * create new tenant
    */
   @Post('/')
+  @Example<TenantRecord>(tenantRecordExample)
   public async createTenant(
     @Request() request: RequestWithRootTenantAgent,
     @Body() body: TenantsCreateOptions,
-  ): Promise<TenantsRecord> {
+  ): Promise<TenantRecord> {
     const tenant = await request.user.agent.modules.tenants.createTenant({
       config: body.config,
     })
@@ -32,10 +34,11 @@ export class TenantsController extends Controller {
    * get tenant by id
    */
   @Get('/{tenantId}')
+  @Example<TenantRecord>(tenantRecordExample)
   public async getTenant(
     @Request() request: RequestWithRootTenantAgent,
     @Path('tenantId') tenantId: string,
-  ): Promise<TenantsRecord> {
+  ): Promise<TenantRecord> {
     const tenant = await request.user.agent.modules.tenants.getTenantById(tenantId)
 
     return tenantRecordToApiModel(tenant)
@@ -48,11 +51,12 @@ export class TenantsController extends Controller {
    * If you want to unset an non-required value, you can pass `null`.
    */
   @Put('/{tenantId}')
+  @Example<TenantRecord>(tenantRecordExample)
   public async updateTenant(
     @Request() request: RequestWithRootTenantAgent,
     @Path('tenantId') tenantId: string,
     @Body() body: TenantsUpdateOptions,
-  ): Promise<TenantsRecord> {
+  ): Promise<TenantRecord> {
     const tenantRecord = await request.user.agent.modules.tenants.getTenantById(tenantId)
 
     tenantRecord.config = {
@@ -88,11 +92,12 @@ export class TenantsController extends Controller {
    * get tenants by query
    */
   @Get('/')
+  @Example<TenantRecord[]>([tenantRecordExample])
   public async getTenantsByQuery(
     @Request() request: RequestWithRootTenantAgent,
     @Query('label') label?: string,
     @Query('storageVersion') storageVersion?: string,
-  ): Promise<TenantsRecord[]> {
+  ): Promise<TenantRecord[]> {
     const tenants = await request.user.agent.modules.tenants.findTenantsByQuery({
       label,
       storageVersion: storageVersion as VersionString,

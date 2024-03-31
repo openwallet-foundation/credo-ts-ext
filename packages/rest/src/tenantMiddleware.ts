@@ -29,15 +29,15 @@ export type RequestWithRootTenantAgent = Request & {
 export async function expressAuthentication(request: Request, securityName: string, scopes?: string[]) {
   if (securityName === 'tenants') {
     const rootAgent = container.resolve<RestRootAgent | RestRootAgentWithTenants>(Agent)
-    let tenantId = request.headers['x-tenant-id']
+    let tenantId = request.headers['x-tenant-id'] || 'default'
 
     // If tenants module is not enabled, we always return the root tenant agent
     if (!('tenants' in rootAgent.modules)) {
-      if (tenantId) {
+      if (tenantId !== 'default') {
         return Promise.reject(
           new StatusException(
-            'x-tenant-id header was provided, but tenant module is not enabled. Use --multi-tenant to enable multitenant capabilities',
-            401,
+            "x-tenant-id header with value different than 'default' was provided. When the tenant module is not enabled, only 'default' can be used. Use --multi-tenant to enable multi-tenant capabilities",
+            400,
           ),
         )
       }
@@ -45,8 +45,8 @@ export async function expressAuthentication(request: Request, securityName: stri
       if (scopes?.includes('admin')) {
         return Promise.reject(
           new StatusException(
-            'Unable to use tenant admin features without tenant module enabled. Use --multi-tenant to enable multitenant capabilities',
-            401,
+            'Unable to use tenant admin features without tenant module enabled. Use --multi-tenant to enable multi-tenant capabilities',
+            400,
           ),
         )
       }
@@ -66,8 +66,8 @@ export async function expressAuthentication(request: Request, securityName: stri
       if (!scopes || (!scopes.includes('admin') && !scopes.includes('default'))) {
         return Promise.reject(
           new StatusException(
-            'Default tenant is not authorized to access this resource. Set the x-tenant-id to a specific tenant id to access this resource.',
-            401,
+            'This endpoint cannot be called by the default tenant. Set the x-tenant-id header to a specific tenant id to access this endpoint.',
+            400,
           ),
         )
       }
@@ -77,8 +77,8 @@ export async function expressAuthentication(request: Request, securityName: stri
       if (!scopes || !scopes.includes('tenant')) {
         return Promise.reject(
           new StatusException(
-            `Tenant ${tenantId} is not authorized to access this resource. Only the default tenant can access this resource. Omit the x-tenant-id header, or set the value to 'default'`,
-            401,
+            `This endpoint cannot be called by a specific tenant. Only the default tenant can access this resource. Omit the x-tenant-id header, or set the value to 'default'`,
+            400,
           ),
         )
       }

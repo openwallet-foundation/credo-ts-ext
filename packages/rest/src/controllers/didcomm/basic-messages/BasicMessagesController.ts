@@ -2,7 +2,7 @@ import { RecordNotFoundError, BasicMessageRole } from '@credo-ts/core'
 import { Body, Controller, Example, Get, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RequestWithAgent } from '../../../authentication'
+import { RequestWithAgent } from '../../../tenantMiddleware'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId, ThreadId } from '../../types'
 

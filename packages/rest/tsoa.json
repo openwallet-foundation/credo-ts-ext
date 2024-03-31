@@ -6,11 +6,19 @@
     "name": "Credo REST API",
     "outputDirectory": "src/generated",
     "specVersion": 3,
-    "securityDefinitions": {
-      "tenants": {
-        "type": "apiKey",
-        "name": "x-tenant-id",
-        "in": "header"
+    "specMerging": "recursive",
+    "spec": {
+      "components": {
+        "parameters": {
+          "tenant": {
+            "in": "header",
+            "name": "x-tenant-id",
+            "description": "Optional header to set the context to a specific tenant. Only needed when the --multi-tenant feature is enabled. Default value is 'default'",
+            "schema": {
+              "type": "string"
+            }
+          }
+        }
       }
     }
   },
@@ -18,6 +26,6 @@
     "middlewareTemplate": "src/middlewareTemplate.ts.hbs",
     "routesDir": "src/generated",
     "iocModule": "./src/utils/tsyringeTsoaIocContainer",
-    "authenticationModule": "./src/authentication.ts"
+    "authenticationModule": "./src/tenantMiddleware.ts"
   }
 }

@@ -28,7 +28,7 @@ import { DidController } from './../controllers/did/DidsController';
 import { AnonCredsController } from './../controllers/anoncreds/AnonCredsController';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
 import { AgentController } from './../controllers/agent/AgentController';
-import { expressAuthentication } from './../authentication';
+import { expressAuthentication } from './../tenantMiddleware';
 // @ts-ignore - no great way to install types from subpackage
 import { iocContainer } from './../utils/tsyringeTsoaIocContainer';
 import type { IocContainer, IocContainerFactory } from '@tsoa/runtime';
@@ -60,7 +60,7 @@ const models: TsoaRoute.Models = {
         "type": {"dataType":"string","validators":{}},
     },
     // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-    "TenantsRecord": {
+    "TenantRecord": {
         "dataType": "refObject",
         "properties": {
             "id": {"ref":"RecordId","required":true},

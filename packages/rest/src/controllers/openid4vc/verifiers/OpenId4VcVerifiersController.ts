@@ -2,7 +2,7 @@ import { OpenId4VcVerifierRepository } from '@credo-ts/openid4vc/build/openid4vc
 import { Controller, Route, Tags, Security, Post, Request, Body, Delete, Path, Example, Get, Query } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RequestWithAgent } from '../../../authentication'
+import { RequestWithAgent } from '../../../tenantMiddleware'
 import { apiErrorResponse } from '../../../utils/response'
 
 import { openId4VcIssuerRecordExample } from './OpenId4VcVerifiersControllerExamples'

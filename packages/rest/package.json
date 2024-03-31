@@ -21,7 +21,7 @@
     "credo-rest": "bin/credo-rest.js"
   },
   "scripts": {
-    "tsoa": "tsoa spec-and-routes",
+    "tsoa": "ts-node ./scripts/generate-spec-and-routes.ts",
     "dev": "yarn tsoa && tsnd --respawn samples/sampleWithApp.ts",
     "sample": "yarn tsoa && tsnd --respawn samples/sample.ts",
     "sample:with-app": "yarn tsoa && tsnd --respawn samples/sampleWithApp.ts",

@@ -4,7 +4,7 @@ import { DidExchangeState, RecordNotFoundError } from '@credo-ts/core'
 import { Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RequestWithAgent } from '../../../authentication'
+import { RequestWithAgent } from '../../../tenantMiddleware'
 import { apiErrorResponse } from '../../../utils/response'
 import { Did } from '../../did/DidsControllerTypes'
 import { RecordId } from '../../types'
