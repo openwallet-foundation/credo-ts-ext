@@ -1,4 +1,5 @@
-FROM node:20 as all-dependencies
+# Node 20.12 has some issues with node-gyp when running yarn install
+FROM node:20.11 as all-dependencies
 
 WORKDIR /all-dependencies
 
@@ -16,6 +17,7 @@ FROM all-dependencies as build
 
 # Copy remaining files for rest package and build the JS files
 COPY tsconfig.build.json tsconfig.build.json
+COPY tsconfig.json tsconfig.json
 COPY packages/rest packages/rest
 WORKDIR /all-dependencies/packages/rest
 RUN yarn build
@@ -32,7 +34,7 @@ COPY yarn.lock yarn.lock
 
 RUN yarn install --production
 
-FROM node:20 as final
+FROM node:20.11 as final
 
 WORKDIR /app
 
