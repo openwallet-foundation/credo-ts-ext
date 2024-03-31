@@ -1,6 +1,6 @@
 import type { CredoRestSetupAppConfig } from './CredoRestConfig'
-import type { RequestWithAgent } from '../authentication'
 import type { ApiError } from '../error'
+import type { RequestWithAgent } from '../tenantMiddleware'
 import type { NextFunction, Request, Response } from 'express'
 import type { Server as HttpServer } from 'http'
 import type { Socket } from 'net'

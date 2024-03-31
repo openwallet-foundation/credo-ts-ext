@@ -3,7 +3,7 @@ import type { AgentInfo } from './AgentControllerTypes'
 import { Controller, Example, Get, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RequestWithRootAgent } from '../../authentication'
+import { RequestWithRootAgent } from '../../tenantMiddleware'
 
 import { agentInfoExample } from './AgentControllerExamples'
 

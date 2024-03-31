@@ -16,7 +16,7 @@ import type {
 import { Body, Controller, Example, Response, Get, Path, Post, Route, Tags, Security, Request } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RequestWithAgent } from '../../authentication'
+import { RequestWithAgent } from '../../tenantMiddleware'
 import { alternativeResponse } from '../../utils/response'
 
 import {

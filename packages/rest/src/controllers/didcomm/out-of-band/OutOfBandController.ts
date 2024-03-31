@@ -14,7 +14,7 @@ import { parseMessageType, supportsIncomingMessageType } from '@credo-ts/core/bu
 import { Body, Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
-import { RequestWithAgent } from '../../../authentication'
+import { RequestWithAgent } from '../../../tenantMiddleware'
 import { apiErrorResponse } from '../../../utils/response'
 import { RecordId } from '../../types'
 import { connectionRecordExample } from '../connections/ConnectionsControllerExamples'
