@@ -32,11 +32,11 @@
   "inboundTransport": [
     {
       "transport": "http",
-      "port": 5000
+      "port": 6000
     },
     {
       "transport": "ws",
-      "port": 5001
+      "port": 6001
     }
   ],
   "outboundTransport": ["http", "ws"],
