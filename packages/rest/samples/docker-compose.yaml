@@ -13,8 +13,8 @@ services:
       - 3000:3000
 
       # DIDComm
-      - 5000:5000
-      - 5001:5001
+      - 6000:6000
+      - 6001:6001
 
     # Use the local config file in the container
     volumes:
