@@ -31,6 +31,8 @@ import {
   KeyDidResolver,
   JwkDidResolver,
   PeerDidResolver,
+  CacheModule,
+  InMemoryLruCache,
 } from '@credo-ts/core'
 import {
   IndyVdrAnonCredsRegistry,
@@ -151,11 +153,16 @@ export function getAgentModules(options: {
     tenants?: TenantsModule<typeof baseModules>
     indyVdr?: IndyVdrModule
     cheqd?: CheqdModule
+    cache?: CacheModule
   } = baseModules
 
   if (options.multiTenant) {
     modules.tenants = new TenantsModule({
       sessionLimit: Infinity,
+    })
+    // Disable SingleContextStorageLruCache
+    modules.cache = new CacheModule({
+      cache: new InMemoryLruCache({ limit: 100 }),
     })
   }
 
