@@ -135,6 +135,7 @@ export function getAgentModules(options: {
                 // eslint-disable-next-line @typescript-eslint/no-explicit-any
                 disclosureFrame: firstCredential.disclosureFrame as any,
                 hashingAlgorithm: 'sha-256',
+                credentialSupportedId: 'test',
               }
             }
 

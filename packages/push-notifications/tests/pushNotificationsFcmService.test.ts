@@ -196,5 +196,12 @@ function createInboundMessageContext<T extends AgentMessage>(message: T) {
     } {
       throw new Error('Function not implemented.')
     },
+    receivedAt: new Date(),
+    setMessageHandler: () => {
+      return
+    },
+    setResponseMessage: () => {
+      return
+    },
   }
 }
