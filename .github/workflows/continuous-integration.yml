@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   ci-trigger:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     outputs:
       triggered: ${{ steps.check.outputs.triggered }}
     steps:
@@ -35,7 +35,7 @@ jobs:
           echo "::set-output name=triggered::${SHOULD_RUN}"
 
   validate:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Validate
     needs: [ci-trigger]
     if: needs.ci-trigger.outputs.triggered == 'true'
@@ -64,7 +64,7 @@ jobs:
         run: yarn check-types
 
   integration-test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Integration Tests
     needs: [ci-trigger]
     if: needs.ci-trigger.outputs.triggered == 'true'
@@ -90,8 +90,10 @@ jobs:
       - name: Run tests
         run: yarn test --coverage
 
-      - uses: codecov/codecov-action@v1
+      - uses: codecov/codecov-action@v4
         if: always()
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
 
   package-finder:
     runs-on: ubuntu-latest
