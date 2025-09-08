@@ -41,10 +41,10 @@ jobs:
     if: needs.ci-trigger.outputs.triggered == 'true'
     steps:
       - name: Checkout credo-ts-ext
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node v18
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org/'
@@ -75,10 +75,10 @@ jobs:
 
     steps:
       - name: Checkout credo-ts-ext
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: ${{ matrix.node-version }}
           registry-url: 'https://registry.npmjs.org/'
@@ -90,7 +90,7 @@ jobs:
       - name: Run tests
         run: yarn test --coverage
 
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v5
         if: always()
 
   package-finder:
@@ -101,10 +101,10 @@ jobs:
       packages: ${{ steps.get-packages.outputs.packages }}
     steps:
       - name: Checkout credo-ts-ext
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
 
       - name: Setup node v18
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org/'
@@ -140,11 +140,11 @@ jobs:
 
       # Initiate release process if release was created
       - name: Checkout credo-ts-ext
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         if: ${{ steps.release-please.outputs.release_created }}
 
       - name: Setup node v18
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 18
           registry-url: 'https://registry.npmjs.org/'
