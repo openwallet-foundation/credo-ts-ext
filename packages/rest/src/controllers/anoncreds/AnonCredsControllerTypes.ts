@@ -100,8 +100,7 @@ export interface AnonCredsGetCredentialDefinitionSuccessResponse {
 }
 
 export interface AnonCredsRegisterCredentialDefinitionOptions
-  extends AnonCredsRegisterCredentialDefinitionApiOptions,
-    AnyJsonObject {}
+  extends AnonCredsRegisterCredentialDefinitionApiOptions, AnyJsonObject {}
 
 export interface AnonCredsRegisterCredentialDefinitionInput extends CredoAnonCredsCredentialDefinitionOptions {}
 

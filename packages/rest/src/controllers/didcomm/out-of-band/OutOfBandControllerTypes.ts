@@ -10,8 +10,10 @@ import type {
 } from '@credo-ts/core'
 import type { PlaintextMessage } from '@credo-ts/core/build/types'
 
-export interface DidCommOutOfBandCreateInvitationOptions
-  extends Omit<CreateOutOfBandInvitationConfig, 'routing' | 'appendedAttachments' | 'messages'> {
+export interface DidCommOutOfBandCreateInvitationOptions extends Omit<
+  CreateOutOfBandInvitationConfig,
+  'routing' | 'appendedAttachments' | 'messages'
+> {
   messages?: Array<PlaintextMessage>
 }
 
@@ -21,8 +23,10 @@ export interface DidCommOutOfBandCreateInvitationResponse {
   invitationUrl: string
 }
 
-export interface DidCommOutOfBandCreateLegacyConnectionInvitationOptions
-  extends Omit<CreateLegacyInvitationConfig, 'routing'> {}
+export interface DidCommOutOfBandCreateLegacyConnectionInvitationOptions extends Omit<
+  CreateLegacyInvitationConfig,
+  'routing'
+> {}
 
 export interface DidCommOutOfBandCreateLegacyConnectionlessInvitationOptions {
   message: PlaintextMessage

@@ -60,8 +60,10 @@ export function proofExchangeRecordToApiModel(record: CredoProofExchangeRecord):
 
 interface AcceptAnonCredsProposalOptions extends NonNullable<AnonCredsProofFormat['proofFormats']['acceptProposal']> {}
 
-export interface DidCommProofsProposeProofOptions
-  extends Omit<ProposeProofOptions, 'proofFormats' | 'protocolVersion'> {
+export interface DidCommProofsProposeProofOptions extends Omit<
+  ProposeProofOptions,
+  'proofFormats' | 'protocolVersion'
+> {
   protocolVersion: ProofProtocolVersion
   proofFormats: {
     indy?: AnonCredsProposeProofFormat
@@ -69,8 +71,10 @@ export interface DidCommProofsProposeProofOptions
   }
 }
 
-export interface DidCommProofsAcceptProposalOptions
-  extends Omit<AcceptProofProposalOptions, 'proofFormats' | 'proofRecordId'> {
+export interface DidCommProofsAcceptProposalOptions extends Omit<
+  AcceptProofProposalOptions,
+  'proofFormats' | 'proofRecordId'
+> {
   protocolVersion: ProofProtocolVersion
   proofFormats?: {
     indy?: AcceptAnonCredsProposalOptions
@@ -83,16 +87,20 @@ export interface DidCommProofsCreateRequestResponse {
   proofExchange: DidCommProofExchangeRecord
 }
 
-export interface DidCommProofsAcceptRequestOptions
-  extends Omit<AcceptProofRequestOptions, 'proofFormats' | 'proofRecordId'> {
+export interface DidCommProofsAcceptRequestOptions extends Omit<
+  AcceptProofRequestOptions,
+  'proofFormats' | 'proofRecordId'
+> {
   proofFormats?: {
     indy?: AnonCredsSelectedCredentials
     anoncreds?: AnonCredsSelectedCredentials
   }
 }
 
-export interface DidCommProofsCreateRequestOptions
-  extends Omit<CreateProofRequestOptions, 'proofFormats' | 'protocolVersion'> {
+export interface DidCommProofsCreateRequestOptions extends Omit<
+  CreateProofRequestOptions,
+  'proofFormats' | 'protocolVersion'
+> {
   protocolVersion: ProofProtocolVersion
   proofFormats: {
     indy?: AnonCredsRequestProofFormatOptions

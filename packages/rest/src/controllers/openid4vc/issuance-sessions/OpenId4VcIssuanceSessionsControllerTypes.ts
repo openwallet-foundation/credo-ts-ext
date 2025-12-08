@@ -192,8 +192,10 @@ export interface OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions {
  *   ]
  * }
  */
-export interface OpenId4VcIssuanceSessionsCreateOfferOptions
-  extends Omit<OpenId4VciCreateCredentialOfferOptions, 'offeredCredentials'> {
+export interface OpenId4VcIssuanceSessionsCreateOfferOptions extends Omit<
+  OpenId4VciCreateCredentialOfferOptions,
+  'offeredCredentials'
+> {
   publicIssuerId: PublicIssuerId
   credentials: Array<OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions>
 }

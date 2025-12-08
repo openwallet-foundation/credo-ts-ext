@@ -120,8 +120,10 @@ export interface AcceptCredentialRequestOptions {
   comment?: string
 }
 
-export interface DidCommCredentialsGetFormatDataResponse
-  extends Omit<GetCredentialFormatDataReturn<CredentialFormats>, 'offerAttributes'> {
+export interface DidCommCredentialsGetFormatDataResponse extends Omit<
+  GetCredentialFormatDataReturn<CredentialFormats>,
+  'offerAttributes'
+> {
   offerAttributes?: Array<{
     'mime-type'?: string
     name: string

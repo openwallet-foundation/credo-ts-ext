@@ -96,8 +96,7 @@ export function openId4VcVerificationSessionRecordToApiModel(
  *   }
  * }
  */
-export interface OpenId4VcVerificationSessionsCreateRequestOptions
-  extends OpenId4VcSiopCreateAuthorizationRequestOptions {
+export interface OpenId4VcVerificationSessionsCreateRequestOptions extends OpenId4VcSiopCreateAuthorizationRequestOptions {
   publicVerifierId: PublicVerifierId
 }
 
