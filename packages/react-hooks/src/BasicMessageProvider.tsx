@@ -2,7 +2,7 @@ import type { RecordsState } from './recordUtils'
 import type { Agent } from '@credo-ts/core'
 import type { PropsWithChildren } from 'react'
 
-import { BasicMessageRecord } from '@credo-ts/core'
+import { DidCommBasicMessageRecord } from '@credo-ts/didcomm'
 import { useState, createContext, useContext, useEffect, useMemo } from 'react'
 import * as React from 'react'
 
@@ -15,7 +15,7 @@ import {
   addRecord,
 } from './recordUtils'
 
-const BasicMessageContext = createContext<RecordsState<BasicMessageRecord> | undefined>(undefined)
+const BasicMessageContext = createContext<RecordsState<DidCommBasicMessageRecord> | undefined>(undefined)
 
 export const useBasicMessages = () => {
   const basicMessageContext = useContext(BasicMessageContext)
@@ -25,7 +25,7 @@ export const useBasicMessages = () => {
   return basicMessageContext
 }
 
-export const useBasicMessagesByConnectionId = (connectionId: string): BasicMessageRecord[] => {
+export const useBasicMessagesByConnectionId = (connectionId: string): DidCommBasicMessageRecord[] => {
   const { records: basicMessages } = useBasicMessages()
 
   const messages = useMemo(
@@ -41,13 +41,13 @@ interface Props {
 }
 
 const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, children }) => {
-  const [state, setState] = useState<RecordsState<BasicMessageRecord>>({
+  const [state, setState] = useState<RecordsState<DidCommBasicMessageRecord>>({
     records: [],
     loading: true,
   })
 
   const setInitialState = async () => {
-    const records = await agent.basicMessages.findAllByQuery({})
+    const records = await agent.didcomm.basicMessages.findAllByQuery({})
     setState({ records, loading: false })
   }
 
@@ -58,16 +58,16 @@ const BasicMessageProvider: React.FC<PropsWithChildren<Props>> = ({ agent, child
   useEffect(() => {
     if (state.loading) return
 
-    const basicMessageAdded$ = recordsAddedByType(agent, BasicMessageRecord).subscribe((record) =>
-      setState(addRecord(record, state)),
+    const basicMessageAdded$ = recordsAddedByType(agent, DidCommBasicMessageRecord).subscribe((record) =>
+      setState(addRecord<DidCommBasicMessageRecord>(record, state)),
     )
 
-    const basicMessageUpdated$ = recordsUpdatedByType(agent, BasicMessageRecord).subscribe((record) =>
-      setState(updateRecord(record, state)),
+    const basicMessageUpdated$ = recordsUpdatedByType(agent, DidCommBasicMessageRecord).subscribe((record) =>
+      setState(updateRecord<DidCommBasicMessageRecord>(record, state)),
     )
 
-    const basicMessageRemoved$ = recordsRemovedByType(agent, BasicMessageRecord).subscribe((record) =>
-      setState(removeRecord(record, state)),
+    const basicMessageRemoved$ = recordsRemovedByType(agent, DidCommBasicMessageRecord).subscribe((record) =>
+      setState(removeRecord<DidCommBasicMessageRecord>(record, state)),
     )
 
     return () => {
