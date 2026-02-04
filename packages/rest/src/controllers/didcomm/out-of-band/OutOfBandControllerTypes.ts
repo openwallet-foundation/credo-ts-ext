@@ -3,20 +3,20 @@ import type { CredoBaseRecord, RecordId } from '../../types'
 import type {
   CreateLegacyInvitationConfig,
   CreateOutOfBandInvitationConfig,
-  OutOfBandRecord as CredoOutOfBandRecord,
-  OutOfBandRole,
-  OutOfBandState,
+  DidCommOutOfBandRecord as CredoOutOfBandRecord,
+  DidCommOutOfBandRole,
+  DidCommOutOfBandState,
   ReceiveOutOfBandInvitationConfig,
-} from '@credo-ts/core'
-import type { PlaintextMessage } from '@credo-ts/core/build/types'
+  DidCommPlaintextMessage
+} from '@credo-ts/didcomm'
 
 export interface DidCommOutOfBandCreateInvitationOptions
   extends Omit<CreateOutOfBandInvitationConfig, 'routing' | 'appendedAttachments' | 'messages'> {
-  messages?: Array<PlaintextMessage>
+  messages?: Array<DidCommPlaintextMessage>
 }
 
 export interface DidCommOutOfBandCreateInvitationResponse {
-  invitation: PlaintextMessage
+  invitation: DidCommPlaintextMessage
   outOfBandRecord: DidCommOutOfBandRecord
   invitationUrl: string
 }
@@ -25,18 +25,18 @@ export interface DidCommOutOfBandCreateLegacyConnectionInvitationOptions
   extends Omit<CreateLegacyInvitationConfig, 'routing'> {}
 
 export interface DidCommOutOfBandCreateLegacyConnectionlessInvitationOptions {
-  message: PlaintextMessage
+  message: DidCommPlaintextMessage
   domain: string
 }
 
 export interface DidCommOutOfBandReceiveInvitationOptions extends Omit<ReceiveOutOfBandInvitationConfig, 'routing'> {
-  invitation: PlaintextMessage | string
+  invitation: DidCommPlaintextMessage | string
 }
 
 export interface DidCommOutOfBandAcceptInvitationOptions {
   autoAcceptConnection?: boolean
   reuseConnection?: boolean
-  label?: string
+  label: string
   alias?: string
   imageUrl?: string
   timeoutMs?: number
@@ -47,21 +47,21 @@ export interface DidCommOutOfBandRecord extends CredoBaseRecord {
   /**
    * The out of band invitation
    */
-  outOfBandInvitation: PlaintextMessage
+  outOfBandInvitation: DidCommPlaintextMessage
 
   /**
    * Our role in the out of band exchange
    *
    * @example receiver
    */
-  role: OutOfBandRole
+  role: DidCommOutOfBandRole
 
   /**
    * State of the out of band invitation
    *
    * @example await-response
    */
-  state: OutOfBandState
+  state: DidCommOutOfBandState
 
   /**
    * Alias for the connection(s) created based on the out of band invitation

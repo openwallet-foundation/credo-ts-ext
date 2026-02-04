@@ -1,26 +1,67 @@
+/** * WORKAROUND: Explicitly import askar-nodejs to register the native bindings.
+ * This is required in Credo v0.6.x to prevent 'keyGetJwkSecret' undefined errors.
+ * @see https://github.com/openwallet-foundation/credo-ts/issues/2597
+ */
+import '@openwallet-foundation/askar-nodejs'
 import type { InboundTransport, Transports } from './setup/CredoRestConfig'
-import type { AskarWalletPostgresStorageConfig } from '@credo-ts/askar'
+import type { AskarPostgresStorageConfig } from '@credo-ts/askar'
+import type { CheqdModuleConfigOptions } from '@credo-ts/cheqd'
+import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
 
-import { AutoAcceptCredential, AutoAcceptProof } from '@credo-ts/core'
-import process from 'process'
+import { DidCommAutoAcceptCredential, DidCommAutoAcceptProof } from '@credo-ts/didcomm'
+import process from 'node:process'
+// import * as process from 'process'.
 import yargs from 'yargs'
+import { hideBin } from 'yargs/helpers'
 
+// eslint-disable-next-line import/no-cycle
 import { setupApp } from './setup/setupApp'
 
-const parsed = yargs
+interface CliArgs {
+  label: string
+  'wallet-id': string
+  'wallet-key': string
+  'admin-port': number
+  'indy-ledger': IndyVdrPoolConfig[]
+  'cheqd-ledger': CheqdModuleConfigOptions
+  endpoint?: string[]
+  'log-level': number
+  'use-did-sov-prefix-where-allowed': boolean
+  'use-did-key-in-protocols': boolean
+  'outbound-transport': Transports[]
+  'multi-tenant': boolean
+  'inbound-transport': InboundTransport[]
+  'auto-accept-connections': boolean
+  'auto-accept-credentials': DidCommAutoAcceptCredential
+  'auto-accept-mediation-requests': boolean
+  'auto-accept-proofs': DidCommAutoAcceptProof
+  'auto-update-storage-on-startup': boolean
+  'connection-image-url'?: string
+  'webhook-url'?: string
+  'websocket-events': boolean
+  'storage-type': 'sqlite' | 'postgres'
+  'postgres-host'?: string
+  'postgres-username'?: string
+  'postgres-password'?: string
+}
+
+const parsed = yargs(hideBin(process.argv))
   .scriptName('credo-rest')
+  .config('config')
+  .alias('c', 'config')
+  .env('CREDO_REST')
   .command('start', 'Start Credo Rest agent')
   .option('label', {
     alias: 'l',
-    string: true,
+    type: 'string',
     demandOption: true,
   })
   .option('wallet-id', {
-    string: true,
+    type: 'string',
     demandOption: true,
   })
   .option('wallet-key', {
-    string: true,
+    type: 'string',
     demandOption: true,
   })
   .option('indy-ledger', {
@@ -31,22 +72,24 @@ const parsed = yargs
   .option('cheqd-ledger', {
     array: true,
     default: [],
-    coerce: (items: unknown[]) => items.map((i) => (typeof i === 'string' ? JSON.parse(i) : i)),
+    coerce: (items: unknown[]) => ({
+      networks: items.map((i) => (typeof i === 'string' ? JSON.parse(i) : i)),
+    }),
   })
   .option('endpoint', {
     array: true,
-    string: true,
+    type: 'string',
   })
   .option('log-level', {
-    number: true,
+    type: 'number',
     default: 3,
   })
   .option('use-did-sov-prefix-where-allowed', {
-    boolean: true,
+    type: 'boolean',
     default: false,
   })
   .option('use-did-key-in-protocols', {
-    boolean: true,
+    type: 'boolean',
     default: true,
   })
   .option('outbound-transport', {
@@ -55,74 +98,66 @@ const parsed = yargs
     array: true,
   })
   .option('multi-tenant', {
-    boolean: true,
+    type: 'boolean',
     default: false,
-    describe:
-      'Start the agent as a multi-tenant agent. Once enabled, all operations (except tenant management) must be performed under a specific tenant. Tenants can be created in the tenants controller (POST /tenants, see swagger UI), and the scope for a specific tenant can be set using the x-tenant-id header.',
+    describe: 'Start the agent as a multi-tenant agent.',
   })
   .option('inbound-transport', {
     array: true,
     default: [],
     coerce: (input: string[]) => {
-      // Configured using config object
-      if (typeof input[0] === 'object') return input as unknown as InboundTransport[]
+      if (typeof input[0] === 'object') return input
       if (input.length % 2 !== 0) {
-        throw new Error(
-          'Inbound transport should be specified as transport port pairs (e.g. --inbound-transport http 5000 ws 5001)',
-        )
+        throw new Error('Inbound transport should be specified as transport port pairs.')
       }
-
-      return input.reduce<Array<InboundTransport>>((transports, item, index) => {
-        const isEven = index % 2 === 0
-        // isEven means it is the transport
-        // transport port transport port
-        const isTransport = isEven
-
-        if (isTransport) {
-          transports.push({
-            transport: item as Transports,
-            port: Number(input[index + 1]),
-          })
+      return input.reduce<any[]>((transports, item, index) => {
+        if (index % 2 === 0) {
+          transports.push({ transport: item, port: Number(input[index + 1]) })
         }
-
         return transports
       }, [])
     },
   })
   .option('auto-accept-connections', {
-    boolean: true,
+    type: 'boolean',
     default: false,
   })
   .option('auto-accept-credentials', {
-    choices: [AutoAcceptCredential.Always, AutoAcceptCredential.Never, AutoAcceptCredential.ContentApproved] as const,
-    default: AutoAcceptCredential.ContentApproved,
+    choices: [
+      DidCommAutoAcceptCredential.Always,
+      DidCommAutoAcceptCredential.Never,
+      DidCommAutoAcceptCredential.ContentApproved,
+    ] as const,
+    default: DidCommAutoAcceptCredential.ContentApproved,
   })
   .option('auto-accept-mediation-requests', {
-    boolean: true,
+    type: 'boolean',
     default: false,
   })
   .option('auto-accept-proofs', {
-    choices: [AutoAcceptProof.Always, AutoAcceptProof.Never, AutoAcceptProof.ContentApproved] as const,
-    default: AutoAcceptProof.ContentApproved,
+    choices: [
+      DidCommAutoAcceptProof.Always,
+      DidCommAutoAcceptProof.Never,
+      DidCommAutoAcceptProof.ContentApproved,
+    ] as const,
+    default: DidCommAutoAcceptProof.ContentApproved,
   })
   .option('auto-update-storage-on-startup', {
-    boolean: true,
+    type: 'boolean',
     default: true,
   })
   .option('connection-image-url', {
-    string: true,
+    type: 'string',
   })
   .option('webhook-url', {
-    string: true,
+    type: 'string',
   })
   .option('websocket-events', {
-    boolean: true,
+    type: 'boolean',
     default: false,
-    describe:
-      'Enable websocket events on the admin API server. When a client connects, it will receive events from the agent.',
   })
   .option('admin-port', {
-    number: true,
+    type: 'number',
     demandOption: true,
   })
   .option('storage-type', {
@@ -130,73 +165,70 @@ const parsed = yargs
     default: 'sqlite',
   })
   .option('postgres-host', {
-    string: true,
+    type: 'string',
   })
   .option('postgres-username', {
-    string: true,
+    type: 'string',
   })
   .option('postgres-password', {
-    string: true,
+    type: 'string',
   })
   .check((argv) => {
     if (
       argv['storage-type'] === 'postgres' &&
       (!argv['postgres-host'] || !argv['postgres-username'] || !argv['postgres-password'])
     ) {
-      throw new Error(
-        "--postgres-host, --postgres-username, and postgres-password are required when setting --storage-type to 'postgres'",
-      )
+      throw new Error("Postgres host, username, and password are required for 'postgres' storage.")
     }
-
     return true
   })
-  .config()
-  .env('CREDO_REST')
   .parseSync()
+
+export const parsedArgs = parsed as unknown as CliArgs
 
 export async function runCliServer() {
   const { start, shutdown } = await setupApp({
-    webhookUrl: parsed['webhook-url'],
-    adminPort: parsed['admin-port'],
+    webhookUrl: parsedArgs['webhook-url'],
+    adminPort: parsedArgs['admin-port'],
     enableWebsocketEvents: true,
     enableCors: true,
 
     agent: {
-      label: parsed.label,
+      label: parsedArgs.label,
       walletConfig: {
-        id: parsed['wallet-id'],
-        key: parsed['wallet-key'],
-        storage:
-          parsed['storage-type'] === 'sqlite'
+        id: parsedArgs['wallet-id'],
+        key: parsedArgs['wallet-key'],
+        database:
+          parsedArgs['storage-type'] === 'sqlite'
             ? {
                 type: 'sqlite',
               }
             : ({
                 type: 'postgres',
                 config: {
-                  host: parsed['postgres-host'] as string,
+                  host: parsedArgs['postgres-host'] as string,
                 },
                 credentials: {
-                  account: parsed['postgres-username'] as string,
-                  password: parsed['postgres-password'] as string,
+                  account: parsedArgs['postgres-username'] as string,
+                  password: parsedArgs['postgres-password'] as string,
                 },
-              } satisfies AskarWalletPostgresStorageConfig),
+              } satisfies AskarPostgresStorageConfig),
       },
-      indyLedgers: parsed['indy-ledger'],
-      cheqdLedgers: parsed['cheqd-ledger'],
-      endpoints: parsed.endpoint,
-      autoAcceptConnections: parsed['auto-accept-connections'],
-      autoAcceptCredentials: parsed['auto-accept-credentials'],
-      autoAcceptProofs: parsed['auto-accept-proofs'],
-      autoUpdateStorageOnStartup: parsed['auto-update-storage-on-startup'],
-      autoAcceptMediationRequests: parsed['auto-accept-mediation-requests'],
-      useDidKeyInProtocols: parsed['use-did-key-in-protocols'],
-      useDidSovPrefixWhereAllowed: parsed['use-did-sov-prefix-where-allowed'],
-      logLevel: parsed['log-level'],
-      inboundTransports: parsed['inbound-transport'],
-      outboundTransports: parsed['outbound-transport'],
-      connectionImageUrl: parsed['connection-image-url'],
-      multiTenant: parsed['multi-tenant'],
+      indyLedgers: parsedArgs['indy-ledger'],
+      cheqdLedgers: parsedArgs['cheqd-ledger'],
+      endpoints: parsedArgs.endpoint,
+      autoAcceptConnections: parsedArgs['auto-accept-connections'],
+      autoAcceptCredentials: parsedArgs['auto-accept-credentials'],
+      autoAcceptProofs: parsedArgs['auto-accept-proofs'],
+      autoUpdateStorageOnStartup: parsedArgs['auto-update-storage-on-startup'],
+      autoAcceptMediationRequests: parsedArgs['auto-accept-mediation-requests'],
+      useDidKeyInProtocols: parsedArgs['use-did-key-in-protocols'],
+      useDidSovPrefixWhereAllowed: parsedArgs['use-did-sov-prefix-where-allowed'],
+      logLevel: parsedArgs['log-level'],
+      inboundTransports: parsedArgs['inbound-transport'],
+      outboundTransports: parsedArgs['outbound-transport'],
+      connectionImageUrl: parsedArgs['connection-image-url'],
+      multiTenant: parsedArgs['multi-tenant'],
     },
   })
 

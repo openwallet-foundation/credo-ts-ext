@@ -1,9 +1,9 @@
 import type { CredoBaseRecord, RecordId, ThreadId } from '../../types'
-import type { BasicMessageRole, BasicMessageRecord as CredoBasicMessageRecord } from '@credo-ts/core'
+import type { DidCommBasicMessageRole, DidCommBasicMessageRecord as CredoBasicMessageRecord } from '@credo-ts/didcomm'
 
 export interface DidCommBasicMessageRecord extends CredoBaseRecord {
   connectionId: RecordId
-  role: BasicMessageRole
+  role: DidCommBasicMessageRole
   content: string
   sentTime: string
   threadId?: ThreadId

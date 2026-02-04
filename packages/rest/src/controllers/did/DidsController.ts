@@ -7,9 +7,10 @@ import type {
   DidCreateActionResponse,
   DidCreateWaitResponse,
   DidDocumentJson,
+  DidCreateOptions,
 } from './DidsControllerTypes'
 
-import { DidDocument, JsonTransformer, TypedArrayEncoder } from '@credo-ts/core'
+import { DidDocument, Hasher, JsonTransformer, Kms, TypedArrayEncoder } from '@credo-ts/core'
 import {
   Body,
   Controller,
@@ -24,9 +25,10 @@ import {
   Security,
   Request,
 } from 'tsoa'
+
 import { injectable } from 'tsyringe'
 
-import { RequestWithAgent } from '../../tenantMiddleware'
+import type { RequestWithAgent } from '../../tenantMiddleware'
 import { alternativeResponse } from '../../utils/response'
 
 import {
@@ -34,7 +36,9 @@ import {
   didResolveSuccessResponseExample,
   didCreateFinishedResponseExample,
 } from './DidsControllerExamples'
-import { DidImportOptions, DidCreateOptions } from './DidsControllerTypes'
+import type { DidImportOptions } from './DidsControllerTypes'
+import { transformPrivateKeyToPrivateJwk } from '@credo-ts/askar'
+import { randomBytes } from 'crypto'
 
 @Tags('Dids')
 @Route('/dids')
@@ -78,14 +82,32 @@ export class DidController extends Controller {
   @SuccessResponse(201, 'Did imported successfully')
   public async importDid(@Request() request: RequestWithAgent, @Body() options: DidImportOptions): Promise<void> {
     try {
+      const { privateJwk } = transformPrivateKeyToPrivateJwk({
+        type: {
+          // TODO: Take key type and curve dynamically
+          crv: 'Ed25519',
+          kty: 'OKP',
+        },
+        privateKey: TypedArrayEncoder.fromString(options.privateKey ?? randomBytes(32)),
+      })
+
+      const { keyId, publicJwk } = await request.user.agent.kms.importKey({
+        privateJwk,
+      })
+
+      const verificationKey = Kms.PublicJwk.fromPublicJwk(publicJwk) as Kms.PublicJwk<Kms.Ed25519PublicJwk>
+      const buffer = Hasher.hash(verificationKey.publicKey.publicKey, 'sha-256')
+
       await request.user.agent.dids.import({
         did: options.did,
         didDocument: options.didDocument ? JsonTransformer.fromJSON(options.didDocument, DidDocument) : undefined,
         overwrite: options.overwrite,
-        privateKeys: options.privateKeys?.map(({ keyType, privateKeyBase58 }) => ({
-          keyType,
-          privateKey: TypedArrayEncoder.fromBase58(privateKeyBase58),
-        })),
+        keys: [
+          {
+            didDocumentRelativeKeyId: TypedArrayEncoder.toBase58(buffer),
+            kmsKeyId: keyId
+          }
+        ]
       })
     } catch (error) {
       this.setStatus(500)
@@ -126,28 +148,28 @@ export class DidController extends Controller {
       },
     })
 
-    const didDocumentJson = didResult.didState.didDocument?.toJSON() as DidDocumentJson
-
-    const { ...copiedSecret } = didResult.didState.secret
-    copiedSecret.seedBase58 = copiedSecret.seed
-      ? TypedArrayEncoder.toBase58(copiedSecret.seed as Uint8Array)
-      : undefined
-    copiedSecret.privateKeyBase58 = copiedSecret.privateKey
-      ? TypedArrayEncoder.toBase58(copiedSecret.privateKey as Uint8Array)
-      : undefined
-    delete copiedSecret.seed
-    delete copiedSecret.privateKey
-
     if (didResult.didState.state === 'failed') {
       this.setStatus(500)
       return alternativeResponse<DidCreateFailedResponse>({
         ...didResult,
         didState: {
           ...didResult.didState,
-          didDocument: didDocumentJson,
-          secret: copiedSecret,
         },
       })
+    }
+    const didDocumentJson = didResult.didState.didDocument?.toJSON() as DidDocumentJson
+    let secretParam
+    if (didResult.didState.secret) {
+      const { ...copiedSecret } = didResult.didState.secret
+      secretParam = copiedSecret
+      copiedSecret.seedBase58 = copiedSecret.seed
+        ? TypedArrayEncoder.toBase58(copiedSecret.seed as Uint8Array)
+        : undefined
+      copiedSecret.privateKeyBase58 = copiedSecret.privateKey
+        ? TypedArrayEncoder.toBase58(copiedSecret.privateKey as Uint8Array)
+        : undefined
+      delete copiedSecret.seed
+      delete copiedSecret.privateKey
     }
 
     if (didResult.didState.state === 'wait') {
@@ -157,7 +179,7 @@ export class DidController extends Controller {
         didState: {
           ...didResult.didState,
           didDocument: didDocumentJson,
-          secret: copiedSecret,
+          secret: secretParam,
         },
       })
     }
@@ -168,7 +190,7 @@ export class DidController extends Controller {
         didState: {
           ...didResult.didState,
           didDocument: didDocumentJson,
-          secret: copiedSecret,
+          secret: secretParam,
         },
       })
     }
@@ -178,7 +200,7 @@ export class DidController extends Controller {
       didState: {
         ...didResult.didState,
         didDocument: didDocumentJson,
-        secret: copiedSecret,
+        secret: secretParam,
       },
     }
   }

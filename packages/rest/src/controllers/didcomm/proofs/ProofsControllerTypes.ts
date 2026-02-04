@@ -1,39 +1,39 @@
 import type { CredoBaseRecord, RecordId, ThreadId } from '../../types'
 import type {
-  AnonCredsProofFormat,
+  AnonCredsDidCommProofFormat,
   AnonCredsNonRevokedInterval,
   AnonCredsPredicateType,
   AnonCredsSelectedCredentials,
   AnonCredsProposeProofFormat,
   AnonCredsRequestProofFormat,
   AnonCredsProofRequestRestriction,
-  LegacyIndyProofFormat,
+  LegacyIndyDidCommProofFormat
 } from '@credo-ts/anoncreds'
 import type {
-  ProofExchangeRecord as CredoProofExchangeRecord,
-  AutoAcceptProof,
-  ProofState,
-  ProofRole,
+  DidCommProofExchangeRecord as CredoProofExchangeRecord,
+  DidCommAutoAcceptProof,
+  DidCommProofState,
+  DidCommProofRole,
   CreateProofRequestOptions,
   AcceptProofRequestOptions,
   ProposeProofOptions,
   AcceptProofProposalOptions,
   GetProofFormatDataReturn,
-} from '@credo-ts/core'
-import type { PlaintextMessage } from '@credo-ts/core/build/types'
+  DidCommPlaintextMessage
+} from '@credo-ts/didcomm'
 
 import { maybeMapValues } from '../../../utils/maybeMapValues'
 
-type ProofFormats = [LegacyIndyProofFormat, AnonCredsProofFormat]
+type ProofFormats = [LegacyIndyDidCommProofFormat, AnonCredsDidCommProofFormat]
 type ProofProtocolVersion = 'v1' | 'v2'
 
 export interface DidCommProofExchangeRecord extends CredoBaseRecord {
   connectionId?: RecordId
   threadId: ThreadId
   parentThreadId?: ThreadId
-  state: ProofState
-  role: ProofRole
-  autoAcceptProof?: AutoAcceptProof
+  state: DidCommProofState
+  role: DidCommProofRole
+  autoAcceptProof?: DidCommAutoAcceptProof
   errorMessage?: string
   protocolVersion: string
 }
@@ -58,7 +58,7 @@ export function proofExchangeRecordToApiModel(record: CredoProofExchangeRecord):
   }
 }
 
-interface AcceptAnonCredsProposalOptions extends NonNullable<AnonCredsProofFormat['proofFormats']['acceptProposal']> {}
+interface AcceptAnonCredsProposalOptions extends NonNullable<AnonCredsDidCommProofFormat['proofFormats']['acceptProposal']> {}
 
 export interface DidCommProofsProposeProofOptions
   extends Omit<ProposeProofOptions, 'proofFormats' | 'protocolVersion'> {
@@ -70,7 +70,7 @@ export interface DidCommProofsProposeProofOptions
 }
 
 export interface DidCommProofsAcceptProposalOptions
-  extends Omit<AcceptProofProposalOptions, 'proofFormats' | 'proofRecordId'> {
+  extends Omit<AcceptProofProposalOptions, 'proofFormats' | 'proofExchangeRecordId'> {
   protocolVersion: ProofProtocolVersion
   proofFormats?: {
     indy?: AcceptAnonCredsProposalOptions
@@ -79,7 +79,7 @@ export interface DidCommProofsAcceptProposalOptions
 }
 
 export interface DidCommProofsCreateRequestResponse {
-  message: PlaintextMessage
+    message: DidCommPlaintextMessage
   proofExchange: DidCommProofExchangeRecord
 }
 

@@ -1,27 +1,27 @@
 import type { CredoBaseRecord, RecordId, ThreadId } from '../../types'
-import type { AnonCredsCredentialFormat, LegacyIndyCredentialFormat } from '@credo-ts/anoncreds'
+import type { AnonCredsDidCommCredentialFormat, LegacyIndyCredentialFormat } from '@credo-ts/anoncreds'
 import type {
-  AutoAcceptCredential,
-  CredentialFormatPayload,
-  CredentialPreviewAttributeOptions,
+  DidCommAutoAcceptCredential,
+  DidCommCredentialFormatPayload,
+  DidCommCredentialPreviewAttributeOptions,
   CredentialRecordBinding,
-  CredentialRole,
-  CredentialState,
-  CredentialExchangeRecord as CredoCredentialExchangeRecord,
+  DidCommCredentialRole,
+  DidCommCredentialState,
+  DidCommCredentialExchangeRecord as CredoCredentialExchangeRecord,
   GetCredentialFormatDataReturn,
-} from '@credo-ts/core'
-import type { PlaintextMessage } from '@credo-ts/core/build/types'
+  DidCommPlaintextMessage
+} from '@credo-ts/didcomm'
 
-type CredentialFormats = [LegacyIndyCredentialFormat, AnonCredsCredentialFormat]
+type CredentialFormats = [LegacyIndyCredentialFormat, AnonCredsDidCommCredentialFormat]
 type CredentialProtocolVersion = 'v1' | 'v2'
 
 export interface DidCommCredentialExchangeRecord extends CredoBaseRecord {
   connectionId?: RecordId
   threadId: ThreadId
   parentThreadId?: ThreadId
-  state: CredentialState
-  role: CredentialRole
-  autoAcceptCredential?: AutoAcceptCredential
+  state: DidCommCredentialState
+  role: DidCommCredentialRole
+  autoAcceptCredential?: DidCommAutoAcceptCredential
   revocationNotification?: {
     revocationDate: Date
     comment?: string
@@ -29,7 +29,7 @@ export interface DidCommCredentialExchangeRecord extends CredoBaseRecord {
   errorMessage?: string
   protocolVersion: string
   credentials: CredentialRecordBinding[]
-  credentialAttributes?: CredentialPreviewAttributeOptions[]
+  credentialAttributes?: DidCommCredentialPreviewAttributeOptions[]
 }
 
 export interface DidCommCredentialExchangeWithFormatData {
@@ -75,7 +75,7 @@ export interface ProposeCredentialOptions {
   credentialFormats: {
     [key in CredentialFormats[number] as key['formatKey']]?: CredentialFormats[number]['credentialFormats']['createProposal']
   }
-  autoAcceptCredential?: AutoAcceptCredential
+  autoAcceptCredential?: DidCommAutoAcceptCredential
   comment?: string
   connectionId: RecordId
 }
@@ -84,39 +84,39 @@ export interface AcceptCredentialProposalOptions {
   credentialFormats?: {
     [key in CredentialFormats[number] as key['formatKey']]?: CredentialFormats[number]['credentialFormats']['acceptProposal']
   }
-  autoAcceptCredential?: AutoAcceptCredential
+  autoAcceptCredential?: DidCommAutoAcceptCredential
   comment?: string
 }
 
 export interface CreateOfferOptions {
   protocolVersion: CredentialProtocolVersion
-  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createOffer'>
-  autoAcceptCredential?: AutoAcceptCredential
+  credentialFormats: DidCommCredentialFormatPayload<CredentialFormats, 'createOffer'>
+  autoAcceptCredential?: DidCommAutoAcceptCredential
   comment?: string
 }
 
 export interface DidCommCredentialsCreateOfferResponse {
-  message: PlaintextMessage
+  message: DidCommPlaintextMessage
   credentialExchange: DidCommCredentialExchangeRecord
 }
 
 export interface OfferCredentialOptions {
   protocolVersion: CredentialProtocolVersion
-  credentialFormats: CredentialFormatPayload<CredentialFormats, 'createOffer'>
-  autoAcceptCredential?: AutoAcceptCredential
+  credentialFormats: DidCommCredentialFormatPayload<CredentialFormats, 'createOffer'>
+  autoAcceptCredential?: DidCommAutoAcceptCredential
   comment?: string
   connectionId: RecordId
 }
 
 export interface AcceptCredentialOfferOptions {
-  credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptOffer'>
-  autoAcceptCredential?: AutoAcceptCredential
+  credentialFormats?: DidCommCredentialFormatPayload<CredentialFormats, 'acceptOffer'>
+  autoAcceptCredential?: DidCommAutoAcceptCredential
   comment?: string
 }
 
 export interface AcceptCredentialRequestOptions {
-  credentialFormats?: CredentialFormatPayload<CredentialFormats, 'acceptRequest'>
-  autoAcceptCredential?: AutoAcceptCredential
+  credentialFormats?: DidCommCredentialFormatPayload<CredentialFormats, 'acceptRequest'>
+  autoAcceptCredential?: DidCommAutoAcceptCredential
   comment?: string
 }
 

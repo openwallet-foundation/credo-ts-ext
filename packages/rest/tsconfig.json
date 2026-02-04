@@ -3,5 +3,6 @@
   "compilerOptions": {
     "lib": ["ES2021.Promise"],
     "types": ["jest", "node"]
-  }
+  },
+  "exclude": ["src/generated/**"]
 }

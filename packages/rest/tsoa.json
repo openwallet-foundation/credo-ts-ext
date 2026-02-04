@@ -9,17 +9,20 @@
     "specMerging": "recursive",
     "spec": {
       "components": {
-        "parameters": {
-          "tenant": {
-            "in": "header",
+        "securitySchemes": {
+          "tenants": {
+            "type": "apiKey",
             "name": "x-tenant-id",
-            "description": "Optional header to set the context to a specific tenant. Only needed when the --multi-tenant feature is enabled. Default value is 'default'",
-            "schema": {
-              "type": "string"
-            }
+            "in": "header",
+            "description": "Optional header to set the context to a specific tenant. Only needed when the --multi-tenant feature is enabled. Default value is 'default'"
           }
         }
-      }
+      },
+      "security": [
+        {
+          "tenants": []
+        }
+      ]
     }
   },
   "routes": {

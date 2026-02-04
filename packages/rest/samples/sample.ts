@@ -1,3 +1,8 @@
+/** * WORKAROUND: Explicitly import askar-nodejs to register the native bindings.
+ * This is required in Credo v0.6.x to prevent 'keyGetJwkSecret' undefined errors.
+ * @see https://github.com/openwallet-foundation/credo-ts/issues/2597
+ */
+import '@openwallet-foundation/askar-nodejs'
 import type { CredoRestAgentConfig } from '../src'
 
 import { LogLevel } from '@credo-ts/core'

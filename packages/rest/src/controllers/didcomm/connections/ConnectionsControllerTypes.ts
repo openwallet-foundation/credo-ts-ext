@@ -1,29 +1,29 @@
 import type { Did } from '../../did/DidsControllerTypes'
 import type { CredoBaseRecord, ThreadId } from '../../types'
 import type {
-  ConnectionType,
-  ConnectionRecord as CredoConnectionRecord,
-  DidExchangeRole,
-  DidExchangeState,
-  HandshakeProtocol,
-} from '@credo-ts/core'
+  DidCommConnectionType,
+  DidCommConnectionRecord as CredoConnectionRecord,
+  DidCommDidExchangeRole,
+  DidCommDidExchangeState,
+  DidCommHandshakeProtocol,
+} from '@credo-ts/didcomm'
 
 export interface DidCommConnectionRecord extends CredoBaseRecord {
   did?: Did
   theirDid?: Did
   theirLabel?: string
-  state: DidExchangeState
-  role: DidExchangeRole
+  state: DidCommDidExchangeState
+  role: DidCommDidExchangeRole
   alias?: string
   autoAcceptConnection?: boolean
   threadId?: ThreadId
   imageUrl?: string
   mediatorId?: string
   errorMessage?: string
-  protocol?: HandshakeProtocol
+  protocol?: DidCommHandshakeProtocol
   outOfBandId?: string
   invitationDid?: Did
-  connectionTypes?: Array<ConnectionType | string>
+  connectionTypes?: Array<DidCommConnectionType | string>
   previousDids?: Array<Did>
   previousTheirDids?: Array<Did>
 }

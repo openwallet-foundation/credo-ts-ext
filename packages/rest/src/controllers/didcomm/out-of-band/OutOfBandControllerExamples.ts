@@ -1,6 +1,6 @@
-import type { DidCommOutOfBandCreateInvitationResponse, DidCommOutOfBandRecord } from './OutOfBandControllerTypes'
+import type { DidCommOutOfBandCreateInvitationResponse, DidCommOutOfBandRecord as OutOfBandRecordExample } from './OutOfBandControllerTypes'
 
-import { OutOfBandRecord, OutOfBandRole, OutOfBandState } from '@credo-ts/core'
+import { DidCommOutOfBandRecord, DidCommOutOfBandRole, DidCommOutOfBandState } from '@credo-ts/didcomm'
 
 export const outOfBandInvitationExample = {
   '@type': 'https://didcomm.org/out-of-band/1.1/invitation',
@@ -24,14 +24,14 @@ export const legacyInvitationExample = {
   '@id': 'd6b23733-be49-408b-98ab-ba9460384087',
 }
 
-export const outOfBandRecordExample: DidCommOutOfBandRecord = {
+export const outOfBandRecordExample: OutOfBandRecordExample = {
   outOfBandInvitation: outOfBandInvitationExample,
   id: '42a95528-0e30-4f86-a462-0efb02178b53',
   createdAt: new Date('2022-01-01T00:00:00.000Z'),
-  role: OutOfBandRole.Sender,
-  state: OutOfBandState.PrepareResponse,
+    role: DidCommOutOfBandRole.Sender,
+    state: DidCommOutOfBandState.PrepareResponse,
   reusable: false,
-  type: OutOfBandRecord.type,
+    type: DidCommOutOfBandRecord.type,
 }
 
 export const outOfBandCreateInvitationResponseExample: DidCommOutOfBandCreateInvitationResponse = {

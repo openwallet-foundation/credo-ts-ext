@@ -1,21 +1,21 @@
 import type {
   DidCommProofsCreateRequestResponse,
-  DidCommProofExchangeRecord,
+    DidCommProofExchangeRecord as ProofExchangeRecordExample,
   DidCommProofsGetFormatDataResponse,
 } from './ProofsControllerTypes'
 
-import { AutoAcceptProof, ProofExchangeRecord, ProofRole, ProofState } from '@credo-ts/core'
+import { DidCommAutoAcceptProof, DidCommProofExchangeRecord, DidCommProofRole, DidCommProofState } from '@credo-ts/didcomm'
 
-export const proofExchangeRecordExample: DidCommProofExchangeRecord = {
+export const proofExchangeRecordExample: ProofExchangeRecordExample = {
   id: '821f9b26-ad04-4f56-89b6-e2ef9c72b36e',
   protocolVersion: 'v2',
-  role: ProofRole.Prover,
-  state: ProofState.ProposalSent,
+  role: DidCommProofRole.Prover,
+    state: DidCommProofState.ProposalSent,
   threadId: '0019d466-5eea-4269-8c40-031b4896c5b7',
   connectionId: '2aecf74c-3073-4f98-9acb-92415d096834',
   createdAt: new Date('2022-01-01T00:00:00.000Z'),
-  autoAcceptProof: AutoAcceptProof.Always,
-  type: ProofExchangeRecord.type,
+    autoAcceptProof: DidCommAutoAcceptProof.Always,
+    type: DidCommProofExchangeRecord.type,
 }
 
 export const didCommProofsCreateRequestResponse: DidCommProofsCreateRequestResponse = {

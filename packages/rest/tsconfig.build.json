@@ -3,7 +3,9 @@
   "compilerOptions": {
     "outDir": "./build",
     "types": ["node"],
-    "lib": ["ES2021.Promise"]
+    "lib": ["ES2021.Promise"],
+    "skipLibCheck": true
   },
+  "exclude": ["src/generated/**"],
   "include": ["src/**/*"]
 }

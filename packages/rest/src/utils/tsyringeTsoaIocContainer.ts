@@ -1,9 +1,10 @@
-import type { IocContainer } from '@tsoa/runtime'
 
-import { container } from 'tsyringe'
+import type { IocContainer } from '@tsoa/runtime';
+import { container } from 'tsyringe';
 
 export const iocContainer: IocContainer = {
-  get: <T>(controller: { prototype: T }): T => {
-    return container.resolve<T>(controller as never)
+  // TODO: Check and fix types later
+  get: <T>(controller: any): T => {
+    return container.resolve<T>(controller);
   },
-}
+};

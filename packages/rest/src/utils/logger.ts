@@ -1,27 +1,28 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
-import type { ILogObject } from 'tslog'
+import type { ILogObj } from 'tslog'
 
 import { LogLevel, BaseLogger } from '@credo-ts/core'
 import { appendFileSync } from 'fs'
 import { Logger } from 'tslog'
 
-function logToTransport(logObject: ILogObject) {
+function logToTransport(logObject: ILogObj) {
   appendFileSync('logs.txt', JSON.stringify(logObject) + '\n')
 }
 
 export class TsLogger extends BaseLogger {
-  private logger: Logger
+  private logger: Logger<ILogObj>
 
   // Map our log levels to tslog levels
   private tsLogLevelMap = {
-    [LogLevel.test]: 'silly',
-    [LogLevel.trace]: 'trace',
-    [LogLevel.debug]: 'debug',
-    [LogLevel.info]: 'info',
-    [LogLevel.warn]: 'warn',
-    [LogLevel.error]: 'error',
-    [LogLevel.fatal]: 'fatal',
+    [LogLevel.test]: 0,
+    [LogLevel.trace]: 1,
+    [LogLevel.debug]: 2,
+    [LogLevel.info]: 3,
+    [LogLevel.warn]: 4,
+    [LogLevel.error]: 5,
+    [LogLevel.fatal]: 6,
+    [LogLevel.off]: 7
   } as const
 
   public constructor(logLevel: LogLevel, name?: string) {
@@ -30,22 +31,7 @@ export class TsLogger extends BaseLogger {
     this.logger = new Logger({
       name,
       minLevel: this.logLevel == LogLevel.off ? undefined : this.tsLogLevelMap[this.logLevel],
-      ignoreStackLevels: 5,
-      attachedTransports: [
-        {
-          transportLogger: {
-            silly: logToTransport,
-            debug: logToTransport,
-            trace: logToTransport,
-            info: logToTransport,
-            warn: logToTransport,
-            error: logToTransport,
-            fatal: logToTransport,
-          },
-          // always log to file
-          minLevel: 'silly',
-        },
-      ],
+      attachedTransports: [logToTransport],
     })
   }
 
@@ -53,9 +39,9 @@ export class TsLogger extends BaseLogger {
     const tsLogLevel = this.tsLogLevelMap[level]
 
     if (data) {
-      this.logger[tsLogLevel](message, data)
+      this.logger.log(tsLogLevel, message, data)
     } else {
-      this.logger[tsLogLevel](message)
+      this.logger.log(tsLogLevel, message)
     }
   }
 

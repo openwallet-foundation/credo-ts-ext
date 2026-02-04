@@ -1,5 +1,11 @@
 import type { AnyJsonObject } from '../types'
-import type { DidResolutionMetadata, DidDocumentMetadata, KeyType } from '@credo-ts/core'
+import type {
+  DidResolutionMetadata,
+  DidDocumentMetadata,
+  DidRegistrationExtraOptions,
+  DidRegistrationSecretOptions,
+  DidDocument,
+} from '@credo-ts/core'
 import type { DIDDocument } from 'did-resolver'
 
 /**
@@ -60,8 +66,9 @@ export interface DidResolveFailedResponse {
   didDocumentMetadata: DidDocumentMetadata
 }
 
+// TODO: Possibly remove this unnecessary interface
 interface PrivateKey {
-  keyType: KeyType
+  keyType: any
 
   /**
    * Base58 encoded private key
@@ -76,7 +83,8 @@ export interface DidImportOptions {
   /**
    * Private keys to import as part of the did document
    */
-  privateKeys?: PrivateKey[]
+  // TODO: Check type
+  privateKey: string
 
   /**
    * Whether to overwrite the existing did document and private keys
@@ -93,17 +101,18 @@ export type DidCreateOptions = KeyOrJwkDidCreateOptions | DidCreateBaseOptions
 
 interface DidCreateBaseOptions {
   method?: string
-  did?: Did
-  options?: AnyJsonObject
-  secret?: AnyJsonObject
-  didDocument?: DidDocumentJson
+  did?: string
+  options?: DidRegistrationExtraOptions
+  secret?: DidRegistrationSecretOptions
+  didDocument?: DidDocument
 }
 
 interface KeyOrJwkDidCreateOptions extends Omit<DidCreateBaseOptions, 'did' | 'didDocument'> {
   method: 'key' | 'jwk'
 
   options: {
-    keyType: KeyType
+    // TODO: Check type
+    keyType: string
   }
   // how to encode buffer?
   secret?: {

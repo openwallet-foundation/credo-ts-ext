@@ -9,19 +9,19 @@ import type { OpenId4VcVerifierRecord as CredoOpenId4VcVerifierRecord } from '@c
 export type PublicVerifierId = string
 
 export interface OpenId4VcVerifierRecord extends CredoBaseRecord {
-  publicVerifierId: PublicVerifierId
+    publicVerifierId: PublicVerifierId
 }
 
 export function openId4vcVerifierRecordToApiModel(record: CredoOpenId4VcVerifierRecord): OpenId4VcVerifierRecord {
-  return {
-    // Base Record
-    id: record.id,
-    createdAt: record.createdAt,
-    updatedAt: record.updatedAt,
-    type: record.type,
+    return {
+        // Base Record
+        id: record.id,
+        createdAt: record.createdAt,
+        updatedAt: record.updatedAt,
+        type: record.type,
 
-    publicVerifierId: record.verifierId,
-  }
+        publicVerifierId: record.verifierId,
+    }
 }
 
 /**
@@ -30,5 +30,5 @@ export function openId4vcVerifierRecordToApiModel(record: CredoOpenId4VcVerifier
  * }
  */
 export interface OpenId4VcVerifiersCreateOptions {
-  publicVerifierId?: PublicVerifierId
+    publicVerifierId?: PublicVerifierId
 }

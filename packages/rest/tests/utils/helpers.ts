@@ -44,8 +44,9 @@ export async function getTestAgent<Multitenant extends boolean = false>(
 
   if (!port) {
     const internalOutboundTransport = new InternalOutboundTransport()
-    await internalOutboundTransport.start(agent)
-    agent.registerOutboundTransport(internalOutboundTransport)
+    // TODO: Check the start function
+    await internalOutboundTransport.start(agent.context)
+    agent.didcomm.registerOutboundTransport(internalOutboundTransport)
   }
 
   return agent as Multitenant extends true ? RestRootAgentWithTenants : RestRootAgent

@@ -1,20 +1,21 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES2017",
+    "module": "es2020",
+    "moduleResolution": "bundler",
+    "target": "ES2020",
     "declaration": true,
     "sourceMap": true,
     "strict": true,
     "noEmitOnError": true,
-    "lib": [],
-    "types": [],
+    "lib": ["es2022"],
     "esModuleInterop": true,
+    "preserveSymlinks": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "skipLibCheck": true
-  },
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true  },
   "exclude": [
     "node_modules",
     "build",

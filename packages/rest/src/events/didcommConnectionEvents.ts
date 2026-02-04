@@ -1,13 +1,13 @@
-import type { Agent, ConnectionStateChangedEvent } from '@credo-ts/core'
+import type { Agent } from '@credo-ts/core'
 
-import { ConnectionEventTypes } from '@credo-ts/core'
+import { DidCommConnectionEventTypes, DidCommConnectionStateChangedEvent } from '@credo-ts/didcomm'
 
 import { connectionRecordToApiModel } from '../controllers/didcomm/connections/ConnectionsControllerTypes'
 
 import { emitEvent, type EmitEventConfig } from './emitEvent'
 
 export const didcommConnectionEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
-  agent.events.on(ConnectionEventTypes.ConnectionStateChanged, async (event: ConnectionStateChangedEvent) => {
+    agent.events.on(DidCommConnectionEventTypes.DidCommConnectionStateChanged, async (event: DidCommConnectionStateChangedEvent) => {
     const { connectionRecord, ...payload } = event.payload
     const webhookPayload = {
       ...event,

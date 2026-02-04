@@ -1,0 +1,11 @@
+onlyBuiltDependencies:
+  - '@2060.io/ffi-napi'
+  - '@2060.io/ref-napi'
+  - '@hyperledger/anoncreds-nodejs'
+  - '@hyperledger/indy-vdr-nodejs'
+  - '@openwallet-foundation/askar-nodejs'
+  - '@scarf/scarf'
+  - es5-ext
+  - esbuild
+  - protobufjs
+  - secp256k1

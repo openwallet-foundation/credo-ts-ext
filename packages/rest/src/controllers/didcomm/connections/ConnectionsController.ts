@@ -1,6 +1,7 @@
 import type { DidCommConnectionRecord } from './ConnectionsControllerTypes'
 
-import { DidExchangeState, RecordNotFoundError } from '@credo-ts/core'
+import { RecordNotFoundError } from '@credo-ts/core'
+import { DidCommDidExchangeState } from '@credo-ts/didcomm'
 import { Controller, Delete, Example, Get, Path, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -26,12 +27,12 @@ export class ConnectionsController extends Controller {
     @Request() request: RequestWithAgent,
     @Query('outOfBandId') outOfBandId?: RecordId,
     @Query('alias') alias?: string,
-    @Query('state') state?: DidExchangeState,
+    @Query('state') state?: DidCommDidExchangeState,
     @Query('did') did?: Did,
     @Query('theirDid') theirDid?: Did,
     @Query('theirLabel') theirLabel?: string,
   ) {
-    const connections = await request.user.agent.connections.findAllByQuery({
+    const connections = await request.user.agent.didcomm.connections.findAllByQuery({
       alias,
       did,
       theirDid,
@@ -51,7 +52,7 @@ export class ConnectionsController extends Controller {
   @Example<DidCommConnectionRecord>(connectionRecordExample)
   @Get('/:connectionId')
   public async getConnectionById(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
-    const connection = await request.user.agent.connections.findById(connectionId)
+    const connection = await request.user.agent.didcomm.connections.findById(connectionId)
 
     if (!connection) {
       this.setStatus(404)
@@ -70,7 +71,7 @@ export class ConnectionsController extends Controller {
   public async deleteConnection(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {
       this.setStatus(204)
-      await request.user.agent.connections.deleteById(connectionId)
+      await request.user.agent.didcomm.connections.deleteById(connectionId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         this.setStatus(404)
@@ -92,7 +93,7 @@ export class ConnectionsController extends Controller {
   @Post('/:connectionId/accept-request')
   public async acceptRequest(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {
-      const connection = await request.user.agent.connections.acceptRequest(connectionId)
+      const connection = await request.user.agent.didcomm.connections.acceptRequest(connectionId)
       return connectionRecordToApiModel(connection)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -118,7 +119,7 @@ export class ConnectionsController extends Controller {
   @Post('/:connectionId/accept-response')
   public async acceptResponse(@Request() request: RequestWithAgent, @Path('connectionId') connectionId: RecordId) {
     try {
-      const connection = await request.user.agent.connections.acceptResponse(connectionId)
+      const connection = await request.user.agent.didcomm.connections.acceptResponse(connectionId)
       return connectionRecordToApiModel(connection)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {

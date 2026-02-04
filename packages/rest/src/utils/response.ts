@@ -10,6 +10,7 @@ export function apiErrorResponse(error: string | Error | unknown, details?: unkn
   const message = typeof error === 'string' ? error : error instanceof Error ? error.message : 'Unknown error'
 
   return {
+    isError: true,
     message,
     details,
   } satisfies ApiError

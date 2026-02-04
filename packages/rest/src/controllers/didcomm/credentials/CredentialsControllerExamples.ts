@@ -1,18 +1,18 @@
 import type {
   DidCommCredentialsCreateOfferResponse,
-  DidCommCredentialExchangeRecord,
+    DidCommCredentialExchangeRecord as CredentialExchangeRecordExample,
   DidCommCredentialsGetFormatDataResponse,
 } from './CredentialsControllerTypes'
 
-import { CredentialExchangeRecord, CredentialRole, CredentialState } from '@credo-ts/core'
+import { DidCommCredentialExchangeRecord, DidCommCredentialRole, DidCommCredentialState } from '@credo-ts/didcomm'
 
-export const credentialExchangeRecordExample: DidCommCredentialExchangeRecord = {
+export const credentialExchangeRecordExample: CredentialExchangeRecordExample = {
   credentials: [],
-  type: CredentialExchangeRecord.type,
-  role: CredentialRole.Holder,
+  type: DidCommCredentialExchangeRecord.type,
+  role: DidCommCredentialRole.Holder,
   id: '821f9b26-ad04-4f56-89b6-e2ef9c72b36e',
   createdAt: new Date('2022-01-01T00:00:00.000Z'),
-  state: CredentialState.OfferSent,
+    state: DidCommCredentialState.OfferSent,
   connectionId: 'ac6d0fdd-0db8-4f52-8a3d-de7ff8ddc14b',
   threadId: '82701488-b43c-4d7b-9244-4bb204a7ae26',
   credentialAttributes: [],

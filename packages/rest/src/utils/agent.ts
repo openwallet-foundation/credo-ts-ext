@@ -1,28 +1,24 @@
-import type { OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions } from '../controllers/openid4vc/issuance-sessions/OpenId4VcIssuanceSessionsControllerTypes'
+// import type { OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions } from '../controllers/openid4vc/issuance-sessions/OpenId4VcIssuanceSessionsControllerTypes'
+import type { CredoRestAgentConfig } from '../setup/CredoRestConfig.js'
 import type { AnonCredsRegistry } from '@credo-ts/anoncreds'
-import type { NetworkConfig as CheqdNetworkConfig } from '@credo-ts/cheqd/build/CheqdModuleConfig'
-import type { Agent, AutoAcceptCredential, AutoAcceptProof } from '@credo-ts/core'
-import type { IndyVdrPoolConfig } from '@credo-ts/indy-vdr'
-import type { TenantAgent } from '@credo-ts/tenants/build/TenantAgent'
+import type { AskarPostgresConfig, AskarPostgresCredentials, AskarPostgresStorageConfig } from '@credo-ts/askar'
+import type { CheqdModuleConfigOptions } from '@credo-ts/cheqd'
+import type { DidCommAutoAcceptCredential, DidCommAutoAcceptProof } from '@credo-ts/didcomm'
+import type { TenantAgent } from '@credo-ts/tenants'
 
 import {
-  AnonCredsCredentialFormatService,
-  AnonCredsProofFormatService,
-  V1CredentialProtocol,
+  AnonCredsDidCommCredentialFormatService,
+  AnonCredsDidCommProofFormatService,
   AnonCredsModule,
-  LegacyIndyCredentialFormatService,
-  LegacyIndyProofFormatService,
-  V1ProofProtocol,
+  LegacyIndyDidCommCredentialFormatService,
+  LegacyIndyDidCommProofFormatService,
+  DidCommCredentialV1Protocol,
+  DidCommProofV1Protocol,
 } from '@credo-ts/anoncreds'
-import { AskarModule, AskarMultiWalletDatabaseScheme } from '@credo-ts/askar'
-import { CheqdModule, CheqdDidResolver, CheqdDidRegistrar, CheqdAnonCredsRegistry } from '@credo-ts/cheqd'
+import { AskarModule } from '@credo-ts/askar'
+import { CheqdModule, CheqdDidRegistrar, CheqdDidResolver, CheqdAnonCredsRegistry } from '@credo-ts/cheqd'
+import { type Agent } from '@credo-ts/core'
 import {
-  V2CredentialProtocol,
-  V2ProofProtocol,
-  ConnectionsModule,
-  CredentialsModule,
-  MediatorModule,
-  ProofsModule,
   DidsModule,
   KeyDidRegistrar,
   JwkDidRegistrar,
@@ -32,20 +28,26 @@ import {
   JwkDidResolver,
   PeerDidResolver,
 } from '@credo-ts/core'
+import { DidCommCredentialV2Protocol, DidCommModule, DidCommProofV2Protocol } from '@credo-ts/didcomm'
 import {
   IndyVdrAnonCredsRegistry,
-  IndyVdrModule,
-  IndyVdrIndyDidResolver,
-  IndyVdrSovDidResolver,
   IndyVdrIndyDidRegistrar,
+  IndyVdrIndyDidResolver,
+  IndyVdrModule,
+  IndyVdrSovDidResolver,
+  type IndyVdrPoolConfig,
 } from '@credo-ts/indy-vdr'
-import { OpenId4VcIssuerModule, OpenId4VcHolderModule, OpenId4VcVerifierModule } from '@credo-ts/openid4vc'
 import { TenantsModule } from '@credo-ts/tenants'
 import { anoncreds } from '@hyperledger/anoncreds-nodejs'
-import { ariesAskar } from '@hyperledger/aries-askar-nodejs'
+// eslint-disable-next-line import/order
 import { indyVdr } from '@hyperledger/indy-vdr-nodejs'
 
-export type { CheqdNetworkConfig }
+// import type { OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions } from '../controllers/openid4vc/issuance-sessions/OpenId4VcIssuanceSessionsControllerTypes'
+import { askar as askarNodeJS } from '@openwallet-foundation/askar-nodejs'
+
+
+import { getDatabaseConfig } from './util'
+
 type ModulesWithoutTenants = Omit<ReturnType<typeof getAgentModules>, 'tenants'>
 
 export type RestRootAgent = Agent<ModulesWithoutTenants>
@@ -55,97 +57,128 @@ export type RestAgent = RestRootAgent | RestTenantAgent | RestRootAgentWithTenan
 
 export function getAgentModules(options: {
   autoAcceptConnections: boolean
-  autoAcceptProofs: AutoAcceptProof
-  autoAcceptCredentials: AutoAcceptCredential
+  autoAcceptProofs: DidCommAutoAcceptProof
+  autoAcceptCredentials: DidCommAutoAcceptCredential
   autoAcceptMediationRequests: boolean
   indyLedgers?: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
-  cheqdLedgers?: CheqdNetworkConfig[]
+  cheqdLedgers?: CheqdModuleConfigOptions
   extraAnonCredsRegistries?: AnonCredsRegistry[]
   multiTenant: boolean
-  baseUrl: string
+  credoConfig: Pick<CredoRestAgentConfig, 'walletConfig' | 'label' | 'endpoints' | 'extraModules'>
+  // baseUrl: string
 }) {
-  const legacyIndyCredentialFormatService = new LegacyIndyCredentialFormatService()
-  const legacyIndyProofFormatService = new LegacyIndyProofFormatService()
+  const legacyIndyCredentialFormatService = new LegacyIndyDidCommCredentialFormatService()
+  const legacyIndyProofFormatService = new LegacyIndyDidCommProofFormatService()
 
-  const baseUrlWithoutSlash = options.baseUrl.endsWith('/') ? options.baseUrl.slice(0, -1) : options.baseUrl
+  // const baseUrlWithoutSlash = options.baseUrl.endsWith('/') ? options.baseUrl.slice(0, -1) : options.baseUrl
 
   const baseModules = {
-    connections: new ConnectionsModule({
-      autoAcceptConnections: options.autoAcceptConnections,
-    }),
-    proofs: new ProofsModule({
-      autoAcceptProofs: options.autoAcceptProofs,
-      proofProtocols: [
-        new V1ProofProtocol({
-          indyProofFormat: legacyIndyProofFormatService,
-        }),
-        new V2ProofProtocol({
-          proofFormats: [legacyIndyProofFormatService, new AnonCredsProofFormatService()],
-        }),
-      ],
-    }),
-    credentials: new CredentialsModule({
-      autoAcceptCredentials: options.autoAcceptCredentials,
-      credentialProtocols: [
-        new V1CredentialProtocol({
-          indyCredentialFormat: legacyIndyCredentialFormatService,
-        }),
-        new V2CredentialProtocol({
-          credentialFormats: [legacyIndyCredentialFormatService, new AnonCredsCredentialFormatService()],
-        }),
-      ],
-    }),
     anoncreds: new AnonCredsModule({
       registries: (options.extraAnonCredsRegistries ?? []) as [AnonCredsRegistry],
       anoncreds,
     }),
     askar: new AskarModule({
-      ariesAskar,
-      multiWalletDatabaseScheme: AskarMultiWalletDatabaseScheme.ProfilePerWallet,
+      askar: askarNodeJS,
+      // multiWalletDatabaseScheme: AskarMultiWalletDatabaseScheme.ProfilePerWallet,
+      store: {
+        id: options.credoConfig.walletConfig.id,
+        key: options.credoConfig.walletConfig.key,
+        database: getDatabaseConfig({
+          'db-type': options.credoConfig.walletConfig.database,
+          'postgres-host': (options.credoConfig.walletConfig.database?.config as AskarPostgresConfig)?.host,
+          'postgres-username': (
+            (options.credoConfig.walletConfig.database as AskarPostgresStorageConfig)
+              ?.credentials as AskarPostgresCredentials
+          )?.account,
+          'postgres-password': (
+            (options.credoConfig.walletConfig.database as AskarPostgresStorageConfig)
+              ?.credentials as AskarPostgresCredentials
+          )?.password,
+        }),
+      },
     }),
-    mediator: new MediatorModule({
-      autoAcceptMediationRequests: options.autoAcceptMediationRequests,
+    didcomm: new DidCommModule({
+      endpoints: options.credoConfig.endpoints ?? [],
+      processDidCommMessagesConcurrently: true,
+      mediationRecipient: true,
+      messagePickup: true,
+      mediator: {
+        autoAcceptMediationRequests: options.autoAcceptMediationRequests,
+      },
+      basicMessages: true,
+      connections: {
+        autoAcceptConnections: options.autoAcceptConnections,
+      },
+      proofs: {
+        autoAcceptProofs: options.autoAcceptProofs,
+        proofProtocols: [
+          new DidCommProofV1Protocol({
+            indyProofFormat: legacyIndyProofFormatService,
+          }),
+          new DidCommProofV2Protocol({
+            proofFormats: [legacyIndyProofFormatService, new AnonCredsDidCommProofFormatService()],
+          }),
+        ],
+      },
+      credentials: {
+        autoAcceptCredentials: options.autoAcceptCredentials,
+        credentialProtocols: [
+          new DidCommCredentialV1Protocol({
+            indyCredentialFormat: legacyIndyCredentialFormatService,
+          }),
+          new DidCommCredentialV2Protocol({
+            credentialFormats: [legacyIndyCredentialFormatService, new AnonCredsDidCommCredentialFormatService()],
+          }),
+        ],
+      },
     }),
     dids: new DidsModule({
       registrars: [new KeyDidRegistrar(), new JwkDidRegistrar(), new PeerDidRegistrar()],
       resolvers: [new WebDidResolver(), new KeyDidResolver(), new JwkDidResolver(), new PeerDidResolver()],
     }),
-    openId4VcIssuer: new OpenId4VcIssuerModule({
-      baseUrl: `${baseUrlWithoutSlash}/oid4vci`,
-      endpoints: {
-        credential: {
-          credentialRequestToCredentialMapper: ({ issuanceSession, holderBinding, credentialsSupported }) => {
-            const credentials = issuanceSession.issuanceMetadata
-              ?.credentials as OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions[]
-            if (!credentials) throw new Error('Not implemented')
+    // TODO: Fix the OID4VC changes for version update
+    // openid4vc: new OpenId4VcModule({
+    //   issuer: {
+    //     baseUrl:
+    //       process.env.NODE_ENV === 'PROD'
+    //         ? `https://${require('APP_URL')}/oid4vci`
+    //         : `${require('AGENT_HTTP_URL')}/oid4vci`,
 
-            const requestedIds = credentialsSupported.map((c) => c.id).filter((id): id is string => id !== undefined)
-            const firstCredential = credentials.find((c) => requestedIds.includes(c.credentialSupportedId))
-            if (!firstCredential) throw new Error('Not implemented')
+    //     statefulCredentialOfferExpirationInSeconds: Number(process.env.OID4VCI_CRED_OFFER_EXPIRY) || 3600,
+    //     accessTokenExpiresInSeconds: Number(process.env.OID4VCI_ACCESS_TOKEN_EXPIRY) || 3600,
+    //     authorizationCodeExpiresInSeconds: Number(process.env.OID4VCI_AUTH_CODE_EXPIRY) || 3600,
+    //     cNonceExpiresInSeconds: Number(process.env.OID4VCI_CNONCE_EXPIRY) || 3600,
+    //     dpopRequired: false,
+    //     // credentialRequestToCredentialMapper: ({ issuanceSession, holderBinding, credentialConfiguration }) => {
+    //     //         const credentials = issuanceSession.issuanceMetadata
+    //     //           ?.credentials as OpenId4VcIssuanceSessionCreateOfferSdJwtCredentialOptions[]
+    //     //         if (!credentials) throw new Error('Not implemented')
 
-            if (firstCredential.format === 'vc+sd-jwt') {
-              return {
-                format: 'vc+sd-jwt',
-                issuer: firstCredential.issuer,
-                holder: holderBinding,
-                payload: firstCredential.payload,
-                // Type in credo is wrong
-                // eslint-disable-next-line @typescript-eslint/no-explicit-any
-                disclosureFrame: firstCredential.disclosureFrame as any,
-                hashingAlgorithm: 'sha-256',
-              }
-            }
+    //     //   const requestedIds = credentialConfiguration.map((c) => c.id).filter((id): id is string => id !== undefined)
+    //     //         const firstCredential = credentials.find((c) => requestedIds.includes(c.credentialSupportedId))
+    //     //         if (!firstCredential) throw new Error('Not implemented')
 
-            throw new Error('Not implemented')
-          },
-        },
-      },
-    }),
-    openId4VcHolder: new OpenId4VcHolderModule(),
-    openId4VcVerifier: new OpenId4VcVerifierModule({
-      baseUrl: `${baseUrlWithoutSlash}/siop`,
-    }),
-  } as const
+    //     //         if (firstCredential.format === 'vc+sd-jwt') {
+    //     //           return {
+    //     //             format: 'vc+sd-jwt',
+    //     //             issuer: firstCredential.issuer,
+    //     //             holder: holderBinding,
+    //     //             payload: firstCredential.payload,
+    //     //             // Type in credo is wrong
+    //     //             // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    //     //             disclosureFrame: firstCredential.disclosureFrame as any,
+    //     //             hashingAlgorithm: 'sha-256',
+    //     //           } as unknown as OpenId4VciSignSdJwtCredentials
+    //     //         }
+
+    //     //         throw new Error('Not implemented')
+    //     //       },
+    //     credentialRequestToCredentialMapper: ({ issuanceSession, holderBinding, credentialConfiguration }) => {
+    //       throw new Error('Not implemented')
+    //     }
+    //   }
+    // })
+  }
 
   const modules: typeof baseModules & {
     tenants?: TenantsModule<typeof baseModules>
@@ -173,9 +206,7 @@ export function getAgentModules(options: {
 
   // Register cheqd module and related resolvers/registrars
   if (options.cheqdLedgers) {
-    modules.cheqd = new CheqdModule({
-      networks: options.cheqdLedgers,
-    })
+    modules.cheqd = new CheqdModule(options.cheqdLedgers)
     modules.dids.config.addRegistrar(new CheqdDidRegistrar())
     modules.dids.config.addResolver(new CheqdDidResolver())
     modules.anoncreds.config.registries.push(new CheqdAnonCredsRegistry())

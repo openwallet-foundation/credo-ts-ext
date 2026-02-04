@@ -1,0 +1,15 @@
+diff --git a/build/anoncreds-rs/AnonCredsRsHolderService.mjs b/build/anoncreds-rs/AnonCredsRsHolderService.mjs
+index 6fa532e40e154b6f70d0a69c1948c8868441d61a..2ce40b6e61927ad27a7e80244f00645ffabaf2e9 100644
+--- a/build/anoncreds-rs/AnonCredsRsHolderService.mjs
++++ b/build/anoncreds-rs/AnonCredsRsHolderService.mjs
+@@ -201,8 +201,8 @@ let AnonCredsRsHolderService = class AnonCredsRsHolderService$1 {
+ 			const isLegacyIdentifier = credentialOffer.cred_def_id.match(unqualifiedCredentialDefinitionIdRegex);
+ 			if (!isLegacyIdentifier && useLegacyProverDid) throw new CredoError("Cannot use legacy prover_did with non-legacy identifiers");
+ 			createReturnObj = CredentialRequest.create({
+-				entropy: !useLegacyProverDid || !isLegacyIdentifier ? anoncreds.generateNonce() : void 0,
+-				proverDid: useLegacyProverDid ? TypedArrayEncoder.toBase58(TypedArrayEncoder.fromString(anoncreds.generateNonce().slice(0, 16))) : void 0,
++				entropy: !useLegacyProverDid || !isLegacyIdentifier ? this.generateNonce(agentContext) : void 0,
++				proverDid: useLegacyProverDid ? TypedArrayEncoder.toBase58(TypedArrayEncoder.fromString(this.generateNonce(agentContext).slice(0, 16))) : void 0,
+ 				credentialDefinition,
+ 				credentialOffer,
+ 				linkSecret: linkSecretRecord.value,

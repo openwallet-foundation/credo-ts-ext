@@ -1,0 +1,22 @@
+diff --git a/build/pool/IndyVdrPool.mjs b/build/pool/IndyVdrPool.mjs
+index db1bed2d787a0667e26317e45640ac5aa72546cf..a6b66c1abbd77b1c7b016d84629d80572a268c5c 100644
+--- a/build/pool/IndyVdrPool.mjs
++++ b/build/pool/IndyVdrPool.mjs
+@@ -3,6 +3,7 @@ import "../error/index.mjs";
+ import { parseIndyDid } from "@credo-ts/anoncreds";
+ import { AgentContext, Kms, TypedArrayEncoder } from "@credo-ts/core";
+ import { GetAcceptanceMechanismsRequest, GetTransactionAuthorAgreementRequest, PoolCreate, indyVdr } from "@hyperledger/indy-vdr-shared";
++import { NodeJSIndyVdr } from '@hyperledger/indy-vdr-nodejs/build/NodeJSIndyVdr'
+ 
+ //#region src/pool/IndyVdrPool.ts
+ var IndyVdrPool = class {
+@@ -69,7 +70,8 @@ var IndyVdrPool = class {
+ 		if (authorAgreement == null) return request;
+ 		if (!poolTaa) throw new IndyVdrError(`Please, specify a transaction author agreement with version and acceptance mechanism. ${JSON.stringify(authorAgreement)}`);
+ 		if (authorAgreement.version !== poolTaa.version || !authorAgreement.acceptanceMechanisms.aml[poolTaa.acceptanceMechanism]) throw new IndyVdrError(`Unable to satisfy matching TAA with mechanism ${JSON.stringify(poolTaa.acceptanceMechanism)} and version ${poolTaa.version} in pool.\n Found ${JSON.stringify(authorAgreement.acceptanceMechanisms.aml)} and version ${authorAgreement.version} in pool.`);
+-		const acceptance = indyVdr.prepareTxnAuthorAgreementAcceptance({
++		//TODO: fix this with indy-vdr (https://github.com/hyperledger-indy/indy-vdr/tree/main/wrappers/javascript)
++		const acceptance = new NodeJSIndyVdr().prepareTxnAuthorAgreementAcceptance({
+ 			text: authorAgreement.text,
+ 			version: authorAgreement.version,
+ 			taaDigest: authorAgreement.digest,

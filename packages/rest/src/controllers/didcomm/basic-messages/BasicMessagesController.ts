@@ -1,4 +1,5 @@
-import { RecordNotFoundError, BasicMessageRole } from '@credo-ts/core'
+import { RecordNotFoundError } from '@credo-ts/core'
+import { DidCommBasicMessageRole } from '@credo-ts/didcomm'
 import { Body, Controller, Example, Get, Post, Query, Request, Route, Security, Tags } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -29,11 +30,11 @@ export class DidCommBasicMessagesController extends Controller {
   public async findBasicMessagesByQuery(
     @Request() request: RequestWithAgent,
     @Query('connectionId') connectionId?: RecordId,
-    @Query('role') role?: BasicMessageRole,
+      @Query('role') role?: DidCommBasicMessageRole,
     @Query('threadId') threadId?: ThreadId,
     @Query('parentThreadId') parentThreadId?: ThreadId,
   ): Promise<DidCommBasicMessageRecord[]> {
-    const basicMessageRecords = await request.user.agent.basicMessages.findAllByQuery({
+    const basicMessageRecords = await request.user.agent.didcomm.basicMessages.findAllByQuery({
       connectionId,
       role,
       threadId,
@@ -53,7 +54,7 @@ export class DidCommBasicMessagesController extends Controller {
   @Post('/send')
   public async sendMessage(@Request() request: RequestWithAgent, @Body() body: DidCommBasicMessagesSendOptions) {
     try {
-      const basicMessageRecord = await request.user.agent.basicMessages.sendMessage(
+      const basicMessageRecord = await request.user.agent.didcomm.basicMessages.sendMessage(
         body.connectionId,
         body.content,
         body.parentThreadId,

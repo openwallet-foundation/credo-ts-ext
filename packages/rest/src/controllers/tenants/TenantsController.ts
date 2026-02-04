@@ -64,8 +64,8 @@ export class TenantsController extends Controller {
     }
 
     // Set to value, or if null was provided, to undefined
-    if (body.config?.connectionImageUrl !== undefined) {
-      tenantRecord.config.connectionImageUrl = body.config.connectionImageUrl ?? undefined
+    if (body.config?.label !== undefined) {
+      tenantRecord.config.label = body.config.label ?? undefined
     }
 
     // Overwrite if value was provided

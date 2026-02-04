@@ -21,7 +21,7 @@ describe('Push Notifications Fcm ', () => {
 
   afterAll(async () => {
     await agent.shutdown()
-    await agent.wallet.delete()
+    await agent.modules.askar.deleteStore()
   })
 
   describe('Create fcm set-device-info message', () => {

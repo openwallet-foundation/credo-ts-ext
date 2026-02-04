@@ -7,25 +7,27 @@ import type { Socket } from 'net'
 import type { Exception } from 'tsoa'
 
 import { Agent } from '@credo-ts/core'
-import { TenantAgent } from '@credo-ts/tenants/build/TenantAgent'
+import { TenantAgent } from '@credo-ts/tenants'
 import bodyParser from 'body-parser'
 import cors from 'cors'
 import express from 'express'
 import { serve, generateHTML } from 'swagger-ui-express'
 import { ValidateError } from 'tsoa'
 import { container } from 'tsyringe'
-import { Server as WsServer } from 'ws'
+import ws from 'ws'
 
-import { didcommBasicMessageEvents } from '../events/didcommBasicMessageEvents'
-import { didcommConnectionEvents } from '../events/didcommConnectionEvents'
-import { didcommCredentialEvents } from '../events/didcommCredentialEvents'
-import { didcommOutOfBandEvents } from '../events/didcommOutOfBandEvents'
-import { didcommProofEvents } from '../events/didcommProofEvents'
-import { openId4VcIssuanceSessionEvents } from '../events/openId4VcIssuanceSessionEvents'
-import { openId4VcVerificationSessionEvents } from '../events/openId4VcVerificationSessionEvents'
-import { RegisterRoutes } from '../generated/routes'
+import { didcommBasicMessageEvents } from '../events/didcommBasicMessageEvents.js'
+import { didcommConnectionEvents } from '../events/didcommConnectionEvents.js'
+import { didcommCredentialEvents } from '../events/didcommCredentialEvents.js'
+import { didcommOutOfBandEvents } from '../events/didcommOutOfBandEvents.js'
+import { didcommProofEvents } from '../events/didcommProofEvents.js'
+// import { openId4VcIssuanceSessionEvents } from '../events/openId4VcIssuanceSessionEvents'
+// import { openId4VcVerificationSessionEvents } from '../events/openId4VcVerificationSessionEvents'
+import { RegisterRoutes } from '../generated/routes.js'
 
-import { createRestAgent } from './createRestAgent'
+import { createRestAgent } from './createRestAgent.js'
+
+const WsServer = ws.Server
 
 /**
  * Setup the Credo REST server based on the provided configuration. It expects an agent to be provided
@@ -52,8 +54,8 @@ export async function setupApp(config: CredoRestSetupAppConfig) {
     didcommCredentialEvents(agent, emitEventConfig)
     didcommProofEvents(agent, emitEventConfig)
     didcommOutOfBandEvents(agent, emitEventConfig)
-    openId4VcIssuanceSessionEvents(agent, emitEventConfig)
-    openId4VcVerificationSessionEvents(agent, emitEventConfig)
+    // openId4VcIssuanceSessionEvents(agent, emitEventConfig)
+    // openId4VcVerificationSessionEvents(agent, emitEventConfig)
   }
 
   // Use body parser to read sent json payloads
@@ -63,14 +65,17 @@ export async function setupApp(config: CredoRestSetupAppConfig) {
     }),
   )
   app.use(bodyParser.json())
-  app.use('/docs', serve, async (_req: Request, res: Response, next: NextFunction) => {
-    res.send(generateHTML(await import('../generated/swagger.json')))
+  app.use('/docs', serve as any, async (_req: Request, res: Response, next: NextFunction) => {
+    const swaggerJson = config.customSwaggerJson ?? (await import('../generated/swagger.json'))
+    res.send(generateHTML(swaggerJson))
     next()
   })
 
   // TODO: allow to pass custom RegisterRoutes method (will allow extension using TSOA)
   RegisterRoutes(app)
-
+  if (config.registerExtraRoutes) {
+      config.registerExtraRoutes(app);
+  }
   app.use(async (req, _, next) => {
     // End tenant session if active
     await endTenantSessionIfActive(req)

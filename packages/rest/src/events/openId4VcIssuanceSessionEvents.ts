@@ -9,19 +9,19 @@ import { openId4VcIssuanceSessionRecordToApiModel } from '../controllers/openid4
 import { emitEvent } from './emitEvent'
 
 export const openId4VcIssuanceSessionEvents = async (agent: Agent, emitEventConfig: EmitEventConfig) => {
-  agent.events.on(
-    OpenId4VcIssuerEvents.IssuanceSessionStateChanged,
-    async (event: OpenId4VcIssuanceSessionStateChangedEvent) => {
-      const { issuanceSession, ...payload } = event.payload
-      const webhookPayload = {
-        ...event,
-        payload: {
-          ...payload,
-          issuanceSession: openId4VcIssuanceSessionRecordToApiModel(issuanceSession),
-        },
-      }
+    agent.events.on(
+        OpenId4VcIssuerEvents.IssuanceSessionStateChanged,
+        async (event: OpenId4VcIssuanceSessionStateChangedEvent) => {
+            const { issuanceSession, ...payload } = event.payload
+            const webhookPayload = {
+                ...event,
+                payload: {
+                    ...payload,
+                    issuanceSession: openId4VcIssuanceSessionRecordToApiModel(issuanceSession),
+                },
+            }
 
-      await emitEvent(webhookPayload, emitEventConfig)
-    },
-  )
+            await emitEvent(webhookPayload, emitEventConfig)
+        },
+    )
 }

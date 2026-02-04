@@ -19,7 +19,7 @@ describe('Push Notifications apns', () => {
 
   afterAll(async () => {
     await agent.shutdown()
-    await agent.wallet.delete()
+    await agent.modules.askar.deleteStore()
   })
 
   describe('Create apns set push notification message', () => {

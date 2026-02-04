@@ -1,6 +1,6 @@
 import type { CredoBaseRecord } from '../types'
 import type { TenantRecord as CredoTenantRecord } from '@credo-ts/tenants'
-import type { TenantConfig } from '@credo-ts/tenants/build/models/TenantConfig'
+import type { TenantConfig } from '@credo-ts/tenants'
 
 type TenantApiConfig = Omit<TenantConfig, 'walletConfig'>
 
@@ -11,7 +11,7 @@ export interface TenantRecord extends CredoBaseRecord {
 
 export function tenantRecordToApiModel(record: CredoTenantRecord): TenantRecord {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { walletConfig: _, ...config } = record.config
+  const { label: _, ...config } = record.config
 
   return {
     // Base Record
@@ -21,7 +21,9 @@ export function tenantRecordToApiModel(record: CredoTenantRecord): TenantRecord 
     type: record.type,
 
     storageVersion: record.storageVersion,
-    config,
+    config: {
+      label: record.config.label,
+    }
   }
 }
 

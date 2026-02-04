@@ -8,7 +8,7 @@ export interface AgentInfo {
   /**
    * The config of the agent.
    */
-  config: ApiAgentConfig
+  config?: ApiAgentConfig
 
   /**
    * Whether the agent has been initialized.

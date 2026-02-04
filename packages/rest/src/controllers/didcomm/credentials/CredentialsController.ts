@@ -4,7 +4,8 @@ import type {
   DidCommCredentialsGetFormatDataResponse,
 } from './CredentialsControllerTypes'
 
-import { CredentialState, RecordNotFoundError, CredentialRole } from '@credo-ts/core'
+import { RecordNotFoundError } from '@credo-ts/core'
+import { DidCommCredentialState, DidCommCredentialRole } from '@credo-ts/didcomm'
 import { Body, Controller, Delete, Get, Path, Post, Route, Tags, Example, Query, Security, Request } from 'tsoa'
 import { injectable } from 'tsyringe'
 
@@ -42,10 +43,10 @@ export class CredentialsController extends Controller {
     @Query('threadId') threadId?: ThreadId,
     @Query('parentThreadId') parentThreadId?: ThreadId,
     @Query('connectionId') connectionId?: RecordId,
-    @Query('state') state?: CredentialState,
-    @Query('role') role?: CredentialRole,
+    @Query('state') state?: DidCommCredentialState,
+    @Query('role') role?: DidCommCredentialRole,
   ) {
-    const credentials = await request.user.agent.credentials.findAllByQuery({
+    const credentials = await request.user.agent.didcomm.credentials.findAllByQuery({
       connectionId,
       threadId,
       state,
@@ -69,7 +70,7 @@ export class CredentialsController extends Controller {
     @Path('credentialExchangeId') credentialExchangeId: RecordId,
   ) {
     try {
-      const credential = await request.user.agent.credentials.getById(credentialExchangeId)
+      const credential = await request.user.agent.didcomm.credentials.getById(credentialExchangeId)
       return credentialExchangeRecordToApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -92,7 +93,7 @@ export class CredentialsController extends Controller {
     @Path('credentialExchangeId') credentialExchangeId: RecordId,
   ): Promise<DidCommCredentialsGetFormatDataResponse> {
     try {
-      const formatData = await request.user.agent.credentials.getFormatData(credentialExchangeId)
+      const formatData = await request.user.agent.didcomm.credentials.getFormatData(credentialExchangeId)
       return formatData
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -116,7 +117,7 @@ export class CredentialsController extends Controller {
   ) {
     try {
       this.setStatus(204)
-      await request.user.agent.credentials.deleteById(credentialExchangeId)
+      await request.user.agent.didcomm.credentials.deleteById(credentialExchangeId)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
         this.setStatus(404)
@@ -139,7 +140,7 @@ export class CredentialsController extends Controller {
   @Post('/propose-credential')
   public async proposeCredential(@Request() request: RequestWithAgent, @Body() options: ProposeCredentialOptions) {
     try {
-      const credential = await request.user.agent.credentials.proposeCredential(options)
+      const credential = await request.user.agent.didcomm.credentials.proposeCredential(options)
       return credentialExchangeRecordToApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -164,9 +165,9 @@ export class CredentialsController extends Controller {
     @Body() options?: AcceptCredentialProposalOptions,
   ) {
     try {
-      const credential = await request.user.agent.credentials.acceptProposal({
+      const credential = await request.user.agent.didcomm.credentials.acceptProposal({
         ...options,
-        credentialRecordId: credentialExchangeId,
+        credentialExchangeRecordId: credentialExchangeId,
       })
 
       return credentialExchangeRecordToApiModel(credential)
@@ -192,10 +193,10 @@ export class CredentialsController extends Controller {
     @Body() options: CreateOfferOptions,
   ): Promise<DidCommCredentialsCreateOfferResponse> {
     try {
-      const offer = await request.user.agent.credentials.createOffer(options)
+      const offer = await request.user.agent.didcomm.credentials.createOffer(options)
       return {
         message: offer.message.toJSON(),
-        credentialExchange: credentialExchangeRecordToApiModel(offer.credentialRecord),
+        credentialExchange: credentialExchangeRecordToApiModel(offer.credentialExchangeRecord),
       }
     } catch (error) {
       this.setStatus(500)
@@ -211,7 +212,7 @@ export class CredentialsController extends Controller {
   @Post('/offer-credential')
   public async offerCredential(@Request() request: RequestWithAgent, @Body() options: OfferCredentialOptions) {
     try {
-      const credential = await request.user.agent.credentials.offerCredential(options)
+      const credential = await request.user.agent.didcomm.credentials.offerCredential(options)
       return credentialExchangeRecordToApiModel(credential)
     } catch (error) {
       if (error instanceof RecordNotFoundError) {
@@ -236,9 +237,9 @@ export class CredentialsController extends Controller {
     @Body() options?: AcceptCredentialOfferOptions,
   ) {
     try {
-      const credential = await request.user.agent.credentials.acceptOffer({
+      const credential = await request.user.agent.didcomm.credentials.acceptOffer({
         ...options,
-        credentialRecordId: credentialExchangeId,
+        credentialExchangeRecordId: credentialExchangeId,
       })
       return credentialExchangeRecordToApiModel(credential)
     } catch (error) {
@@ -264,9 +265,9 @@ export class CredentialsController extends Controller {
     @Body() options?: AcceptCredentialRequestOptions,
   ) {
     try {
-      const credential = await request.user.agent.credentials.acceptRequest({
+      const credential = await request.user.agent.didcomm.credentials.acceptRequest({
         ...options,
-        credentialRecordId: credentialExchangeId,
+        credentialExchangeRecordId: credentialExchangeId,
       })
       return credentialExchangeRecordToApiModel(credential)
     } catch (error) {
@@ -291,8 +292,8 @@ export class CredentialsController extends Controller {
     @Path('credentialExchangeId') credentialExchangeId: RecordId,
   ) {
     try {
-      const credential = await request.user.agent.credentials.acceptCredential({
-        credentialRecordId: credentialExchangeId,
+      const credential = await request.user.agent.didcomm.credentials.acceptCredential({
+        credentialExchangeRecordId: credentialExchangeId,
       })
       return credentialExchangeRecordToApiModel(credential)
     } catch (error) {

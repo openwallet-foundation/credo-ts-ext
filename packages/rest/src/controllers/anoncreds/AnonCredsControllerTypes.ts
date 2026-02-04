@@ -13,7 +13,6 @@ import type {
   RegisterSchemaReturnStateFinished,
   RegisterSchemaReturnStateWait,
 } from '@credo-ts/anoncreds'
-import type { AnonCredsRegisterCredentialDefinitionApiOptions } from '@credo-ts/anoncreds/build/AnonCredsApi'
 
 /**
  * @example did:indy:bcovrin:test:WgWxqztrNooG92RXvxSTWv/anoncreds/v0/SCHEMA/schema-name/1.0
@@ -28,7 +27,7 @@ export type AnonCredsCredentialDefinitionId = string
 export interface AnonCredsGetSchemaFailedResponse {
   schemaId: AnonCredsSchemaId
   schema?: AnonCredsSchema
-  resolutionMetadata: Required<AnonCredsResolutionMetadata>
+  resolutionMetadata: Partial<AnonCredsResolutionMetadata>
   schemaMetadata: AnyJsonObject
 }
 
@@ -51,7 +50,7 @@ export interface AnonCredsGetSchemaSuccessResponse {
  */
 export interface AnonCredsRegisterSchemaBody {
   schema: AnonCredsSchema
-  options?: AnyJsonObject
+  options?: { [x: string]: unknown }
 }
 
 export interface AnonCredsRegisterSchemaSuccessResponse {
@@ -88,7 +87,7 @@ export interface AnonCredsRegisterSchemaFailedResponse {
 export interface AnonCredsGetCredentialDefinitionFailedResponse {
   credentialDefinitionId: AnonCredsCredentialDefinitionId
   credentialDefinition?: AnonCredsCredentialDefinition
-  resolutionMetadata: Required<AnonCredsResolutionMetadata>
+  resolutionMetadata: Partial<AnonCredsResolutionMetadata>
   credentialDefinitionMetadata: AnyJsonObject
 }
 
@@ -97,6 +96,10 @@ export interface AnonCredsGetCredentialDefinitionSuccessResponse {
   credentialDefinition: AnonCredsCredentialDefinition
   resolutionMetadata: AnyJsonObject
   credentialDefinitionMetadata: AnyJsonObject
+}
+
+export interface AnonCredsRegisterCredentialDefinitionApiOptions {
+  supportRevocation: boolean;
 }
 
 export interface AnonCredsRegisterCredentialDefinitionOptions
