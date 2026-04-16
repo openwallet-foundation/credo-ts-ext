@@ -1,18 +1,16 @@
-import type { MessageHandler, MessageHandlerInboundMessage } from '@credo-ts/core'
+import type { DidCommMessageHandler, DidCommMessageHandlerInboundMessage } from '@credo-ts/didcomm'
+
+import { DidCommOutboundMessageContext } from '@credo-ts/didcomm'
 
 import { PushNotificationsApnsSetDeviceInfoMessage } from '../messages'
 
-/**
- * Handler for incoming push notification device info messages
- */
-export class PushNotificationsApnsSetDeviceInfoHandler implements MessageHandler {
+export class PushNotificationsApnsSetDeviceInfoHandler implements DidCommMessageHandler {
   public supportedMessages = [PushNotificationsApnsSetDeviceInfoMessage]
 
-  /**
-  /* We don't really need to do anything with this at the moment
-  /* The result can be hooked into through the generic message processed event
-   */
-  public async handle(inboundMessage: MessageHandlerInboundMessage<PushNotificationsApnsSetDeviceInfoHandler>) {
+  public async handle(
+    inboundMessage: DidCommMessageHandlerInboundMessage<PushNotificationsApnsSetDeviceInfoHandler>,
+  ): Promise<DidCommOutboundMessageContext | undefined> {
     inboundMessage.assertReadyConnection()
+    return undefined
   }
 }
