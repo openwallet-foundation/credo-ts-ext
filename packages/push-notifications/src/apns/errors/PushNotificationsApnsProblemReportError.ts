@@ -1,21 +1,21 @@
 import type { PushNotificationsApnsProblemReportReason } from './PushNotificationsApnsProblemReportReason'
-import type { ProblemReportErrorOptions } from '@credo-ts/core'
+import type { DidCommProblemReportErrorOptions } from '@credo-ts/didcomm'
 
-import { ProblemReportError } from '@credo-ts/core'
+import { DidCommProblemReportError } from '@credo-ts/didcomm'
 
 import { PushNotificationsApnsProblemReportMessage } from '../messages'
 
 /**
  * @internal
  */
-interface PushNotificationsApnsProblemReportErrorOptions extends ProblemReportErrorOptions {
+interface PushNotificationsApnsProblemReportErrorOptions extends DidCommProblemReportErrorOptions {
   problemCode: PushNotificationsApnsProblemReportReason
 }
 
 /**
  * @internal
  */
-export class PushNotificationsApnsProblemReportError extends ProblemReportError {
+export class PushNotificationsApnsProblemReportError extends DidCommProblemReportError {
   public problemReport: PushNotificationsApnsProblemReportMessage
 
   public constructor(

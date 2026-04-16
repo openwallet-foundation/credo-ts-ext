@@ -1,20 +1,21 @@
 import type { ApnsDeviceInfo } from './models'
 
-import { OutboundMessageContext, AgentContext, ConnectionService, injectable, MessageSender } from '@credo-ts/core'
+import { AgentContext, injectable } from '@credo-ts/core'
+import { DidCommConnectionService, DidCommMessageSender, DidCommOutboundMessageContext } from '@credo-ts/didcomm'
 
 import { PushNotificationsApnsService } from './PushNotificationsApnsService'
 
 @injectable()
 export class PushNotificationsApnsApi {
-  private messageSender: MessageSender
+  private messageSender: DidCommMessageSender
   private pushNotificationsService: PushNotificationsApnsService
-  private connectionService: ConnectionService
+  private connectionService: DidCommConnectionService
   private agentContext: AgentContext
 
   public constructor(
-    messageSender: MessageSender,
+    messageSender: DidCommMessageSender,
     pushNotificationsService: PushNotificationsApnsService,
-    connectionService: ConnectionService,
+    connectionService: DidCommConnectionService,
     agentContext: AgentContext,
   ) {
     this.messageSender = messageSender
@@ -22,6 +23,7 @@ export class PushNotificationsApnsApi {
     this.connectionService = connectionService
     this.agentContext = agentContext
   }
+
   /**
    * Sends a set request with the apns device info (token) to another agent via a `connectionId`
    *
@@ -35,7 +37,7 @@ export class PushNotificationsApnsApi {
 
     const message = this.pushNotificationsService.createSetDeviceInfo(deviceInfo)
 
-    const outbound = new OutboundMessageContext(message, {
+    const outbound = new DidCommOutboundMessageContext(message, {
       agentContext: this.agentContext,
       connection: connection,
     })
@@ -58,7 +60,7 @@ export class PushNotificationsApnsApi {
 
     const message = this.pushNotificationsService.createDeviceInfo({ threadId, deviceInfo })
 
-    const outbound = new OutboundMessageContext(message, {
+    const outbound = new DidCommOutboundMessageContext(message, {
       agentContext: this.agentContext,
       connection: connection,
     })
@@ -77,7 +79,7 @@ export class PushNotificationsApnsApi {
 
     const message = this.pushNotificationsService.createGetDeviceInfo()
 
-    const outbound = new OutboundMessageContext(message, {
+    const outbound = new DidCommOutboundMessageContext(message, {
       agentContext: this.agentContext,
       connection: connection,
     })

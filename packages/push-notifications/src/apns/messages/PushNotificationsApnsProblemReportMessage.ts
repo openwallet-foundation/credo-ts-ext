@@ -1,14 +1,14 @@
-import type { ProblemReportMessageOptions } from '@credo-ts/core'
+import type { DidCommProblemReportMessageOptions } from '@credo-ts/didcomm'
 
-import { IsValidMessageType, parseMessageType, ProblemReportMessage } from '@credo-ts/core'
+import { DidCommProblemReportMessage, IsValidMessageType, parseMessageType } from '@credo-ts/didcomm'
 
-export type PushNotificationsApnsProblemReportMessageOptions = ProblemReportMessageOptions
+export type PushNotificationsApnsProblemReportMessageOptions = DidCommProblemReportMessageOptions
 
 /**
  * @see https://github.com/hyperledger/aries-rfcs/blob/main/features/0035-report-problem/README.md
  * @internal
  */
-export class PushNotificationsApnsProblemReportMessage extends ProblemReportMessage {
+export class PushNotificationsApnsProblemReportMessage extends DidCommProblemReportMessage {
   /**
    * Create new ConnectionProblemReportMessage instance.
    * @param options

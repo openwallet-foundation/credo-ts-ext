@@ -1,20 +1,21 @@
 import type { FcmDeviceInfo } from './models'
 
-import { OutboundMessageContext, AgentContext, ConnectionService, injectable, MessageSender } from '@credo-ts/core'
+import { AgentContext, injectable } from '@credo-ts/core'
+import { DidCommConnectionService, DidCommMessageSender, DidCommOutboundMessageContext } from '@credo-ts/didcomm'
 
 import { PushNotificationsFcmService } from './PushNotificationsFcmService'
 
 @injectable()
 export class PushNotificationsFcmApi {
-  private messageSender: MessageSender
+  private messageSender: DidCommMessageSender
   private pushNotificationsService: PushNotificationsFcmService
-  private connectionService: ConnectionService
+  private connectionService: DidCommConnectionService
   private agentContext: AgentContext
 
   public constructor(
-    messageSender: MessageSender,
+    messageSender: DidCommMessageSender,
     pushNotificationsService: PushNotificationsFcmService,
-    connectionService: ConnectionService,
+    connectionService: DidCommConnectionService,
     agentContext: AgentContext,
   ) {
     this.messageSender = messageSender
@@ -36,7 +37,7 @@ export class PushNotificationsFcmApi {
 
     const message = this.pushNotificationsService.createSetDeviceInfo(deviceInfo)
 
-    const outbound = new OutboundMessageContext(message, {
+    const outbound = new DidCommOutboundMessageContext(message, {
       agentContext: this.agentContext,
       connection: connection,
     })
@@ -59,7 +60,7 @@ export class PushNotificationsFcmApi {
 
     const message = this.pushNotificationsService.createDeviceInfo({ threadId, deviceInfo })
 
-    const outbound = new OutboundMessageContext(message, {
+    const outbound = new DidCommOutboundMessageContext(message, {
       agentContext: this.agentContext,
       connection: connection,
     })
@@ -78,7 +79,7 @@ export class PushNotificationsFcmApi {
 
     const message = this.pushNotificationsService.createGetDeviceInfo()
 
-    const outbound = new OutboundMessageContext(message, {
+    const outbound = new DidCommOutboundMessageContext(message, {
       agentContext: this.agentContext,
       connection: connection,
     })

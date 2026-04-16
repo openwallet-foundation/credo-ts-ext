@@ -1,4 +1,4 @@
-import { AgentMessage, IsValidMessageType, parseMessageType } from '@credo-ts/core'
+import { DidCommMessage, IsValidMessageType, parseMessageType } from '@credo-ts/didcomm'
 
 interface PushNotificationsFcmGetDeviceInfoOptions {
   id?: string
@@ -9,7 +9,7 @@ interface PushNotificationsFcmGetDeviceInfoOptions {
  *
  * @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0734-push-notifications-fcm#get-device-info
  */
-export class PushNotificationsFcmGetDeviceInfoMessage extends AgentMessage {
+export class PushNotificationsFcmGetDeviceInfoMessage extends DidCommMessage {
   public constructor(options: PushNotificationsFcmGetDeviceInfoOptions) {
     super()
 

@@ -1,5 +1,5 @@
 import type { FcmDeviceInfo } from './models/FcmDeviceInfo'
-import type { InboundMessageContext } from '@credo-ts/core'
+import type { DidCommInboundMessageContext } from '@credo-ts/didcomm'
 
 import { CredoError } from '@credo-ts/core'
 import { Lifecycle, scoped } from 'tsyringe'
@@ -42,7 +42,7 @@ export class PushNotificationsFcmService {
     })
   }
 
-  public processSetDeviceInfo(messageContext: InboundMessageContext<PushNotificationsFcmSetDeviceInfoMessage>) {
+  public processSetDeviceInfo(messageContext: DidCommInboundMessageContext<PushNotificationsFcmSetDeviceInfoMessage>) {
     const { message } = messageContext
     if (
       (message.deviceToken === null && message.devicePlatform !== null) ||
