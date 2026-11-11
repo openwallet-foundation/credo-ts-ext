@@ -1,5 +1,0 @@
-export { agentSlice, AgentThunks } from './agent'
-export { connectionsSlice, ConnectionThunks, ConnectionsSelectors } from './connections'
-export { credentialsSlice, CredentialsThunks, CredentialsSelectors } from './credentials'
-export { proofsSlice, ProofsThunks, ProofsSelectors } from './proofs'
-export { mediationSlice, MediationThunks, MediationSelectors } from './mediation'
