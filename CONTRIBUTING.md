@@ -26,6 +26,8 @@ pnpm test
 
 Run `pnpm style:fix` to apply Biome formatting and lint fixes. Shared tooling versions are defined in the `pnpm-workspace.yaml` catalog.
 
+CI runs the unit and end-to-end test projects on Node.js 22, 24, and 26, matching Credo main.
+
 To create a package, add a directory under `packages` with its own `package.json` and the configuration files listed below.
 
 Some general notes on creating a new package:
