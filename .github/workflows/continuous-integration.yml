@@ -60,6 +60,8 @@ jobs:
         node-version: [22, 24, 26]
     steps:
       - uses: actions/checkout@v7.0.1
+      - name: Start Indy ledger
+        run: docker compose up -d --build
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -68,6 +70,14 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run E2E tests
-        run: pnpm test:e2e --coverage
+        run: |
+          docker compose up -d --wait --wait-timeout 600 --no-recreate
+          pnpm test:e2e --coverage --passWithNoTests=false
+      - name: Ledger logs
+        if: failure()
+        run: docker compose logs --no-color --tail 200
+      - name: Stop Indy ledger
+        if: always()
+        run: docker compose down
       - uses: codecov/codecov-action@v4
         if: always() && hashFiles('coverage/lcov.info') != ''
