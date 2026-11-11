@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  pull-requests: write
+  contents: write
+  id-token: write
+
+concurrency:
+  group: credo-ts-ext-${{ github.ref }}-release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    if: github.repository == 'openwallet-foundation/credo-ts-ext'
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '22.22.1'
+          cache: pnpm
+      - name: Update npm
+        run: npm install -g npm@^11
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Create release pull request or publish to npm
+        uses: changesets/action@v2
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          pr-title: 'chore(release): new version'
+          commit-message: 'chore(release): new version'
+          version-script: pnpm changeset-version
+          publish-script: pnpm release
+          push-with-git-cli: true

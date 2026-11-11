@@ -1,7 +1,0 @@
-node_modules
-build
-.vscode
-.idea
-coverage
-CHANGELOG.md
-generated
