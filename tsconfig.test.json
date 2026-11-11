@@ -7,7 +7,6 @@
       "@credo-ts/react-hooks": ["packages/react-hooks/src"],
       "@credo-ts/rest": ["packages/rest/src"],
       "@credo-ts/redux-store": ["packages/redux-store/src"],
-      "@credo-ts/transport-ble": ["packages/transport-ble/src"],
       "@credo-ts/push-notifications": ["packages/push-notifications/src"]
     },
     "types": ["jest", "node"]
