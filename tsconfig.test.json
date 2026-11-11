@@ -3,11 +3,8 @@
   "compilerOptions": {
     "lib": ["ES2021.Promise"],
     "baseUrl": ".",
-    "paths": {
-      "@credo-ts/rest": ["packages/rest/src"]
-    },
     "types": ["jest", "node"]
   },
-  "include": ["tests", "samples", "**/tests", "**/samples"],
+  "include": ["jest.config.ts", "jest.config.base.ts", "tests", "samples", "**/tests", "**/samples"],
   "exclude": ["node_modules", "build", "**/build/**"]
 }
