@@ -43,21 +43,21 @@
   <a href="#license">License</a>
 </p>
 
-Credo Extensions is an extension repo to [Credo](https://github.com/openwallet-foundation/credo-ts.git). It hosts libraries built on top of Credo that don't necessarily belong to the core of the project. Example extension libraries include React Hooks for Credo and a REST API wrapper.
+Credo Extensions previously hosted libraries built on top of [Credo](https://github.com/openwallet-foundation/credo-ts.git). All packages have now been removed or relocated; the monorepo scaffold is retained for future packages.
 
 If you're just getting started the [Credo repo](https://github.com/openwallet-foundation/credo-ts.git) is probably the place to start.
 
 ## Packages
 
-All packages are placed in the [`packages/`](./packages) directory.
+There are currently no packages in this repository.
 
-| Package                                                                                      | Version                                                                                            | Description                                         |
-| -------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------- |
-| [`@credo-ts/rest`](https://www.npmjs.com/package/@credo-ts/rest)                             | ![@credo-ts/rest version](https://img.shields.io/npm/v/@credo-ts/rest)                             | Rest API for using Credo over HTTP                  |
-| [`@credo-ts/react-hooks`](https://www.npmjs.com/package/@credo-ts/react-hooks)               | ![@credo-ts/react-hooks version](https://img.shields.io/npm/v/@credo-ts/react-hooks)               | React Hooks for data handling and agent interaction |
-| [`@credo-ts/redux-store`](https://www.npmjs.com/package/@credo-ts/redux-store)               | ![@credo-ts/redux-store version](https://img.shields.io/npm/v/@credo-ts/redux-store)               | Redux Toolkit wrapper around Credo                  |
-| [`@credo-ts/push-notifications`](https://www.npmjs.com/package/@credo-ts/push-notifications) | ![@credo-ts/push-notifications version](https://img.shields.io/npm/v/@credo-ts/push-notifications) | Push notification plugin for Credo                  |
-| [`@credo-ts/transport-ble`](https://www.npmjs.com/package/@credo-ts/transport-ble)           | ![@credo-ts/transport-ble version](https://img.shields.io/npm/v/@credo-ts/transport-ble)           | Bluetooth Low Energy transport for Credo            |
+### Removed packages
+
+- Push notifications is now part of [DIDComm Mediator Credo](https://github.com/openwallet-foundation/didcomm-mediator-credo), available as [`@credo-ts/didcomm-push-notifications`](https://github.com/openwallet-foundation/didcomm-mediator-credo/tree/main/packages/push-notifications).
+- React hooks is now part of [Bifold Wallet](https://github.com/openwallet-foundation/bifold-wallet), available as [`@bifold/react-hooks`](https://github.com/openwallet-foundation/bifold-wallet/tree/main/packages/react-hooks).
+- BLE transport (`@credo-ts/transport-ble`) has moved to [Credo DIDComm Extensions](https://github.com/openwallet-foundation/credo-ts-didcomm-ext).
+- `@credo-ts/redux-store` has been removed from this repository.
+- `@credo-ts/rest` has been removed from this repository, along with its Docker image deployment workflow.
 
 ## Contributing
 

@@ -14,7 +14,7 @@ Contributions are made pursuant to the Developer's Certificate of Origin, availa
 
 ## Creating a new package
 
-Packages in this repo are managed using yarn workspaces and [release-please](https://github.com/googleapis/release-please). To create a new package, it is easiest to duplicate of one the existing packages in the `packages` directory and remove and rename everything that is not needed.
+Packages in this repo are managed using yarn workspaces and [release-please](https://github.com/googleapis/release-please). There are currently no packages; to create one, add a directory under `packages` with its own `package.json` and the configuration files listed below.
 
 Some general notes on creating a new package:
 
@@ -38,7 +38,7 @@ See [this PR](https://github.com/openwallet-foundation/credo-ts-ext/pull/32) for
   - If you want to squash your PR only the title of the PR should be following conventional commits.
   - If you want to rebase your PR **ALL** commit messages should follow the conventional commits specification. This is a good option for PRs that make a lot of changes that can't be captured in a single message
 - Use scopes to indicate the package the commit affects.
-  - E.g. if you're adding a new feature to the `redux-store` package start your commit with `feat(redux-store): `.
+  - E.g. for a package named `example`, start your commit with `feat(example): `.
 - Indicate breaking changes using `!`
-  - E.g. if you're adding a new breaking feature to the `redux-store` package start your commit with `feat(redux-store)!: `
+  - E.g. for a package named `example`, start your breaking-change commit with `feat(example)!: `.
 - If you're working on multiple packages in a single PR, make sure to split the commits and use the rebase strategy. The commit message will be applied to all packages that it affects, meaning that all packages will receive the same version bump.
