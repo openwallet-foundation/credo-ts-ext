@@ -38,7 +38,7 @@ See [this PR](https://github.com/openwallet-foundation/credo-ts-ext/pull/32) for
   - If you want to squash your PR only the title of the PR should be following conventional commits.
   - If you want to rebase your PR **ALL** commit messages should follow the conventional commits specification. This is a good option for PRs that make a lot of changes that can't be captured in a single message
 - Use scopes to indicate the package the commit affects.
-  - E.g. if you're adding a new feature to the `redux-store` package start your commit with `feat(redux-store): `.
+  - E.g. if you're adding a new feature to the `rest` package start your commit with `feat(rest):`.
 - Indicate breaking changes using `!`
-  - E.g. if you're adding a new breaking feature to the `redux-store` package start your commit with `feat(redux-store)!: `
+  - E.g. if you're adding a new breaking feature to the `rest` package start your commit with `feat(rest)!:`
 - If you're working on multiple packages in a single PR, make sure to split the commits and use the rebase strategy. The commit message will be applied to all packages that it affects, meaning that all packages will receive the same version bump.
