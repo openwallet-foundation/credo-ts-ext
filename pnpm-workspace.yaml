@@ -1,0 +1,12 @@
+packages:
+  - packages/*
+  - samples/*
+
+catalog:
+  '@biomejs/biome': 2.5.14
+  '@types/node': ^22.19.0
+  '@typescript/native': npm:typescript@^7.0.2
+  '@vitest/coverage-v8': ^5.0.5
+  reflect-metadata: 0.2.2
+  typescript: npm:@typescript/typescript6@^6.0.2
+  vitest: ^5.0.5

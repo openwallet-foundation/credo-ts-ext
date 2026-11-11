@@ -63,7 +63,7 @@ There are currently no packages in this repository.
 
 If you would like to contribute to this repository, please read the [CONTRIBUTING](/CONTRIBUTING.md) guidelines. These documents will provide more information to get you started!
 
-For running tests, make sure to follow the network setup guides from the Credo [DEVREADME.md](https://github.com/openwallet-foundation/credo-ts/blob/main/DEVREADME.md).
+The monorepo uses Node.js 22+, pnpm, Biome, tsdown, Vitest, and Changesets, aligned with Credo-ts main. Run `pnpm install`, `pnpm validate`, `pnpm build`, and `pnpm test` to validate changes.
 
 There are regular community working groups to discuss ongoing efforts within Credo, showcase items you've built with Credo, or ask questions. See [Meeting Information](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information) for up to date information on the meeting schedule. Everyone is welcome to join!
 

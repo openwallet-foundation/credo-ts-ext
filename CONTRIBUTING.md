@@ -14,7 +14,21 @@ Contributions are made pursuant to the Developer's Certificate of Origin, availa
 
 ## Creating a new package
 
-Packages in this repo are managed using yarn workspaces and [release-please](https://github.com/googleapis/release-please). There are currently no packages; to create one, add a directory under `packages` with its own `package.json` and the configuration files listed below.
+Packages are managed using pnpm workspaces and [Changesets](https://github.com/changesets/changesets). Use Node.js 22 or newer and the pnpm version pinned in `package.json` (via Corepack).
+
+```sh
+corepack enable
+pnpm install
+pnpm validate
+pnpm build
+pnpm test
+```
+
+Run `pnpm style:fix` to apply Biome formatting and lint fixes. Shared tooling versions are defined in the `pnpm-workspace.yaml` catalog.
+
+CI runs the unit and end-to-end test projects on Node.js 22, 24, and 26, matching Credo main.
+
+To create a package, add a directory under `packages` with its own `package.json` and the configuration files listed below.
 
 Some general notes on creating a new package:
 
@@ -22,17 +36,26 @@ Some general notes on creating a new package:
 - Test files that test multiple features should be hosted in the `packages/<package-name>/tests` directory
 - If you want to include sample files for your package, you can host these in the `packages/<package-name>/samples` directory.
 - Make sure to update all references of the package names in the `package.json`, `README.md` files
-- Delete the `CHANGELOG.md` file. This will be automatically added by release-please.
+- Changesets generates `CHANGELOG.md` when versioning packages.
 - Make sure your package includes all the needed build files:
-  - `jest.config.ts`
-  - `tsconfig.json`
   - `tsconfig.build.json`
+  - `tsdown.config.ts`
+- Packages use ESM (`"type": "module"`). Add a `build` script using `tsdown --config tsdown.config.ts` and export the generated JavaScript and declaration files.
+- Extend the root `tsconfig.build.json` in your package's build configuration, set `outDir` to `build`, and include `src`.
+- Re-export the default from `../../tsdown.config.base.ts` in your package's tsdown configuration. The explicit extension supports native config loading. The shared configuration emits unbundled ESM and declaration maps for a neutral ES2020 target.
+- Use `workspace:*` for internal dependencies and `catalog:` for shared tooling versions.
+- Tests use Vitest globals and live alongside source or in package `tests` directories. Tests ending in `.e2e.test.ts` run in the `e2e` project; other `.test.ts` and `.spec.ts` files run in `unit`.
+- Run `pnpm test:unit` or `pnpm test:e2e` to select a project. No tests is currently a successful result because the workspace is empty.
 
 ## Release Process
 
-Releases are managed using [Release Please](https://github.com/googleapis/release-please). It will automatically scan all commits using conventional commits standard. If changes are detected that will trigger a version bump using either the `feat:` or `fix:` scope, or `!` (e.g. `feat!:`) for breaking changes, release please will open a PR with the version bump and updates to `CHANGELOG.md`. The PR will be automatically kept up to date, and once it will be merged a new release will be created on Github and the package will be released on NPM.
+Releases are managed using Changesets. Run `pnpm changeset` for changes affecting published packages, select the affected packages and bump types, and describe the changes and migration steps. Commit the generated changeset with your code; this command does not commit automatically.
 
-See [this PR](https://github.com/openwallet-foundation/credo-ts-ext/pull/32) for an example. Each package is versioned independently, to let packages evolve at their own pace. To make the release process as smooth as possible, make sure you're following these guidelines:
+The release workflow opens a PR with updated versions and changelogs using `pnpm changeset-version`. Merging the release PR builds packages and publishes them using `pnpm release`. Packages are versioned independently. npm trusted publishing must be configured for each package to trust this repository's `release.yml` workflow before its first automated publication.
+
+This monorepo follows Credo-ts main's pnpm, Biome, TypeScript, tsdown, Vitest, and Changesets tooling. Unlike core's fixed release group, extensions retain independent versions; core-specific native dependencies, test projects, and snapshot publishing are not included.
+
+To keep changes easy to review:
 
 - Make sure your commits follow the [Conventional Commits](https://www.conventionalcommits.org/) specification.
   - If you want to squash your PR only the title of the PR should be following conventional commits.
@@ -41,4 +64,4 @@ See [this PR](https://github.com/openwallet-foundation/credo-ts-ext/pull/32) for
   - E.g. for a package named `example`, start your commit with `feat(example): `.
 - Indicate breaking changes using `!`
   - E.g. for a package named `example`, start your breaking-change commit with `feat(example)!: `.
-- If you're working on multiple packages in a single PR, make sure to split the commits and use the rebase strategy. The commit message will be applied to all packages that it affects, meaning that all packages will receive the same version bump.
+- For changes affecting multiple packages, select each affected package in the changeset. Commit messages do not determine package version bumps.

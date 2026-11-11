@@ -1,7 +1,8 @@
 node_modules
 build
 .vscode
-yarn-error.log
+.pnpm-store
+pnpm-debug.log*
 .idea
 coverage
 .DS_Store

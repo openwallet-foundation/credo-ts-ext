@@ -1,27 +1,32 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "ES2017",
+    "module": "es2022",
+    "moduleResolution": "bundler",
+    "target": "ES2020",
     "declaration": true,
     "sourceMap": true,
     "strict": true,
     "noEmitOnError": true,
-    "lib": [],
+    "lib": ["es2022"],
     "types": [],
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "verbatimModuleSyntax": true,
     "experimentalDecorators": true,
-    "emitDecoratorMetadata": true,
-    "skipLibCheck": true
+    "emitDecoratorMetadata": true
   },
   "exclude": [
     "node_modules",
+    "**/node_modules/**",
     "build",
+    "**/build/**",
+    "**/cli-build/**",
     "**/*.test.ts",
     "**/__tests__/*.ts",
     "**/__mocks__/*.ts",
-    "**/build/**",
-    "scripts"
+    "**/.pnpm/**"
   ]
 }
