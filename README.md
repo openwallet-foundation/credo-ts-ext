@@ -43,18 +43,19 @@
   <a href="#license">License</a>
 </p>
 
-Credo Extensions previously hosted libraries built on top of [Credo](https://github.com/openwallet-foundation/credo-ts.git). All packages have now been removed or relocated; the monorepo scaffold is retained for future packages.
+Credo Extensions hosts libraries built on top of [Credo](https://github.com/openwallet-foundation/credo-ts.git),
+including ledger-based DID integrations.
 
 If you're just getting started the [Credo repo](https://github.com/openwallet-foundation/credo-ts.git) is probably the place to start.
 
 ## Packages
 
-There are currently no packages in this repository.
+| Package | Description |
+| --- | --- |
+| [@credo-ts/indy-vdr](./packages/indy-vdr) | Indy DID registration/resolution, ledger pools, endorsement and AnonCreds registry |
 
-The Cheqd, Hedera and Indy VDR packages are being transferred wholesale from Credo, retaining their
-`@credo-ts/cheqd`, `@credo-ts/hedera` and `@credo-ts/indy-vdr` names and `/anoncreds` entry points.
-Packages and their complete test suites will be established here before the originals are removed separately.
-Subsequent releases of these packages will be published from this repository, not from Credo.
+The Indy VDR package includes its complete test suite and optional `@credo-ts/indy-vdr/anoncreds` entry point.
+It is maintained and released from this repository.
 
 ### Removed packages
 
@@ -85,12 +86,22 @@ signatures or pull in its Drizzle and DIDComm test infrastructure.
 
 Run `pnpm test:unit` for offline tests and `pnpm test:e2e` for `*.e2e.test.ts` suites.
 Shared helper tests are discovered alongside package tests. CI runs unit and E2E suites separately;
-an empty E2E suite is allowed only while the package ports are pending.
+both jobs require tests to be discovered.
 
-Each package port must bring its fixtures and E2E prerequisites with it: Indy pool/genesis/seeded identities,
-the Cheqd validator and funded test accounts, or explicit Hedera network/operator credentials.
-Add service startup and readiness checks to the E2E job when introducing local-ledger suites.
-Do not copy embedded Hedera operator keys or silently skip tests when required services or credentials are missing.
+Start the Indy pool before running E2E tests:
+
+```sh
+docker compose up -d --build --wait --wait-timeout 600
+pnpm test:e2e
+docker compose down
+```
+
+On Apple Silicon, use `docker compose -f docker-compose.yml -f docker-compose.arm.yml` in place of
+`docker compose` for both startup and shutdown. The pool exposes ports 9701–9708 and its health check waits
+for the transaction author agreement and test endorser/trustee identities to be seeded.
+`GENESIS_TXN_PATH` can point to an alternative genesis file, but that ledger must have the same test identities
+and transaction author agreement configured. Test seeds and the in-memory wallet key are test-only fixtures.
+
 No sibling checkout of Credo is needed for development or CI.
 
 There are regular community working groups to discuss ongoing efforts within Credo, showcase items you've built with Credo, or ask questions. See [Meeting Information](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information) for up to date information on the meeting schedule. Everyone is welcome to join!
