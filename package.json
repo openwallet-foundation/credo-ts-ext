@@ -26,6 +26,7 @@
     "@changesets/cli": "^3.0.3",
     "@credo-ts/askar": "catalog:",
     "@credo-ts/core": "catalog:",
+    "@credo-ts/indy-vdr": "workspace:*",
     "@credo-ts/node": "catalog:",
     "@openwallet-foundation/askar-nodejs": "catalog:",
     "@types/node": "catalog:",
@@ -34,6 +35,7 @@
     "reflect-metadata": "catalog:",
     "tsdown": "^0.23.4",
     "typescript": "catalog:",
+    "unrun": "^0.3.1",
     "vite": "^8.3.5",
     "vitest": "catalog:"
   },

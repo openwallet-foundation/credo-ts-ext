@@ -3,6 +3,8 @@ packages:
   - samples/*
 
 allowBuilds:
+  '@hyperledger/anoncreds-nodejs': true
+  '@hyperledger/indy-vdr-nodejs': true
   '@openwallet-foundation/askar-nodejs': true
   cbor-extract: true
   koffi: true
@@ -13,15 +15,21 @@ catalog:
   '@credo-ts/askar': 0.8.0-alpha-20261111193946
   '@credo-ts/core': 0.8.0-alpha-20261111193946
   '@credo-ts/node': 0.8.0-alpha-20261111193946
+  '@hyperledger/anoncreds-nodejs': 0.5.0
+  '@hyperledger/indy-vdr-nodejs': ^0.3.0
+  '@hyperledger/indy-vdr-shared': ^0.3.0
   '@openwallet-foundation/askar-nodejs': 0.7.0
   '@types/node': ^22.19.0
   '@typescript/native': npm:typescript@^7.0.2
   '@vitest/coverage-v8': ^5.0.5
   reflect-metadata: 0.2.2
+  rxjs: ^7.8.2
   typescript: npm:@typescript/typescript6@^6.0.2
   vitest: ^5.0.5
 
 minimumReleaseAgeExclude:
+  - '@hyperledger/anoncreds-nodejs@0.5.0'
+  - '@hyperledger/anoncreds-shared@0.5.0'
   - '@credo-ts/anoncreds@0.8.0-alpha-20261111193946'
   - '@credo-ts/askar@0.8.0-alpha-20261111193946'
   - '@credo-ts/core@0.8.0-alpha-20261111193946'

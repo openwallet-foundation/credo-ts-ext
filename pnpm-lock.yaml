@@ -167,6 +167,9 @@ catalogs:
     '@biomejs/biome':
       specifier: 2.5.14
       version: 2.5.14
+    '@credo-ts/anoncreds':
+      specifier: 0.8.0-alpha-20261111193946
+      version: 0.8.0-alpha-20261111193946
     '@credo-ts/askar':
       specifier: 0.8.0-alpha-20261111193946
       version: 0.8.0-alpha-20261111193946
@@ -176,6 +179,15 @@ catalogs:
     '@credo-ts/node':
       specifier: 0.8.0-alpha-20261111193946
       version: 0.8.0-alpha-20261111193946
+    '@hyperledger/anoncreds-nodejs':
+      specifier: 0.5.0
+      version: 0.5.0
+    '@hyperledger/indy-vdr-nodejs':
+      specifier: ^0.3.0
+      version: 0.3.0
+    '@hyperledger/indy-vdr-shared':
+      specifier: ^0.3.0
+      version: 0.3.0
     '@openwallet-foundation/askar-nodejs':
       specifier: 0.7.0
       version: 0.7.0
@@ -191,6 +203,9 @@ catalogs:
     reflect-metadata:
       specifier: 0.2.2
       version: 0.2.2
+    rxjs:
+      specifier: ^7.8.2
+      version: 7.8.2
     typescript:
       specifier: npm:@typescript/typescript6@^6.0.2
       version: 6.0.2
@@ -214,6 +229,9 @@ importers:
       '@credo-ts/core':
         specifier: 'catalog:'
         version: 0.8.0-alpha-20261111193946(@typescript/typescript6@6.0.2)
+      '@credo-ts/indy-vdr':
+        specifier: workspace:*
+        version: link:packages/indy-vdr
       '@credo-ts/node':
         specifier: 'catalog:'
         version: 0.8.0-alpha-20261111193946(@typescript/typescript6@6.0.2)
@@ -234,16 +252,47 @@ importers:
         version: 0.2.2
       tsdown:
         specifier: ^0.23.4
-        version: 0.23.7(@typescript/typescript6@6.0.2)
+        version: 0.23.7(@typescript/typescript6@6.0.2)(unrun@0.3.1)
       typescript:
         specifier: 'catalog:'
         version: '@typescript/typescript6@6.0.2'
+      unrun:
+        specifier: ^0.3.1
+        version: 0.3.1
       vite:
         specifier: ^8.3.5
         version: 8.3.7(@types/node@22.20.5)(yaml@2.9.1)
       vitest:
         specifier: 'catalog:'
         version: 5.1.0(@types/node@22.20.5)(@vitest/coverage-v8@5.1.0)(vite@8.3.7(@types/node@22.20.5)(yaml@2.9.1))
+
+  packages/indy-vdr:
+    dependencies:
+      '@credo-ts/core':
+        specifier: 'catalog:'
+        version: 0.8.0-alpha-20261111193946(@typescript/typescript6@6.0.2)
+    devDependencies:
+      '@credo-ts/anoncreds':
+        specifier: 'catalog:'
+        version: 0.8.0-alpha-20261111193946(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)
+      '@hyperledger/anoncreds-nodejs':
+        specifier: 'catalog:'
+        version: 0.5.0
+      '@hyperledger/indy-vdr-nodejs':
+        specifier: 'catalog:'
+        version: 0.3.0
+      '@hyperledger/indy-vdr-shared':
+        specifier: 'catalog:'
+        version: 0.3.0
+      '@stablelib/ed25519':
+        specifier: ^2.0.2
+        version: 2.1.0
+      rxjs:
+        specifier: 'catalog:'
+        version: 7.8.2
+      typescript:
+        specifier: 'catalog:'
+        version: '@typescript/typescript6@6.0.2'
 
 packages:
 
@@ -434,6 +483,11 @@ packages:
     resolution: {integrity: sha512-tEj8X2No2A1c9NDnZECxiiJ8TP3vmFlN9tLlLeSaMqVW4tUmVG2R4qpv/eP4zymWxnymYLkLcIYVV0VcWj3RCQ==}
     engines: {node: '>= 20.12.0'}
 
+  '@credo-ts/anoncreds@0.8.0-alpha-20261111193946':
+    resolution: {integrity: sha512-ybTVtQ1tYOInr9zimmfjEKRy717BionBQGiZQBSm+XkvkI1VHA7DvEBuAYYy/A8/tzbP9nGC3emeVWVWnGZm2Q==}
+    peerDependencies:
+      '@hyperledger/anoncreds-shared': ^0.4.1 || ^0.5.0
+
   '@credo-ts/askar@0.8.0-alpha-20261111193946':
     resolution: {integrity: sha512-8KiFX+7FTFEQu1E9hLqA8eUEDdZ6nJVPG2jr8uoP/oAUmmmoRAGwyC1fouJozWFIkkJu90jcR4yWLjL1BWcCOA==}
     peerDependencies:
@@ -471,6 +525,20 @@ packages:
 
   '@emnapi/wasi-threads@2.2.0':
     resolution: {integrity: sha512-JP7OYH38Q7+pyTAe14raZHLQIK7BDKbdwji+Xi3pcd/6QkJYQH3SX4wu6EplGrGJWRepoNzedfm0G3B9Z4e9Rw==}
+
+  '@hyperledger/anoncreds-nodejs@0.5.0':
+    resolution: {integrity: sha512-g2LYOrdw/6LqqQ3nW1Nw3uSxeGJXrzWzo/JwaXP9V6pU3Bpb9jd0Bthle1+YetSFazj7DuNA/usFUdWdPYBKQQ==}
+    engines: {node: '>= 22.12'}
+
+  '@hyperledger/anoncreds-shared@0.5.0':
+    resolution: {integrity: sha512-dduy1EqIYyxGC3/oTlrC7kqdAy0CJXpGklB8i4U4BMHjn91EvNvBmLLOwNvPqNIwaTDvpfJM4uY1933HvRPH1A==}
+
+  '@hyperledger/indy-vdr-nodejs@0.3.0':
+    resolution: {integrity: sha512-yx6hPlTXwirouAkMwaLmowU1mfBwRjTFQUQCH7Mgd4/C6Zp0taw/KUclhB83LpbjHBZiGsV/bILeLYD+HNpHfA==}
+    engines: {node: '>= 20'}
+
+  '@hyperledger/indy-vdr-shared@0.3.0':
+    resolution: {integrity: sha512-MMH/PwmjfKSH9X7nplYPgu8oMNHsbMZSaP6F+6xFzJDJKsJ15v/y9zwi4eiTDcMVmmRcDHfSep2uBR4FWkXxzQ==}
 
   '@isaacs/fs-minipass@4.0.1':
     resolution: {integrity: sha512-wgm9Ehl2jpeqP3zw/7mo3kRHFp5MEDhqAdwy1fTGkHAwnkGOVsgpvQhL8B5n1qlb01jV3n/bI0ZfZp5lWA1k4w==}
@@ -1649,6 +1717,9 @@ packages:
     resolution: {integrity: sha512-+KJGIyHgkGuIq3IEBNftfhW/LfWhXUIY6OmyVWjliu5KH1y0fw7VQ8YndE2O4qZdMSd9SqbnC8GOcZEy0Om7sA==}
     engines: {node: '>=18'}
 
+  koffi@2.16.3:
+    resolution: {integrity: sha512-E9y1AsgYGlaxMhcZzHr8y96QF2U5XzA12GGVAfbWqIubTwPNMXQarfBzePNXHe0xtIEtNd6ifAv3GAKYGUeBAQ==}
+
   koffi@3.3.7:
     resolution: {integrity: sha512-Vrq4UwAE19HPLMou8m7HGCELiTE3l9D+r1nA7XwVHUTNaRdymPM+kzkkD2VGxlyjI2qZTb9tMDaFn7kfZ72v3Q==}
 
@@ -2116,6 +2187,16 @@ packages:
     resolution: {integrity: sha512-pjy2bYhSsufwWlKwPc+l3cN7+wuJlK6uz0YdJEOlQDbl6jo/YlPi4mb8agUkVC8BF7V8NuzeyPNqRksA3hztKQ==}
     engines: {node: '>= 0.8'}
 
+  unrun@0.3.1:
+    resolution: {integrity: sha512-onIck/oNnCaytwths1ZVp1LK2Gq2hPoyFhiHebObuUXqR3S0uHuLLaBK8K6mRRgV7Ptip8AnNvaUsgzwWwBZuA==}
+    engines: {node: ^22.13.0 || >=24.0.0}
+    hasBin: true
+    peerDependencies:
+      synckit: ^0.11.11
+    peerDependenciesMeta:
+      synckit:
+        optional: true
+
   uuid@14.0.3:
     resolution: {integrity: sha512-Sc5u1VVln93y1Xnz4R+CunOZc7R9LUcTmhj7Rc7Eg3HVcf7rVn2FOoa812fe0W8p3jD7xeoGSYbfqCGGH2B6xw==}
     hasBin: true
@@ -2505,6 +2586,21 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 2.0.0
 
+  '@credo-ts/anoncreds@0.8.0-alpha-20261111193946(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)':
+    dependencies:
+      '@astronautlabs/jsonpath': 1.1.2
+      '@credo-ts/core': 0.8.0-alpha-20261111193946(@typescript/typescript6@6.0.2)
+      '@credo-ts/didcomm': 0.8.0-alpha-20261111193946(@typescript/typescript6@6.0.2)
+      '@hyperledger/anoncreds-shared': 0.5.0
+      '@sphereon/pex-models': 2.3.2
+      class-transformer: 0.5.1
+      class-validator: 0.14.4
+      reflect-metadata: 0.2.2
+      zod: 4.6.7
+    transitivePeerDependencies:
+      - supports-color
+      - typescript
+
   '@credo-ts/askar@0.8.0-alpha-20261111193946(@openwallet-foundation/askar-shared@0.7.0)(@typescript/typescript6@6.0.2)':
     dependencies:
       '@credo-ts/core': 0.8.0-alpha-20261111193946(@typescript/typescript6@6.0.2)
@@ -2626,6 +2722,24 @@ snapshots:
     dependencies:
       tslib: 2.9.1
     optional: true
+
+  '@hyperledger/anoncreds-nodejs@0.5.0':
+    dependencies:
+      '@hyperledger/anoncreds-shared': 0.5.0
+      koffi: 3.3.7
+
+  '@hyperledger/anoncreds-shared@0.5.0':
+    dependencies:
+      tar: 7.5.22
+
+  '@hyperledger/indy-vdr-nodejs@0.3.0':
+    dependencies:
+      '@hyperledger/indy-vdr-shared': 0.3.0
+      koffi: 2.16.3
+
+  '@hyperledger/indy-vdr-shared@0.3.0':
+    dependencies:
+      tar: 7.5.22
 
   '@isaacs/fs-minipass@4.0.1':
     dependencies:
@@ -3686,6 +3800,8 @@ snapshots:
 
   jwt-decode@4.0.0: {}
 
+  koffi@2.16.3: {}
+
   koffi@3.3.7:
     optionalDependencies:
       '@koromix/koffi-android-arm64': 3.3.7
@@ -4084,7 +4200,7 @@ snapshots:
 
   toidentifier@1.0.1: {}
 
-  tsdown@0.23.7(@typescript/typescript6@6.0.2):
+  tsdown@0.23.7(@typescript/typescript6@6.0.2)(unrun@0.3.1):
     dependencies:
       cac: 7.1.0
       defu: 6.1.7
@@ -4102,6 +4218,7 @@ snapshots:
       verkit: 0.5.0
     optionalDependencies:
       typescript: '@typescript/typescript6@6.0.2'
+      unrun: 0.3.1
     transitivePeerDependencies:
       - '@volar/typescript'
       - '@vue/language-core'
@@ -4169,6 +4286,10 @@ snapshots:
   undici@6.29.1: {}
 
   unpipe@1.0.0: {}
+
+  unrun@0.3.1:
+    dependencies:
+      rolldown: 1.3.1
 
   uuid@14.0.3: {}
 
