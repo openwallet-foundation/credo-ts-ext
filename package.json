@@ -24,6 +24,10 @@
   "devDependencies": {
     "@biomejs/biome": "catalog:",
     "@changesets/cli": "^3.0.3",
+    "@credo-ts/askar": "catalog:",
+    "@credo-ts/core": "catalog:",
+    "@credo-ts/node": "catalog:",
+    "@openwallet-foundation/askar-nodejs": "catalog:",
     "@types/node": "catalog:",
     "@typescript/native": "catalog:",
     "@vitest/coverage-v8": "catalog:",

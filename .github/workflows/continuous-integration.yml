@@ -30,8 +30,8 @@ jobs:
       - name: Build
         run: pnpm build
 
-  test:
-    name: Tests (Node ${{ matrix.node-version }})
+  unit-tests:
+    name: Unit Tests (Node ${{ matrix.node-version }})
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
@@ -47,6 +47,27 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
       - name: Run tests
-        run: pnpm test --coverage
+        run: pnpm test:unit --coverage --passWithNoTests=false
+      - uses: codecov/codecov-action@v4
+        if: always() && hashFiles('coverage/lcov.info') != ''
+
+  e2e-tests:
+    name: E2E Tests (Node ${{ matrix.node-version }})
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        node-version: [22, 24, 26]
+    steps:
+      - uses: actions/checkout@v7.0.1
+      - uses: pnpm/action-setup@v6
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: pnpm
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Run E2E tests
+        run: pnpm test:e2e --coverage
       - uses: codecov/codecov-action@v4
         if: always() && hashFiles('coverage/lcov.info') != ''
