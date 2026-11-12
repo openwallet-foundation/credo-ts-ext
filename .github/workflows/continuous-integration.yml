@@ -61,7 +61,7 @@ jobs:
     steps:
       - uses: actions/checkout@v7.0.1
       - name: Start Indy ledger
-        run: docker compose up -d --build
+        run: docker compose up -d --build --wait --wait-timeout 600
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -71,7 +71,6 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Run E2E tests
         run: |
-          docker compose up -d --wait --wait-timeout 600 --no-recreate
           pnpm test:e2e --coverage --passWithNoTests=false
       - name: Ledger logs
         if: failure()

@@ -55,7 +55,7 @@ If you're just getting started the [Credo repo](https://github.com/openwallet-fo
 | [@credo-ts/indy-vdr](./packages/indy-vdr) | Indy DID registration/resolution, ledger pools, endorsement and AnonCreds registry |
 
 The Indy VDR package includes its complete test suite and optional `@credo-ts/indy-vdr/anoncreds` entry point.
-It is maintained and released from this repository.
+It is maintained and released from this repository. The first release from this repository will follow the release of Credo 0.8.0.
 
 ### Removed packages
 
@@ -73,9 +73,11 @@ The monorepo uses Node.js 22+, pnpm, Biome, tsdown, Vitest, and Changesets, alig
 
 ### Ledger package development
 
-Credo dependencies are pinned to the same published alpha in [pnpm-workspace.yaml](./pnpm-workspace.yaml).
+Credo development dependencies are pinned to the same published alpha in [pnpm-workspace.yaml](./pnpm-workspace.yaml).
 Use `catalog:` for those dependencies rather than `workspace:*`, sibling-repository paths or moving dist-tags.
-Update the pins together and verify compatibility with the shared tests before adopting another alpha.
+Published Credo packages should use compatible semver ranges for peer dependencies and keep matching `catalog:`
+development dependencies for tests. Update the pins together and verify compatibility with the shared tests before
+adopting another alpha.
 Runtime dependencies belong in each package's manifest; root development dependencies support the shared tests only.
 
 Shared utilities in [tests/helpers.ts](./tests/helpers.ts) provide unit-test agent contexts, Node KMS backends

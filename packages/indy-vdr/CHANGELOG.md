@@ -1,5 +1,7 @@
 # Changelog
 
+For 0.7.x release notes, see the [Credo-ts changelog](https://github.com/openwallet-foundation/credo-ts/blob/main/packages/indy-vdr/CHANGELOG.md).
+
 ## 0.7.1
 
 ### Patch Changes

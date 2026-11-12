@@ -26,7 +26,6 @@
     "@changesets/cli": "^3.0.3",
     "@credo-ts/askar": "catalog:",
     "@credo-ts/core": "catalog:",
-    "@credo-ts/indy-vdr": "workspace:*",
     "@credo-ts/node": "catalog:",
     "@openwallet-foundation/askar-nodejs": "catalog:",
     "@types/node": "catalog:",

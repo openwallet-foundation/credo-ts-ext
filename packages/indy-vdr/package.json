@@ -7,7 +7,7 @@
     },
     "./anoncreds": "./src/anoncreds/index.ts"
   },
-  "version": "0.7.1",
+  "version": "0.7.4",
   "files": [
     "build"
   ],
@@ -36,11 +36,9 @@
     "build": "tsdown --config-loader unrun",
     "prepublishOnly": "pnpm run build"
   },
-  "dependencies": {
-    "@credo-ts/core": "catalog:"
-  },
   "devDependencies": {
     "@credo-ts/anoncreds": "catalog:",
+    "@credo-ts/core": "catalog:",
     "@hyperledger/anoncreds-nodejs": "catalog:",
     "@hyperledger/indy-vdr-nodejs": "catalog:",
     "@hyperledger/indy-vdr-shared": "catalog:",
@@ -49,7 +47,8 @@
     "typescript": "catalog:"
   },
   "peerDependencies": {
-    "@credo-ts/anoncreds": "catalog:",
+    "@credo-ts/anoncreds": "^0.8.0-alpha",
+    "@credo-ts/core": "^0.8.0-alpha",
     "@hyperledger/indy-vdr-shared": "catalog:"
   },
   "peerDependenciesMeta": {
