@@ -21,7 +21,7 @@
   /></a>
     <a href="https://www.npmjs.com/package/@credo-ts/indy-vdr"
     ><img
-      alt="@credo-ts/anoncreds version"
+      alt="@credo-ts/indy-vdr version"
       src="https://img.shields.io/npm/v/@credo-ts/indy-vdr"
   /></a>
 
