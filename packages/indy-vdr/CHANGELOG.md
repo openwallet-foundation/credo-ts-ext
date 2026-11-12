@@ -2,6 +2,12 @@
 
 For 0.7.x release notes, see the [Credo-ts changelog](https://github.com/openwallet-foundation/credo-ts/blob/main/packages/indy-vdr/CHANGELOG.md).
 
+## 0.8.0
+
+### Minor Changes
+
+- 1a36deb: This release removes `did:sov` support (#3194) and moves the AnonCreds registry to the `@credo-ts/indy-vdr/anoncreds` entry point (#3204). These breaking changes require Credo 0.8.0 or later.
+
 ## 0.7.1
 
 ### Patch Changes
