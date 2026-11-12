@@ -18,7 +18,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'unit',
-          include: ['packages/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
+          include: ['{packages,tests}/**/*.{test,spec}.?(c|m)[jt]s?(x)'],
           exclude: ['**/node_modules/**', '**/build/**', '**/*.e2e.{test,spec}.?(c|m)[jt]s?(x)'],
         },
       },
@@ -26,7 +26,7 @@ export default defineConfig({
         extends: true,
         test: {
           name: 'e2e',
-          include: ['packages/**/*.e2e.{test,spec}.?(c|m)[jt]s?(x)'],
+          include: ['{packages,tests}/**/*.e2e.{test,spec}.?(c|m)[jt]s?(x)'],
           exclude: ['**/node_modules/**', '**/build/**'],
         },
       },

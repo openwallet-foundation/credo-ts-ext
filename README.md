@@ -43,13 +43,19 @@
   <a href="#license">License</a>
 </p>
 
-Credo Extensions previously hosted libraries built on top of [Credo](https://github.com/openwallet-foundation/credo-ts.git). All packages have now been removed or relocated; the monorepo scaffold is retained for future packages.
+Credo Extensions hosts libraries built on top of [Credo](https://github.com/openwallet-foundation/credo-ts.git),
+including ledger-based DID integrations.
 
 If you're just getting started the [Credo repo](https://github.com/openwallet-foundation/credo-ts.git) is probably the place to start.
 
 ## Packages
 
-There are currently no packages in this repository.
+| Package | Description |
+| --- | --- |
+| [@credo-ts/indy-vdr](./packages/indy-vdr) | Indy DID registration/resolution, ledger pools, endorsement and AnonCreds registry |
+
+The Indy VDR package includes its complete test suite and optional `@credo-ts/indy-vdr/anoncreds` entry point.
+It is maintained and released from this repository. The first release from this repository will follow the release of Credo 0.8.0.
 
 ### Removed packages
 
@@ -64,6 +70,41 @@ There are currently no packages in this repository.
 If you would like to contribute to this repository, please read the [CONTRIBUTING](/CONTRIBUTING.md) guidelines. These documents will provide more information to get you started!
 
 The monorepo uses Node.js 22+, pnpm, Biome, tsdown, Vitest, and Changesets, aligned with Credo-ts main. Run `pnpm install`, `pnpm validate`, `pnpm build`, and `pnpm test` to validate changes.
+
+### Ledger package development
+
+Credo development dependencies are pinned to the same published alpha in [pnpm-workspace.yaml](./pnpm-workspace.yaml).
+Use `catalog:` for those dependencies rather than `workspace:*`, sibling-repository paths or moving dist-tags.
+Published Credo packages should use compatible semver ranges for peer dependencies and keep matching `catalog:`
+development dependencies for tests. Update the pins together and verify compatibility with the shared tests before
+adopting another alpha.
+Runtime dependencies belong in each package's manifest; root development dependencies support the shared tests only.
+
+Shared utilities in [tests/helpers.ts](./tests/helpers.ts) provide unit-test agent contexts, Node KMS backends
+and typed mock helpers using public package exports. [tests/agent.ts](./tests/agent.ts) provides full-agent
+options with a unique, in-memory Askar store per call. Call `agent.initialize()` before use and always
+`await agent.shutdown()` during cleanup. These helpers intentionally do not mirror Credo's internal test-helper
+signatures or pull in its Drizzle and DIDComm test infrastructure.
+
+Run `pnpm test:unit` for offline tests and `pnpm test:e2e` for `*.e2e.test.ts` suites.
+Shared helper tests are discovered alongside package tests. CI runs unit and E2E suites separately;
+both jobs require tests to be discovered.
+
+Start the Indy pool before running E2E tests:
+
+```sh
+docker compose up -d --build --wait --wait-timeout 600
+pnpm test:e2e
+docker compose down
+```
+
+On Apple Silicon, use `docker compose -f docker-compose.yml -f docker-compose.arm.yml` in place of
+`docker compose` for both startup and shutdown. The pool exposes ports 9701–9708 and its health check waits
+for the transaction author agreement and test endorser/trustee identities to be seeded.
+`GENESIS_TXN_PATH` can point to an alternative genesis file, but that ledger must have the same test identities
+and transaction author agreement configured. Test seeds and the in-memory wallet key are test-only fixtures.
+
+No sibling checkout of Credo is needed for development or CI.
 
 There are regular community working groups to discuss ongoing efforts within Credo, showcase items you've built with Credo, or ask questions. See [Meeting Information](https://github.com/openwallet-foundation/credo-ts/wiki/Meeting-Information) for up to date information on the meeting schedule. Everyone is welcome to join!
 

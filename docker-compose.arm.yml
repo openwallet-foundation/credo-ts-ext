@@ -1,0 +1,5 @@
+services:
+  indy-pool:
+    build:
+      dockerfile: network/indy-pool-arm.dockerfile
+    platform: linux/arm64/v8
