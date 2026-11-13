@@ -9,6 +9,7 @@ import {
   didIndyRevocationRegistryIdRegex,
   didIndySchemaIdRegex,
   getDidIndyCredentialDefinitionId,
+  getDidIndyIdentifierVariants,
   getDidIndyRevocationRegistryDefinitionId,
   getDidIndySchemaId,
   getIndyLedgerCredentialDefinitionId,
@@ -92,6 +93,23 @@ describe('identifiers', () => {
     )
   })
 
+  test('parses encoded components without decoding structural separators', () => {
+    const did = 'did:indy:pool:localtest:TL1EaPFCZ8Si5aUrqScBDt'
+
+    expect(parseIndySchemaId(`${did}/anoncreds/v0/SCHEMA/Medical%20Bill%2fClaims/1.0`).schemaName).toBe(
+      'Medical Bill/Claims'
+    )
+    expect(parseIndyCredentialDefinitionId(`${did}/anoncreds/v0/CLAIM_DEF/10/SCH%20Employee%2fID`).tag).toBe(
+      'SCH Employee/ID'
+    )
+    expect(
+      parseIndyRevocationRegistryId(`${did}/anoncreds/v0/REV_REG_DEF/10/SCH%20Employee%2FID/REV%201`)
+    ).toMatchObject({
+      credentialDefinitionTag: 'SCH Employee/ID',
+      revocationRegistryTag: 'REV 1',
+    })
+  })
+
   describe('indyVdrAnonCredsRegistryIdentifierRegex', () => {
     test('does not match against an unqualified did, schema id, credential definition id and revocation registry id', () => {
       const did = '7Tqg6BwSSWapxgUDm9KKgg'
@@ -136,6 +154,49 @@ describe('identifiers', () => {
     expect(getDidIndySchemaId(namespace, did, name, version)).toEqual(
       'did:indy:sovrin:test:12345/anoncreds/v0/SCHEMA/backbench/420'
     )
+  })
+
+  test('identifier formatters percent-encode only identifier components when enabled', () => {
+    expect(getDidIndySchemaId('sovrin:test', '12345', 'Medical Bill/Claims', '1.0', true)).toBe(
+      'did:indy:sovrin:test:12345/anoncreds/v0/SCHEMA/Medical%20Bill%2FClaims/1.0'
+    )
+    expect(getDidIndyCredentialDefinitionId('sovrin:test', '12345', 420, 'SCH Employee/ID', true)).toBe(
+      'did:indy:sovrin:test:12345/anoncreds/v0/CLAIM_DEF/420/SCH%20Employee%2FID'
+    )
+    expect(
+      getDidIndyRevocationRegistryDefinitionId('sovrin:test', '12345', 420, 'SCH Employee/ID', 'REV 1', true)
+    ).toBe('did:indy:sovrin:test:12345/anoncreds/v0/REV_REG_DEF/420/SCH%20Employee%2FID/REV%201')
+  })
+
+  test('identifier variants are canonical and treat percent-encoding as case-insensitive', () => {
+    const did = 'did:indy:pool:localtest:TL1EaPFCZ8Si5aUrqScBDt'
+    const encoded = `${did}/anoncreds/v0/SCHEMA/Medical%20Bill%2FClaims/1.0`
+    const lowerCaseEncoding = `${did}/anoncreds/v0/SCHEMA/Medical%20Bill%2fClaims/1.0`
+    const unencoded = `${did}/anoncreds/v0/SCHEMA/Medical Bill/Claims/1.0`
+
+    expect(getDidIndyIdentifierVariants(encoded)[0]).toBe(encoded)
+    expect(getDidIndyIdentifierVariants(lowerCaseEncoding)[0]).toBe(encoded)
+    expect(getDidIndyIdentifierVariants(unencoded)[0]).toBe(encoded)
+    expect(getDidIndyIdentifierVariants('other:registry:id')).toEqual(['other:registry:id'])
+  })
+
+  test('preserves components with invalid percent-encoding', () => {
+    const did = 'did:indy:pool:localtest:TL1EaPFCZ8Si5aUrqScBDt'
+
+    expect(getDidIndyIdentifierVariants(`${did}/anoncreds/v0/SCHEMA/50% off/1.0`)).toEqual([
+      `${did}/anoncreds/v0/SCHEMA/50%25%20off/1.0`,
+      `${did}/anoncreds/v0/SCHEMA/50% off/1.0`,
+    ])
+  })
+
+  test('returns canonical, original, and decoded variants for partially encoded components', () => {
+    const did = 'did:indy:pool:localtest:TL1EaPFCZ8Si5aUrqScBDt'
+
+    expect(getDidIndyIdentifierVariants(`${did}/anoncreds/v0/CLAIM_DEF/10/my%20big tag`)).toEqual([
+      `${did}/anoncreds/v0/CLAIM_DEF/10/my%20big%20tag`,
+      `${did}/anoncreds/v0/CLAIM_DEF/10/my%20big tag`,
+      `${did}/anoncreds/v0/CLAIM_DEF/10/my big tag`,
+    ])
   })
 
   test('getDidIndyCredentialDefinitionId returns a valid credential definition id given a did, seqNo, and tag', () => {
