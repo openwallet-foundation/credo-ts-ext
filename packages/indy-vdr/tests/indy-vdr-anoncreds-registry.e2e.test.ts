@@ -43,6 +43,7 @@ const endorser = new Agent(
     indyVdr: new IndyVdrModule({
       indyVdr,
       networks: indyVdrModuleConfig.networks,
+      encodeAnonCredsIdentifiers: true,
     }),
     dids: new DidsModule({
       registrars: [new IndyVdrIndyDidRegistrar()],
@@ -60,6 +61,7 @@ const agent = new Agent(
     indyVdr: new IndyVdrModule({
       indyVdr,
       networks: indyVdrModuleConfig.networks,
+      encodeAnonCredsIdentifiers: true,
     }),
     dids: new DidsModule({
       registrars: [new IndyVdrIndyDidRegistrar()],
@@ -858,6 +860,89 @@ describe('IndyVdrAnonCredsRegistry', () => {
         didIndyNamespace: 'pool:localtest',
       },
     })
+  })
+
+  test('resolves encoded and historical identifiers for ledger objects', async () => {
+    const { namespaceIdentifier } = parseIndyDid(endorserDid)
+    const version = `1.${Date.now()}`
+    const schemaName = 'Medical Bill'
+    const schemaRegistration = await indyVdrAnonCredsRegistry.registerSchema(endorser.context, {
+      options: {
+        endorserMode: 'internal',
+        endorserDid,
+      },
+      schema: {
+        attrNames: ['name'],
+        issuerId: endorserDid,
+        name: schemaName,
+        version,
+      },
+    })
+
+    if (schemaRegistration.schemaState.state !== 'finished') {
+      throw new Error(`Unable to register schema: ${JSON.stringify(schemaRegistration)}`)
+    }
+
+    const schemaSeqNo = schemaRegistration.schemaMetadata.indyLedgerSeqNo as number
+    const encodedSchemaId = `did:indy:pool:localtest:${namespaceIdentifier}/anoncreds/v0/SCHEMA/Medical%20Bill/${version}`
+    const historicalSchemaId = `did:indy:pool:localtest:${namespaceIdentifier}/anoncreds/v0/SCHEMA/Medical Bill/${version}`
+    expect(schemaRegistration.schemaState.schemaId).toBe(encodedSchemaId)
+
+    await waitForSchemaOnAllNodes(encodedSchemaId)
+
+    for (const schemaId of [encodedSchemaId, historicalSchemaId]) {
+      const result = await indyVdrAnonCredsRegistry.getSchema(endorser.context, schemaId)
+      expect(result).toMatchObject({
+        schemaId,
+        schema: {
+          name: schemaName,
+          version,
+          issuerId: endorserDid,
+        },
+        resolutionMetadata: {},
+      })
+    }
+
+    const encodedCredentialDefinitionId = `did:indy:pool:localtest:${namespaceIdentifier}/anoncreds/v0/CLAIM_DEF/${schemaSeqNo}/SCH%20Employee%20ID`
+    const historicalCredentialDefinitionId = `did:indy:pool:localtest:${namespaceIdentifier}/anoncreds/v0/CLAIM_DEF/${schemaSeqNo}/SCH Employee ID`
+    const credentialDefinitionRegistration = await indyVdrAnonCredsRegistry.registerCredentialDefinition(
+      endorser.context,
+      {
+        credentialDefinition: {
+          issuerId: endorserDid,
+          tag: 'SCH Employee ID',
+          schemaId: encodedSchemaId,
+          type: 'CL',
+          value: credentialDefinitionValue,
+        },
+        options: {
+          endorserMode: 'internal',
+          endorserDid,
+        },
+      }
+    )
+
+    if (credentialDefinitionRegistration.credentialDefinitionState.state !== 'finished') {
+      throw new Error(`Unable to register credential definition: ${JSON.stringify(credentialDefinitionRegistration)}`)
+    }
+
+    expect(credentialDefinitionRegistration.credentialDefinitionState.credentialDefinitionId).toBe(
+      encodedCredentialDefinitionId
+    )
+
+    for (const credentialDefinitionId of [encodedCredentialDefinitionId, historicalCredentialDefinitionId]) {
+      const resolvedCredentialDefinition = await resolveWhenAvailable(() =>
+        indyVdrAnonCredsRegistry.getCredentialDefinition(endorser.context, credentialDefinitionId)
+      )
+      expect(resolvedCredentialDefinition).toMatchObject({
+        credentialDefinitionId,
+        credentialDefinition: {
+          schemaId: encodedSchemaId,
+          tag: 'SCH Employee ID',
+        },
+        resolutionMetadata: {},
+      })
+    }
   })
 
   test('register and resolve a credential definition (internal,credDefDid != schemaDid)', async () => {
