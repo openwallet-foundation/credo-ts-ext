@@ -17,7 +17,7 @@ jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -38,7 +38,7 @@ jobs:
       matrix:
         node-version: [22, 24, 26]
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@v7
       - uses: pnpm/action-setup@v6
       - uses: actions/setup-node@v7
         with:
@@ -48,7 +48,7 @@ jobs:
         run: pnpm install --frozen-lockfile
       - name: Run tests
         run: pnpm test:unit --coverage --passWithNoTests=false
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v7
         if: always() && hashFiles('coverage/lcov.info') != ''
 
   e2e-tests:
@@ -59,7 +59,7 @@ jobs:
       matrix:
         node-version: [22, 24, 26]
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@v7
       - name: Start Indy ledger
         run: docker compose up -d --build --wait --wait-timeout 600
       - uses: pnpm/action-setup@v6
@@ -78,5 +78,5 @@ jobs:
       - name: Stop Indy ledger
         if: always()
         run: docker compose down
-      - uses: codecov/codecov-action@v4
+      - uses: codecov/codecov-action@v7
         if: always() && hashFiles('coverage/lcov.info') != ''
