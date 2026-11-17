@@ -53,9 +53,10 @@ If you're just getting started the [Credo repo](https://github.com/openwallet-fo
 | Package | Description |
 | --- | --- |
 | [@credo-ts/indy-vdr](./packages/indy-vdr) | Indy DID registration/resolution, ledger pools, endorsement and AnonCreds registry |
+| [@credo-ts/hedera](./packages/hedera) | Hedera DID registration/resolution and optional AnonCreds registry |
 
-The Indy VDR package includes its complete test suite and optional `@credo-ts/indy-vdr/anoncreds` entry point.
-It is maintained and released from this repository. The first release from this repository will follow the release of Credo 0.8.0.
+The ledger packages include their complete test suites and optional AnonCreds entry points. They are maintained and
+released from this repository against the Credo versions listed in [pnpm-workspace.yaml](./pnpm-workspace.yaml).
 
 ### Removed packages
 
