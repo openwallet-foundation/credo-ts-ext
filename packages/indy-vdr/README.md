@@ -38,6 +38,28 @@ This checkout targets the exact published Credo alpha pinned in
 Install a platform binding such as `@hyperledger/indy-vdr-nodejs` alongside the compatible
 `@hyperledger/indy-vdr-shared` peer. Using the AnonCreds entry point additionally requires `@credo-ts/anoncreds`.
 
+## AnonCreds identifier encoding
+
+The AnonCreds registry accepts both historical unencoded and percent-encoded `did:indy` schema,
+credential-definition, and revocation-registry identifiers. It decodes identifier components before
+constructing ledger queries and reports canonical percent-encoded variants through
+`getIdentifierVariants`.
+
+`encodeAnonCredsIdentifiers` defaults to `false`, so new identifiers remain unencoded for compatibility
+with agents that do not support encoded identifiers. To generate encoded schema names and tags, enable
+the option on `IndyVdrModule`:
+
+```ts
+new IndyVdrModule({
+  indyVdr,
+  networks,
+  encodeAnonCredsIdentifiers: true,
+})
+```
+
+The option also controls identifiers derived in resolved registry objects. It does not change the
+accepted input formats.
+
 ## Development
 
 From the repository root:

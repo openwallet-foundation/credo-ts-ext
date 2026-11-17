@@ -25,6 +25,14 @@ export function isDidIndyRevocationRegistryId(revocationRegistryId: string) {
   return didIndyRevocationRegistryIdRegex.test(revocationRegistryId)
 }
 
+function decodePathSegment(segment: string) {
+  try {
+    return decodeURIComponent(segment)
+  } catch {
+    return segment
+  }
+}
+
 export interface ParsedIndySchemaId {
   did: string
   namespace: string
@@ -42,7 +50,7 @@ export function parseIndySchemaId(schemaId: string): ParsedIndySchemaId {
       did,
       namespace,
       namespaceIdentifier,
-      schemaName,
+      schemaName: decodePathSegment(schemaName),
       schemaVersion,
     }
   }
@@ -68,7 +76,7 @@ export function parseIndyCredentialDefinitionId(credentialDefinitionId: string):
       namespace,
       namespaceIdentifier,
       schemaSeqNo,
-      tag,
+      tag: decodePathSegment(tag),
     }
   }
 
@@ -94,8 +102,8 @@ export function parseIndyRevocationRegistryId(revocationRegistryId: string): Par
       namespace,
       namespaceIdentifier,
       schemaSeqNo,
-      credentialDefinitionTag,
-      revocationRegistryTag,
+      credentialDefinitionTag: decodePathSegment(credentialDefinitionTag),
+      revocationRegistryTag: decodePathSegment(revocationRegistryTag),
     }
   }
 
@@ -120,17 +128,28 @@ export const indyVdrAnonCredsRegistryIdentifierRegex = new RegExp(
   indyVdrAnonCredsRegexes.map((r) => r.source).join('|')
 )
 
-export function getDidIndySchemaId(namespace: string, unqualifiedDid: string, name: string, version: string) {
-  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/SCHEMA/${name}/${version}`
+function encodePathSegment(segment: string, percentEncode: boolean) {
+  return percentEncode ? encodeURIComponent(segment) : segment
+}
+
+export function getDidIndySchemaId(
+  namespace: string,
+  unqualifiedDid: string,
+  name: string,
+  version: string,
+  percentEncode = false
+) {
+  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/SCHEMA/${encodePathSegment(name, percentEncode)}/${version}`
 }
 
 export function getDidIndyCredentialDefinitionId(
   namespace: string,
   unqualifiedDid: string,
   schemaSeqNo: string | number,
-  tag: string
+  tag: string,
+  percentEncode = false
 ) {
-  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/CLAIM_DEF/${schemaSeqNo}/${tag}`
+  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/CLAIM_DEF/${schemaSeqNo}/${encodePathSegment(tag, percentEncode)}`
 }
 
 export function getDidIndyRevocationRegistryDefinitionId(
@@ -138,9 +157,10 @@ export function getDidIndyRevocationRegistryDefinitionId(
   unqualifiedDid: string,
   schemaSeqNo: string | number,
   credentialDefinitionTag: string,
-  revocationRegistryTag: string
+  revocationRegistryTag: string,
+  percentEncode = false
 ) {
-  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/REV_REG_DEF/${schemaSeqNo}/${credentialDefinitionTag}/${revocationRegistryTag}`
+  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/REV_REG_DEF/${schemaSeqNo}/${encodePathSegment(credentialDefinitionTag, percentEncode)}/${encodePathSegment(revocationRegistryTag, percentEncode)}`
 }
 
 export function getDidIndyRevocationRegistryEntryId(
@@ -148,9 +168,38 @@ export function getDidIndyRevocationRegistryEntryId(
   unqualifiedDid: string,
   schemaSeqNo: string | number,
   credentialDefinitionTag: string,
-  revocationRegistryTag: string
+  revocationRegistryTag: string,
+  percentEncode = false
 ) {
-  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/REV_REG_ENTRY/${schemaSeqNo}/${credentialDefinitionTag}/${revocationRegistryTag}`
+  return `did:indy:${namespace}:${unqualifiedDid}/anoncreds/v0/REV_REG_ENTRY/${schemaSeqNo}/${encodePathSegment(credentialDefinitionTag, percentEncode)}/${encodePathSegment(revocationRegistryTag, percentEncode)}`
+}
+
+type EncodePathSegment = (segment: string) => string
+
+function parseDidIndyIdentifierFormatter(identifier: string) {
+  if (isDidIndySchemaId(identifier)) {
+    const { did, schemaName, schemaVersion } = parseIndySchemaId(identifier)
+    return (encode: EncodePathSegment) => `${did}/anoncreds/v0/SCHEMA/${encode(schemaName)}/${schemaVersion}`
+  }
+  if (isDidIndyCredentialDefinitionId(identifier)) {
+    const { did, schemaSeqNo, tag } = parseIndyCredentialDefinitionId(identifier)
+    return (encode: EncodePathSegment) => `${did}/anoncreds/v0/CLAIM_DEF/${schemaSeqNo}/${encode(tag)}`
+  }
+  if (isDidIndyRevocationRegistryId(identifier)) {
+    const { did, schemaSeqNo, credentialDefinitionTag, revocationRegistryTag } =
+      parseIndyRevocationRegistryId(identifier)
+    return (encode: EncodePathSegment) =>
+      `${did}/anoncreds/v0/REV_REG_DEF/${schemaSeqNo}/${encode(credentialDefinitionTag)}/${encode(revocationRegistryTag)}`
+  }
+
+  return undefined
+}
+
+export function getDidIndyIdentifierVariants(identifier: string): string[] {
+  const format = parseDidIndyIdentifierFormatter(identifier)
+  if (!format) return [identifier]
+
+  return [...new Set([format(encodeURIComponent), identifier, format((segment) => segment)])]
 }
 
 /**

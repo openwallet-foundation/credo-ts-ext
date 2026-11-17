@@ -57,6 +57,14 @@ export interface IndyVdrModuleConfigOptions {
    * ```
    */
   networks: [IndyVdrPoolConfig, ...IndyVdrPoolConfig[]]
+
+  /**
+   * Whether newly generated did:indy AnonCreds identifiers percent-encode schema names and tags.
+   * Both encoded and historical unencoded identifiers are always accepted.
+   *
+   * @default false
+   */
+  encodeAnonCredsIdentifiers?: boolean
 }
 
 export class IndyVdrModuleConfig {
@@ -69,6 +77,11 @@ export class IndyVdrModuleConfig {
   /** See {@link IndyVdrModuleConfigOptions.networks} */
   public get networks() {
     return this.options.networks
+  }
+
+  /** See {@link IndyVdrModuleConfigOptions.encodeAnonCredsIdentifiers} */
+  public get encodeAnonCredsIdentifiers() {
+    return this.options.encodeAnonCredsIdentifiers ?? false
   }
 
   /** See {@link IndyVdrModuleConfigOptions.indyVdr} */
