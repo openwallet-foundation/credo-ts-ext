@@ -73,8 +73,8 @@ pnpm --filter @credo-ts/hedera build
 pnpm test --project unit packages/hedera
 ```
 
-The E2E suites submit transactions to a Hedera network. Set `HEDERA_NETWORK`,
-`HEDERA_OPERATOR_ID`, and `HEDERA_OPERATOR_KEY` to a test account before running:
+The E2E suites submit transactions to Hedera testnet by default. Override the test helper defaults with
+`HEDERA_NETWORK`, `HEDERA_OPERATOR_ID`, and `HEDERA_OPERATOR_KEY` when needed:
 
 ```sh
 pnpm test --project e2e packages/hedera

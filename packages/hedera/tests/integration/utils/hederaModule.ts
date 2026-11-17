@@ -14,18 +14,15 @@ export const getHederaModuleConfig = (props: {
   operatorId?: string
   operatorKey?: string
 }): HederaModuleConfigOptions => {
-  const operatorId = props.operatorId ?? process.env.HEDERA_OPERATOR_ID
-  const operatorKey = props.operatorKey ?? process.env.HEDERA_OPERATOR_KEY
-  if (!operatorId || !operatorKey) {
-    throw new Error('HEDERA_OPERATOR_ID and HEDERA_OPERATOR_KEY must be configured to run Hedera integration tests')
-  }
-
   return {
     networks: [
       {
         network: props.network ?? (process.env.HEDERA_NETWORK as HederaNetwork) ?? 'testnet',
-        operatorId,
-        operatorKey,
+        operatorId: props.operatorId ?? process.env.HEDERA_OPERATOR_ID ?? '0.0.5489553',
+        operatorKey:
+          props.operatorKey ??
+          process.env.HEDERA_OPERATOR_KEY ??
+          '302e020100300506032b6570042204209f54b75b6238ced43e41b1463999cb40bf2f7dd2c9fd4fd3ef780027c016a138',
       },
     ],
   }
