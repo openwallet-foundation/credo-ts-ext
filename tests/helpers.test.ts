@@ -8,11 +8,17 @@ describe('shared test helpers', () => {
     const kms = context.dependencyManager.resolve(Kms.KeyManagementApi)
     const { keyId, publicJwk } = await kms.createKey({ type: { kty: 'OKP', crv: 'Ed25519' } })
     const data = new TextEncoder().encode('ledger test')
-    const { signature } = await kms.sign({ keyId, data, algorithm: 'EdDSA' })
+    const { signature } = await kms.sign({
+      keyId,
+      data,
+      algorithm: 'EdDSA',
+      expectedPublicJwk: publicJwk,
+    })
 
     await expect(kms.verify({ key: { publicJwk }, data, signature, algorithm: 'EdDSA' })).resolves.toEqual({
       verified: true,
       publicJwk,
+      backend: 'node',
     })
     expect(context.dependencyManager.resolve(AgentContext)).toBe(context)
     expect(context.isInitialized).toBe(true)
