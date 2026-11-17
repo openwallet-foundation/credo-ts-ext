@@ -1,0 +1,74 @@
+{
+  "name": "@credo-ts/hedera",
+  "exports": {
+    ".": {
+      "cli": "./build/index.mjs",
+      "import": "./src/index.ts"
+    },
+    "./anoncreds": "./src/anoncreds/index.ts"
+  },
+  "version": "0.7.1",
+  "files": [
+    "build"
+  ],
+  "license": "Apache-2.0",
+  "publishConfig": {
+    "access": "public",
+    "types": "./build/index.d.mts",
+    "module": "./build/index.mjs",
+    "exports": {
+      ".": "./build/index.mjs",
+      "./anoncreds": {
+        "import": "./build/anoncreds/index.mjs",
+        "require": "./build/anoncreds/index.mjs",
+        "types": "./build/anoncreds/index.d.mts"
+      },
+      "./package.json": "./package.json"
+    }
+  },
+  "homepage": "https://github.com/openwallet-foundation/credo-ts-ext/tree/main/packages/hedera",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/openwallet-foundation/credo-ts-ext",
+    "directory": "packages/hedera"
+  },
+  "scripts": {
+    "build": "tsdown --config-loader unrun",
+    "prepublishOnly": "pnpm run build"
+  },
+  "dependencies": {
+    "@hashgraph/sdk": "^2.81.0",
+    "@hiero-did-sdk/cache": "^0.1.8",
+    "@hiero-did-sdk/client": "^0.1.8",
+    "@hiero-did-sdk/core": "^0.1.8",
+    "@hiero-did-sdk/hcs": "^0.1.8",
+    "@hiero-did-sdk/publisher-internal": "^0.1.8",
+    "@hiero-did-sdk/registrar": "^0.1.8",
+    "@hiero-did-sdk/resolver": "^0.1.8",
+    "buffer": "^6.0.3"
+  },
+  "devDependencies": {
+    "@credo-ts/anoncreds": "catalog:",
+    "@credo-ts/askar": "catalog:",
+    "@credo-ts/core": "catalog:",
+    "@credo-ts/node": "catalog:",
+    "@hiero-did-sdk/anoncreds": "^0.1.8",
+    "@hyperledger/anoncreds-nodejs": "catalog:",
+    "@openwallet-foundation/askar-nodejs": "catalog:",
+    "typescript": "catalog:",
+    "zstd-napi": "^0.0.13"
+  },
+  "peerDependencies": {
+    "@credo-ts/anoncreds": "^0.8.0-alpha",
+    "@credo-ts/core": "^0.8.0-alpha",
+    "@hiero-did-sdk/anoncreds": "^0.1.8"
+  },
+  "peerDependenciesMeta": {
+    "@credo-ts/anoncreds": {
+      "optional": true
+    },
+    "@hiero-did-sdk/anoncreds": {
+      "optional": true
+    }
+  }
+}
