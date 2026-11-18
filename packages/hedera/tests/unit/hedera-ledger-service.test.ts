@@ -8,8 +8,9 @@ import {
   AgentContext,
   DidDocument,
   type DidDocumentKey,
+  DidDocumentRole,
   DidRecord,
-  DidRepository,
+  DidsApi,
   Kms,
   TypedArrayEncoder,
 } from '@credo-ts/core'
@@ -84,18 +85,24 @@ const mockPublicJwk: Kms.KmsJwkPublicOkp & { crv: 'Ed25519' } = {
 const mockKms = {
   sign: vi.fn().mockResolvedValue({ signature: new Uint8Array([1, 2, 3]) }),
   getPublicKey: vi.fn().mockReturnValue({ publicKey: mockPublicJwk, backend: 'askar' }),
+  createKey: vi.fn(),
+  deleteKey: vi.fn().mockResolvedValue(true),
 } as unknown as Kms.KeyManagementApi
 
-const mockDidRepository = {
-  findCreatedDid: vi.fn().mockResolvedValue({
-    keys: [
-      {
-        didDocumentRelativeKeyId: DID_ROOT_KEY_ID,
-        kmsKeyId: 'kmsKeyId',
-      },
-    ],
-  }),
-} as unknown as DidRepository
+const mockDidsApi = {
+  getActiveCreatedDid: vi.fn().mockResolvedValue(
+    new DidRecord({
+      did,
+      role: DidDocumentRole.Created,
+      keys: [
+        {
+          didDocumentRelativeKeyId: DID_ROOT_KEY_ID,
+          kmsKeyId: 'kmsKeyId',
+        },
+      ],
+    })
+  ),
+} as unknown as DidsApi
 
 const mockAgentContext = {
   dependencyManager: {
@@ -103,8 +110,8 @@ const mockAgentContext = {
       if (cls === Kms.KeyManagementApi) {
         return mockKms
       }
-      if (cls === DidRepository) {
-        return mockDidRepository
+      if (cls === DidsApi) {
+        return mockDidsApi
       }
       throw new Error(`No instance found for ${cls}`)
     }),
@@ -193,6 +200,56 @@ describe('HederaLedgerService', () => {
       expect(submitCreateDIDRequest).toHaveBeenCalled()
       expect(result.did).toBe(did)
       expect(result.rootKey).toBeDefined()
+    })
+
+    it('should delete the root key it created when publishing the DID fails', async () => {
+      mockFunction(mockKms.createKey).mockResolvedValueOnce({
+        keyId: mockKeyId,
+        backend: 'node',
+        publicJwk: { ...mockPublicJwk, kid: mockKeyId },
+      } as Awaited<ReturnType<Kms.KeyManagementApi['createKey']>>)
+      mockFunction(generateCreateDIDRequest).mockRejectedValueOnce(new Error('Publish failed'))
+
+      await expect(
+        service.createDid(mockAgentContext, { method: 'hedera', options: { network: 'testnet' } })
+      ).rejects.toThrow('Publish failed')
+
+      expect(mockKms.deleteKey).toHaveBeenCalledWith({ keyId: mockKeyId, backend: 'node' })
+    })
+
+    it('should keep the root key it created when submitting the DID fails', async () => {
+      mockFunction(mockKms.deleteKey).mockClear()
+      mockFunction(mockKms.createKey).mockResolvedValueOnce({
+        keyId: mockKeyId,
+        backend: 'node',
+        publicJwk: { ...mockPublicJwk, kid: mockKeyId },
+      } as Awaited<ReturnType<Kms.KeyManagementApi['createKey']>>)
+      mockFunction(generateCreateDIDRequest).mockResolvedValueOnce({
+        state: {},
+        signingRequest: { serializedPayload: new Uint8Array([1, 2, 3]) },
+      } as unknown as Awaited<ReturnType<typeof generateCreateDIDRequest>>)
+      mockFunction(submitCreateDIDRequest).mockRejectedValueOnce(new Error('Submit timed out'))
+
+      await expect(
+        service.createDid(mockAgentContext, { method: 'hedera', options: { network: 'testnet' } })
+      ).rejects.toThrow('Submit timed out')
+
+      expect(mockKms.deleteKey).not.toHaveBeenCalled()
+    })
+
+    it('should keep a root key passed by the caller when publishing the DID fails', async () => {
+      mockFunction(mockKms.deleteKey).mockClear()
+      mockFunction(generateCreateDIDRequest).mockRejectedValueOnce(new Error('Publish failed'))
+
+      await expect(
+        service.createDid(mockAgentContext, {
+          method: 'hedera',
+          options: { network: 'testnet' },
+          secret: { rootKeyId: mockKeyId },
+        })
+      ).rejects.toThrow('Publish failed')
+
+      expect(mockKms.deleteKey).not.toHaveBeenCalled()
     })
 
     it('should create DID with didDocument and calls updateDid', async () => {
@@ -399,6 +456,7 @@ describe('HederaLedgerService', () => {
       expect(result).toHaveProperty('did', did)
       expect(mockKms.sign).toHaveBeenCalledWith({
         keyId: mockKeyId,
+        backend: 'askar',
         expectedPublicJwk: expect.objectContaining({ x: mockPublicJwk.x }),
         data: deactivateDidRequest.signingRequest.serializedPayload,
         algorithm: 'EdDSA',
@@ -524,34 +582,25 @@ describe('HederaLedgerService', () => {
 
   describe('getIssuerKeySigner', () => {
     it('should return Signer when rootKey exists', async () => {
-      const didRecord = {
+      const didRecord = new DidRecord({
+        did,
+        role: DidDocumentRole.Created,
         keys: [{ didDocumentRelativeKeyId: DID_ROOT_KEY_ID, kmsKeyId: 'kms-key-id' }],
-      } as unknown as DidRecord
+      })
 
-      mockFunction(mockDidRepository.findCreatedDid).mockResolvedValueOnce(didRecord)
+      mockFunction(mockDidsApi.getActiveCreatedDid).mockResolvedValueOnce(didRecord)
 
       // biome-ignore lint/suspicious/noExplicitAny: no explanation
       const result = await (anonCredsService as any).getIssuerKeySigner(mockAgentContext, 'issuer-id')
 
-      expect(mockDidRepository.findCreatedDid).toHaveBeenCalledWith(mockAgentContext, 'issuer-id')
+      expect(mockDidsApi.getActiveCreatedDid).toHaveBeenCalledWith('issuer-id')
       expect(mockKms.getPublicKey).toHaveBeenCalledWith({ keyId: 'kms-key-id' })
       expect(await result.publicKey()).toEqual(privateKey.publicKey.toStringDer())
     })
 
     it('should throw error if no rootKey found', async () => {
-      const didRecord = {
-        keys: [],
-      } as unknown as DidRecord
-      mockFunction(mockDidRepository.findCreatedDid).mockResolvedValueOnce(didRecord)
-
-      // biome-ignore lint/suspicious/noExplicitAny: no explanation
-      await expect((anonCredsService as any).getIssuerKeySigner(mockAgentContext, 'issuer-id')).rejects.toThrow(
-        'The root key not found in the KMS'
-      )
-    })
-
-    it('should throw error if didRecord is null or undefined', async () => {
-      mockFunction(mockDidRepository.findCreatedDid).mockResolvedValueOnce(null)
+      const didRecord = new DidRecord({ did, role: DidDocumentRole.Created, keys: [] })
+      mockFunction(mockDidsApi.getActiveCreatedDid).mockResolvedValueOnce(didRecord)
 
       // biome-ignore lint/suspicious/noExplicitAny: no explanation
       await expect((anonCredsService as any).getIssuerKeySigner(mockAgentContext, 'issuer-id')).rejects.toThrow(

@@ -66,6 +66,7 @@ describe('KmsSigner', () => {
 
     expect(kmsMock.sign).toHaveBeenCalledWith({
       keyId: mockKeyId,
+      backend: undefined,
       expectedPublicJwk: mockJwk,
       data,
       algorithm: 'EdDSA',
@@ -84,6 +85,7 @@ describe('KmsSigner', () => {
       data: message,
       signature,
       key: { keyId: mockKeyId },
+      backend: undefined,
       algorithm: 'EdDSA',
     })
     expect(result).toBe(true)

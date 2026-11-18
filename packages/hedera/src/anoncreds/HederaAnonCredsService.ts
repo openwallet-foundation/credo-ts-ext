@@ -12,7 +12,7 @@ import type {
   RegisterSchemaOptions,
   RegisterSchemaReturn,
 } from '@credo-ts/anoncreds'
-import { type AgentContext, DidRepository, injectable, Kms } from '@credo-ts/core'
+import { type AgentContext, DidsApi, injectable, Kms } from '@credo-ts/core'
 import { HederaAnoncredsRegistry } from '@hiero-did-sdk/anoncreds'
 import { LRUMemoryCache } from '@hiero-did-sdk/cache'
 import { type Cache, DID_ROOT_KEY_ID } from '@hiero-did-sdk/core'
@@ -103,16 +103,16 @@ export class HederaAnonCredsService {
   }
 
   private async getIssuerKeySigner(agentContext: AgentContext, issuerId: string): Promise<KmsSigner> {
-    const didRepository = agentContext.dependencyManager.resolve(DidRepository)
+    const didsApi = agentContext.dependencyManager.resolve(DidsApi)
     const kms = agentContext.dependencyManager.resolve(Kms.KeyManagementApi)
 
-    const didRecord = await didRepository.findCreatedDid(agentContext, issuerId)
-    const rootKey = didRecord?.keys?.find((key) => key.didDocumentRelativeKeyId === DID_ROOT_KEY_ID)
+    const didRecord = await didsApi.getActiveCreatedDid(issuerId)
+    const rootKey = didRecord.keys?.find((key) => key.didDocumentRelativeKeyId === DID_ROOT_KEY_ID)
     if (!rootKey?.kmsKeyId) {
       throw new Error('The root key not found in the KMS')
     }
 
-    const issuerPublicJwk = await createOrGetKey(kms, rootKey.kmsKeyId)
+    const issuerPublicJwk = await createOrGetKey(kms, rootKey.kmsKeyId, rootKey.kmsBackend)
     return new KmsSigner(kms, issuerPublicJwk)
   }
 }
