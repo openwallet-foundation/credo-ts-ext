@@ -8,6 +8,8 @@ allowBuilds:
   '@openwallet-foundation/askar-nodejs': true
   cbor-extract: true
   koffi: true
+  protobufjs: false
+  zstd-napi: true
 
 catalog:
   '@biomejs/biome': 2.5.14
