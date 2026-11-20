@@ -5,6 +5,7 @@ import {
   type DidDocument,
   type DidDocumentKey,
   type DidUpdateOptions,
+  deleteDidKeys,
   injectable,
   Kms,
 } from '@credo-ts/core'
@@ -93,30 +94,52 @@ export class HederaLedgerService {
       const kms = agentContext.dependencyManager.resolve(Kms.KeyManagementApi)
 
       const publicJwk = await createOrGetKey(kms, secret?.rootKeyId)
-      const rootKey = { kmsKeyId: publicJwk.keyId, didDocumentRelativeKeyId: DID_ROOT_KEY_ID }
+      const rootKey = {
+        kmsKeyId: publicJwk.keyId,
+        kmsBackend: publicJwk.kmsBackend,
+        didDocumentRelativeKeyId: DID_ROOT_KEY_ID,
+      }
 
-      const publisher = this.getPublisher(agentContext, client, publicJwk)
+      const prepareCreateDidRequest = async () => {
+        const publisher = this.getPublisher(agentContext, client, publicJwk)
 
-      const { state, signingRequest } = await generateCreateDIDRequest(
-        {
-          controller,
-          multibasePublicKey: getMultibasePublicKey(publicJwk),
-          topicReader,
-        },
-        {
-          client,
-          publisher,
+        const { state, signingRequest } = await generateCreateDIDRequest(
+          {
+            controller,
+            multibasePublicKey: getMultibasePublicKey(publicJwk),
+            topicReader,
+          },
+          {
+            client,
+            publisher,
+          }
+        )
+
+        const { signature } = await kms.sign({
+          keyId: publicJwk.keyId,
+          backend: publicJwk.kmsBackend,
+          expectedPublicJwk: publicJwk.toJson(),
+          data: signingRequest.serializedPayload,
+          algorithm: 'EdDSA',
+        })
+        return { publisher, state, signature }
+      }
+
+      const { publisher, state, signature } = await prepareCreateDidRequest().catch(async (error) => {
+        // Only a root key Credo created is deleted
+        if (!secret?.rootKeyId) {
+          await deleteDidKeys(
+            agentContext,
+            [{ keyId: publicJwk.keyId, kmsBackend: publicJwk.kmsBackend }],
+            'after failed did:hedera creation'
+          )
         }
-      )
-
-      const signatureResult = await kms.sign({
-        keyId: publicJwk.keyId,
-        expectedPublicJwk: publicJwk.toJson(),
-        data: signingRequest.serializedPayload,
-        algorithm: 'EdDSA',
+        throw error
       })
+
+      // A submit that fails can still publish the did, so from here the root key is kept
       const createDidDocumentResult = await submitCreateDIDRequest(
-        { state, signature: signatureResult.signature, topicReader },
+        { state, signature, topicReader },
         {
           client,
           publisher,
@@ -179,7 +202,7 @@ export class HederaLedgerService {
         didDocumentOperation
       )
 
-      const rootPublicJwk = await createOrGetKey(kms, rootKey.kmsKeyId)
+      const rootPublicJwk = await createOrGetKey(kms, rootKey.kmsKeyId, rootKey.kmsBackend)
       const publisher = this.getPublisher(agentContext, client, rootPublicJwk)
 
       const { states, signingRequests } = await generateUpdateDIDRequest(
@@ -226,7 +249,7 @@ export class HederaLedgerService {
     return this.clientService.withClient({ networkName }, async (client: Client) => {
       const topicReader = this.getHederaHcsTopicReader(agentContext)
 
-      const rootPublicJwk = await createOrGetKey(kms, rootKey.kmsKeyId)
+      const rootPublicJwk = await createOrGetKey(kms, rootKey.kmsKeyId, rootKey.kmsBackend)
       const publisher = this.getPublisher(agentContext, client, rootPublicJwk)
 
       const { state, signingRequest } = await generateDeactivateDIDRequest(
@@ -241,6 +264,7 @@ export class HederaLedgerService {
       )
       const signatureResult = await kms.sign({
         keyId: rootPublicJwk.keyId,
+        backend: rootPublicJwk.kmsBackend,
         expectedPublicJwk: rootPublicJwk.toJson(),
         data: signingRequest.serializedPayload,
         algorithm: 'EdDSA',
@@ -300,6 +324,7 @@ export class HederaLedgerService {
     for (const [key, request] of Object.entries(signingRequests)) {
       const { signature } = await kms.sign({
         keyId: publicJwk.keyId,
+        backend: publicJwk.kmsBackend,
         expectedPublicJwk: publicJwk.toJson(),
         data: request.serializedPayload,
         algorithm: 'EdDSA',

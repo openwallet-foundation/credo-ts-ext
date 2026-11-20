@@ -6,10 +6,13 @@ import {
   type DidDocumentKey,
   DidDocumentRole,
   DidRecord,
+  DidRecordStatus,
   type DidRegistrar,
   DidRepository,
   type DidUpdateResult,
+  getRemovedDidKeys,
   JsonTransformer,
+  Kms,
 } from '@credo-ts/core'
 import { getErrorMessage } from '../errorMessage'
 import {
@@ -21,6 +24,7 @@ import {
 
 export class HederaDidRegistrar implements DidRegistrar {
   public readonly supportedMethods = ['hedera']
+  public readonly deactivationSupport = 'supported'
 
   async create(agentContext: AgentContext, options: HederaDidCreateOptions): Promise<DidCreateResult> {
     try {
@@ -84,6 +88,12 @@ export class HederaDidRegistrar implements DidRegistrar {
         }
       }
 
+      Kms.checkKmsKeyReferences(
+        agentContext,
+        (options.secret?.keys ?? []).map((key) => ({ keyId: key.kmsKeyId, backend: key.kmsBackend }))
+      )
+      // Keys passed in that the did document never had are not removed by the update
+      const previousKeys = didRecord.keys ?? []
       const keys = this.concatKeys(didRecord.keys, options.secret?.keys)
       const { didDocument: updatedDidDocument } = await ledgerService.updateDid(agentContext, {
         ...options,
@@ -102,6 +112,7 @@ export class HederaDidRegistrar implements DidRegistrar {
           did,
           didDocument: didRecord.didDocument,
         },
+        removedKeys: getRemovedDidKeys(previousKeys, didRecord.keys),
       }
     } catch (error) {
       agentContext.config.logger.error('Error updating DID', { error })
@@ -130,7 +141,7 @@ export class HederaDidRegistrar implements DidRegistrar {
 
       const didRecord = await didRepository.findCreatedDid(agentContext, did)
 
-      if (!didDocument || didDocumentMetadata.deactivated || !didRecord) {
+      if (!didDocument || !didRecord) {
         return {
           didDocumentMetadata,
           didRegistrationMetadata: {},
@@ -140,12 +151,29 @@ export class HederaDidRegistrar implements DidRegistrar {
           },
         }
       }
+
+      // Deactivated outside this agent, so only the did record still has to be marked deactivated
+      if (didDocumentMetadata.deactivated) {
+        didRecord.status = DidRecordStatus.Deactivated
+        await didRepository.update(agentContext, didRecord)
+        return {
+          didDocumentMetadata: {},
+          didRegistrationMetadata: {},
+          didState: {
+            state: 'finished',
+            did,
+            didDocument: didRecord.didDocument ?? JsonTransformer.fromJSON(didDocument, DidDocument),
+          },
+        }
+      }
+
       const { didDocument: deactivatedDidDocument } = await ledgerService.deactivateDid(agentContext, {
         ...options,
         secret: { keys: didRecord.keys },
       })
 
       didRecord.didDocument = JsonTransformer.fromJSON(deactivatedDidDocument, DidDocument)
+      didRecord.status = DidRecordStatus.Deactivated
       await didRepository.update(agentContext, didRecord)
 
       return {

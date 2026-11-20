@@ -207,6 +207,51 @@ describe('IndyVdrIndyDidRegistrar', () => {
     })
   })
 
+  test('keeps the created key when the ledger write fails', async () => {
+    // @ts-expect-error - method is private
+    vi.spyOn<undefined, undefined>(indyVdrIndyDidRegistrar, 'createRegisterDidWriteRequest').mockResolvedValueOnce()
+    // @ts-expect-error - method is private
+    vi.spyOn<undefined, undefined>(indyVdrIndyDidRegistrar, 'registerPublicDid').mockRejectedValueOnce(
+      new Error('ledger write timed out')
+    )
+    const deleteKeySpy = vi.spyOn(kms, 'deleteKey').mockClear()
+
+    const result = await indyVdrIndyDidRegistrar.create(agentContext, {
+      method: 'indy',
+      options: {
+        alias: 'Hello',
+        endorserMode: 'internal',
+        endorserDid: 'did:indy:pool1:BzCbsNYhMrjHiqZDTUASHg',
+      },
+    })
+
+    expect(result.didState).toEqual({ state: 'failed', reason: 'unknownError: ledger write timed out' })
+    expect(deleteKeySpy).not.toHaveBeenCalled()
+  })
+
+  test('deletes the created key when creating the did fails before the ledger write', async () => {
+    // @ts-expect-error - method is private
+    vi.spyOn<undefined, undefined>(indyVdrIndyDidRegistrar, 'createRegisterDidWriteRequest').mockRejectedValueOnce(
+      new Error('ledger write failed')
+    )
+    const deleteKeySpy = vi.spyOn(kms, 'deleteKey').mockClear()
+
+    const result = await indyVdrIndyDidRegistrar.create(agentContext, {
+      method: 'indy',
+      options: {
+        alias: 'Hello',
+        endorserMode: 'internal',
+        endorserDid: 'did:indy:pool1:BzCbsNYhMrjHiqZDTUASHg',
+      },
+    })
+
+    expect(result.didState).toEqual({ state: 'failed', reason: 'unknownError: ledger write failed' })
+    expect(deleteKeySpy).toHaveBeenCalledTimes(1)
+    const [{ keyId: createdKeyId }] = deleteKeySpy.mock.calls[0]
+    expect(createdKeyId).not.toEqual(keyId)
+    await expect(kms.getPublicKey({ keyId: createdKeyId })).rejects.toThrow('not found')
+  })
+
   test('creates a did:indy document with services using attrib', async () => {
     // @ts-expect-error - method is private
     const createRegisterDidWriteRequestSpy = vi.spyOn<undefined, undefined>(

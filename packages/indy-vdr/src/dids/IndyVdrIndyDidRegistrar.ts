@@ -17,6 +17,7 @@ import {
   DidDocumentRole,
   DidRecord,
   DidRepository,
+  deleteDidKeys,
   Hasher,
   IndyAgentService,
   Kms,
@@ -40,6 +41,7 @@ import {
 
 export class IndyVdrIndyDidRegistrar implements DidRegistrar {
   public readonly supportedMethods = ['indy']
+  public readonly deactivationSupport = 'notSupportedByRegistrar'
 
   private didCreateActionResult({
     namespace,
@@ -121,16 +123,11 @@ export class IndyVdrIndyDidRegistrar implements DidRegistrar {
 
     const kms = agentContext.dependencyManager.resolve(Kms.KeyManagementApi)
 
-    const _verificationKey = options.options.keyId
-      ? (await kms.getPublicKey({ keyId: options.options.keyId })).publicKey
-      : (
-          await kms.createKey({
-            type: {
-              kty: 'OKP',
-              crv: 'Ed25519',
-            },
-          })
-        ).publicJwk
+    const { publicKey: _verificationKey, backend } = options.options.keyId
+      ? await kms.getPublicKey({ keyId: options.options.keyId })
+      : await kms
+          .createKey({ type: { kty: 'OKP', crv: 'Ed25519' } })
+          .then(({ publicJwk, backend }) => ({ publicKey: publicJwk, backend }))
 
     if (_verificationKey.kty !== 'OKP' || _verificationKey.crv !== 'Ed25519') {
       return {
@@ -140,6 +137,7 @@ export class IndyVdrIndyDidRegistrar implements DidRegistrar {
     }
 
     const verificationKey = Kms.PublicJwk.fromPublicJwk(_verificationKey) as Kms.PublicJwk<Kms.Ed25519PublicJwk>
+    verificationKey.kmsBackend = backend
 
     // Create a new key and calculate did according to the rules for indy did method
     const buffer = Hasher.hash(verificationKey.publicKey.publicKey, 'sha-256')
@@ -269,9 +267,15 @@ export class IndyVdrIndyDidRegistrar implements DidRegistrar {
   // FIXME: we need to completely revamp this logic, it's overly complex
   // We might even want to look at ditching the whole generic DIDs api ...
   public async create(agentContext: AgentContext, options: IndyVdrDidCreateOptions): Promise<IndyVdrDidCreateResult> {
+    let createdKey: Kms.KmsKeyReference | undefined
+
     try {
       const res = await this.parseInput(agentContext, options)
       if (res.status === 'error') return this.didCreateFailedResult({ reason: res.reason })
+      // parseInput creates the key when no keyId is passed
+      if (res.type === 'create' && !options.options.endorsedTransaction && !options.options.keyId) {
+        createdKey = { keyId: res.verificationKey.keyId, kmsBackend: res.verificationKey.kmsBackend }
+      }
 
       const did = res.did
 
@@ -343,6 +347,7 @@ export class IndyVdrIndyDidRegistrar implements DidRegistrar {
             {
               didDocumentRelativeKeyId: '#verkey',
               kmsKeyId: verificationKey.keyId,
+              kmsBackend: verificationKey.kmsBackend,
             },
           ])
           const didAction: EndorseDidTxAction = {
@@ -358,6 +363,8 @@ export class IndyVdrIndyDidRegistrar implements DidRegistrar {
         }
       }
 
+      // A write that fails can still reach the ledger, so from here the key that controls the did is kept
+      createdKey = undefined
       await this.registerPublicDid(agentContext, pool, nymRequest)
       if (attribRequest) await this.setEndpointsForDid(agentContext, pool, attribRequest)
 
@@ -368,6 +375,7 @@ export class IndyVdrIndyDidRegistrar implements DidRegistrar {
           {
             didDocumentRelativeKeyId: '#verkey',
             kmsKeyId: verificationKey.keyId,
+            kmsBackend: verificationKey.kmsBackend,
           },
         ])
       }
@@ -378,6 +386,7 @@ export class IndyVdrIndyDidRegistrar implements DidRegistrar {
       agentContext.config.logger.error('Error creating indy did', {
         error,
       })
+      if (createdKey) await deleteDidKeys(agentContext, [createdKey], 'after failed did:indy creation')
       return this.didCreateFailedResult({
         reason: `unknownError: ${error instanceof Error ? error.message : String(error)}`,
       })

@@ -1,4 +1,11 @@
-import { AgentContext, type DidDocumentKey, DidDocumentRole, DidRecord, DidRepository } from '@credo-ts/core'
+import {
+  AgentContext,
+  type DidDocumentKey,
+  DidDocumentRole,
+  DidRecord,
+  DidRecordStatus,
+  DidRepository,
+} from '@credo-ts/core'
 import { mockFunction } from '../../../../tests/helpers'
 import { HederaDidRegistrar } from '../../src/dids/HederaDidRegistrar'
 import { type HederaDidUpdateOptions, HederaLedgerService } from '../../src/ledger/HederaLedgerService'
@@ -27,6 +34,7 @@ const mockAgentContext = {
   config: {
     logger: {
       debug: vi.fn(),
+      warn: vi.fn(),
       error: vi.fn(),
     },
   },
@@ -92,7 +100,10 @@ describe('HederaDidRegistrar', () => {
 
       const foundDidRecord = {
         didDocument,
-        keys: [{ didDocumentRelativeKeyId: 'key1' }],
+        keys: [
+          { didDocumentRelativeKeyId: '#did-root-key', kmsKeyId: 'root-key' },
+          { didDocumentRelativeKeyId: '#key-1', kmsKeyId: 'removed-key' },
+        ],
       } as unknown as DidRecord
 
       mockFunction(mockLedgerService.resolveDid).mockResolvedValue({
@@ -134,6 +145,8 @@ describe('HederaDidRegistrar', () => {
       expect(result.didState.state).toBe('finished')
       expect(result.didState.did).toBe(did)
       expect(result.didState.didDocument).toBeInstanceOf(Object)
+      // key2 is passed in but the did document never had it, so only the key of the removed #key-1 is returned
+      expect(result.removedKeys).toEqual([{ keyId: 'removed-key' }])
     })
 
     it('should return failed state if DID not found or deactivated', async () => {
@@ -204,17 +217,36 @@ describe('HederaDidRegistrar', () => {
         })
       )
       expect(mockDidRepository.update).toHaveBeenCalledWith(mockAgentContext, foundDidRecord)
+      expect(foundDidRecord.status).toBe(DidRecordStatus.Deactivated)
 
       expect(result.didState.state).toBe('finished')
       expect(result.didState.did).toBe(did)
       expect(result.didState.didDocument).toBeInstanceOf(Object)
     })
 
-    it('should return failed state if DID is deactivated', async () => {
+    it('should only mark the did record deactivated when the DID is already deactivated on the ledger', async () => {
+      const foundDidRecord = { didDocument } as unknown as DidRecord
       mockFunction(mockLedgerService.resolveDid).mockResolvedValueOnce({
         didDocument,
         didResolutionMetadata,
         didDocumentMetadata: { deactivated: true },
+      })
+      mockFunction(mockDidRepository.findCreatedDid).mockResolvedValue(foundDidRecord)
+      mockFunction(mockLedgerService.deactivateDid).mockClear()
+
+      const result = await registrar.deactivate(mockAgentContext, { did })
+
+      expect(mockLedgerService.deactivateDid).not.toHaveBeenCalled()
+      expect(mockDidRepository.update).toHaveBeenCalledWith(mockAgentContext, foundDidRecord)
+      expect(foundDidRecord.status).toBe(DidRecordStatus.Deactivated)
+      expect(result.didState).toEqual({ state: 'finished', did, didDocument })
+    })
+
+    it('should return failed state if the did record is not found', async () => {
+      mockFunction(mockLedgerService.resolveDid).mockResolvedValueOnce({
+        didDocument,
+        didResolutionMetadata,
+        didDocumentMetadata: {},
       })
       mockFunction(mockDidRepository.findCreatedDid).mockResolvedValue(null)
 
