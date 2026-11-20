@@ -1,0 +1,8 @@
+services:
+  cheqd-ledger:
+    # Local tag so the build does not replace the upstream image it is based on.
+    image: credo-ts-ext/cheqd-node-arm:4.2.1
+    build:
+      context: network
+      dockerfile: cheqd-node-arm.dockerfile
+    platform: linux/arm64/v8
