@@ -85,8 +85,10 @@ export class CheqdDidResolver implements DidResolver {
         }
 
         let resource: Metadata | undefined
-        if (params.version) {
-          resource = resources.find((resource) => resource.version === params.version)
+        // Earlier releases only read the non-standard `version` parameter.
+        const resourceVersion = params.resourceVersion ?? params.version
+        if (resourceVersion) {
+          resource = resources.find((resource) => resource.version === resourceVersion)
         } else {
           const date = params.resourceVersionTime ? new Date(Number(params.resourceVersionTime) * 1000) : new Date()
           // find the resourceId closest to the created time
