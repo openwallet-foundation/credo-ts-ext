@@ -13,10 +13,10 @@ allowBuilds:
 
 catalog:
   '@biomejs/biome': 2.5.14
-  '@credo-ts/anoncreds': 0.8.0-alpha-20261117102315
-  '@credo-ts/askar': 0.8.0-alpha-20261117102315
-  '@credo-ts/core': 0.8.0-alpha-20261117102315
-  '@credo-ts/node': 0.8.0-alpha-20261117102315
+  '@credo-ts/anoncreds': 0.8.0-alpha-20261118122511
+  '@credo-ts/askar': 0.8.0-alpha-20261118122511
+  '@credo-ts/core': 0.8.0-alpha-20261118122511
+  '@credo-ts/node': 0.8.0-alpha-20261118122511
   '@hyperledger/anoncreds-nodejs': 0.5.0
   '@hyperledger/indy-vdr-nodejs': ^0.3.0
   '@hyperledger/indy-vdr-shared': ^0.3.0
@@ -32,10 +32,10 @@ catalog:
 minimumReleaseAgeExclude:
   - '@hyperledger/anoncreds-nodejs@0.5.0'
   - '@hyperledger/anoncreds-shared@0.5.0'
-  - '@credo-ts/anoncreds@0.8.0-alpha-20261117102315'
-  - '@credo-ts/askar@0.8.0-alpha-20261117102315'
-  - '@credo-ts/core@0.8.0-alpha-20261117102315'
-  - '@credo-ts/didcomm@0.8.0-alpha-20261117102315'
-  - '@credo-ts/node@0.8.0-alpha-20261117102315'
+  - '@credo-ts/anoncreds@0.8.0-alpha-20261118122511'
+  - '@credo-ts/askar@0.8.0-alpha-20261118122511'
+  - '@credo-ts/core@0.8.0-alpha-20261118122511'
+  - '@credo-ts/didcomm@0.8.0-alpha-20261118122511'
+  - '@credo-ts/node@0.8.0-alpha-20261118122511'
   - '@openwallet-foundation/askar-nodejs@0.7.0'
   - '@openwallet-foundation/askar-shared@0.7.0'

@@ -168,17 +168,17 @@ catalogs:
       specifier: 2.5.14
       version: 2.5.14
     '@credo-ts/anoncreds':
-      specifier: 0.8.0-alpha-20261117102315
-      version: 0.8.0-alpha-20261117102315
+      specifier: 0.8.0-alpha-20261118122511
+      version: 0.8.0-alpha-20261118122511
     '@credo-ts/askar':
-      specifier: 0.8.0-alpha-20261117102315
-      version: 0.8.0-alpha-20261117102315
+      specifier: 0.8.0-alpha-20261118122511
+      version: 0.8.0-alpha-20261118122511
     '@credo-ts/core':
-      specifier: 0.8.0-alpha-20261117102315
-      version: 0.8.0-alpha-20261117102315
+      specifier: 0.8.0-alpha-20261118122511
+      version: 0.8.0-alpha-20261118122511
     '@credo-ts/node':
-      specifier: 0.8.0-alpha-20261117102315
-      version: 0.8.0-alpha-20261117102315
+      specifier: 0.8.0-alpha-20261118122511
+      version: 0.8.0-alpha-20261118122511
     '@hyperledger/anoncreds-nodejs':
       specifier: 0.5.0
       version: 0.5.0
@@ -225,13 +225,13 @@ importers:
         version: 3.0.3
       '@credo-ts/askar':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@openwallet-foundation/askar-shared@0.7.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@openwallet-foundation/askar-shared@0.7.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@credo-ts/core':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@credo-ts/node':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@openwallet-foundation/askar-nodejs':
         specifier: 'catalog:'
         version: 0.7.0
@@ -295,16 +295,16 @@ importers:
     devDependencies:
       '@credo-ts/anoncreds':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@credo-ts/didcomm@0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@credo-ts/didcomm@0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@credo-ts/askar':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@openwallet-foundation/askar-shared@0.7.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@openwallet-foundation/askar-shared@0.7.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@credo-ts/core':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@credo-ts/node':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@hiero-did-sdk/anoncreds':
         specifier: ^0.1.8
         version: 0.1.8(bn.js@5.2.3)(react-native@0.88.1(@babel/core@7.29.13(supports-color@8.1.1))(react@19.3.1)(supports-color@8.1.1))(supports-color@8.1.1)
@@ -325,10 +325,10 @@ importers:
     devDependencies:
       '@credo-ts/anoncreds':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@credo-ts/didcomm@0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@credo-ts/didcomm@0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@credo-ts/core':
         specifier: 'catalog:'
-        version: 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+        version: 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@hyperledger/anoncreds-nodejs':
         specifier: 'catalog:'
         version: 0.5.0
@@ -604,28 +604,28 @@ packages:
     resolution: {integrity: sha512-tEj8X2No2A1c9NDnZECxiiJ8TP3vmFlN9tLlLeSaMqVW4tUmVG2R4qpv/eP4zymWxnymYLkLcIYVV0VcWj3RCQ==}
     engines: {node: '>= 20.12.0'}
 
-  '@credo-ts/anoncreds@0.8.0-alpha-20261117102315':
-    resolution: {integrity: sha512-hjkehRYcesVUFSjnaVd0UMyBdpohSuAgsQn6M8rWoZUCblp0Ji3X6Qlj/B5/IY94j/pv8ZpxnA117RwcgQ9ptQ==}
+  '@credo-ts/anoncreds@0.8.0-alpha-20261118122511':
+    resolution: {integrity: sha512-pm+bb7e++nxyOHL2Ef2I8JT77qTYo8v8ebU94cvQaQ0ddwbdR00EY/BdTWgXABGv8LXRauYSBOW9xv7AXQ46Mw==}
     peerDependencies:
-      '@credo-ts/didcomm': 0.8.0-alpha-20261117102315
+      '@credo-ts/didcomm': 0.8.0-alpha-20261118122511
       '@hyperledger/anoncreds-shared': ^0.4.1 || ^0.5.0
     peerDependenciesMeta:
       '@credo-ts/didcomm':
         optional: true
 
-  '@credo-ts/askar@0.8.0-alpha-20261117102315':
-    resolution: {integrity: sha512-xf+AZK+4WyfAuvJMDzj8qIGYXel7nk4EhGBFfrJN8IH/Y66Y+khU865n77Q6Hz20sDJOOPQo75mfeQfPB48nIg==}
+  '@credo-ts/askar@0.8.0-alpha-20261118122511':
+    resolution: {integrity: sha512-WD260AIqpcja3TEYcFkXr2pcdsrxxHBD8/LLQu2p0vV4zJG6SNrkaAnCRI3va5Qn/kCI5nN0NfJFua9+gSbsfA==}
     peerDependencies:
       '@openwallet-foundation/askar-shared': ^0.4.3 || ^0.5.0 || ^0.6.0 || ^0.7.0
 
-  '@credo-ts/core@0.8.0-alpha-20261117102315':
-    resolution: {integrity: sha512-ivbRBh3bsJGgXuCd2HEwfSGaaooNMV7VSj5EVNDdI+1SN0CjotW83g+iGA2voJujfQOn/38AYAeaRcKFeQvltQ==}
+  '@credo-ts/core@0.8.0-alpha-20261118122511':
+    resolution: {integrity: sha512-XzjbjmA6ex86PDbEJmIOqyt1vw3pn8B5gldkp4rhwix7xNe8lAjJtLpy5Mzqbnza91wrq4kp2YsD5pB4OCdSTw==}
 
-  '@credo-ts/didcomm@0.8.0-alpha-20261117102315':
-    resolution: {integrity: sha512-eDTWx6tl6RA0gAt2MvcPe+PqTYL4SdudhoddmozH9vBC+bvgETnkRvzr1gxeDn7k6DuYsQ+eckZd1qEi7zG3yw==}
+  '@credo-ts/didcomm@0.8.0-alpha-20261118122511':
+    resolution: {integrity: sha512-hIAhhZ6yITgLuQf0tWsTWGMYx71ABugw0tOv1z+tGaC3X/AWX2rxtYLRMn1W0gJzR41Kqz1pG80dv9U39r0gnQ==}
 
-  '@credo-ts/node@0.8.0-alpha-20261117102315':
-    resolution: {integrity: sha512-aXE8YiSJ7EBrDnkH6f8zV6L1uPr/CPWk1lIHYVDAI8fuhyS1N+6yWdNNbS5d2d02zfF67IoZ5uDYRY7szh7lvA==}
+  '@credo-ts/node@0.8.0-alpha-20261118122511':
+    resolution: {integrity: sha512-g/UGXaaf19Ma6eHEt5Eziyox8Afn3uAKghg4pqPUAzpd65BUD7yhMBWdUhEpCVU0Hz6PakVj32NPgI7TJTgvCQ==}
     engines: {node: '>=22'}
 
   '@digitalbazaar/credentials-context@3.2.0':
@@ -3626,10 +3626,10 @@ snapshots:
       '@babel/helper-compilation-targets': 7.29.13
       '@babel/helper-module-transforms': 7.29.14(@babel/core@7.29.13(supports-color@8.1.1))(supports-color@8.1.1)
       '@babel/helpers': 7.29.14
-      '@babel/parser': 7.29.13
+      '@babel/parser': 7.29.14
       '@babel/template': 7.29.7
       '@babel/traverse': 7.29.14(supports-color@8.1.1)
-      '@babel/types': 7.29.11
+      '@babel/types': 7.29.14
       '@jridgewell/remapping': 2.3.5
       convert-source-map: 2.0.0
       debug: 4.4.3(supports-color@8.1.1)
@@ -3660,7 +3660,7 @@ snapshots:
   '@babel/helper-module-imports@7.29.7(supports-color@8.1.1)':
     dependencies:
       '@babel/traverse': 7.29.14(supports-color@8.1.1)
-      '@babel/types': 7.29.11
+      '@babel/types': 7.29.14
     transitivePeerDependencies:
       - supports-color
 
@@ -3699,8 +3699,8 @@ snapshots:
   '@babel/template@7.29.7':
     dependencies:
       '@babel/code-frame': 7.29.7
-      '@babel/parser': 7.29.13
-      '@babel/types': 7.29.11
+      '@babel/parser': 7.29.14
+      '@babel/types': 7.29.14
 
   '@babel/traverse@7.29.14(supports-color@8.1.1)':
     dependencies:
@@ -3896,10 +3896,10 @@ snapshots:
       fast-wrap-ansi: 0.2.2
       sisteransi: 2.0.0
 
-  '@credo-ts/anoncreds@0.8.0-alpha-20261117102315(@credo-ts/didcomm@0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
+  '@credo-ts/anoncreds@0.8.0-alpha-20261118122511(@credo-ts/didcomm@0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1))(@hyperledger/anoncreds-shared@0.5.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
     dependencies:
       '@astronautlabs/jsonpath': 1.1.2
-      '@credo-ts/core': 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+      '@credo-ts/core': 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@hyperledger/anoncreds-shared': 0.5.0
       '@sphereon/pex-models': 2.3.2
       class-transformer: 0.5.1
@@ -3907,14 +3907,14 @@ snapshots:
       reflect-metadata: 0.2.2
       zod: 4.6.7
     optionalDependencies:
-      '@credo-ts/didcomm': 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+      '@credo-ts/didcomm': 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
     transitivePeerDependencies:
       - supports-color
       - typescript
 
-  '@credo-ts/askar@0.8.0-alpha-20261117102315(@openwallet-foundation/askar-shared@0.7.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
+  '@credo-ts/askar@0.8.0-alpha-20261118122511(@openwallet-foundation/askar-shared@0.7.0)(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
     dependencies:
-      '@credo-ts/core': 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+      '@credo-ts/core': 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@noble/curves': 2.4.0
       '@openwallet-foundation/askar-shared': 0.7.0
       '@panva/hpke-noble': 1.1.8(hpke@1.1.8)
@@ -3927,7 +3927,7 @@ snapshots:
       - supports-color
       - typescript
 
-  '@credo-ts/core@0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
+  '@credo-ts/core@0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
     dependencies:
       '@animo-id/pex': 6.1.1(supports-color@8.1.1)
       '@astronautlabs/jsonpath': 1.1.2
@@ -3972,9 +3972,9 @@ snapshots:
       - supports-color
       - typescript
 
-  '@credo-ts/didcomm@0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
+  '@credo-ts/didcomm@0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
     dependencies:
-      '@credo-ts/core': 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+      '@credo-ts/core': 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@stablelib/ed25519': 2.1.0
       class-transformer: 0.5.1
       class-validator: 0.14.4
@@ -3986,10 +3986,10 @@ snapshots:
       - supports-color
       - typescript
 
-  '@credo-ts/node@0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
+  '@credo-ts/node@0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)':
     dependencies:
-      '@credo-ts/core': 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
-      '@credo-ts/didcomm': 0.8.0-alpha-20261117102315(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+      '@credo-ts/core': 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
+      '@credo-ts/didcomm': 0.8.0-alpha-20261118122511(@typescript/typescript6@6.0.2)(supports-color@8.1.1)
       '@types/express': 5.0.6
       '@types/node': 22.20.5
       '@types/ws': 8.18.2
@@ -4772,7 +4772,7 @@ snapshots:
   '@react-native/codegen@0.88.1(@babel/core@7.29.13(supports-color@8.1.1))':
     dependencies:
       '@babel/core': 7.29.13(supports-color@8.1.1)
-      '@babel/parser': 7.29.13
+      '@babel/parser': 7.29.14
       flow-parser: 0.327.0
       invariant: 2.2.4
       nullthrows: 1.1.1
@@ -6114,7 +6114,7 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.13(supports-color@8.1.1)
       '@babel/traverse': 7.29.14(supports-color@8.1.1)
-      '@babel/types': 7.29.11
+      '@babel/types': 7.29.14
       flow-enums-runtime: 0.0.6
       invariant: 2.2.4
       metro-symbolicate: 0.87.3
@@ -6148,8 +6148,8 @@ snapshots:
     dependencies:
       '@babel/core': 7.29.13(supports-color@8.1.1)
       '@babel/generator': 7.29.14
-      '@babel/parser': 7.29.13
-      '@babel/types': 7.29.11
+      '@babel/parser': 7.29.14
+      '@babel/types': 7.29.14
       '@jridgewell/sourcemap-codec': 1.6.0
       flow-enums-runtime: 0.0.6
       metro: 0.87.3(supports-color@8.1.1)
@@ -6170,10 +6170,10 @@ snapshots:
       '@babel/code-frame': 7.29.7
       '@babel/core': 7.29.13(supports-color@8.1.1)
       '@babel/generator': 7.29.14
-      '@babel/parser': 7.29.13
+      '@babel/parser': 7.29.14
       '@babel/template': 7.29.7
       '@babel/traverse': 7.29.14(supports-color@8.1.1)
-      '@babel/types': 7.29.11
+      '@babel/types': 7.29.14
       accepts: 2.0.0
       connect: 3.7.0(supports-color@8.1.1)
       debug: 4.4.3(supports-color@8.1.1)
