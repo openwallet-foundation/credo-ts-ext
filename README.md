@@ -54,6 +54,7 @@ If you're just getting started the [Credo repo](https://github.com/openwallet-fo
 | --- | --- |
 | [@credo-ts/indy-vdr](./packages/indy-vdr) | Indy DID registration/resolution, ledger pools, endorsement and AnonCreds registry |
 | [@credo-ts/hedera](./packages/hedera) | Hedera DID registration/resolution and optional AnonCreds registry |
+| [@credo-ts/cheqd](./packages/cheqd) | Cheqd DID registration/resolution, DID-linked resources and optional AnonCreds registry |
 
 The ledger packages include their complete test suites and optional AnonCreds entry points. They are maintained and
 released from this repository against the Credo versions listed in [pnpm-workspace.yaml](./pnpm-workspace.yaml).
@@ -91,7 +92,7 @@ Run `pnpm test:unit` for offline tests and `pnpm test:e2e` for `*.e2e.test.ts` s
 Shared helper tests are discovered alongside package tests. CI runs unit and E2E suites separately;
 both jobs require tests to be discovered.
 
-Start the Indy pool before running E2E tests:
+Ledger packages keep their test ledgers in separate Docker Compose files. Start the Indy pool before running the E2E tests:
 
 ```sh
 docker compose up -d --build --wait --wait-timeout 600
@@ -103,7 +104,9 @@ On Apple Silicon, use `docker compose -f docker-compose.yml -f docker-compose.ar
 `docker compose` for both startup and shutdown. The pool exposes ports 9701–9708 and its health check waits
 for the transaction author agreement and test endorser/trustee identities to be seeded.
 `GENESIS_TXN_PATH` can point to an alternative genesis file, but that ledger must have the same test identities
-and transaction author agreement configured. Test seeds and the in-memory wallet key are test-only fixtures.
+and transaction author agreement configured. The cheqd E2E tests also need the cheqd ledger from
+[packages/cheqd/docker-compose.yml](./packages/cheqd/docker-compose.yml); see the
+[cheqd README](./packages/cheqd/README.md#development). Test seeds and the in-memory wallet key are test-only fixtures.
 
 No sibling checkout of Credo is needed for development or CI.
 
