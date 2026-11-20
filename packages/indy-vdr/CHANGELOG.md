@@ -2,6 +2,18 @@
 
 For 0.7.x release notes, see the [Credo-ts changelog](https://github.com/openwallet-foundation/credo-ts/blob/main/packages/indy-vdr/CHANGELOG.md).
 
+## 0.8.0
+
+### Minor Changes
+
+- 1a36deb: This release removes `did:sov` support and moves the AnonCreds registry to the `@credo-ts/indy-vdr/anoncreds` entry point. These breaking changes require Credo 0.8.0 or later.
+
+### Patch Changes
+
+- 46de9de: Support percent-encoded AnonCreds identifiers in the Indy-VDR registry and add an opt-in option for generating them.
+- 46de9de: Pass the expected public JWK through Indy VDR single-signature and multi-signature operations so the KMS can verify the signing key before signing.
+- 46de9de: Preserve revocation status list resolution for locally stored registry definitions created before issuance-type metadata was stored.
+
 ## 0.7.1
 
 ### Patch Changes

@@ -1,5 +1,27 @@
 # Changelog
 
+## 0.8.0
+
+### Minor Changes
+
+- 9724d80: Move `@credo-ts/cheqd` into Credo Extensions while retaining its npm package name and public entry points. This release
+  requires Credo 0.8.0 and Node.js 22 or later. `@credo-ts/anoncreds` is now an optional peer dependency and
+  `CheqdAnonCredsRegistry` is only exported from the `@credo-ts/cheqd/anoncreds` entry point. Consumers using the
+  registry must install `@credo-ts/anoncreds` explicitly.
+
+### Patch Changes
+
+- 9724d80: Pin CosmJS dependencies to the versions supported by `@cheqd/sdk-esm`.
+- 9724d80: The did:cheqd registrar stores the KMS backend of the keys it creates or imports as a `KmsKeyReference`, and its
+  `createKey` option accepts a `backend`. Keys passed with a DID document are checked with `Kms.checkKmsKeyReferences`,
+  which logs a warning for keys without a backend. Signing DID and resource transactions passes the expected public key,
+  so the KMS checks the signing key before it signs.
+- 9724d80: Keep cheqd DID URL query parameters on `ParsedCheqdDid.params`, which `ParsedDid` no longer declares after the `did-resolver` 6 upgrade.
+- 9724d80: Resolving cheqd DIDs and resources no longer needs the cosmos payer wallet. The wallet is now created on the first ledger write, so a missing or failing `cosmosPayerSeed` doesn't block resolution. This fixes resolution on React Native, where deriving a wallet from a generated mnemonic failed. Ledger writes without a `cosmosPayerSeed` now fail with an error instead of using an unfunded generated wallet. On React Native, a mnemonic `cosmosPayerSeed` needs a full WebCrypto implementation such as `react-native-quick-crypto`.
+  
+  `CheqdLedgerService.disconnect()` now disconnects instead of creating the SDK.
+- 9724d80: Resolving a DID-Linked Resource with a `resourceVersion` query parameter now returns that version. Before, the resolver only read the non-standard `version` parameter, so a `resourceVersion` query was ignored and returned the latest resource. `version` is still accepted.
+
 ## 0.7.1
 
 ### Patch Changes
